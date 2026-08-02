@@ -1,0 +1,177 @@
+# Dataset Card — ColdTrack AI
+
+Dokumen ini menjelaskan seluruh dataset publik yang digunakan tim ColdTrack AI, perannya dalam
+pipeline, serta temuan penting dari proses eksplorasi data (EDA). Model AI kami tidak dilatih dari
+nol maupun murni disintesis — kami mengambil pola dinamika suhu dari data IoT dunia nyata,
+lalu menalanya (fine-tune) ke domain rantai dingin menggunakan data sintetik yang kami bangun sendiri
+(lihat Bagian 2 Playbook Teknis). Dataset di bawah ini adalah fondasi tahap pretraining dan validasi.
+
+---
+
+## Ringkasan Peran Tiap Dataset
+
+| # | Dataset | Peran dalam Proyek |
+|---|---|---|
+| 1 | Temperature Readings: IoT Devices | Pretraining pola suhu normal (siklus harian) |
+| 2 | Intel Berkeley Lab Data | Referensi pola kegagalan sensor nyata |
+| 3 | Smart Manufacturing IoT-Cloud | Pembanding struktur & rasio label anomali |
+| 4 | NAB (realKnownCause) | Set uji eksternal untuk generalisasi model |
+| 5 | UAH-DriveSet | Referensi perilaku pengemudi (agresif/mengantuk) |
+| 6 | Taxi Trajectory Porto | Referensi realisme rute (pola macet/berhenti) |
+| 7 | NASA POWER API | Suhu ambien nyata untuk koordinat Indonesia |
+
+---
+
+## 1. Temperature Readings: IoT Devices
+
+- **Sumber**: Kaggle (atulanandjha) — https://www.kaggle.com/datasets/atulanandjha/temperature-readings-iot-devices
+- **Lisensi**: GNU Lesser General Public License 3.0
+- **Ukuran**: 97.606 baris, suhu ruangan indoor/outdoor
+- **Peran**: Korpus pretraining utama backbone GRU — mengajarkan model dinamika suhu umum (inersia
+  termal, siklus harian).
+
+**Temuan EDA:**
+- Data bersih, tanpa missing value.
+- Rentang suhu 21–51°C — wajar untuk iklim India (bukan anomali, bukan bug).
+- Mayoritas data (77.261 baris) berlabel "Out" (outdoor), sisanya "In" (indoor) — kami memfilter
+  hanya data outdoor karena lebih relevan dengan kondisi kargo yang terekspos suhu ambien.
+- Interval pencatatan tidak konsisten: median gap 0 menit, tapi gap maksimum mencapai ~11,5 hari.
+  Perlu resampling ke interval 1 menit sebelum dipakai untuk pretraining.
+- Pola diurnal (naik siang, turun dini hari) terkonfirmasi jelas saat di-zoom ke skala satu hari.
+
+**Catatan penting**: dataset ini berasal dari India, bukan Indonesia. Perannya hanya untuk
+mengajarkan model *bentuk kurva* suhu secara umum (fisika perpindahan panas bersifat universal),
+bukan nilai suhu ambien Indonesia. Nilai suhu ambien Indonesia yang sesungguhnya berasal dari
+dataset #7 (NASA POWER).
+
+---
+
+## 2. Intel Berkeley Lab Data
+
+- **Sumber**: MIT CSAIL — http://db.csail.mit.edu/labdata/labdata.html
+- **Ukuran**: 2.313.682 baris, 54 sensor (suhu, kelembapan, tegangan)
+- **Peran**: Referensi pola kegagalan sensor nyata untuk desain katalog anomali sintetik kami
+  (A5: sensor macet, A6: sensor berderau/paket hilang).
+
+**Temuan EDA:**
+- **17,7% dari seluruh data adalah outlier ekstrim** (suhu di luar rentang 0–50°C, termasuk nilai
+  -38,4°C dan 385,6°C yang mustahil secara fisik).
+- Outlier tersebar acak di hampir semua sensor (bukan disebabkan oleh sensor tertentu yang rusak
+  permanen) — mengindikasikan noise/glitch transmisi sesaat, bukan kegagalan hardware total.
+- Dua sensor (moteid 5 dan 57) hampir tidak pernah mengirim data (<40 baris dari total jutaan),
+  kemungkinan mati/kehabisan baterai di awal pengumpulan data.
+- Ditemukan beberapa moteid dengan ID tidak valid (contoh: 65407) — bit error transmisi, dibuang
+  saat pembersihan data.
+
+---
+
+## 3. Smart Manufacturing IoT-Cloud Monitoring Dataset
+
+- **Sumber**: Kaggle (ziya07) — https://www.kaggle.com/datasets/ziya07/smart-manufacturing-iot-cloud-monitoring-dataset
+- **Lisensi**: CC0-1.0
+- **Ukuran**: 100.000 baris, data sensor mesin manufaktur
+- **Peran**: Kalibrasi struktur label dan rasio kelas anomali sebelum data sintetik kami sendiri
+  siap; latihan pipeline pemrosesan.
+
+**Temuan EDA:**
+- Struktur labelnya sangat mirip rencana skema kami: `anomaly_flag` (biner) setara `is_anomaly`,
+  `failure_type` (5 kategori) setara `failure_mode`, `predicted_remaining_life` setara konsep
+  Time-to-Breach kami.
+- Rasio anomali hanya **8,9%** — jauh lebih imbalanced dibanding target desain kami (60% sehat /
+  40% anomali). Ini memperkuat alasan kami sengaja mendesain rasio yang lebih seimbang, supaya
+  model tidak "malas" belajar pola anomali.
+- Ditemukan inkonsistensi antar-label: proporsi `failure_type` pada baris dengan `anomaly_flag=0`
+  dan `anomaly_flag=1` nyaris identik, menandakan kedua kolom label dihasilkan secara independen
+  (tidak saling menjamin konsistensi). Kami menghindari pola ini dengan menghasilkan ketiga label
+  (`is_anomaly`, `failure_mode`, `time_to_breach`) dari satu sumber kebenaran yang sama di
+  simulator kami.
+
+---
+
+## 4. NAB — Numenta Anomaly Benchmark (realKnownCause)
+
+- **Sumber**: Kaggle (boltzmannbrain/nab) — https://www.kaggle.com/datasets/boltzmannbrain/nab
+- **File yang digunakan**: `ambient_temperature_system_failure.csv` (7.267 baris, interval 1 jam),
+  `machine_temperature_system_failure.csv` (22.695 baris, interval 5 menit)
+- **Peran**: Set uji eksternal untuk mengukur generalisasi model pada data suhu nyata dengan
+  anomali yang waktunya sudah diketahui secara pasti (ground truth publik).
+
+**Temuan EDA:**
+- Nilai mentah dalam skala Fahrenheit, dikonversi ke Celsius sebelum digunakan.
+- Data `machine_temperature` menunjukkan osilasi rutin (kemungkinan siklus HVAC ruang server) dan
+  dua anomali penurunan suhu tajam yang tercatat (~15 Des 2013 dan ~15 Feb 2014) — pola kegagalan
+  "penurunan mendadak" ini melengkapi katalog anomali kami yang sebagian besar berupa kenaikan suhu.
+
+---
+
+## 5. UAH-DriveSet
+
+- **Sumber**: Universidad de Alcalá — http://www.robesafe.uah.es/personal/eduardo.romera/uah-driveset/
+- **Lisensi**: Non-komersial/akademik saja — **dilarang didistribusikan ulang**, wajib disitasi
+  (Romera et al., ITSC 2016)
+- **Ukuran unduhan penuh**: ±3,3 GB (termasuk video perjalanan; data sensor teks jauh lebih kecil)
+- **Cakupan yang kami gunakan**: 1 dari 6 driver (D1), 7 rute (kombinasi normal/drowsy/aggressive
+  pada motorway/secondary road). Video tidak diunduh — hanya file data teks yang relevan.
+- **Peran**: Referensi statistik perilaku mengemudi (normal/mengantuk/agresif) dan frekuensi event
+  pengereman/belokan keras untuk parameter `harsh_events` di simulator kami. Bukan data pelatihan
+  utama, sehingga sampel 1 driver dinilai cukup representatif untuk tujuan ini.
+- **Catatan akses**: unduhan memerlukan persetujuan lisensi manual via formulir di situs resmi
+  (tidak bisa diunduh otomatis via script/API).
+
+**Temuan EDA — struktur `SEMANTIC_FINAL.txt`:**
+- Format unik: satu file berisi 54 nilai, satu nilai per baris (bukan tabel kolom seperti file
+  lain), merangkum satu rute penuh. Definisi tiap baris merujuk pada README resmi dataset.
+- Berisi metadata rute (waktu, kecepatan, jarak), skor performa mengemudi per kategori (0–100:
+  accelerations, brakings, turnings, lane-weaving, lane-drifting, overspeeding, car-following),
+  jumlah event low/medium/high untuk akselerasi/pengereman/belokan, serta rasio perilaku
+  (normal/drowsy/aggressive, basis 0–1).
+- **Validasi silang label**: pada rute berlabel `DROWSY-MOTORWAY`, rasio "drowsy" hasil analisis
+  memang paling dominan (55,7%, dibanding normal 32,4% dan aggressive 11,9%), dan score brakings
+  (38,1/100) serta lane-weaving (26,3/100) sama-sama rendah — konsisten dengan ciri khas
+  pengemudi mengantuk (reaksi rem telat, kendaraan kurang stabil di jalur). Ini menunjukkan label
+  perilaku pada dataset ini akurat dan dapat diandalkan sebagai referensi.
+
+---
+
+## 6. Taxi Service Trajectory — Porto
+
+- **Sumber**: Kaggle (crailtap/taxi-trajectory), dataset kompetisi ECML/PKDD
+- **Ukuran**: 1,9 GB, ~1,7 juta trip taksi
+- **Peran**: Referensi realisme rute perkotaan (pola berhenti-jalan, kemacetan) untuk generator
+  rute sintetik kami — bukan untuk meniru rute Porto secara langsung.
+
+**Temuan EDA:**
+- Setiap baris merepresentasikan satu trip utuh; rute tersimpan sebagai daftar koordinat
+  [longitude, latitude] pada kolom `POLYLINE`, dicatat tiap 15 detik.
+- Median durasi trip ~10 menit — wajar untuk perjalanan taksi dalam kota.
+- Ditemukan outlier: trip berdurasi 0 detik (data rusak/trip batal) dan trip hingga 10,5 jam
+  (kemungkinan GPS macet). Kedua jenis outlier ini difilter sebelum dipakai sebagai referensi.
+
+---
+
+## 7. NASA POWER API
+
+- **Sumber**: NASA POWER — https://power.larc.nasa.gov/ (gratis, tanpa API key)
+- **Parameter diambil**: `T2M` (suhu udara 2m), `ALLSKY_SFC_SW_DWN` (radiasi matahari)
+- **Peran**: Sumber suhu ambien dan beban radiasi matahari yang benar-benar mewakili kondisi
+  Indonesia (Jakarta) — inilah yang membuat simulasi kami "terasa Indonesia", berbeda dari dataset
+  #1 yang hanya mengajarkan pola umum.
+
+**Temuan EDA (sampel Jakarta, 1–7 Jan 2024):**
+- Rentang suhu 26–31,3°C, jauh lebih stabil dibanding dataset IoT India (std 1,22 vs 5,7) — sesuai
+  karakter iklim tropis.
+- Pola diurnal jelas: suhu terendah dini hari, tertinggi siang hari.
+- Radiasi matahari berkorelasi langsung dengan kenaikan suhu (radiasi 0 di malam hari, naik tajam
+  mulai jam 6 pagi) — data ini menjadi input langsung untuk komponen `k_solar` pada persamaan
+  termal simulator (lihat Bagian 2.3 Langkah 4, Playbook Teknis).
+
+---
+
+## Catatan Umum untuk Pembaca
+
+- Seluruh dataset di atas **tidak digunakan mentah**. Perannya adalah pretraining, kalibrasi, dan
+  validasi — bukan menjadi data pelatihan utama untuk fitur inti (Time-to-Breach). Data pelatihan
+  utama dihasilkan melalui simulator fisika kami sendiri, karena label ground-truth untuk
+  kegagalan cold chain tidak tersedia secara publik (lihat Bagian 2.2 Playbook Teknis).
+- Satuan dan skala tiap dataset diverifikasi secara terpisah sebelum digabungkan (contoh: dataset
+  NAB dalam Fahrenheit, dikonversi ke Celsius) untuk menghindari kesalahan penggabungan data.
