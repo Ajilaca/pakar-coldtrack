@@ -7,11 +7,15 @@ Sistem prediksi dini kegagalan rantai dingin (cold chain) berbasis AI, dibangun 
 
 ## Cara Menjalankan
 
+### Production Mode (Standalone Build)
 ```bash
 docker compose up --build
 ```
 
-> Detail environment variable, port, dan langkah setup tambahan akan dilengkapi seiring pengembangan.
+### Development Mode (Live Reload / Hot Refresh)
+```bash
+docker compose -f docker-compose.dev.yml up --build
+```
 
 ## Struktur Repo
 
