@@ -40,6 +40,12 @@ Thumbs.db
 *.onnx
 *.ckpt
 *.h5
+# Kecualikan: artefak serah terima ke R3 (kecil, deliverable resmi)
+!ml/reports/coldtrack.onnx
+
+# --- Data hasil generate (bisa dibuat ulang lewat skrip) ---
+data/raw/
+data/processed/windows/
 
 # --- Editors ---
 .vscode/
