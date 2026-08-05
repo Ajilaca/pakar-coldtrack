@@ -192,6 +192,22 @@ sekadar durasi tunggal). Kedua kolom ini ditetapkan sebagai **asumsi desain simu
 konservatif**, semata-mata untuk keperluan pembuatan label Time-to-Breach pada data sintetik kami
 — bukan representasi ambang toleransi resmi dari produk tertentu.
 
+## Riwayat Perbaikan Bug (Kolaborasi dengan R2)
+
+Tiga bug ditemukan R2 (AI Model Engineer) saat menyiapkan pipeline training, dilacak dan
+diperbaiki di sumbernya (simulator). Detail teknis lengkap ada di `ml/simulator/README.md`;
+ringkasan di sini untuk konteks metodologi proposal:
+
+- **Bug 1** (`time_to_breach` konstan per trip) dan **Bug 2** (muatan berat nyaris tidak pernah
+  breach karena kalibrasi massa) — diperbaiki di versi `v2`/`v3`.
+- **Bug 3** (`is_anomaly`/`failure_mode` konstan per trip, menyebabkan 48,3% jendela training
+  60-menit salah label pada tiga mode yang terukur) — diperbaiki di versi `v4`, diverifikasi turun
+  menjadi 0,00% salah label dengan metodologi pengukuran yang sama.
+
+Proses ini didokumentasikan apa adanya karena menunjukkan siklus validasi silang yang nyata antar
+peran tim (R1 membangun, R2 menguji di jalur konsumsi berbeda, R1 memperbaiki di sumbernya) —
+bukan disembunyikan sebagai kelemahan.
+
 ## Validasi Sim-to-Real (Playbook Bagian 2.3 Langkah 9)
 
 Dilakukan dua uji untuk mengukur kemiripan data sintetik terhadap dataset IoT publik (#1,
