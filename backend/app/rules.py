@@ -190,7 +190,9 @@ def compute_feature_drivers(df_features: pd.DataFrame) -> list[FeatureDriver]:
     """Calculate top 3 feature driver contributions."""
     latest_row = df_features.iloc[-1]
     delta_temp_val = float(latest_row.get("delta_temp", 0.0))
+    temp_val = float(latest_row.get("temp_c", 4.0))
     ambient_val = float(latest_row.get("ambient_c", 30.0))
+    delta_ambient_val = abs(ambient_val - temp_val)
     reefer_dur_val = float(latest_row.get("reefer_duration_min", 0.0))
 
     return [
@@ -201,7 +203,7 @@ def compute_feature_drivers(df_features: pd.DataFrame) -> list[FeatureDriver]:
         ),
         FeatureDriver(
             feature="delta_suhu_ambien",
-            value=f"{ambient_val:.1f} C",
+            value=f"{delta_ambient_val:.1f} C",
             contribution=0.31,
         ),
         FeatureDriver(

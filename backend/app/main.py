@@ -128,6 +128,16 @@ def analyze_telemetry(payload: AnalyzeRequest) -> AnalyzeResponse:
         df_features=df_features,
     )
 
+    # Heuristic TTB fallback if ONNX returned None during warning or critical status
+    if time_to_breach is None and status in ["WASPADA", "KRITIS"]:
+        limits = evaluate_cargo_limits(payload.cargo_profile)
+        max_limit = limits["max_temp_c"]
+        delta_temp_avg = float(df_features["delta_temp"].iloc[-5:].mean())
+        if latest_temp >= max_limit:
+            time_to_breach = 0.0
+        elif delta_temp_avg > 0:
+            time_to_breach = float(round((max_limit - latest_temp) / delta_temp_avg, 1))
+
     # 4. Recommended Actions & Driver Explanations
     actions = generate_recommended_actions(
         status=status,
