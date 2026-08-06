@@ -1,16 +1,18 @@
 """ColdTrack AI Backend — Core FastAPI Service."""
 
 import logging
+import os
 import time
 from typing import Any
 
+import structlog
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.explain import compute_feature_drivers
 from app.inference import inference_engine
 from app.preprocess import prepare_onnx_input_tensor
 from app.rules import (
-    compute_feature_drivers,
     compute_risk_index,
     evaluate_cargo_limits,
     generate_recommended_actions,
@@ -24,11 +26,19 @@ from app.schemas import (
     ScenarioMetadata,
 )
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='{"time":"%(asctime)s", "level":"%(levelname)s", "name":"%(name)s", "message":"%(message)s"}',
+# Structlog configuration for audit-trail JSON logging
+structlog.configure(
+    processors=[
+        structlog.processors.TimeStamper(fmt="iso"),
+        structlog.stdlib.add_log_level,
+        structlog.processors.JSONRenderer(),
+    ],
+    wrapper_class=structlog.make_filtering_bound_logger(logging.INFO),
+    logger_factory=structlog.PrintLoggerFactory(),
 )
-logger = logging.getLogger("coldtrack.api")
+logger = structlog.get_logger("coldtrack.api")
+
+ENABLE_LLM = os.getenv("ENABLE_LLM", "false").lower() == "true"
 
 app = FastAPI(
     title="ColdTrack AI Backend",
