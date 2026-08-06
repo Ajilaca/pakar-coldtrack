@@ -1,0 +1,49 @@
+{
+  "id": "scenario_5_extreme_ambient",
+  "title": "Skenario 5: Lonjakan Suhu Ambien Ekstrem (Cuaca Panas / Kemacetan)",
+  "description": "Truk terjebak macet total saat suhu lingkungan melonjak hingga 38.5°C dengan radiasi matahari tinggi.",
+  "cargo_profile": "vaksin_2_8C",
+  "expected_status": "WASPADA",
+  "shipment_id": "TRK-JKT-0421",
+  "readings": [
+    {
+      "ts": "2026-08-20T12:00:00+07:00",
+      "temp_c": 4.5,
+      "humidity": 60.0,
+      "ambient_c": 35.0,
+      "door_open": false,
+      "reefer_on": true,
+      "lat": -6.1800,
+      "lon": 106.8100,
+      "speed_kmh": 15.0,
+      "harsh_events": 0,
+      "solar_radiation": 850.0
+    },
+    {
+      "ts": "2026-08-20T12:15:00+07:00",
+      "temp_c": 5.8,
+      "humidity": 62.0,
+      "ambient_c": 37.0,
+      "door_open": false,
+      "reefer_on": true,
+      "lat": -6.1820,
+      "lon": 106.8120,
+      "speed_kmh": 5.0,
+      "harsh_events": 0,
+      "solar_radiation": 920.0
+    },
+    {
+      "ts": "2026-08-20T12:30:00+07:00",
+      "temp_c": 6.9,
+      "humidity": 65.0,
+      "ambient_c": 38.5,
+      "door_open": false,
+      "reefer_on": true,
+      "lat": -6.1830,
+      "lon": 106.8130,
+      "speed_kmh": 2.0,
+      "harsh_events": 0,
+      "solar_radiation": 950.0
+    }
+  ]
+}

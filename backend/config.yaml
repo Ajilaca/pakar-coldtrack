@@ -5,8 +5,32 @@ app:
   name: coldtrack-ai-backend
   host: 0.0.0.0
   port: 8000
+  mock_mode: false
 
 model:
-  onnx_path: ml/reports/model.onnx
-  # sequence_length, feature order, thresholds, etc. to be defined
-  # together by the AI Model Engineer once the ONNX export is ready.
+  onnx_path: ../ml/reports/coldtrack.onnx
+  labels_path: ../ml/reports/labels.json
+
+cargo_profiles:
+  vaksin_2_8C:
+    name: "Vaksin & Produk Biologis (2 - 8°C)"
+    min_temp_c: 2.0
+    max_temp_c: 8.0
+    critical_temp_c: 10.0
+  daging_beku_-18C:
+    name: "Daging & Makanan Beku (-18°C)"
+    min_temp_c: -22.0
+    max_temp_c: -18.0
+    critical_temp_c: -12.0
+  buah_segar_4_10C:
+    name: "Buah & Sayur Segar (4 - 10°C)"
+    min_temp_c: 4.0
+    max_temp_c: 10.0
+    critical_temp_c: 15.0
+
+risk_weights:
+  temp_breach: 0.40
+  temp_rate_of_rise: 0.25
+  reefer_off: 0.20
+  door_open: 0.15
+

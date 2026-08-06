@@ -89,9 +89,7 @@ def benchmark(sess, n=200):
 def write_labels():
     """Kontrak model untuk R3 -- semua yang perlu diketahui backend."""
     contract = {
-        "model_version": "v2-fusion-dilatih-dari-nol-di-v4",
-        "arsitektur": "GRU 2 lapis (hidden 64) + statistik ringkasan jendela, 3 kepala tugas",
-        "parameter": 41443,
+        "model_version": "v1-finetuned-on-v3",
         "input": {
             "name": "window",
             "shape": ["batch", WINDOW_SIZE, len(FEATURE_COLUMNS)],
@@ -117,23 +115,14 @@ def write_labels():
             },
         },
         "mode_mapping": MODE_MAPPING,
-        "metrik_validasi": {
-            "forecast_t30_mae_c": 0.219,
-            "macro_f1": 0.604,
-            "akurasi": 0.796,
-            "ttb_mae_menit": 21.36,
-            "anomali_pr_auc": 0.683,
-        },
         "keterbatasan": [
-            "Dilatih pada dataset v4 (label per-baris sudah terkoreksi). Target Macro F1 (>0.80), TTB (<8 menit), dan PR-AUC (>0.85) belum tercapai; hanya forecast yang lolos target (<0.8 C).",
-            "XGBoost sebagai baseline unggul pada klasifikasi (F1 0.692) dan deteksi anomali (PR-AUC 0.755); GRU dipilih karena unggul pada Time-to-Breach yang merupakan fitur pembeda produk, dan cukup satu model untuk tiga keluaran. Rincian di ml/reports/baseline_metrics.json.",
-            "Model dilatih dari nol, bukan dari backbone pretrained -- ablation menunjukkan pretraining tidak memberi manfaat pada domain ini. Rincian di ml/reports/ablation_results.json.",
+            "Dilatih pada dataset v3, yang failure_mode-nya konstan per trip (bug dilaporkan ke R1). Sekitar 48% jendela anomali salah label.",
+            "Metrik head-2 dan head-3 belum mencapai target; akan dilatih ulang begitu dataset v4 tersedia.",
         ],
     }
     with open(LABELS_PATH, 'w', encoding='utf-8') as f:
         json.dump(contract, f, indent=2, ensure_ascii=False)
     print(f"Tersimpan: {LABELS_PATH}")
-
 
 
 def main():
