@@ -9,7 +9,7 @@ import pandas as pd
 
 from ml.tests.test_data_contract import FEATURE_COLUMNS
 
-DATA_PATH = "data/processed/v3_seed1000_700trips.parquet"
+DATA_PATH = "data/processed/v4_seed1000_700trips.parquet"
 OUT_DIR = "data/processed/windows"
 
 WINDOW_SIZE = 60
