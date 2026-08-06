@@ -117,17 +117,20 @@ def prepare_onnx_input_tensor(
     ]
     df[numeric_cols] = df[numeric_cols].interpolate(method="linear").bfill().ffill()
 
-    # Compute derived features
-    df_features = compute_derived_features(df)
-
-    # Padding if less than sequence_length
-    if len(df_features) < sequence_length:
-        first_row = df_features.iloc[[0]]
-        pad_count = sequence_length - len(df_features)
+    # Padding raw readings if less than sequence_length
+    if len(df) < sequence_length:
+        pad_count = sequence_length - len(df)
+        first_row = df.iloc[[0]].copy()
         pad_df = pd.concat([first_row] * pad_count, ignore_index=True)
-        df_features = pd.concat([pad_df, df_features], ignore_index=True)
-    elif len(df_features) > sequence_length:
-        df_features = df_features.iloc[-sequence_length:].reset_index(drop=True)
+        # Shift timestamps backwards by 1 minute for each padded step
+        start_ts = first_row["ts"].iloc[0]
+        pad_df["ts"] = [start_ts - pd.Timedelta(minutes=pad_count - i) for i in range(pad_count)]
+        df = pd.concat([pad_df, df], ignore_index=True)
+    elif len(df) > sequence_length:
+        df = df.iloc[-sequence_length:].reset_index(drop=True)
+
+    # Compute derived features over full sequence
+    df_features = compute_derived_features(df)
 
     # Extract required feature columns in exact ONNX order
     feature_matrix = df_features[ONNX_FEATURE_COLUMNS].to_numpy(dtype=np.float32)

@@ -8,8 +8,8 @@ app:
   mock_mode: false
 
 model:
-  onnx_path: ../ml/reports/coldtrack.onnx
-  labels_path: ../ml/reports/labels.json
+  onnx_path: models/coldtrack.onnx
+  labels_path: models/labels.json
 
 cargo_profiles:
   vaksin_2_8C:

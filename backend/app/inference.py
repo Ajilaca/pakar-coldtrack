@@ -21,23 +21,28 @@ class ONNXInferenceEngine:
         onnx_path: str | None = None,
         labels_path: str | None = None,
     ):
-        model_cfg = settings.get("model", {})
         base_dir = Path(__file__).resolve().parent.parent
+        model_cfg = settings.get("model", {})
 
-        resolved_onnx_path = Path(
-            onnx_path or model_cfg.get("onnx_path", "../ml/reports/coldtrack.onnx")
-        )
-        if not resolved_onnx_path.is_absolute():
-            resolved_onnx_path = (base_dir / resolved_onnx_path).resolve()
+        def _resolve_path(config_val: str, fallback_relative: str) -> Path:
+            p = Path(config_val)
+            if p.is_absolute() and p.exists():
+                return p
+            # Try relative to backend/ (base_dir)
+            p1 = (base_dir / p).resolve()
+            if p1.exists():
+                return p1
+            # Try fallback relative to base_dir
+            p2 = (base_dir / fallback_relative).resolve()
+            if p2.exists():
+                return p2
+            return p1
 
-        resolved_labels_path = Path(
-            labels_path or model_cfg.get("labels_path", "../ml/reports/labels.json")
-        )
-        if not resolved_labels_path.is_absolute():
-            resolved_labels_path = (base_dir / resolved_labels_path).resolve()
+        onnx_cfg = onnx_path or model_cfg.get("onnx_path", "models/coldtrack.onnx")
+        labels_cfg = labels_path or model_cfg.get("labels_path", "models/labels.json")
 
-        self.onnx_path = resolved_onnx_path
-        self.labels_path = resolved_labels_path
+        self.onnx_path = _resolve_path(onnx_cfg, "../ml/reports/coldtrack.onnx")
+        self.labels_path = _resolve_path(labels_cfg, "../ml/reports/labels.json")
         self.session: ort.InferenceSession | None = None
         self.labels_meta: dict[str, Any] = {}
         self.classes = [
