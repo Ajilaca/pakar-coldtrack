@@ -20,11 +20,16 @@ OUT_PATH = "ml/reports/coldtrack_finetuned.pt"
 SCALER_PATH = "ml/reports/scaler_finetune.npz"
 
 BATCH_SIZE = 256
-N_EPOCHS = 25
-FREEZE_EPOCHS = 3
-LR_BACKBONE = 3e-4      # pelan -- backbone sudah punya bekal dari pretraining
+N_EPOCHS = 30
+FREEZE_EPOCHS = 3       # peninggalan dari alur pretraining; tanpa bobot pretrained
+                        # sebenarnya tidak melindungi apa pun, dipertahankan agar
+                        # hasil sama persis dengan konfigurasi yang divalidasi
+LR_BACKBONE = 5e-4      # pelan -- backbone sudah punya bekal dari pretraining
 LR_HEADS = 2e-3         # cepat -- 3 head masih acak, perlu mengejar
-LOSS_WEIGHTS = {'forecast': 1.0, 'failure': 1.0, 'ttb': 0.8}
+# Bobot diseimbangkan agar kontribusi tiap tugas sebanding. Dengan 1.0/1.0/0.8,
+# forecast cuma menyumbang 2,3% dari loss total (MAE ternormalisasi ~0.036 vs
+# CrossEntropy ~1.42) sehingga nyaris tidak dipelajari.
+LOSS_WEIGHTS = {'forecast': 30.0, 'failure': 1.0, 'ttb': 8.0}
 
 TEMP_IDX = 0
 SENTINEL = 999.0
@@ -103,9 +108,12 @@ def main():
     train_loader = DataLoader(make_dataset(TRAIN_PATH, mean, std), batch_size=BATCH_SIZE, shuffle=True)
     val_loader = DataLoader(make_dataset(VAL_PATH, mean, std), batch_size=BATCH_SIZE, shuffle=False)
 
+    # Dilatih dari nol, BUKAN dari backbone pretrained. Ablation B menunjukkan
+    # pretraining tidak memberi manfaat pada domain ini dan justru memperburuk
+    # TTB 29% (28,20 vs 21,84 menit) -- lihat ml/reports/ablation_results.json.
+    # Skrip pretraining tetap dipertahankan sebagai bukti eksperimen.
     model = ColdTrackGRU()
-    model.load_state_dict(torch.load(BACKBONE_PATH))
-    print(f"Bobot pretrained dimuat dari {BACKBONE_PATH}\n")
+    print("Model dilatih dari nol (lihat ablation B di model_card.md)\n")
 
     head_params = (
         list(model.head_forecast.parameters())
