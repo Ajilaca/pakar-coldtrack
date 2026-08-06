@@ -9,6 +9,7 @@ import structlog
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.config import settings
 from app.explain import compute_feature_drivers
 from app.inference import inference_engine
 from app.preprocess import prepare_onnx_input_tensor
@@ -109,7 +110,7 @@ def analyze_telemetry(payload: AnalyzeRequest) -> AnalyzeResponse:
     latest_temp = float(df_features["temp_c"].iloc[-1])
 
     # 2. Model Inference (ONNX or Fallback)
-    model_version = "v1-finetuned-on-v3"
+    model_version = settings.get("model", {}).get("version", "coldtrack-gru-v1.3")
     if inference_engine.is_ready:
         try:
             forecast_dict, failure_dict, ttb_predicted = inference_engine.predict(

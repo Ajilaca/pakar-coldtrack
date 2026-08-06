@@ -47,6 +47,7 @@ def test_analyze_endpoint_success():
     assert "actions" in res_data
     assert len(res_data["actions"]) == 3
     assert "model_version" in res_data
+    assert res_data["model_version"] == "coldtrack-gru-v1.3"
     assert "inference_ms" in res_data
     assert res_data["inference_ms"] < 1000  # Latency target < 1000ms
 
@@ -83,3 +84,56 @@ def test_analyze_invalid_payload_returns_422():
     }
     response = client.post("/api/v1/analyze", json=invalid_payload)
     assert response.status_code == 422
+
+
+def test_broken_payload_single_reading_extreme_values():
+    """Spec requirement: handle 'CSV/payload rusak' — single reading with edge-case extreme values."""
+    payload = {
+        "shipment_id": "TRK-EDGE-001",
+        "cargo_profile": "vaksin_2_8C",
+        "readings": [
+            {
+                "ts": "2026-08-20T07:00:00+07:00",
+                "temp_c": -99.0,
+                "humidity": 0.0,
+                "ambient_c": 0.0,
+                "door_open": True,
+                "reefer_on": False,
+                "lat": 0.0,
+                "lon": 0.0,
+                "speed_kmh": 0.0,
+                "harsh_events": 999,
+            }
+        ],
+    }
+    response = client.post("/api/v1/analyze", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] in ["AMAN", "WASPADA", "KRITIS"]
+    assert data["inference_ms"] > 0
+
+
+def test_latency_under_1000ms():
+    """Spec requirement: explicit target latency check < 1000ms."""
+    payload = {
+        "shipment_id": "TRK-PERF-001",
+        "cargo_profile": "vaksin_2_8C",
+        "readings": [
+            {
+                "ts": "2026-08-20T07:00:00+07:00",
+                "temp_c": 5.0,
+                "humidity": 70.0,
+                "ambient_c": 30.0,
+                "door_open": False,
+                "reefer_on": True,
+                "lat": -6.2,
+                "lon": 106.8,
+                "speed_kmh": 30.0,
+                "harsh_events": 0,
+            }
+        ],
+    }
+    response = client.post("/api/v1/analyze", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["inference_ms"] < 1000
