@@ -46,10 +46,6 @@ Mengembalikan `(df_trip, labels)`. `df_trip` adalah DataFrame per-menit berisi:
   dan perhitungan `time_to_breach`; **tidak boleh** dipakai sebagai fitur input model)
 - `time_to_breach` — dihitung **per menit** (hitung mundur ke breach terdekat), bukan satu angka
   per trip
-- `is_anomaly`, `failure_mode` — dihitung **per menit** mengikuti `onset_minute`: `A0`/0 sebelum
-  onset, berubah ke kode anomalinya sejak onset (A8 terkecuali, anomali sejak menit 0)
-- `onset_minute` — menit terjadinya anomali, dicatat di semua baris trip untuk keperluan audit
-  (`NaN` untuk trip sehat)
 - `gps_jitter_m`, `timestamp_offset_sec` — metadata realisme sensor, belum resmi masuk 12 fitur
   inti (perlu didiskusikan dengan R2 sebelum dipakai sebagai input model)
 
@@ -86,29 +82,8 @@ menyekalakan `C_thermal` memakai akar kuadrat massa (`1050 * sqrt(massa_kg/300)`
 agar profil vaksin (300 kg, sudah tervalidasi sebelumnya) tidak berubah. Breach rate daging beku
 naik dari 0% menjadi 16,7% pada mode A3, sementara profil lain tetap stabil.
 
-**Bug 3 -- `is_anomaly` dan `failure_mode` konstan per trip.** Pola persis sama seperti Bug 1,
-tapi di kolom label kategori: dihitung sekali per trip lalu disalin ke seluruh baris, sehingga
-baris-baris sebelum anomali benar-benar terjadi (`minute < onset_minute`) sudah diberi label
-anomali padahal kondisinya masih identik dengan trip sehat. R2 mengukur dampaknya pada level
-jendela training (window 60 menit) untuk tiga mode yang onsetnya terlihat dari kolom observasi
-(A1 dari `door_open`, A3 dari `reefer_on`, A7 dari `speed_kmh`): **48,3% dari 28.136 jendela
-salah label** (13.582 jendela). Ini konsisten dengan macro F1 head-2 yang mentok di 0,401
-(target > 0,80) meski head-1 sudah melewati target -- bug label, bukan masalah arsitektur model.
-
-Diperbaiki dengan menghitung `failure_mode` dan `is_anomaly` **per baris** di dalam
-`simulate_trip_full`: bernilai `A0`/0 untuk `minute < onset_minute`, berubah ke kode anomalinya
-sejak `onset_minute`. A8 dikecualikan (anomali memang ada sejak menit 0, bukan bug). Kolom baru
-`onset_minute` ditambahkan ke output agar R2 bisa mengaudit ulang, termasuk untuk mode A2/A4/A5/A6
-yang onsetnya tidak terlihat dari kolom observasi langsung.
-
-Diverifikasi ulang dengan metodologi identik milik R2 (window mislabel check) pada 700 trip:
-tiga mode yang sama (A1, A3, A7) turun dari 47,4-49,0% salah label menjadi **0,00%** di ketiga
-mode. Tes regresi `test_labels_match_onset_minute` ditambahkan ke
-`ml/tests/test_data_contract.py` untuk mencegah bug ini terulang.
-
-Riwayat file data: `v1` (sebelum perbaikan bug) -> `v2` (Bug 1 & 2 diperbaiki) -> `v3` (+ lapisan
-realisme sensor) -> `v4` (Bug 3 diperbaiki + kolom `onset_minute`). **`v4` adalah versi resmi
-terkini.**
+Riwayat file data: `v1` (sebelum perbaikan bug) -> `v2` (bug diperbaiki) -> `v3` (bug diperbaiki +
+lapisan realisme sensor ditambahkan). **`v3` adalah versi resmi terkini.**
 
 ## Catatan Kalibrasi
 
@@ -146,8 +121,7 @@ sensor sungguhan -- dicatat sebagai perbaikan potensial untuk iterasi berikutnya
 - [x] Validasi sim-to-real: uji KS dan ACF terhadap dataset IoT publik (Langkah 9)
 - [x] Pembagian data per `trip_id` (70/15/15, stratifikasi per `failure_mode` terverifikasi)
       (Langkah 10)
-- [x] Tes otomatis anti-kebocoran target (`ml/tests/test_data_contract.py`, 6/6 lolos, termasuk
-      regresi Bug 1 dan Bug 3)
+- [x] Tes otomatis anti-kebocoran target (`ml/tests/test_data_contract.py`, 5/5 lolos)
 
 ## Referensi Terkait
 

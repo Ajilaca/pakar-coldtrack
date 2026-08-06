@@ -1,0 +1,79 @@
+{
+  "model_version": "v1-finetuned-on-v3",
+  "input": {
+    "name": "window",
+    "shape": [
+      "batch",
+      60,
+      12
+    ],
+    "dtype": "float32",
+    "features": [
+      "temp_c",
+      "delta_temp",
+      "ambient_c",
+      "delta_ambient",
+      "solar_radiation",
+      "humidity",
+      "door_open",
+      "reefer_on",
+      "reefer_duration_min",
+      "speed_kmh",
+      "harsh_events",
+      "hour_of_day"
+    ],
+    "catatan": "Nilai MENTAH, tidak perlu dinormalisasi. Urutan kolom wajib persis seperti di atas. Baris terakhir jendela = menit 'sekarang'."
+  },
+  "outputs": {
+    "forecast_c": {
+      "shape": [
+        "batch",
+        3
+      ],
+      "satuan": "derajat Celsius",
+      "horizons_menit": [
+        15,
+        30,
+        60
+      ]
+    },
+    "failure_prob": {
+      "shape": [
+        "batch",
+        7
+      ],
+      "satuan": "probabilitas 0-1, jumlahnya 1",
+      "classes": [
+        "A0",
+        "A1",
+        "A3",
+        "A7",
+        "A8",
+        "degradasi_bertahap",
+        "masalah_sensor"
+      ]
+    },
+    "time_to_breach_min": {
+      "shape": [
+        "batch"
+      ],
+      "satuan": "menit",
+      "catatan": "Hanya bermakna bila failure_prob menunjuk ke kelas non-A0. Head ini dilatih dengan sentinel 999 di-mask dari loss, jadi keluarannya tidak terdefinisi untuk kondisi sehat."
+    }
+  },
+  "mode_mapping": {
+    "A0": "A0",
+    "A1": "A1",
+    "A2": "degradasi_bertahap",
+    "A3": "A3",
+    "A4": "degradasi_bertahap",
+    "A5": "masalah_sensor",
+    "A6": "masalah_sensor",
+    "A7": "A7",
+    "A8": "A8"
+  },
+  "keterbatasan": [
+    "Dilatih pada dataset v3, yang failure_mode-nya konstan per trip (bug dilaporkan ke R1). Sekitar 48% jendela anomali salah label.",
+    "Metrik head-2 dan head-3 belum mencapai target; akan dilatih ulang begitu dataset v4 tersedia."
+  ]
+}
