@@ -105,6 +105,18 @@ def analyze_telemetry(payload: AnalyzeRequest) -> AnalyzeResponse:
             status_code=400, detail="Readings list cannot be empty"
         )
 
+    # GRU fusion model computes internal summary stats (std, trend, etc.) over the
+    # window. Padded windows produce incorrect std/trend and the model was never
+    # trained on them, leading to silently degraded predictions.
+    if len(payload.readings) < 60:
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                f"Minimum 60 readings required for reliable inference, "
+                f"got {len(payload.readings)}."
+            ),
+        )
+
     # 1. Preprocessing & Feature Engineering
     tensor_3d, df_features = prepare_onnx_input_tensor(payload.readings)
     latest_temp = float(df_features["temp_c"].iloc[-1])
