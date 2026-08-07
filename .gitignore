@@ -43,6 +43,7 @@ Thumbs.db
 # Kecualikan: artefak serah terima ke R3 (kecil, deliverable resmi)
 !ml/reports/coldtrack.onnx
 !backend/models/coldtrack.onnx
+!backend/models/coldtrack_ttb.onnx
 !ml/reports/coldtrack_ttb.onnx
 
 # --- Data hasil generate (bisa dibuat ulang lewat skrip) ---
