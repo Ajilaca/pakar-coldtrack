@@ -206,9 +206,10 @@ model.
 
 ### 2. Keluaran TTB tidak terdefinisi untuk kondisi sehat
 
-Head TTB dilatih hanya pada jendela yang benar-benar menuju breach; jendela sehat di-mask dari
+Model TTB dilatih hanya pada jendela yang benar-benar menuju breach; jendela sehat di-mask dari
 loss. Akibatnya, model **tetap mengeluarkan angka** saat kondisi sehat, dan angka itu tidak
-bermakna — pengujian pada 2.000 jendela sehat menghasilkan median 49 menit.
+bermakna — pengujian pada 2.000 jendela sehat menghasilkan median **15 menit**, dan **tidak satu
+pun** bernilai besar yang dapat dipakai backend sebagai penanda "aman".
 
 **Angka TTB wajib disembunyikan bila `failure_prob` menunjuk ke kelas `A0`.** Ini bukan saran,
 melainkan syarat kebenaran keluaran.
