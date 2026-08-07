@@ -6,3 +6,6 @@ venv/
 .ruff_cache/
 tests/
 .env
+notebooks/
+data/raw/
+node_modules/

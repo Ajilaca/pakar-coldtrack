@@ -1,0 +1,62 @@
+{
+  "id": "scenario_3_compressor_degradation",
+  "title": "Skenario 3: Degradasi Kompresor Reefer (Kegagalan Bertahap)",
+  "description": "Efisiensi kompresor menurun secara halus, menyebabkan kenaikan suhu lambat tapi pasti (+0.13°C/menit).",
+  "cargo_profile": "vaksin_2_8C",
+  "expected_status": "KRITIS",
+  "shipment_id": "TRK-JKT-0419",
+  "readings": [
+    {
+      "ts": "2026-08-20T09:00:00+07:00",
+      "temp_c": 4.5,
+      "humidity": 70.0,
+      "ambient_c": 30.0,
+      "door_open": false,
+      "reefer_on": true,
+      "lat": -6.2200,
+      "lon": 106.8500,
+      "speed_kmh": 40.0,
+      "harsh_events": 0,
+      "solar_radiation": 400.0
+    },
+    {
+      "ts": "2026-08-20T09:15:00+07:00",
+      "temp_c": 5.8,
+      "humidity": 72.0,
+      "ambient_c": 31.0,
+      "door_open": false,
+      "reefer_on": true,
+      "lat": -6.2400,
+      "lon": 106.8800,
+      "speed_kmh": 42.0,
+      "harsh_events": 0,
+      "solar_radiation": 450.0
+    },
+    {
+      "ts": "2026-08-20T09:30:00+07:00",
+      "temp_c": 7.2,
+      "humidity": 74.0,
+      "ambient_c": 32.0,
+      "door_open": false,
+      "reefer_on": true,
+      "lat": -6.2600,
+      "lon": 106.9100,
+      "speed_kmh": 38.0,
+      "harsh_events": 1,
+      "solar_radiation": 500.0
+    },
+    {
+      "ts": "2026-08-20T09:45:00+07:00",
+      "temp_c": 8.7,
+      "humidity": 76.0,
+      "ambient_c": 33.0,
+      "door_open": false,
+      "reefer_on": true,
+      "lat": -6.2800,
+      "lon": 106.9400,
+      "speed_kmh": 35.0,
+      "harsh_events": 0,
+      "solar_radiation": 550.0
+    }
+  ]
+}

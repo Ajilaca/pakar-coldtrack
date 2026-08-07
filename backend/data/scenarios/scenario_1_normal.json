@@ -1,0 +1,75 @@
+{
+  "id": "scenario_1_normal",
+  "title": "Skenario 1: Transportasi Vaksin Normal (Kondisi Aman)",
+  "description": "Pengiriman vaksin 2-8°C dari Jakarta ke Bandung. Reefer aktif konsisten, suhu terkendali di 4.2°C.",
+  "cargo_profile": "vaksin_2_8C",
+  "expected_status": "AMAN",
+  "shipment_id": "TRK-JKT-0417",
+  "readings": [
+    {
+      "ts": "2026-08-20T07:00:00+07:00",
+      "temp_c": 4.1,
+      "humidity": 70.0,
+      "ambient_c": 28.5,
+      "door_open": false,
+      "reefer_on": true,
+      "lat": -6.2118,
+      "lon": 106.8456,
+      "speed_kmh": 45.0,
+      "harsh_events": 0,
+      "solar_radiation": 350.0
+    },
+    {
+      "ts": "2026-08-20T07:15:00+07:00",
+      "temp_c": 4.2,
+      "humidity": 71.0,
+      "ambient_c": 29.0,
+      "door_open": false,
+      "reefer_on": true,
+      "lat": -6.2300,
+      "lon": 106.8700,
+      "speed_kmh": 50.0,
+      "harsh_events": 0,
+      "solar_radiation": 400.0
+    },
+    {
+      "ts": "2026-08-20T07:30:00+07:00",
+      "temp_c": 4.3,
+      "humidity": 70.5,
+      "ambient_c": 30.0,
+      "door_open": false,
+      "reefer_on": true,
+      "lat": -6.2500,
+      "lon": 106.9000,
+      "speed_kmh": 48.0,
+      "harsh_events": 0,
+      "solar_radiation": 450.0
+    },
+    {
+      "ts": "2026-08-20T07:45:00+07:00",
+      "temp_c": 4.2,
+      "humidity": 71.5,
+      "ambient_c": 31.0,
+      "door_open": false,
+      "reefer_on": true,
+      "lat": -6.2800,
+      "lon": 106.9300,
+      "speed_kmh": 52.0,
+      "harsh_events": 0,
+      "solar_radiation": 500.0
+    },
+    {
+      "ts": "2026-08-20T08:00:00+07:00",
+      "temp_c": 4.2,
+      "humidity": 71.5,
+      "ambient_c": 31.4,
+      "door_open": false,
+      "reefer_on": true,
+      "lat": -6.3000,
+      "lon": 106.9600,
+      "speed_kmh": 55.0,
+      "harsh_events": 0,
+      "solar_radiation": 520.0
+    }
+  ]
+}
