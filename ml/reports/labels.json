@@ -85,5 +85,36 @@
     "Dilatih pada dataset v4 (label per-baris sudah terkoreksi). Target Macro F1 (>0.80), TTB (<8 menit), dan PR-AUC (>0.85) belum tercapai; hanya forecast yang lolos target (<0.8 C).",
     "XGBoost sebagai baseline unggul pada klasifikasi (F1 0.692) dan deteksi anomali (PR-AUC 0.755); GRU dipilih karena unggul pada Time-to-Breach yang merupakan fitur pembeda produk, dan cukup satu model untuk tiga keluaran. Rincian di ml/reports/baseline_metrics.json.",
     "Model dilatih dari nol, bukan dari backbone pretrained -- ablation menunjukkan pretraining tidak memberi manfaat pada domain ini. Rincian di ml/reports/ablation_results.json."
-  ]
+  ],
+  "model_ttb_terpisah": {
+    "file": "coldtrack_ttb.onnx",
+    "alasan": "Head TTB milik GRU tertinggal jauh di rentang yang menentukan keputusan (MAE 17,9 vs 7,6 menit untuk TTB <= 30 menit di split test), sehingga tugas ini dipindahkan ke XGBoost. Forecast suhu dan klasifikasi mode kegagalan tetap ditangani coldtrack.onnx.",
+    "input": {
+      "name": "window",
+      "shape": [
+        "batch",
+        60,
+        12
+      ],
+      "dtype": "float32",
+      "catatan": "IDENTIK dengan coldtrack.onnx -- tensor yang sama bisa dikirim ke kedua model."
+    },
+    "output": {
+      "name": "time_to_breach_min",
+      "shape": [
+        "batch"
+      ],
+      "satuan": "menit",
+      "catatan": "Tetap hanya bermakna bila failure_prob dari coldtrack.onnx menunjuk ke kelas non-A0. Model ini dilatih hanya pada jendela yang benar-benar menuju breach, jadi keluarannya untuk kondisi sehat tidak terdefinisi."
+    },
+    "akurasi_test": {
+      "TTB <= 10 menit": 3.46,
+      "TTB <= 30 menit": 7.6,
+      "keseluruhan": 53.45
+    },
+    "keterbatasan": [
+      "Akurasi menurun tajam seiring jarak: andal untuk peringatan di bawah ~30 menit, tidak andal sebagai hitung mundur jarak jauh.",
+      "Perhitungan agregat dibungkus di dalam grafik ONNX. Karena model pohon bersifat diskontinu, pembulatan float32 membuat sebagian prediksi berbeda tipis dari XGBoost yang dipanggil langsung; dampaknya pada MAE keseluruhan di bawah 0,5 menit."
+    ]
+  }
 }

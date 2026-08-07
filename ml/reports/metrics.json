@@ -1,0 +1,178 @@
+{
+  "model": "GRU fusion (2 lapis, hidden 64) + statistik ringkasan jendela, 3 kepala",
+  "parameter": 41443,
+  "dataset": "v4_seed1000_700trips",
+  "dilatih_dari_nol": true,
+  "metrik_test": {
+    "forecast_t15_mae_c": 0.1572,
+    "forecast_t30_mae_c": 0.2021,
+    "forecast_t60_mae_c": 0.2484,
+    "macro_f1": 0.5726,
+    "akurasi": 0.7946,
+    "ttb_mae_menit": 52.9845,
+    "anomali_pr_auc": 0.6912
+  },
+  "metrik_val_pembanding": {
+    "forecast_t15_mae_c": 0.1667,
+    "forecast_t30_mae_c": 0.2191,
+    "forecast_t60_mae_c": 0.2668,
+    "macro_f1": 0.6036,
+    "akurasi": 0.7957,
+    "ttb_mae_menit": 21.3613,
+    "anomali_pr_auc": 0.6831
+  },
+  "vs_target": {
+    "forecast_t30_mae_c": {
+      "nilai": 0.2021,
+      "target": "<0.8",
+      "lolos": true
+    },
+    "macro_f1": {
+      "nilai": 0.5726,
+      "target": ">0.8",
+      "lolos": false
+    },
+    "ttb_mae_menit": {
+      "nilai": 52.9845,
+      "target": "<8.0",
+      "lolos": false
+    },
+    "anomali_pr_auc": {
+      "nilai": 0.6912,
+      "target": ">0.85",
+      "lolos": false
+    }
+  },
+  "ttb_per_horizon_test": [
+    {
+      "rentang_menit": "0-10",
+      "n": 478,
+      "mae_menit": 5.963854789733887
+    },
+    {
+      "rentang_menit": "10-30",
+      "n": 141,
+      "mae_menit": 57.12162780761719
+    },
+    {
+      "rentang_menit": "30-60",
+      "n": 211,
+      "mae_menit": 42.31367492675781
+    },
+    {
+      "rentang_menit": "60-120",
+      "n": 352,
+      "mae_menit": 54.27212905883789
+    },
+    {
+      "rentang_menit": "120-400",
+      "n": 532,
+      "mae_menit": 97.51616668701172
+    }
+  ],
+  "catatan": [
+    "Metrik utama dari split TEST. Split val dipakai untuk memilih arsitektur dan hiperparameter, jadi angkanya optimistis.",
+    "Split test hanya berisi 10,6% jendela breach vs 22,6% di val, dengan median TTB 63 vs 10 menit. Split distratifikasi per failure_mode tapi tidak per kejadian breach, sehingga statistik TTB antar split tidak sebanding.",
+    "MAE TTB keseluruhan menyembunyikan fakta penting: model akurat saat breach dekat (0-10 menit) dan tidak akurat saat jauh. Lihat ttb_per_horizon_test."
+  ],
+  "baseline_pembanding_val": {
+    "forecast_t30_mae_c": {
+      "linear": 0.3014250099658966,
+      "xgboost": 0.2030414640903473
+    },
+    "failure_mode": {
+      "xgboost_macro_f1": 0.6915577642314622,
+      "xgboost_akurasi": 0.8600584866577312
+    },
+    "ttb_mae_menit": {
+      "xgboost": 25.217384338378906
+    },
+    "anomali_pr_auc": {
+      "isolation_forest": 0.30993628413218866,
+      "xgboost": 0.7546079915246015
+    },
+    "catatan": "Dievaluasi di split validasi dataset v3. XGBoost melatih model terpisah per tugas, sedangkan GRU memakai satu backbone bersama untuk 3 kepala -- perbandingan tidak sepenuhnya setara dan perlu disebut saat melaporkan."
+  },
+  "ablation_val": {
+    "multitask_finetuned": {
+      "forecast_t15_mae_c": 0.21241004765033722,
+      "forecast_t30_mae_c": 0.2440098375082016,
+      "forecast_t60_mae_c": 0.2674854099750519,
+      "macro_f1": 0.44006327648636756,
+      "akurasi": 0.8019373705373462,
+      "ttb_mae_menit": 22.939620971679688,
+      "anomali_pr_auc": 0.5913302776778813,
+      "_menit": 35.6,
+      "_bobot_loss": [
+        30.0,
+        1.0,
+        8.0
+      ],
+      "_pakai_pretrained": true
+    },
+    "multitask_dari_nol": {
+      "forecast_t15_mae_c": 0.2083146721124649,
+      "forecast_t30_mae_c": 0.23778216540813446,
+      "forecast_t60_mae_c": 0.2644917666912079,
+      "macro_f1": 0.42988550414115156,
+      "akurasi": 0.8030339953698062,
+      "ttb_mae_menit": 22.85155487060547,
+      "anomali_pr_auc": 0.5734861939460622,
+      "_menit": 38.1,
+      "_bobot_loss": [
+        30.0,
+        1.0,
+        8.0
+      ],
+      "_pakai_pretrained": false
+    },
+    "single_forecast": {
+      "forecast_t15_mae_c": 0.1685105711221695,
+      "forecast_t30_mae_c": 0.20292071998119354,
+      "forecast_t60_mae_c": 0.2396385371685028,
+      "macro_f1": 0.02219374333024599,
+      "akurasi": 0.03241135615937614,
+      "ttb_mae_menit": 48.884037017822266,
+      "anomali_pr_auc": 0.35406730156486454,
+      "_menit": 38.1,
+      "_bobot_loss": [
+        30.0,
+        0.0,
+        0.0
+      ],
+      "_pakai_pretrained": true
+    },
+    "single_failure": {
+      "forecast_t15_mae_c": 7.5830912590026855,
+      "forecast_t30_mae_c": 7.1141510009765625,
+      "forecast_t60_mae_c": 6.678982257843018,
+      "macro_f1": 0.6133777993098894,
+      "akurasi": 0.8021810649445595,
+      "ttb_mae_menit": 48.85910415649414,
+      "anomali_pr_auc": 0.6787844687095792,
+      "_menit": 40.7,
+      "_bobot_loss": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "_pakai_pretrained": true
+    },
+    "single_ttb": {
+      "forecast_t15_mae_c": 6.871938228607178,
+      "forecast_t30_mae_c": 8.153542518615723,
+      "forecast_t60_mae_c": 11.325178146362305,
+      "macro_f1": 0.07682581462118919,
+      "akurasi": 0.039234799561350064,
+      "ttb_mae_menit": 23.621845245361328,
+      "anomali_pr_auc": 0.2539131681879352,
+      "_menit": 39.4,
+      "_bobot_loss": [
+        0.0,
+        0.0,
+        8.0
+      ],
+      "_pakai_pretrained": true
+    }
+  }
+}
