@@ -47,7 +47,7 @@ def test_analyze_endpoint_success():
     assert "actions" in res_data
     assert len(res_data["actions"]) == 3
     assert "model_version" in res_data
-    assert res_data["model_version"] == "coldtrack-gru-v1.3"
+    assert res_data["model_version"] == "coldtrack-gru-v2-fusion-v4"
     assert "inference_ms" in res_data
     assert res_data["inference_ms"] < 1000  # Latency target < 1000ms
 
