@@ -108,9 +108,9 @@
       "catatan": "Tetap hanya bermakna bila failure_prob dari coldtrack.onnx menunjuk ke kelas non-A0. Model ini dilatih hanya pada jendela yang benar-benar menuju breach, jadi keluarannya untuk kondisi sehat tidak terdefinisi."
     },
     "akurasi_test": {
-      "TTB <= 10 menit": 3.46,
-      "TTB <= 30 menit": 7.6,
-      "keseluruhan": 53.45
+      "TTB <= 10 menit": 3.3,
+      "TTB <= 30 menit": 7.08,
+      "keseluruhan": 52.0
     },
     "keterbatasan": [
       "Akurasi menurun tajam seiring jarak: andal untuk peringatan di bawah ~30 menit, tidak andal sebagai hitung mundur jarak jauh.",

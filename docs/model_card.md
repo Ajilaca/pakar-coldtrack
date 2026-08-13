@@ -17,8 +17,8 @@ Sistem ini memakai **dua model** yang berbagi kontrak masukan identik.
 |---|---|---|
 | Jenis | GRU 2 lapis (hidden 64) + statistik ringkasan jendela | XGBoost, 300 pohon |
 | Keluaran | prediksi suhu t+15/30/60, probabilitas 7 mode kegagalan | Time-to-Breach (menit) |
-| Ukuran | 169 KB | 946 KB |
-| Latensi CPU (batch 1) | 1,1 ms | 0,09 ms |
+| Ukuran | 169 KB | 950 KB |
+| Latensi CPU (batch 1) | 1,1 ms | 0,14 ms |
 | Parameter / pohon | 41.443 parameter | 300 pohon |
 
 **Masukan (sama untuk keduanya):** tensor `float32` berbentuk `[batch, 60, 12]` — jendela 60 menit
@@ -106,13 +106,13 @@ Seluruh angka berikut dari split **test**.
 
 | Head | Metrik | Hasil | Target | Status |
 |---|---|---|---|---|
-| Forecast suhu | MAE @ t+30 | **0,202 °C** | < 0,8 °C | tercapai |
-| Mode kegagalan | Macro F1 | 0,573 | > 0,80 | belum |
-| Time-to-Breach | MAE (TTB ≤ 30 menit) | **7,60 menit** | < 8 menit | tercapai |
-| Deteksi anomali | PR-AUC | 0,691 | > 0,85 | belum |
+| Forecast suhu | MAE @ t+30 | **0,198 °C** | < 0,8 °C | tercapai |
+| Mode kegagalan | Macro F1 | 0,581 | > 0,80 | belum |
+| Time-to-Breach | MAE (TTB ≤ 30 menit) | **7,08 menit** | < 8 menit | tercapai |
+| Deteksi anomali | PR-AUC | 0,711 | > 0,85 | belum |
 
-**Dua dari empat target tercapai.** MAE forecast pada horizon lain: 0,157 °C (t+15) dan
-0,248 °C (t+60).
+**Dua dari empat target tercapai.** MAE forecast pada horizon lain: 0,152 °C (t+15) dan
+0,237 °C (t+60).
 
 ### Perbandingan dengan baseline
 
@@ -120,17 +120,17 @@ Untuk menjawab pertanyaan "mengapa perlu deep learning", tiga baseline diuji pad
 
 | Metrik | GRU fusion | XGBoost | Regresi linear | Isolation Forest |
 |---|---|---|---|---|
-| Forecast t+30 (°C) | 0,202 | **0,189** | 0,338 | — |
-| Macro F1 | 0,573 | **0,664** | — | — |
-| Akurasi | 0,795 | **0,871** | — | — |
-| PR-AUC anomali | 0,691 | **0,753** | — | 0,371 |
-| TTB ≤ 30 menit (menit) | 17,9 | **7,6** | — | — |
+| Forecast t+30 (°C) | 0,198 | **0,189** | 0,338 | — |
+| Macro F1 | 0,581 | **0,664** | — | — |
+| Akurasi | 0,813 | **0,871** | — | — |
+| PR-AUC anomali | 0,711 | **0,753** | — | 0,371 |
+| TTB ≤ 30 menit (menit) | 17,9 | **7,1** | — | — |
 
 **XGBoost mengungguli GRU pada seluruh metrik.** Temuan ini dilaporkan apa adanya, dan menjadi
 dasar keputusan memakai XGBoost untuk Time-to-Breach.
 
 GRU tetap dipakai untuk forecast dan klasifikasi dengan pertimbangan: selisih pada forecast tipis
-(0,202 vs 0,189, keduanya jauh melampaui target), pada klasifikasi kedua model sama-sama belum
+(0,198 vs 0,189, keduanya jauh melampaui target), pada klasifikasi kedua model sama-sama belum
 mencapai target sehingga penggantian tidak mengubah status papan skor, dan satu model GRU melayani
 dua keluaran sekaligus dengan ukuran 169 KB.
 
@@ -139,12 +139,12 @@ dua keluaran sekaligus dengan ukuran 169 KB.
 | Kelas | Recall | Jumlah sampel |
 |---|---|---|
 | A3 — kegagalan reefer total | **100,0 %** | 379 |
-| A0 — sehat | 90,0 % | 12.546 |
-| `masalah_sensor` (A5+A6) | 61,4 % | 872 |
-| A1 — pintu terbuka lama | 53,0 % | 321 |
-| A7 — kejut suhu ambien | 43,9 % | 642 |
-| A8 — prapendinginan buruk | 27,0 % | 651 |
-| `degradasi_bertahap` (A2+A4) | **8,3 %** | 833 |
+| A0 — sehat | 92,1 % | 12.546 |
+| `masalah_sensor` (A5+A6) | 66,9 % | 872 |
+| A1 — pintu terbuka lama | 58,9 % | 321 |
+| A7 — kejut suhu ambien | 44,1 % | 642 |
+| A8 — prapendinginan buruk | 20,1 % | 651 |
+| `degradasi_bertahap` (A2+A4) | **10,6 %** | 833 |
 
 Pola ini masuk akal secara fisika: A3 (reefer mati total) menghasilkan kenaikan monoton yang khas
 dan selalu terdeteksi, sementara `degradasi_bertahap` justru mode yang paling sulit — perubahannya
@@ -192,9 +192,9 @@ lebih besar. Hasilnya tetap sama.
 
 | TTB sebenarnya | MAE |
 |---|---|
-| ≤ 10 menit | **3,46 menit** |
-| ≤ 30 menit | **7,60 menit** |
-| keseluruhan | 53,45 menit |
+| ≤ 10 menit | **3,30 menit** |
+| ≤ 30 menit | **7,08 menit** |
+| keseluruhan | 52,00 menit |
 
 Model **andal sebagai alarm "sebentar lagi jebol", tidak andal sebagai hitung mundur jarak jauh.**
 Ini keterbatasan fisik, bukan kekurangan implementasi: memperkirakan kejadian lima jam ke depan
@@ -208,7 +208,7 @@ model.
 
 Model TTB dilatih hanya pada jendela yang benar-benar menuju breach; jendela sehat di-mask dari
 loss. Akibatnya, model **tetap mengeluarkan angka** saat kondisi sehat, dan angka itu tidak
-bermakna — pengujian pada 2.000 jendela sehat menghasilkan median **15 menit**, dan **tidak satu
+bermakna — pengujian pada 2.000 jendela sehat menghasilkan median **17 menit**, dan **tidak satu
 pun** bernilai besar yang dapat dipakai backend sebagai penanda "aman".
 
 **Angka TTB wajib disembunyikan bila `failure_prob` menunjuk ke kelas `A0`.** Ini bukan saran,
@@ -216,7 +216,7 @@ melainkan syarat kebenaran keluaran.
 
 ### 3. Mode degradasi bertahap hampir tidak terdeteksi
 
-Recall 8,3 %. Sistem **tidak boleh dipromosikan sebagai pendeteksi kompresor melemah atau kebocoran
+Recall 10,6 %. Sistem **tidak boleh dipromosikan sebagai pendeteksi kompresor melemah atau kebocoran
 refrigeran.** Kegagalan jenis ini akan lolos pada sebagian besar kasus.
 
 ### 4. Dilatih sepenuhnya pada data sintetik
