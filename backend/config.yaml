@@ -9,8 +9,10 @@ app:
 
 model:
   onnx_path: models/coldtrack.onnx
+  ttb_onnx_path: models/coldtrack_ttb.onnx
   labels_path: models/labels.json
   version: coldtrack-gru-v2-fusion-v4
+  ttb_display_cap_min: 30
 
 cargo_profiles:
   vaksin_2_8C:
@@ -19,19 +21,28 @@ cargo_profiles:
     max_temp_c: 8.0
     critical_temp_c: 10.0
   daging_beku_-18C:
-    name: "Daging & Makanan Beku (-18°C)"
-    min_temp_c: -22.0
+    name: "Daging & Makanan Beku (-25 – -18°C)"
+    min_temp_c: -25.0
     max_temp_c: -18.0
     critical_temp_c: -12.0
-  buah_segar_4_10C:
-    name: "Buah & Sayur Segar (4 - 10°C)"
-    min_temp_c: 4.0
-    max_temp_c: 10.0
-    critical_temp_c: 15.0
+  buah_segar_2_4C:
+    name: "Buah & Sayur Segar (2 - 4°C)"
+    min_temp_c: 2.0
+    max_temp_c: 4.0
+    critical_temp_c: 6.0
+  ikan_segar_0_5C:
+    name: "Ikan Segar (0 - 5°C)"
+    min_temp_c: 0.0
+    max_temp_c: 5.0
+    critical_temp_c: 8.0
+  produk_susu_2_4C:
+    name: "Produk Susu (2 - 4°C)"
+    min_temp_c: 2.0
+    max_temp_c: 4.0
+    critical_temp_c: 6.0
 
 risk_weights:
   temp_breach: 0.40
   temp_rate_of_rise: 0.25
   reefer_off: 0.20
   door_open: 0.15
-
