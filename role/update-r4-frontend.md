@@ -13,7 +13,10 @@ besar adalah tulisan, dan itu ada di jalurmu sebagai perakit proposal.**
 Dua temuan yang perlu ditangani segera:
 
 1. **Proposal baru terisi 1 dari 8 bagian**, dan dua bagian sudah lewat tenggat
-2. **Frontend dan backend belum pernah benar-benar saling bicara** — kontraknya tidak cocok
+2. **Frontend dan backend belum pernah benar-benar saling bicara** — nama field tidak cocok
+
+Kabar baiknya, penghambat kedua dari sisi data sudah beres: skenario demo telah diganti dan
+diverifikasi bekerja (rincian di bawah).
 
 ---
 
@@ -44,22 +47,42 @@ Hampir seluruh nama berbeda, dan **enam field wajib tidak dikirim sama sekali**.
 field yang tidak dipakai? Sebagai bahan pertimbangan, `lat` dan `lon` **tidak dipakai model sama
 sekali** dan bisa dijadikan opsional.
 
-### Masalah 2 — skenario demo lebih pendek dari syarat minimum
+### Masalah 2 — skenario demo lebih pendek dari syarat minimum (SUDAH DIBERESKAN R2)
 
 Backend menolak permintaan berisi kurang dari 60 bacaan (model menghitung statistik ringkasan di
-dalam dirinya; jendela yang di-*pad* menghasilkan nilai salah).
+dalam dirinya; jendela yang di-*pad* menghasilkan nilai salah). Skenario lama hanya berisi 3–5
+bacaan di sisi backend dan 31 di sisi frontend.
 
-| Sumber | Jumlah bacaan | Syarat |
-|---|---|---|
-| Skenario frontend (`scenario-data.ts`, `N = 31`) | 31 | ≥ 60 |
-| Skenario backend (`*.json`) | 3–5 | ≥ 60 |
+**Sudah diselesaikan.** Kelima berkas di `backend/data/scenarios/` telah diganti dengan versi
+berisi 125–150 bacaan, diambil dari perjalanan asli di dataset v4 lewat
+`ml/preprocess/export_demo_scenarios.py`.
 
-R2 sudah meminta R1 menyediakan lima skenario pengganti berisi minimal 60 bacaan dari dataset v4.
+Setiap skenario **sudah diverifikasi menghasilkan diagnosis yang benar** — dari sebelumnya 0 dari 5,
+kini 5 dari 5:
+
+| Skenario | Diagnosis model | Keyakinan | Time-to-Breach |
+|---|---|---|---|
+| Perjalanan normal | A0 (sehat) | 88 % | disembunyikan, sesuai aturan |
+| Pintu terbuka lama | A1 | **100 %** | 22 menit |
+| Kompresor melemah | degradasi_bertahap | 35 % | 11 menit |
+| Sensor macet | masalah_sensor | 52 % | 24 menit |
+| Kejut suhu ambien | A7 | **100 %** | 22 menit |
+
+Seluruh nilai TTB jatuh di rentang 11–24 menit — area di mana model paling akurat (MAE 7,08 menit),
+sekaligus cukup memberi ruang untuk tiga langkah tindakan yang direkomendasikan.
+
+**Artinya kamu tidak perlu mengurangi jumlah skenario.** Saran sebelumnya untuk memangkas menjadi
+tiga sudah tidak berlaku — kelimanya bekerja, dan **skenario "kompresor melemah" tetap bisa menjadi
+demo utama** sesuai rencana awal di `context-r4` baris 93.
 
 ### Yang perlu kamu lakukan
 
-Jalankan dengan `NEXT_PUBLIC_USE_MOCK=false` **minggu ini**, jangan tunggu M6. Ini satu-satunya cara
-memastikan demo benar-benar bekerja sebelum hari H.
+1. **Sesuaikan nama field di `src/lib/types.ts`** agar cocok dengan skema backend (`temp_c` bukan
+   `temperature_c`, `ambient_c` bukan `ambient_temp_c`, dan enam field yang belum dikirim).
+2. **Ambil data skenario dari backend** lewat `GET /api/v1/scenarios`, jangan dari
+   `src/lib/scenario-data.ts` yang hanya berisi 31 bacaan hasil pembangkitan lokal.
+3. **Jalankan dengan `NEXT_PUBLIC_USE_MOCK=false` minggu ini**, jangan tunggu M6. Ini satu-satunya
+   cara memastikan demo benar-benar bekerja sebelum hari H.
 
 ---
 
@@ -109,9 +132,9 @@ Yang perlu dicek terhadap "Anatomi satu halaman" di `context-r4` baris 40–51:
 
 | TTB sebenarnya | MAE |
 |---|---|
-| ≤ 10 menit | 3,46 menit |
-| ≤ 30 menit | 7,60 menit |
-| seluruh rentang | 53,45 menit |
+| ≤ 10 menit | 3,30 menit |
+| ≤ 30 menit | 7,08 menit |
+| seluruh rentang | 52,00 menit |
 
 Model andal sebagai alarm jangka pendek, tidak andal sebagai hitung mundur jarak jauh.
 
@@ -163,8 +186,7 @@ Keduanya artefak wajib menurut `context-r4` baris 148.
 
 | Ke | Apa | Kenapa mendesak |
 |---|---|---|
-| **R1** | 5 skenario demo berisi ≥ 60 bacaan | tanpa ini demo end-to-end tidak bisa jalan sama sekali |
-| **R1** | Proposal §4.1 + grafik sim-to-real | tenggat besok; grafik dibutuhkan video PoW |
+| **R1** | Proposal §4.1 + grafik sim-to-real | tenggat 14 Agu; grafik dibutuhkan video PoW |
 | **R3** | Sepakati kontrak field dengan kamu | frontend dan backend belum pernah saling bicara |
 | **R3** | Proposal §4.3 + `docs/architecture.md` | tenggat 16 Agu |
 | **R1 + kamu** | `docs/ai_governance.md` | perlu disepakati siapa menulis duluan |
@@ -174,7 +196,7 @@ Keduanya artefak wajib menurut `context-r4` baris 148.
 ## Urutan prioritas
 
 1. **Latar Belakang & Tujuan** — sudah lewat tenggat, tidak bergantung siapa pun
-2. **Sepakati kontrak field dengan R3, lalu uji `USE_MOCK=false`** — memblokir demo
+2. **Sesuaikan nama field, lalu uji `USE_MOCK=false`** — satu-satunya penghambat demo yang tersisa
 3. **Tagih §4.1 dan §4.3** — dua bagian terbesar yang belum tersentuh
 4. Merge `frontend/prototype` ke `main` + lengkapi kartu hasil
 5. `ai_governance.md` bersama R1

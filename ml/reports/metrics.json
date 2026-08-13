@@ -4,41 +4,41 @@
   "dataset": "v4_seed1000_700trips",
   "dilatih_dari_nol": true,
   "metrik_test": {
-    "forecast_t15_mae_c": 0.1572,
-    "forecast_t30_mae_c": 0.2021,
-    "forecast_t60_mae_c": 0.2484,
-    "macro_f1": 0.5726,
-    "akurasi": 0.7946,
-    "ttb_mae_menit": 52.9845,
-    "anomali_pr_auc": 0.6912
+    "forecast_t15_mae_c": 0.1521,
+    "forecast_t30_mae_c": 0.1976,
+    "forecast_t60_mae_c": 0.2372,
+    "macro_f1": 0.5807,
+    "akurasi": 0.8134,
+    "ttb_mae_menit": 52.4168,
+    "anomali_pr_auc": 0.7105
   },
   "metrik_val_pembanding": {
-    "forecast_t15_mae_c": 0.1667,
-    "forecast_t30_mae_c": 0.2191,
-    "forecast_t60_mae_c": 0.2668,
-    "macro_f1": 0.6036,
-    "akurasi": 0.7957,
-    "ttb_mae_menit": 21.3613,
-    "anomali_pr_auc": 0.6831
+    "forecast_t15_mae_c": 0.1595,
+    "forecast_t30_mae_c": 0.211,
+    "forecast_t60_mae_c": 0.2554,
+    "macro_f1": 0.58,
+    "akurasi": 0.7857,
+    "ttb_mae_menit": 21.2361,
+    "anomali_pr_auc": 0.6874
   },
   "vs_target": {
     "forecast_t30_mae_c": {
-      "nilai": 0.2021,
+      "nilai": 0.1976,
       "target": "<0.8",
       "lolos": true
     },
     "macro_f1": {
-      "nilai": 0.5726,
+      "nilai": 0.5807,
       "target": ">0.8",
       "lolos": false
     },
     "ttb_mae_menit": {
-      "nilai": 52.9845,
+      "nilai": 52.4168,
       "target": "<8.0",
       "lolos": false
     },
     "anomali_pr_auc": {
-      "nilai": 0.6912,
+      "nilai": 0.7105,
       "target": ">0.85",
       "lolos": false
     }
@@ -47,27 +47,27 @@
     {
       "rentang_menit": "0-10",
       "n": 478,
-      "mae_menit": 5.963854789733887
+      "mae_menit": 3.0074288845062256
     },
     {
       "rentang_menit": "10-30",
       "n": 141,
-      "mae_menit": 57.12162780761719
+      "mae_menit": 36.18165969848633
     },
     {
       "rentang_menit": "30-60",
       "n": 211,
-      "mae_menit": 42.31367492675781
+      "mae_menit": 40.52219772338867
     },
     {
       "rentang_menit": "60-120",
       "n": 352,
-      "mae_menit": 54.27212905883789
+      "mae_menit": 54.54825210571289
     },
     {
       "rentang_menit": "120-400",
       "n": 532,
-      "mae_menit": 97.51616668701172
+      "mae_menit": 104.42111206054688
     }
   ],
   "catatan": [

@@ -107,10 +107,10 @@ Untuk menjawab "mengapa perlu deep learning", kami menguji tiga baseline pada da
 
 | Metrik (split test) | GRU | XGBoost | Regresi linear | Isolation Forest |
 |---|---|---|---|---|
-| Prediksi suhu t+30 (°C) | 0,202 | **0,189** | 0,338 | — |
-| Macro F1 | 0,573 | **0,664** | — | — |
-| PR-AUC anomali | 0,691 | **0,753** | — | 0,371 |
-| Time-to-Breach ≤ 30 menit | 17,9 | **7,6** | — | — |
+| Prediksi suhu t+30 (°C) | 0,198 | **0,189** | 0,338 | — |
+| Macro F1 | 0,581 | **0,664** | — | — |
+| PR-AUC anomali | 0,711 | **0,753** | — | 0,371 |
+| Time-to-Breach ≤ 30 menit | 17,9 | **7,1** | — | — |
 
 **XGBoost mengungguli GRU pada seluruh metrik.** Kami memilih melaporkannya daripada menyembunyikannya,
 dan mengambil konsekuensinya: Time-to-Breach dipindahkan ke XGBoost, karena di situlah selisihnya
@@ -126,17 +126,17 @@ keluaran sekaligus dalam 169 KB.
 
 | Keluaran | Metrik | Hasil | Target | Status |
 |---|---|---|---|---|
-| Prediksi suhu | MAE @ t+30 | **0,202 °C** | < 0,8 °C | tercapai |
-| Mode kegagalan | Macro F1 | 0,573 | > 0,80 | belum |
-| Time-to-Breach | MAE (≤ 30 menit) | **7,60 menit** | < 8 menit | tercapai |
-| Deteksi anomali | PR-AUC | 0,691 | > 0,85 | belum |
+| Prediksi suhu | MAE @ t+30 | **0,198 °C** | < 0,8 °C | tercapai |
+| Mode kegagalan | Macro F1 | 0,581 | > 0,80 | belum |
+| Time-to-Breach | MAE (≤ 30 menit) | **7,08 menit** | < 8 menit | tercapai |
+| Deteksi anomali | PR-AUC | 0,711 | > 0,85 | belum |
 
 Seluruh angka berasal dari **split test** — bagian data yang tidak pernah dipakai untuk mengambil
 keputusan apa pun selama pengembangan. Angka pada split validasi lebih baik, tetapi karena split itu
 dipakai berulang kali untuk memilih arsitektur, angkanya sudah condong optimistis dan tidak layak
 dilaporkan sebagai hasil akhir.
 
-Prediksi suhu melampaui targetnya dengan selisih besar — hampir empat kali lebih akurat daripada
+Prediksi suhu melampaui targetnya dengan selisih besar — sekitar empat kali lebih akurat daripada
 yang disyaratkan. Kegagalan reefer total, skenario paling kritis, terdeteksi pada **100%** kasus.
 
 Kedua model berjalan pada CPU biasa dalam **1,2 milidetik** total, jauh di bawah batas 300 ms, dan
@@ -148,9 +148,9 @@ diekspor ke ONNX sehingga layanan backend tidak memerlukan pustaka deep learning
 
 | TTB sebenarnya | MAE |
 |---|---|
-| ≤ 10 menit | **3,46 menit** |
-| ≤ 30 menit | **7,60 menit** |
-| seluruh rentang | 53,45 menit |
+| ≤ 10 menit | **3,30 menit** |
+| ≤ 30 menit | **7,08 menit** |
+| seluruh rentang | 52,00 menit |
 
 Model akurat persis pada rentang yang menentukan keputusan operasional, dan tidak akurat di luar
 itu. Memperkirakan kejadian lima jam ke depan dari jendela 60 menit berada di luar jangkauan
@@ -158,7 +158,7 @@ informasi yang tersedia. Antarmuka karena itu menampilkan angka TTB hanya bila b
 30 menit; di atas itu hanya status risiko yang ditampilkan, agar tidak memberi kesan presisi yang
 tidak dimiliki model.
 
-**Degradasi bertahap hampir tidak terdeteksi.** Recall untuk kelas ini hanya 8,3%. Perubahan yang
+**Degradasi bertahap hampir tidak terdeteksi.** Recall untuk kelas ini hanya 10,6%. Perubahan yang
 sangat lambat nyaris tidak terbedakan dari kondisi normal dalam jendela 60 menit. Kami tidak
 mengklaim sistem ini mampu mendeteksi kompresor yang melemah atau kebocoran refrigeran.
 

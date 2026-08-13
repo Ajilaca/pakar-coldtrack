@@ -26,6 +26,28 @@ MODE_MAPPING = {
 FAILURE_CLASSES = ['A0', 'A1', 'A3', 'A7', 'A8', 'degradasi_bertahap', 'masalah_sensor']
 CLASS_TO_IDX = {name: i for i, name in enumerate(FAILURE_CLASSES)}
 
+# Kolom yang harus dihitung ulang per jendela, bukan diambil apa adanya dari parquet.
+# reefer_duration_min di dataset dihitung sejak awal perjalanan (nilainya bisa mencapai 479),
+# sedangkan backend menghitungnya sejak awal jendela 60 menit (maksimal 60). Perbedaan itu
+# membuat model menerima nilai di luar distribusi latihnya setiap kali dipakai sungguhan.
+IDX_REEFER_ON = FEATURE_COLUMNS.index('reefer_on')
+IDX_REEFER_DURATION = FEATURE_COLUMNS.index('reefer_duration_min')
+
+
+def hitung_ulang_reefer_duration(window):
+    """Hitung ulang reefer_duration_min relatif terhadap awal jendela.
+
+    Menyamakan definisi dengan backend (backend/app/preprocess.py), yang memotong
+    payload ke 60 bacaan terakhir LEBIH DULU, baru menghitung fitur turunannya.
+    """
+    window = window.copy()
+    durasi, berjalan = [], 0
+    for menyala in window[:, IDX_REEFER_ON]:
+        berjalan = berjalan + 1 if menyala >= 0.5 else 0
+        durasi.append(berjalan)
+    window[:, IDX_REEFER_DURATION] = np.array(durasi, dtype=np.float32)
+    return window
+
 
 def build_windows_for_trip(g):
     """g = potongan dataframe satu trip_id. Return dict array atau None kalau trip terlalu pendek."""
@@ -47,7 +69,7 @@ def build_windows_for_trip(g):
         end = start + WINDOW_SIZE
         t = end - 1  # "sekarang" = menit terakhir di jendela
 
-        window = feats[start:end]
+        window = hitung_ulang_reefer_duration(feats[start:end])
         forecast_targets = [temp[t + h] for h in HORIZONS]
 
         if np.isnan(window).any() or np.isnan(forecast_targets).any():
