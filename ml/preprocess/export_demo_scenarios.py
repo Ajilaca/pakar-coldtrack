@@ -20,9 +20,12 @@ import numpy as np
 import onnxruntime as ort
 import pandas as pd
 
-from ml.preprocess.build_windows import (FAILURE_CLASSES, MODE_MAPPING,
-                                         WINDOW_SIZE,
-                                         hitung_ulang_reefer_duration)
+from ml.preprocess.build_windows import (
+    FAILURE_CLASSES,
+    MODE_MAPPING,
+    WINDOW_SIZE,
+    hitung_ulang_reefer_duration,
+)
 from ml.tests.test_data_contract import FEATURE_COLUMNS
 
 ONNX_PATH = "ml/reports/coldtrack.onnx"

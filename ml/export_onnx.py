@@ -11,8 +11,13 @@ import numpy as np
 import onnxruntime as ort
 import torch
 
-from ml.model import ColdTrackGRU, ColdTrackDeploy
-from ml.preprocess.build_windows import FAILURE_CLASSES, MODE_MAPPING, WINDOW_SIZE, HORIZONS
+from ml.model import ColdTrackDeploy, ColdTrackGRU
+from ml.preprocess.build_windows import (
+    FAILURE_CLASSES,
+    HORIZONS,
+    MODE_MAPPING,
+    WINDOW_SIZE,
+)
 from ml.scaler import load_scaler
 from ml.tests.test_data_contract import FEATURE_COLUMNS
 

@@ -15,16 +15,26 @@ Untuk menggambar ulang tanpa melatih lagi (riwayat sudah tersimpan):
 import json
 
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
-import torch.nn as nn
+from torch import nn
 from torch.utils.data import DataLoader
 
-from ml.finetune import (BATCH_SIZE, FREEZE_EPOCHS, LOSS_WEIGHTS, LR_BACKBONE,
-                         LR_HEADS, TRAIN_PATH, VAL_PATH, compute_class_weights,
-                         make_dataset, set_layer0_frozen)
+from ml.finetune import (
+    BATCH_SIZE,
+    FREEZE_EPOCHS,
+    LOSS_WEIGHTS,
+    LR_BACKBONE,
+    LR_HEADS,
+    TRAIN_PATH,
+    VAL_PATH,
+    compute_class_weights,
+    make_dataset,
+    set_layer0_frozen,
+)
 from ml.model import ColdTrackGRU
 from ml.scaler import fit_scaler
 

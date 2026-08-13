@@ -6,12 +6,12 @@ Menjalankan: python -m ml.finetune
 
 import numpy as np
 import torch
-import torch.nn as nn
-from torch.utils.data import TensorDataset, DataLoader
+from torch import nn
+from torch.utils.data import DataLoader, TensorDataset
 
 from ml.model import ColdTrackGRU
 from ml.preprocess.build_windows import FAILURE_CLASSES
-from ml.scaler import fit_scaler, apply_scaler, save_scaler
+from ml.scaler import apply_scaler, fit_scaler, save_scaler
 
 TRAIN_PATH = "data/processed/windows/windows_train.npz"
 VAL_PATH = "data/processed/windows/windows_val.npz"

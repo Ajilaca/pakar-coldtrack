@@ -17,7 +17,7 @@ def test_list_scenarios():
     assert "scenario_1_normal" in scenario_ids
     assert "scenario_2_door_open" in scenario_ids
     assert "scenario_3_compressor_degradation" in scenario_ids
-    assert "scenario_4_reefer_failure" in scenario_ids
+    assert "scenario_4_sensor_stuck" in scenario_ids
     assert "scenario_5_extreme_ambient" in scenario_ids
 
 
