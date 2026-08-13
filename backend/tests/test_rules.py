@@ -1,7 +1,6 @@
 """Unit tests for rule engine and risk scorer."""
 
 import pandas as pd
-
 from app.explain import compute_feature_drivers
 from app.rules import (
     compute_risk_index,
