@@ -1,15 +1,21 @@
 version: "3.9"
 
 services:
-  backend:
+  api:
     build:
       context: ./backend
       dockerfile: Dockerfile
     container_name: coldtrack-backend
     ports:
       - "8000:8000"
-    volumes:
-      - ./backend:/app
+    environment:
+      - CONFIG_PATH=/app/config.yaml
+      - ENABLE_LLM=false
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
     restart: unless-stopped
 
   frontend:
@@ -20,7 +26,8 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - backend
+      api:
+        condition: service_healthy
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:8000
     restart: unless-stopped

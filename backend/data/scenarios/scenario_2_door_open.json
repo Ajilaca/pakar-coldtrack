@@ -1,0 +1,62 @@
+{
+  "id": "scenario_2_door_open",
+  "title": "Skenario 2: Pintu Kargo Terbuka Lama (Anomali Operasional)",
+  "description": "Pintu kargo terbuka selama 20+ menit saat pembongkaran parsial. Suhu melonjak dari 4.0°C ke 9.5°C.",
+  "cargo_profile": "vaksin_2_8C",
+  "expected_status": "KRITIS",
+  "shipment_id": "TRK-JKT-0418",
+  "readings": [
+    {
+      "ts": "2026-08-20T08:00:00+07:00",
+      "temp_c": 4.0,
+      "humidity": 68.0,
+      "ambient_c": 32.0,
+      "door_open": false,
+      "reefer_on": true,
+      "lat": -6.2100,
+      "lon": 106.8400,
+      "speed_kmh": 0.0,
+      "harsh_events": 0,
+      "solar_radiation": 600.0
+    },
+    {
+      "ts": "2026-08-20T08:15:00+07:00",
+      "temp_c": 5.5,
+      "humidity": 75.0,
+      "ambient_c": 32.5,
+      "door_open": true,
+      "reefer_on": true,
+      "lat": -6.2100,
+      "lon": 106.8400,
+      "speed_kmh": 0.0,
+      "harsh_events": 0,
+      "solar_radiation": 620.0
+    },
+    {
+      "ts": "2026-08-20T08:30:00+07:00",
+      "temp_c": 7.8,
+      "humidity": 82.0,
+      "ambient_c": 33.0,
+      "door_open": true,
+      "reefer_on": true,
+      "lat": -6.2100,
+      "lon": 106.8400,
+      "speed_kmh": 0.0,
+      "harsh_events": 0,
+      "solar_radiation": 650.0
+    },
+    {
+      "ts": "2026-08-20T08:45:00+07:00",
+      "temp_c": 9.5,
+      "humidity": 85.0,
+      "ambient_c": 33.5,
+      "door_open": true,
+      "reefer_on": true,
+      "lat": -6.2100,
+      "lon": 106.8400,
+      "speed_kmh": 0.0,
+      "harsh_events": 0,
+      "solar_radiation": 680.0
+    }
+  ]
+}
