@@ -1,13 +1,13 @@
 # Update Tugas R2 — AI Model Engineer
 
-**Per 7 Agustus 2026** · Deadline internal tim: **24 Agustus** (sisa 17 hari)
+**Per 13 Agustus 2026** · Deadline internal tim: **24 Agustus** — sisa **11 hari**
 Disusun berdasarkan audit repositori terhadap `role/context-r2-ai-model.md`.
 
 ---
 
 ## Yang sudah selesai
 
-Seluruh artefak wajib tersedia dan sudah masuk `main`.
+Seluruh artefak wajib tersedia dan sudah masuk `main` lewat PR #9 dan #10.
 
 | Artefak | Status |
 |---|---|
@@ -33,42 +33,20 @@ Seluruh artefak wajib tersedia dan sudah masuk `main`.
 Dua dari empat target tercapai. Sistem final memakai dua model: GRU untuk prediksi suhu dan
 klasifikasi, XGBoost untuk Time-to-Breach.
 
+Integrasi ke backend sudah diverifikasi: kedua model termuat benar di `main`, daftar 7 kelas
+terbaca dari `labels.json`, dan ketiga bug yang dilaporkan ke R3 sudah diperbaiki.
+
 ---
 
-## Yang masih menunggu keputusan tim
+## Tiga keputusan yang perlu dibawa ke tim
 
-### 1. Nada penyampaian keterbatasan di model card dan §4.2
+Belum dijawab, dan memengaruhi tulisan orang lain.
 
-Tiga hal ditulis terbuka:
-
-- XGBoost mengungguli GRU pada seluruh metrik
-- Prapelatihan tidak memberi manfaat dan justru merugikan
-- Model belum pernah divalidasi terhadap perjalanan truk sungguhan
-
-Perlu dikonfirmasi tim apakah tingkat keterbukaan ini disepakati. Rekomendasi R2:
-**dipertahankan.** Batasan yang dinyatakan sendiri lebih aman daripada ketahuan saat sesi tanya
-jawab juri, dan menunjukkan tim yang menguji asumsinya sendiri.
-
-### 2. Narasi §4.2 berbeda dari rencana awal
-
-`context-r2` baris 67 menyiapkan kalimat: *"Kami tidak melatih dari nol... kami mengambil
-representasi dinamika termal umum dari data IoT publik, lalu menalanya ke domain rantai dingin."*
-
-**Kalimat itu tidak lagi akurat.** Eksperimen membuktikan prapelatihan merugikan, sehingga model
-produksi dilatih dari nol. §4.2 ditulis dengan narasi pengganti: *"Kami merencanakan transfer
-learning, mengujinya secara serius, menemukan bahwa pendekatan itu tidak berhasil pada domain ini,
-dan menjelaskan mengapa."*
-
-R4 perlu tahu ini karena memengaruhi naskah video PoW segmen "Model & fine-tuning" (menit 2:30–4:00).
-
-### 3. Target metrik yang belum tercapai
-
-Macro F1 (0,573 vs 0,80) dan PR-AUC (0,691 vs 0,85) belum tercapai, dan sudah mentok setelah
-serangkaian perbaikan. Perlu diputuskan tim: dilaporkan apa adanya sebagai belum tercapai, atau
-target di dokumen internal direvisi ke angka yang dapat dipertanggungjawabkan.
-
-Rekomendasi R2: **laporkan apa adanya.** Menurunkan target setelah melihat hasil akan terbaca
-sebagai menyesuaikan ukuran agar terlihat berhasil.
+| Keputusan | Rekomendasi |
+|---|---|
+| Apakah tim setuju menulis terbuka bahwa **XGBoost mengungguli GRU** dan **prapelatihan merugikan**? | pertahankan — lebih aman daripada ketahuan saat sesi tanya jawab juri |
+| Narasi §4.2 berubah dari rencana awal; R4 perlu tahu sebelum menulis naskah video | wajib disampaikan |
+| Macro F1 (0,573) dan PR-AUC (0,691) belum tercapai — dilaporkan apa adanya, atau target direvisi? | laporkan apa adanya; menurunkan target setelah melihat hasil akan terbaca sebagai menyesuaikan ukuran |
 
 ---
 
@@ -76,24 +54,21 @@ sebagai menyesuaikan ukuran agar terlihat berhasil.
 
 ### Mendukung video PoW (R4)
 
-Segmen "Model & fine-tuning" berdurasi 90 detik. Materi siap pakai:
-
-- `ml/reports/loss_curves.png` — bukti visual prapelatihan tidak membantu
-- `ml/reports/confusion_matrix.png` — akurasi per kelas
-- `ml/reports/ttb_by_horizon.png` — batas kegunaan Time-to-Breach
-- `ml/reports/ablation_results.json` dan `baseline_metrics.json` — seluruh angka pembanding
-
-Perlu dijadwalkan bersama R4 untuk merekam penjelasan teknisnya.
+Segmen "Model & fine-tuning" berdurasi 90 detik. Materi siap pakai: `loss_curves.png`,
+`confusion_matrix.png`, `ttb_by_horizon.png`, `ablation_results.json`, `baseline_metrics.json`.
+Perlu dijadwalkan sesi rekaman penjelasan teknisnya.
 
 ### Ikut uji Docker klon segar (M6)
 
-Seluruh tim, dijadwalkan Rabu Sprint 2. R2 memverifikasi bahwa kedua model termuat benar di dalam
-kontainer dan keluarannya sesuai.
+Verifikasi kedua model termuat benar di dalam kontainer dan keluarannya sesuai.
 
 ### Menjaga kesesuaian bila dataset berubah
 
-Bila R1 membangkitkan ulang dataset (misal untuk memperbaiki ketimpangan split TTB), seluruh
-pipeline perlu dijalankan ulang:
+R1 akan menyediakan lima skenario demo baru berisi ≥ 60 bacaan. Itu **tidak** memerlukan pelatihan
+ulang — skenario hanya dipakai saat inferensi.
+
+Tetapi bila R1 membangkitkan ulang **dataset pelatihan** (misal untuk memperbaiki ketimpangan split
+TTB), seluruh pipeline perlu dijalankan ulang:
 
 ```bash
 python -m ml.preprocess.build_windows
@@ -107,11 +82,32 @@ Angka di `model_card.md`, `metrics.json`, dan §4.2 wajib diperbarui setelahnya.
 
 ---
 
-## Catatan untuk R3
+## Hasil audit lintas peran (13 Agustus)
 
-Ketiga bug integrasi yang dilaporkan sudah diperbaiki di branch `feat/r3-sprint-0` — gerbang TTB
-pada `failure_prob`, penamaan A8, dan sinkronisasi `cargo_profiles`. Sudah diverifikasi R2.
+R2 menelusuri jalur permintaan dari frontend sampai model dan menemukan dua masalah yang **belum
+pernah muncul** karena frontend masih memakai data tiruan:
 
-**Empat commit tersebut belum masuk `main`.** Selama belum di-merge, `main` masih berisi versi
-backend yang menampilkan Time-to-Breach palsu untuk truk sehat. Ini perlu diselesaikan sebelum
-demo apa pun dijalankan dari `main`.
+1. **Nama field tidak cocok.** Frontend mengirim `temperature_c`/`ambient_temp_c`; backend meminta
+   `temp_c`/`ambient_c` plus enam field lain yang tidak dikirim sama sekali. Setiap permintaan akan
+   ditolak 422 begitu `USE_MOCK=false`.
+2. **Skenario demo terlalu pendek.** Backend mewajibkan ≥ 60 bacaan; skenario frontend punya 31,
+   skenario backend punya 3–5.
+
+Sudah dilaporkan ke R3 dan R4 lewat `update-r3-backend.md` dan `update-r4-frontend.md`, serta
+permintaan skenario baru ke R1 lewat `update-r1-ai-data.md`.
+
+**Status proposal tim: baru 1 dari 8 bagian terisi** (§4.2 milik R2), dengan bagian Latar Belakang
+milik R4 sudah lewat tenggat. Ini risiko terbesar tim saat ini — bukan lagi kode.
+
+---
+
+## Karena pekerjaan R2 sudah selesai
+
+Waktu paling bernilai sekarang dipakai membantu bagian yang tertinggal:
+
+- **Bantu R1 membuat grafik sim-to-real** — angkanya sudah ada di `dataset_card.md`, datanya ada di
+  repositori, dan alatnya sudah tersedia di `ml/`
+- **Bantu menyusun kerangka §4.1 dan §4.3** — bukan mengisi, cukup judul bagian dan poin yang perlu
+  dijawab, supaya R1 dan R3 tinggal menulis
+- **Bantu R1 mengekspor skenario demo dari dataset v4** — pekerjaan ini paling dekat dengan
+  perkakas yang sudah dikuasai R2

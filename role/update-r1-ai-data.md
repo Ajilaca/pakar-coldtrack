@@ -1,6 +1,6 @@
 # Update Tugas R1 — AI Data Engineer
 
-**Per 7 Agustus 2026** · Deadline internal tim: **24 Agustus** (sisa 17 hari)
+**Per 13 Agustus 2026** · Deadline internal tim: **24 Agustus** — sisa **11 hari**
 Disusun R2 berdasarkan audit repositori terhadap `role/context-r1-ai-data.md`.
 
 ---
@@ -22,33 +22,59 @@ Codex Alimentarius, SNI) melampaui yang diminta, dan pengakuan jujur bahwa `mass
 
 ---
 
+## Mendesak — permintaan baru dari hasil uji integrasi
+
+### Skenario demo perlu minimal 60 bacaan
+
+Backend kini menolak permintaan berisi kurang dari 60 bacaan, karena model menghitung statistik
+ringkasan (simpangan baku, tren) di dalam dirinya — jendela yang di-*pad* menghasilkan nilai yang
+salah, dan model tidak pernah dilatih pada bentuk seperti itu.
+
+Kondisi saat ini, kelima skenario demo **tidak memenuhi syarat**:
+
+| Sumber | Jumlah bacaan | Syarat |
+|---|---|---|
+| `backend/data/scenarios/*.json` | 3–5 | ≥ 60 |
+| Skenario di frontend (`N = 31`) | 31 | ≥ 60 |
+
+Artinya **demo akan gagal total** begitu frontend dialihkan dari data tiruan ke API sungguhan.
+
+Kamu pemilik simulator, jadi paling tepat menyediakan penggantinya. Yang dibutuhkan: **5 berkas
+skenario, masing-masing minimal 60 bacaan berturut-turut per menit**, sesuai lima skenario di
+`context-r4` baris 87–91:
+
+1. Sehat — perjalanan normal
+2. Pintu terbuka terlalu lama (A1)
+3. Kompresor melemah (A2) — **paling penting**, ini demo utama
+4. Sensor macet (A5)
+5. Kejut suhu ambien saat macet (A7)
+
+Formatnya harus mengikuti skema backend (`backend/app/schemas.py`, kelas `TelemetryReading`):
+
+```json
+{
+  "ts": "2026-08-20T07:00:00+07:00",
+  "temp_c": 4.2, "humidity": 71.5, "ambient_c": 31.4,
+  "door_open": false, "reefer_on": true,
+  "lat": -6.2118, "lon": 106.8456,
+  "speed_kmh": 24.0, "harsh_events": 0, "solar_radiation": 350.0
+}
+```
+
+Datanya sudah ada di `data/processed/v4_seed1000_700trips.parquet` — tinggal memilih trip dengan
+mode anomali yang sesuai, mengambil 60–150 menit berturut-turut, dan mengekspornya ke JSON.
+
+**Saran khusus skenario 3:** pilih potongan di mana `time_to_breach` bernilai **di bawah 30 menit**
+pada menit terakhir jendela. Di rentang itu model paling akurat (MAE 7,6 menit; di bawah 10 menit
+bahkan 3,5 menit), sehingga angka Time-to-Breach yang tampil di demo dapat dipertanggungjawabkan.
+
+---
+
 ## Yang masih kurang
 
-### 1. Notebook `01_eda.ipynb` — belum ada
+### 1. Proposal §4.1 Alur Dataset — belum ditulis (paling mendesak)
 
-Disebut sebagai artefak wajib di `context-r1` baris 151. Temuan EDA sudah tertulis rapi di
-`dataset_card.md`, tetapi notebooknya sendiri tidak ada di repositori.
-
-Isi minimal: pemuatan tiap dataset publik, statistik ringkas, grafik yang mendasari temuan yang
-sudah dituliskan (pola diurnal, sebaran outlier Intel Lab, rasio anomali Smart Manufacturing).
-
-### 2. Grafik validasi sim-to-real — belum ada
-
-Angkanya sudah ada di `dataset_card.md` (KS statistic 1,0000; ACF lag 1/10/30/60), tetapi
-**Gambar 4.1** yang disebut di timeline Sprint 1 belum pernah dibuat.
-
-Yang perlu digambar:
-
-- Perbandingan kurva ACF data sintetik vs data IoT publik, lag 1–60
-- Perbandingan distribusi suhu dan laju perubahan suhu
-
-Simpan sebagai `ml/reports/sim_to_real_acf.png` dan `ml/reports/sim_to_real_distribusi.png`.
-Grafik ini dipakai di proposal §4.1 dan segmen "Pabrik data" pada video PoW (menit 1:20–2:30).
-
-### 3. Proposal §4.1 Alur Dataset — belum ditulis (paling mendesak)
-
-Tenggat menurut jadwal R4 adalah **14 Agustus** — masih ada waktu, tetapi ini bagian dengan bobot
-penilaian besar dan tidak bisa dikebut di hari terakhir.
+Tenggat menurut jadwal R4 adalah **14 Agustus — besok**.
 
 Bahannya **sudah lengkap** di `dataset_card.md` dan `ml/simulator/README.md`; tinggal disusun ulang
 menjadi narasi. Kerangka yang disarankan:
@@ -65,40 +91,50 @@ menjadi narasi. Kerangka yang disarankan:
 
 Contoh format dapat dilihat pada `docs/proposal_4_2_alur_pengembangan_model.md`.
 
-### 4. `docs/ai_governance.md` — masih kerangka kosong
+### 2. Grafik validasi sim-to-real — belum ada
 
-16 baris, isinya hanya komentar HTML. Ini tanggung jawab bersama dengan R4
-(`context-r1` baris 32). Perlu disepakati siapa yang menulis duluan.
+Angkanya sudah ada di `dataset_card.md` (KS statistic 1,0000; ACF lag 1/10/30/60), tetapi
+**Gambar 4.1** yang disebut di timeline Sprint 1 belum pernah dibuat.
+
+Yang perlu digambar:
+
+- Perbandingan kurva ACF data sintetik vs data IoT publik, lag 1–60
+- Perbandingan distribusi suhu dan laju perubahan suhu
+
+Simpan sebagai `ml/reports/sim_to_real_acf.png` dan `ml/reports/sim_to_real_distribusi.png`.
+Dipakai di §4.1 dan video PoW segmen "Pabrik data" (menit 1:20–2:30).
+
+### 3. `docs/ai_governance.md` — masih kerangka kosong
+
+16 baris, isinya hanya komentar HTML. Tanggung jawab bersama R4 (`context-r1` baris 32).
 
 Sebagian bahan sudah tersedia di `docs/model_card.md` bagian "Limitations & Ethical
 Considerations" — silakan dirujuk atau disalin seperlunya, khususnya soal risiko false negative
 yang lebih berat daripada false positive.
+
+### 4. Notebook `01_eda.ipynb` — belum ada
+
+Artefak wajib di `context-r1` baris 151. Temuan EDA sudah tertulis rapi di `dataset_card.md`,
+tetapi notebooknya sendiri tidak ada.
 
 ---
 
 ## Catatan teknis kecil
 
 **Berkas `.pyc` ikut ter-commit.** `ml/tests/test_data_contract.cpython-312-pytest-9.1.1.pyc` ada di
-`main`. Ini berkas hasil kompilasi otomatis yang seharusnya tidak masuk repositori — `.gitignore`
-sudah punya aturan `*.py[cod]`, jadi berkas ini kemungkinan ter-commit sebelum aturan itu berlaku.
-Hapus dengan `git rm --cached ml/tests/test_data_contract.cpython-312-pytest-9.1.1.pyc`.
+`main`. Hapus dengan `git rm --cached`.
 
-**Split test tidak seimbang untuk TTB.** Split `test` hanya memuat 10,6% jendela breach, sementara
-`val` memuat 22,6%, dengan median TTB 63 vs 10 menit. Pembagian sudah distratifikasi per
-`failure_mode`, tetapi tidak per kejadian breach, sehingga evaluasi Time-to-Breach antar split
-kurang sebanding.
-
-Ini **tidak mendesak** — R2 sudah menyesuaikan pelaporannya dan memakai angka test yang lebih
-konservatif. Kalau nanti ada waktu longgar dan dataset dibangkitkan ulang, stratifikasi tambahan
-berdasarkan ada/tidaknya breach akan membuat evaluasi lebih stabil. Kalau tidak sempat, cukup
-dicatat sebagai keterbatasan.
+**Split test tidak seimbang untuk TTB.** Split `test` hanya memuat 10,6% jendela breach, `val`
+memuat 22,6%, dengan median TTB 63 vs 10 menit. Sudah distratifikasi per `failure_mode`, tetapi
+tidak per kejadian breach. **Tidak mendesak** — R2 sudah menyesuaikan pelaporannya. Cukup dicatat
+sebagai keterbatasan bila tidak sempat diperbaiki.
 
 ---
 
 ## Urutan prioritas
 
-1. **Proposal §4.1** — bobot penilaian terbesar, bahannya sudah siap
-2. **Grafik sim-to-real** — dibutuhkan §4.1 dan video PoW
-3. **`ai_governance.md`** bersama R4
-4. **`01_eda.ipynb`** — melengkapi daftar artefak
-5. Hapus berkas `.pyc`
+1. **Skenario demo ≥ 60 bacaan** — memblokir demo end-to-end seluruh tim
+2. **Proposal §4.1** — tenggat besok, bahannya sudah siap
+3. **Grafik sim-to-real** — dibutuhkan §4.1 dan video PoW
+4. **`ai_governance.md`** bersama R4
+5. `01_eda.ipynb` dan hapus berkas `.pyc`
