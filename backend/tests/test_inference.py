@@ -2,7 +2,6 @@
 
 import numpy as np
 import pytest
-
 from app.inference import ONNXInferenceEngine, inference_engine
 
 
