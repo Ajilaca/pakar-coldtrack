@@ -14,8 +14,12 @@ class TelemetryReading(BaseModel):
     ambient_c: float = Field(..., description="Ambient temperature in °C")
     door_open: bool = Field(..., description="Cargo door open status")
     reefer_on: bool = Field(..., description="Reefer cooling unit active status")
-    lat: float = Field(..., description="Vehicle latitude")
-    lon: float = Field(..., description="Vehicle longitude")
+    lat: float | None = Field(
+        None, description="Vehicle latitude (optional, not a model feature)"
+    )
+    lon: float | None = Field(
+        None, description="Vehicle longitude (optional, not a model feature)"
+    )
     speed_kmh: float = Field(..., description="Vehicle speed in km/h")
     harsh_events: int = Field(0, description="Harsh driving events count in window")
     solar_radiation: float | None = Field(

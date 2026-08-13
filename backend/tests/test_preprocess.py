@@ -4,7 +4,6 @@ from datetime import datetime, timedelta, timezone
 
 import numpy as np
 import pytest
-
 from app.preprocess import (
     ONNX_FEATURE_COLUMNS,
     compute_derived_features,
@@ -68,3 +67,26 @@ def test_prepare_onnx_input_tensor(sample_readings):
     # Check exact feature ordering match
     assert len(ONNX_FEATURE_COLUMNS) == 12
     assert list(df_features[ONNX_FEATURE_COLUMNS].columns) == ONNX_FEATURE_COLUMNS
+
+
+def test_lat_lon_optional_default_to_zero():
+    """Contract fix: lat/lon are not model features and may be omitted."""
+    readings = [
+        TelemetryReading(
+            ts=datetime(2026, 8, 20, 8, 0, 0, tzinfo=timezone.utc) + timedelta(minutes=i),
+            temp_c=4.0,
+            humidity=70.0,
+            ambient_c=30.0,
+            door_open=False,
+            reefer_on=True,
+            speed_kmh=40.0,
+            harsh_events=0,
+        )
+        for i in range(10)
+    ]
+    df = readings_to_dataframe(readings)
+    assert df["lat"].iloc[0] == 0.0
+    assert df["lon"].iloc[0] == 0.0
+
+    tensor, _ = prepare_onnx_input_tensor(readings, sequence_length=60)
+    assert tensor.shape == (1, 60, 12)
