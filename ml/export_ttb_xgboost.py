@@ -21,14 +21,14 @@ import numpy as np
 import onnx
 import onnxruntime as ort
 import torch
-import torch.nn as nn
 import xgboost as xgb
 from onnx import compose
 from onnxmltools.convert import convert_xgboost
 from onnxmltools.convert.common.data_types import FloatTensorType
+from torch import nn
 
 from ml.baselines import SENTINEL, XGB_PARAMS, aggregate
-from ml.preprocess.build_windows import HORIZONS, WINDOW_SIZE
+from ml.preprocess.build_windows import WINDOW_SIZE
 from ml.tests.test_data_contract import FEATURE_COLUMNS
 
 TRAIN_PATH = "data/processed/windows/windows_train.npz"
