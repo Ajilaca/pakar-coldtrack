@@ -46,3 +46,14 @@ risk_weights:
   temp_rate_of_rise: 0.25
   reefer_off: 0.20
   door_open: 0.15
+
+# Ambang eskalasi status berdasarkan Time-to-Breach.
+#
+# Status utama dihitung dari `forecast`, sedangkan TTB berasal dari kepala
+# model yang terpisah — keduanya bisa tidak sepakat. Nilai di bawah dipakai
+# sebagai LANTAI status: kalau TTB memperkirakan pelanggaran dalam waktu
+# dekat, status tidak boleh tetap AMAN meski forecast masih di dalam ambang.
+# Lihat rules.py :: compute_risk_index.
+ttb_status_thresholds:
+  critical_max_min: 30   # TTB <= 30 menit -> minimal KRITIS
+  warning_max_min: 60    # TTB <= 60 menit -> minimal WASPADA

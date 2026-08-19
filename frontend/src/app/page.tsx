@@ -1,65 +1,231 @@
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+"use client";
+
+import { useCallback, useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
+import { AppHeader } from "@/components/app-header";
+import { ScenarioPicker } from "@/components/scenario-picker";
+import { ResultCard } from "@/components/result-card";
+import { TemperatureChart } from "@/components/temperature-chart";
+import { ChartLoading, PanelError, PanelEmpty, PanelLoading } from "@/components/panel-states";
+import {
+  ApiError,
+  analyzeShipment,
+  fetchScenarioReadings,
+  fetchScenarios,
+  thresholdFor,
+  toChartPoints,
+  usingMock,
+} from "@/lib/api";
+import { MIN_READINGS, parseReadingsCsv } from "@/lib/csv";
+import { AnalyzeResponse, CargoThreshold, ChartPoint, ScenarioPreset, TelemetryReading } from "@/lib/types";
+
+// Leaflet menyentuh `window`, jadi tidak boleh dirender di server.
+const RouteMap = dynamic(() => import("@/components/route-map"), {
+  ssr: false,
+  loading: () => <ChartLoading />,
+});
 
 export default function Home() {
+  const [scenarios, setScenarios] = useState<ScenarioPreset[]>([]);
+  const [scenarioId, setScenarioId] = useState<string | null>(null);
+  const [csvReadings, setCsvReadings] = useState<TelemetryReading[] | null>(null);
+  const [csvFileName, setCsvFileName] = useState<string | null>(null);
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<AnalyzeResponse | null>(null);
+  const [points, setPoints] = useState<ChartPoint[] | null>(null);
+  const [threshold, setThreshold] = useState<CargoThreshold | null>(null);
+
+  // Muat daftar skenario sekali di awal.
+  useEffect(() => {
+    let cancelled = false;
+    fetchScenarios()
+      .then((list) => {
+        if (cancelled) return;
+        setScenarios(list);
+        setScenarioId((current) => current ?? list[0]?.id ?? null);
+      })
+      .catch((e) => {
+        if (!cancelled) setError(e instanceof Error ? e.message : "Gagal memuat skenario.");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const runAnalysis = useCallback(
+    async (args: { scenarioId?: string | null; readings?: TelemetryReading[]; fileName?: string | null }) => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        let readings: TelemetryReading[];
+        let cargoProfile: string;
+        let activeScenarioId: string | undefined;
+
+        if (args.readings) {
+          readings = args.readings;
+          cargoProfile = "vaksin_2_8C";
+        } else {
+          const id = args.scenarioId ?? scenarioId;
+          if (!id) throw new Error("Pilih skenario dulu, atau unggah CSV.");
+          const preset = scenarios.find((s) => s.id === id);
+          // Bacaan diambil dari backend lalu dikirim balik APA ADANYA —
+          // inilah yang menghilangkan risiko nama field meleset.
+          readings = await fetchScenarioReadings(id);
+          cargoProfile = preset?.cargoProfile ?? "vaksin_2_8C";
+          activeScenarioId = id;
+        }
+
+        if (readings.length < MIN_READINGS) {
+          throw new Error(
+            `Backend memerlukan minimal ${MIN_READINGS} bacaan untuk inferensi yang andal; data ini hanya ${readings.length}.`
+          );
+        }
+
+        const response = await analyzeShipment(
+          {
+            shipment_id: `demo-${Date.now()}`,
+            cargo_profile: cargoProfile,
+            readings,
+          },
+          activeScenarioId
+        );
+
+        setPoints(toChartPoints(readings));
+        setThreshold(thresholdFor(cargoProfile));
+        setResult(response);
+      } catch (e) {
+        setResult(null);
+        setPoints(null);
+        setThreshold(null);
+        if (e instanceof ApiError || e instanceof Error) setError(e.message);
+        else setError("Terjadi kesalahan yang tidak diketahui.");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [scenarioId, scenarios]
+  );
+
+  function handleSelectScenario(id: string) {
+    setScenarioId(id);
+    setCsvReadings(null);
+    setCsvFileName(null);
+    // Memilih skenario TIDAK langsung menganalisis — konsep meminta satu
+    // tombol eksplisit, karena jeda "klik → skeleton → hasil" itu bagian
+    // dari momen demonya.
+    setResult(null);
+    setPoints(null);
+    setError(null);
+  }
+
+  async function handleCsvUpload(file: File) {
+    setError(null);
+    try {
+      const text = await file.text();
+      const parsed = parseReadingsCsv(text);
+      if (parsed.length === 0) throw new Error("CSV tidak berisi bacaan yang valid.");
+      setCsvReadings(parsed);
+      setCsvFileName(file.name);
+      setScenarioId(null);
+      setResult(null);
+      setPoints(null);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Gagal membaca CSV.");
+    }
+  }
+
+  function handleAnalyze() {
+    if (csvReadings) runAnalysis({ readings: csvReadings, fileName: csvFileName });
+    else runAnalysis({ scenarioId });
+  }
+
+  const hasInput = Boolean(scenarioId || csvReadings);
+  const lastPoint = useMemo(() => (points ? points[points.length - 1] : null), [points]);
+
   return (
-    <main className="min-h-screen bg-background text-foreground p-6 md:p-12 flex flex-col items-center justify-center">
-      <div className="max-w-2xl w-full space-y-6">
-        {/* Header Banner */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-border pb-6">
-          <div>
-            <h1 className="text-3xl font-extrabold tracking-tight">ColdTrack AI</h1>
-            <p className="text-muted-foreground text-sm mt-1">
-              Early Warning System for Cold Chain Logistics — COMPFEST 18
-            </p>
+    <main className="coldship-bg min-h-screen p-4 lg:p-6">
+      <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-4">
+        {/* 1 — header */}
+        <AppHeader usingMock={usingMock} />
+
+        {/* 2 & 3 — zona input + tombol tunggal */}
+        <div className="relative z-30">
+          <ScenarioPicker
+            scenarios={scenarios}
+            scenarioId={scenarioId}
+            csvFileName={csvFileName}
+            loading={loading}
+            onSelectScenario={handleSelectScenario}
+            onCsvUpload={handleCsvUpload}
+            onAnalyze={handleAnalyze}
+          />
+        </div>
+
+        {/* 4–8 — kartu hasil */}
+        <div className="relative z-0">
+          {loading && (
+            <div className="card p-4">
+              <PanelLoading rows={2} />
+            </div>
+          )}
+          {!loading && error && (
+            <div className="card p-4">
+              <PanelError message={error} />
+            </div>
+          )}
+          {!loading && !error && !result && (
+            <div className="card p-4">
+              <PanelEmpty
+                message={
+                  hasInput
+                    ? 'Tekan "Analisis Perjalanan" untuk menjalankan model.'
+                    : "Pilih salah satu skenario demo atau unggah CSV telemetri kamu."
+                }
+              />
+            </div>
+          )}
+          {!loading && !error && result && <ResultCard result={result} />}
+        </div>
+
+        {/* 9 — grafik suhu + peta rute */}
+        {!loading && !error && result && points && threshold && (
+          <div className="grid min-h-[320px] grid-cols-1 gap-4 lg:grid-cols-[1.25fr_1fr]">
+            <div className="card card-p flex min-h-[320px] flex-col">
+              <div className="mb-1.5 flex shrink-0 flex-wrap items-baseline justify-between gap-x-3">
+                <p className="t-card-title">Suhu kargo — aktual vs prediksi</p>
+                <p className="t-meta">
+                  garis penuh = aktual · putus-putus = prediksi · pita = {threshold.label}
+                </p>
+              </div>
+              <div className="min-h-0 flex-1">
+                <TemperatureChart
+                  readings={points}
+                  forecast={result.forecast}
+                  threshold={threshold}
+                  showAmbient
+                  compact
+                />
+              </div>
+            </div>
+
+            <div className="card card-p flex min-h-[320px] flex-col">
+              <div className="mb-1.5 flex shrink-0 items-baseline justify-between gap-2">
+                <p className="t-card-title">Rute perjalanan</p>
+                {lastPoint?.lat != null && lastPoint?.lon != null && (
+                  <p className="t-meta font-mono">
+                    {lastPoint.lat.toFixed(4)}, {lastPoint.lon.toFixed(4)}
+                  </p>
+                )}
+              </div>
+              <div className="min-h-0 flex-1">
+                <RouteMap points={points} status={result.status} />
+              </div>
+            </div>
           </div>
-          <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 px-3 py-1 text-xs">
-            ● System Active
-          </Badge>
-        </div>
-
-        {/* Info Alert */}
-        <Alert className="border-primary/20 bg-primary/5">
-          <AlertTitle className="font-semibold text-primary">Frontend Initialized</AlertTitle>
-          <AlertDescription className="text-xs text-muted-foreground mt-1">
-            Next.js 14 App Router, TypeScript, Tailwind CSS, and shadcn/ui have been configured.
-          </AlertDescription>
-        </Alert>
-
-        {/* Feature Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Card className="border-border">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base font-semibold">FastAPI Backend Connection</CardTitle>
-              <CardDescription className="text-xs">Synchronous REST API Service</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-xs text-muted-foreground mb-3">
-                Configured to communicate with FastAPI at port 8000.
-              </p>
-              <Button size="sm" variant="outline" className="w-full">
-                Check Health API
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base font-semibold">ONNX GRU Inference Engine</CardTitle>
-              <CardDescription className="text-xs">Multi-head Sequence Prediction</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-xs text-muted-foreground mb-3">
-                Predicts cold chain failures in real-time.
-              </p>
-              <Button size="sm" variant="default" className="w-full">
-                Run Simulation
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+        )}
       </div>
     </main>
   );

@@ -50,11 +50,58 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        ink: "hsl(var(--ink))",
+        "ink-2": "hsl(var(--ink-2))",
+        /* palet mentah Ocean Blue — dipakai untuk gradien & aksen */
+        "ocean-deep": "hsl(var(--ocean-deep))",
+        ocean: "hsl(var(--ocean))",
+        "ocean-light": "hsl(var(--ocean-light))",
+        brand: {
+          DEFAULT: "hsl(var(--brand))",
+          soft: "hsl(var(--brand-soft))",
+        },
+        coral: {
+          DEFAULT: "hsl(var(--coral))",
+          soft: "hsl(var(--coral-soft))",
+        },
+        mint: {
+          DEFAULT: "hsl(var(--mint))",
+          soft: "hsl(var(--mint-soft))",
+        },
+        amberwarn: {
+          DEFAULT: "hsl(var(--amber-warn))",
+          soft: "hsl(var(--amber-warn-soft))",
+        },
+        critical: {
+          DEFAULT: "hsl(var(--critical))",
+          soft: "hsl(var(--critical-soft))",
+        },
       },
+      /* Sudut dinaikkan mengikuti gaya iOS 26 — lengkung besar dan lembut.
+         xl untuk kontrol di dalam kartu, 2xl untuk kartu, 3xl untuk
+         cangkang terluar (sidebar & wadah isi). */
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        xl: "0.9rem",
+        "2xl": "1.5rem",
+        "3xl": "2.25rem",
+      },
+      fontFamily: {
+        display: ["var(--font-display)", "system-ui", "sans-serif"],
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        mono: ["var(--font-mono)", "monospace"],
+      },
+      boxShadow: {
+        frost: "0 2px 10px -2px rgb(15 42 67 / 0.06), 0 10px 30px -12px rgb(15 42 67 / 0.10)",
+        "frost-lg": "0 8px 24px -6px rgb(15 42 67 / 0.10), 0 24px 48px -18px rgb(15 42 67 / 0.16)",
+      },
+      backgroundImage: {
+        "frost-dots": "radial-gradient(circle, hsl(var(--brand) / 0.10) 1px, transparent 1.4px)",
+      },
+      backgroundSize: {
+        "frost-dots": "16px 16px",
       },
     },
   },

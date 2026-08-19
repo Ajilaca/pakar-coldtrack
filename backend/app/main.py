@@ -144,11 +144,15 @@ def analyze_telemetry(payload: AnalyzeRequest) -> AnalyzeResponse:
         model_version = "coldtrack-rule-v1.0"
 
     # 3. Cargo Risk Index & Status Evaluation
+    # TTB ikut dikirim: status yang dihitung dari forecast saja bisa
+    # bertentangan dengan TTB (lihat catatan di rules.py :: compute_risk_index).
     risk_index, status = compute_risk_index(
         current_temp=latest_temp,
         forecast=forecast.model_dump(),
         cargo_profile=payload.cargo_profile,
         df_features=df_features,
+        time_to_breach_min=time_to_breach,
+        failure_label=failure_mode.label,
     )
 
     # Heuristic TTB fallback if ONNX returned None during warning or critical status

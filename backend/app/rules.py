@@ -19,13 +19,24 @@ def evaluate_cargo_limits(
     }
 
 
+# Urutan keparahan status — dipakai agar eskalasi TTB hanya bisa MENAIKKAN.
+_SEVERITY: dict[str, int] = {"AMAN": 0, "WASPADA": 1, "KRITIS": 2}
+
+
 def compute_risk_index(
     current_temp: float,
     forecast: dict[str, float],
     cargo_profile: str,
     df_features: pd.DataFrame,
+    time_to_breach_min: float | None = None,
+    failure_label: str | None = None,
 ) -> tuple[float, str]:
-    """Compute Cargo Risk Index (0.0 to 1.0) and status classification."""
+    """Compute Cargo Risk Index (0.0 to 1.0) and status classification.
+
+    `time_to_breach_min` dan `failure_label` bersifat opsional supaya
+    pemanggil lama tetap jalan; kalau diisi, keduanya dipakai sebagai lantai
+    status (lihat blok eskalasi di bagian bawah fungsi ini).
+    """
     limits = evaluate_cargo_limits(cargo_profile)
     max_limit = limits["max_temp_c"]
     crit_limit = limits["critical_temp_c"]
@@ -83,6 +94,58 @@ def compute_risk_index(
         risk_index = max(risk_index, 0.45)
     else:
         status = "AMAN"
+
+    # --- Eskalasi berbasis Time-to-Breach --------------------------------
+    #
+    # KENAPA INI PERLU:
+    # Blok klasifikasi di atas hanya melihat `forecast`, sementara TTB
+    # dihasilkan kepala model ONNX yang terpisah. Keduanya bisa tidak
+    # sepakat. Contoh nyata dari skenario demo "kompresor melemah":
+    #
+    #     prediksi suhu maksimum = 3,73 °C   (batas profil = 4,0 °C)
+    #     -> tidak melanggar -> risk 0,11 -> status AMAN
+    #     TTB model            = 19,5 menit -> MELANGGAR, tapi diabaikan
+    #
+    # Hasilnya lampu hijau "AMAN" muncul tepat di sebelah tulisan
+    # "19 menit lagi sebelum ambang terlampaui" — jelas keliru, dan
+    # membuat rekomendasi tindakan ikut salah (menyarankan "pemantauan
+    # rutin" pada muatan yang akan rusak dalam 20 menit).
+    #
+    # Karena itu TTB dipakai sebagai LANTAI status. Blok ini hanya bisa
+    # MENAIKKAN keparahan, tidak pernah menurunkan, sehingga kasus yang
+    # sudah benar sebelumnya tidak berubah sama sekali.
+    if time_to_breach_min is not None and time_to_breach_min >= 0:
+        ttb_cfg = settings.get("ttb_status_thresholds", {})
+        crit_max = ttb_cfg.get("critical_max_min", 30)
+        warn_max = ttb_cfg.get("warning_max_min", 60)
+
+        if time_to_breach_min <= crit_max:
+            escalated = "KRITIS"
+        elif time_to_breach_min <= warn_max:
+            escalated = "WASPADA"
+        else:
+            escalated = None
+
+        if escalated and _SEVERITY[escalated] > _SEVERITY[status]:
+            status = escalated
+            risk_index = max(risk_index, 0.85 if status == "KRITIS" else 0.45)
+
+    # --- Eskalasi berbasis sensor bermasalah ------------------------------
+    #
+    # Kalau model mendiagnosis sensor macet/rusak, seluruh perhitungan di
+    # atas berdiri di atas angka yang tidak bisa dipercaya: suhu terlihat
+    # stabil justru KARENA sensornya beku, bukan karena muatannya aman.
+    # Pada skenario "sensor macet" hal ini menghasilkan status AMAN tanpa
+    # TTB sama sekali — pembacaan paling berbahaya yang bisa ditampilkan
+    # sistem, karena operator diberi rasa aman palsu.
+    #
+    # Sistem tidak boleh menyatakan AMAN dari sensor yang tidak dipercaya.
+    # Minimal WASPADA, supaya operator memverifikasi manual.
+    if failure_label and _SEVERITY[status] < _SEVERITY["WASPADA"]:
+        label = failure_label.lower()
+        if "sensor" in label:
+            status = "WASPADA"
+            risk_index = max(risk_index, 0.45)
 
     return risk_index, status
 
