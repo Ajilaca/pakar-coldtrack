@@ -83,7 +83,7 @@ def test_analyze_all_scenarios():
         "scenario_1_normal",
         "scenario_2_door_open",
         "scenario_3_compressor_degradation",
-        "scenario_4_reefer_failure",
+        "scenario_4_sensor_stuck",
         "scenario_5_extreme_ambient",
     ]
     for s_id in scenario_ids:
