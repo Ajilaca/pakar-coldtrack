@@ -130,22 +130,32 @@ def compute_risk_index(
             status = escalated
             risk_index = max(risk_index, 0.85 if status == "KRITIS" else 0.45)
 
-    # --- Eskalasi berbasis sensor bermasalah ------------------------------
+    # --- Sensor bermasalah: KUNCI di WASPADA -----------------------------
     #
     # Kalau model mendiagnosis sensor macet/rusak, seluruh perhitungan di
     # atas berdiri di atas angka yang tidak bisa dipercaya: suhu terlihat
     # stabil justru KARENA sensornya beku, bukan karena muatannya aman.
-    # Pada skenario "sensor macet" hal ini menghasilkan status AMAN tanpa
-    # TTB sama sekali — pembacaan paling berbahaya yang bisa ditampilkan
-    # sistem, karena operator diberi rasa aman palsu.
     #
-    # Sistem tidak boleh menyatakan AMAN dari sensor yang tidak dipercaya.
-    # Minimal WASPADA, supaya operator memverifikasi manual.
-    if failure_label and _SEVERITY[status] < _SEVERITY["WASPADA"]:
-        label = failure_label.lower()
-        if "sensor" in label:
-            status = "WASPADA"
-            risk_index = max(risk_index, 0.45)
+    # Blok ini sengaja bekerja DUA ARAH, bukan sekadar lantai:
+    #
+    #   - tidak boleh AMAN   -> jangan beri rasa aman palsu dari alat ukur
+    #                           yang sudah diketahui rusak.
+    #   - tidak boleh KRITIS -> jangan mengklaim kepastian dari alat ukur
+    #                           yang sama. Pada skenario "sensor macet",
+    #                           60 bacaan terakhir bernilai identik (3,95)
+    #                           namun kepala TTB tetap mengeluarkan 23,8
+    #                           menit. Angka itu hasil ekstrapolasi dari
+    #                           sinyal beku, jadi menaikkannya ke KRITIS
+    #                           berarti menampilkan presisi yang tidak
+    #                           dimiliki sistem.
+    #
+    # Pesan yang benar untuk kondisi ini adalah "alat ukur tidak dapat
+    # dipercaya, verifikasi manual" — dan itu tepat WASPADA.
+    #
+    # Angka TTB-nya sendiri disembunyikan di main.py, dengan alasan sama.
+    if failure_label and "sensor" in failure_label.lower():
+        status = "WASPADA"
+        risk_index = min(max(risk_index, 0.45), 0.60)
 
     return risk_index, status
 
@@ -212,6 +222,28 @@ def generate_recommended_actions(
                 ),
             ]
     elif status == "WASPADA":
+        # Sensor bermasalah butuh tindakan sendiri. Saran generik di bawah
+        # menyuruh operator "memantau indikator suhu" — padahal indikator
+        # itulah yang rusak. Yang benar: berhenti mempercayai sensornya dan
+        # ukur manual.
+        if "sensor" in failure_label.lower():
+            return [
+                RecommendedAction(
+                    priority=1,
+                    text="Verifikasi suhu kargo secara manual dengan termometer cadangan.",
+                    eta_min=10,
+                ),
+                RecommendedAction(
+                    priority=2,
+                    text="Jangan ambil keputusan dari pembacaan sensor ini sampai terverifikasi.",
+                    eta_min=None,
+                ),
+                RecommendedAction(
+                    priority=3,
+                    text="Jadwalkan kalibrasi ulang sensor setelah perjalanan selesai.",
+                    eta_min=None,
+                ),
+            ]
         return [
             RecommendedAction(
                 priority=1,

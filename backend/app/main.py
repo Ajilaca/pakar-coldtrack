@@ -165,6 +165,14 @@ def analyze_telemetry(payload: AnalyzeRequest) -> AnalyzeResponse:
         elif delta_temp_avg > 0:
             time_to_breach = float(round((max_limit - latest_temp) / delta_temp_avg, 1))
 
+    # Sensor bermasalah: sembunyikan angka TTB.
+    # TTB dihitung dari deret suhu yang justru berasal dari sensor yang macet,
+    # jadi angkanya ekstrapolasi dari sinyal beku. Menampilkannya memberi kesan
+    # presisi yang tidak dimiliki sistem. Harus SETELAH blok fallback di atas,
+    # kalau tidak nilainya akan diisi ulang oleh heuristik.
+    if "sensor" in failure_mode.label.lower():
+        time_to_breach = None
+
     # 4. Recommended Actions & Driver Explanations
     actions = generate_recommended_actions(
         status=status,

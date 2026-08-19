@@ -3,7 +3,7 @@
   "title": "Skenario 5: Kejut Suhu Ambien saat Macet",
   "description": "Kendaraan berhenti lama di bawah radiasi matahari tinggi, beban termal melonjak.",
   "cargo_profile": "produk_susu_2_4C",
-  "expected_status": "WASPADA",
+  "expected_status": "KRITIS",
   "shipment_id": "TRK-JKT-0421",
   "sumber": {
     "dataset": "v4_seed1000_700trips.parquet",
@@ -13,7 +13,7 @@
     "kelas_model": "A7",
     "keyakinan_model": 1.0,
     "time_to_breach_menit_terakhir": 20.0,
-    "catatan": "Jendela dipilih setelah diverifikasi dikenali benar oleh coldtrack.onnx."
+    "catatan": "Jendela dipilih setelah diverifikasi dikenali benar oleh coldtrack.onnx. Revisi 19 Agu 2026 (R2): expected_status diubah WASPADA -> KRITIS. Mesin aturan kini memakai Time-to-Breach sebagai lantai status, dan TTB skenario ini 18 menit — di bawah ambang kritis 30 menit. Label WASPADA ditulis sebelum model TTB dipakai untuk menentukan status."
   },
   "readings": [
     {
