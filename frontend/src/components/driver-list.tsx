@@ -1,30 +1,29 @@
 import { Driver } from "@/lib/types";
 
+/**
+ * Baris "Mengapa AI berpikir begini" — tiga fitur pendorong teratas.
+ * Label bidang dirender oleh pemanggil; komponen ini hanya isinya.
+ */
 export function DriverList({ drivers }: { drivers: Driver[] }) {
   if (drivers.length === 0) return null;
   const top3 = [...drivers].sort((a, b) => b.contribution - a.contribution).slice(0, 3);
 
   return (
     <div className="space-y-2">
-      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-        Faktor pendorong utama
-      </p>
-      <div className="space-y-2">
-        {top3.map((d) => (
-          <div key={d.feature} className="flex items-center gap-3 text-sm">
-            <span className="w-40 shrink-0 text-foreground">{d.feature}</span>
-            <div className="h-1.5 flex-1 rounded-full bg-muted overflow-hidden">
-              <div
-                className="h-full rounded-full bg-primary"
-                style={{ width: `${Math.round(d.contribution * 100)}%` }}
-              />
-            </div>
-            <span className="w-9 shrink-0 text-right text-xs text-muted-foreground">
-              {Math.round(d.contribution * 100)}%
-            </span>
+      {top3.map((d) => (
+        <div key={d.feature} className="space-y-1">
+          <div className="flex items-baseline justify-between gap-2">
+            <span className="t-body truncate text-ink">{d.feature}</span>
+            <span className="t-meta shrink-0 tabular">{Math.round(d.contribution * 100)}%</span>
           </div>
-        ))}
-      </div>
+          <div className="h-1.5 w-full overflow-hidden rounded-full bg-secondary">
+            <div
+              className="grad-brand h-full rounded-full"
+              style={{ width: `${Math.round(d.contribution * 100)}%` }}
+            />
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

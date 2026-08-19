@@ -32,9 +32,9 @@ export function PanelError({ message }: { message: string }) {
 
 export function PanelEmpty({ message }: { message: string }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-border py-16 text-center">
-      <Icon size={40} tone="gray" className="opacity-40" />
-      <p className="text-sm text-muted-foreground max-w-xs">{message}</p>
+    <div className="flex h-full flex-col items-center justify-center gap-2 rounded-2xl bg-secondary/60 px-4 py-8 text-center">
+      <Icon name="empty" size={28} tone="gray" className="opacity-40" />
+      <p className="t-meta max-w-xs">{message}</p>
     </div>
   );
 }

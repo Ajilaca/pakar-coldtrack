@@ -4,73 +4,82 @@
 
 @layer base {
   :root {
-    --font-display: "Baloo 2", system-ui, sans-serif;
+    /* Baloo 2 (bulat, playful) diganti Plus Jakarta Sans agar cocok dengan
+       tampilan kaca/gradien. Kembalikan baris ini + import di layout.tsx
+       kalau ingin gaya lama. */
+    --font-display: "Plus Jakarta Sans", system-ui, sans-serif;
     --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
     --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 
-    /* ColdTrack AI — "frost" palette. Deliberately not the default
-       warm-cream/terracotta AI look; icy blues + a coral accent pair
-       that fits a cold-chain product without reading corporate-navy. */
-    --background: 205 55% 97%;
-    --foreground: 205 40% 14%;
+    /* ==================================================================
+       PALET COLDTRACK — "Ocean Blue".
+
+         Ocean Deep   #003B5C  hsl(202 100% 18%)
+         Ocean Bright #0095D9  hsl(199 100% 43%)
+         Putih        #FFFFFF
+
+       MODE TERANG: latar putih, kartu putih. Biru dipakai untuk teks
+       utama, aksen, tombol, dan grafik.
+
+       Warna STATUS (aman/waspada/kritis) sengaja TIDAK diambil dari
+       palet — tiga status harus bisa dibedakan sekilas, dan tiga
+       gradasi biru tidak memenuhi syarat itu untuk antarmuka
+       keselamatan. Status memakai hijau/kuning/merah, ditampilkan
+       sebagai blok GRADIEN dengan teks putih.
+       ================================================================== */
+    --ocean-deep: 202 100% 18%;
+    --ocean: 199 100% 43%;
+    --ocean-light: 197 100% 62%;
+
+    --background: 205 30% 97%;
+    --foreground: 202 60% 14%;
 
     --card: 0 0% 100%;
-    --card-foreground: 205 40% 14%;
+    --card-foreground: 202 60% 14%;
     --popover: 0 0% 100%;
-    --popover-foreground: 205 40% 14%;
+    --popover-foreground: 202 60% 14%;
 
-    --primary: 213 76% 52%;
+    --primary: 199 100% 43%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 205 45% 94%;
-    --secondary-foreground: 205 40% 20%;
-    --muted: 205 40% 94%;
-    --muted-foreground: 205 20% 45%;
-    --accent: 213 76% 96%;
-    --accent-foreground: 213 76% 30%;
-    --destructive: 4 78% 60%;
+    --secondary: 202 40% 95%;
+    --secondary-foreground: 202 60% 18%;
+    --muted: 205 30% 93%;
+    --muted-foreground: 202 20% 45%;
+    --accent: 199 100% 43%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 4 78% 55%;
     --destructive-foreground: 0 0% 100%;
-    --border: 205 30% 89%;
-    --input: 205 30% 89%;
-    --ring: 213 76% 52%;
+    --border: 203 32% 89%;
+    --input: 203 32% 89%;
+    --ring: 199 100% 43%;
     --radius: 1rem;
 
     /* signature tokens */
-    --ink: 205 48% 14%;      /* deep frost-navy — sidebar / header */
-    --ink-2: 205 40% 24%;
-    --brand: 213 76% 52%;
-    --brand-soft: 213 78% 94%;
-    --coral: 14 92% 67%;
-    --coral-soft: 14 100% 95%;
-    --mint: 160 62% 41%;
-    --mint-soft: 158 60% 94%;
-    --amber-warn: 38 92% 54%;
-    --amber-warn-soft: 42 92% 93%;
-    --critical: 4 82% 63%;
-    --critical-soft: 4 90% 95%;
+    --ink: 202 100% 18%;     /* teks utama = Ocean Deep */
+    --ink-2: 202 25% 42%;
+    --brand: 199 100% 43%;   /* Ocean Bright */
+    --brand-soft: 199 100% 95%;
+    --coral: 202 100% 18%;   /* aksen kedua = Ocean Deep */
+    --coral-soft: 202 60% 94%;
+
+    /* status — di luar palet, lihat catatan di atas */
+    --mint: 160 84% 30%;
+    --mint-soft: 158 60% 95%;
+    --amber-warn: 33 95% 45%;
+    --amber-warn-soft: 40 95% 94%;
+    --critical: 4 78% 52%;
+    --critical-soft: 4 90% 96%;
   }
 
+  /* Aplikasi ini terang secara bawaan — tidak ada mode gelap.
+     Kelas .dark dipertahankan supaya komponen shadcn yang memeriksanya
+     tidak berubah tampilan; nilainya sengaja sama dengan :root. */
   .dark {
-    --background: 205 35% 8%;
-    --foreground: 205 30% 92%;
-    --card: 205 30% 12%;
-    --card-foreground: 205 30% 92%;
-    --popover: 205 30% 12%;
-    --popover-foreground: 205 30% 92%;
-    --primary: 213 76% 60%;
-    --primary-foreground: 205 35% 8%;
-    --secondary: 205 20% 18%;
-    --secondary-foreground: 205 30% 92%;
-    --muted: 205 20% 18%;
-    --muted-foreground: 205 15% 65%;
-    --accent: 205 20% 18%;
-    --accent-foreground: 205 30% 92%;
-    --destructive: 4 70% 50%;
-    --destructive-foreground: 205 30% 95%;
-    --border: 205 20% 22%;
-    --input: 205 20% 22%;
-    --ring: 213 76% 60%;
-    --ink: 205 40% 6%;
-    --ink-2: 205 30% 16%;
+    --background: 205 30% 97%;
+    --foreground: 202 60% 14%;
+    --card: 0 0% 100%;
+    --card-foreground: 202 60% 14%;
+    --border: 203 32% 89%;
   }
 }
 
@@ -88,13 +97,249 @@
 
 @layer utilities {
   .frost-pattern {
-    background-image: radial-gradient(circle, hsl(0 0% 100% / 0.08) 1px, transparent 1.4px);
+    background-image: radial-gradient(circle, hsl(0 0% 100% / 0.07) 1px, transparent 1.4px);
     background-size: 18px 18px;
   }
+
+  /* ==================================================================
+     LATAR APLIKASI
+     Navy pekat sebagai dasar, lalu tiga sapuan cahaya (sky & neon) di
+     sudut-sudut — meniru rujukan gradien yang diberikan. Dipasang
+     `fixed` lewat ::before supaya tidak ikut menggulung bersama isi.
+     ================================================================== */
   .coldship-bg {
-    background: linear-gradient(135deg, hsl(214 75% 78%) 0%, hsl(208 68% 86%) 30%, hsl(199 60% 90%) 60%, hsl(188 52% 89%) 100%);
+    position: relative;
+    background: hsl(var(--background));
+    isolation: isolate;
+  }
+  .coldship-bg::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    /* Latar hampir putih dengan semburat biru sangat tipis di sudut —
+       cukup untuk memberi kedalaman tanpa mengganggu keterbacaan. */
+    background:
+      radial-gradient(50% 40% at 2% 0%, hsl(var(--ocean) / 0.10) 0%, transparent 62%),
+      radial-gradient(40% 34% at 100% 100%, hsl(var(--ocean-light) / 0.10) 0%, transparent 62%),
+      linear-gradient(160deg, hsl(200 45% 98%) 0%, hsl(205 30% 97%) 55%, hsl(203 28% 96%) 100%);
+  }
+
+  /* ==================================================================
+     PERMUKAAN KACA
+     .glass        — kartu biasa
+     .glass-strong — sidebar & bilah atas (lebih pekat, lebih blur)
+     Garis tepi putih tipis + kilau di sisi atas meniru tepi kaca.
+     ================================================================== */
+  /* ------------------------------------------------------------------
+     Permukaan kartu — putih bersih, tanpa garis tepi.
+     Dipisahkan dari latar hanya lewat bayangan lembut berwarna biru
+     (bukan abu-abu netral) supaya menyatu dengan palet Ocean Blue.
+     ------------------------------------------------------------------ */
+  .glass {
+    background: hsl(var(--card));
+    box-shadow:
+      0 1px 2px 0 hsl(var(--ocean-deep) / 0.05),
+      0 8px 24px -12px hsl(var(--ocean-deep) / 0.13);
+  }
+
+  /* Versi "disorot" — kartu hasil. Sedikit lebih terangkat, plus semburat
+     biru sangat tipis dari atas agar terbaca sebagai pusat perhatian. */
+  .glass-glow {
+    background: linear-gradient(180deg, hsl(var(--ocean) / 0.05) 0%, hsl(0 0% 100%) 42%);
+    box-shadow:
+      0 1px 2px 0 hsl(var(--ocean-deep) / 0.06),
+      0 18px 44px -20px hsl(var(--ocean-deep) / 0.2);
+  }
+
+  .glass-strong {
+    background: hsl(var(--card));
+    box-shadow:
+      0 1px 2px 0 hsl(var(--ocean-deep) / 0.05),
+      0 12px 32px -16px hsl(var(--ocean-deep) / 0.16);
+  }
+
+  /* Permukaan yang bisa diklik — terangkat sedikit saat disentuh kursor. */
+  .glass-interactive {
+    transition: box-shadow 200ms ease, transform 200ms ease;
+  }
+  .glass-interactive:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      0 2px 4px 0 hsl(var(--ocean-deep) / 0.07),
+      0 16px 36px -14px hsl(var(--ocean-deep) / 0.24);
+  }
+
+  /* ------------------------------------------------------------------
+     BLOK STATUS BERGRADIEN
+     Dipakai untuk kotak status di kartu hasil. Isinya selalu teks PUTIH,
+     jadi gradiennya sengaja dijaga cukup gelap di kedua ujung agar
+     kontrasnya tetap aman dibaca.
+     ------------------------------------------------------------------ */
+  .grad-safe {
+    background-image: linear-gradient(145deg, hsl(162 84% 26%) 0%, hsl(158 80% 34%) 55%, hsl(152 72% 42%) 100%);
+  }
+  .grad-warn {
+    background-image: linear-gradient(145deg, hsl(28 92% 42%) 0%, hsl(33 95% 48%) 55%, hsl(40 95% 54%) 100%);
+  }
+  .grad-crit {
+    background-image: linear-gradient(145deg, hsl(357 76% 42%) 0%, hsl(4 78% 50%) 55%, hsl(12 84% 57%) 100%);
+  }
+  /* gradien merek — Ocean Deep → Ocean Bright */
+  .grad-ocean {
+    background-image: linear-gradient(145deg, hsl(var(--ocean-deep)) 0%, hsl(var(--ocean)) 65%, hsl(var(--ocean-light)) 100%);
+  }
+
+  /* ------------------------------------------------------------------
+     .on-gradient — pasang pada WADAH yang berlatar gradien.
+
+     Kenapa perlu: kelas skala tipografi (.t-label, .t-meta, dst.) sudah
+     menetapkan warnanya sendiri, dan Tailwind menaruh `text-white`
+     LEBIH AWAL di berkas hasil kompilasi. Akibatnya `text-white` kalah
+     dan label tetap abu-abu di atas gradien berwarna.
+
+     Selektor turunan di bawah ini berspesifisitas 0,2,0 — selalu lebih
+     tinggi daripada kelas tunggal 0,1,0 — jadi menang tanpa bergantung
+     pada urutan berkas. Semua teks di dalamnya dipaksa putih penuh.
+     ------------------------------------------------------------------ */
+  .on-gradient,
+  .on-gradient .t-label,
+  .on-gradient .t-meta,
+  .on-gradient .t-body,
+  .on-gradient .t-card-title,
+  .on-gradient .t-metric,
+  .on-gradient .t-panel-title,
+  .on-gradient .t-status,
+  .on-gradient .t-hero,
+  .on-gradient .t-pill {
+    color: #fff;
+  }
+
+  /* gradien aksen — dipakai tombol, bilah progres, ubin ikon */
+  .grad-brand {
+    background-image: linear-gradient(120deg, hsl(var(--ocean-deep)) 0%, hsl(var(--ocean)) 100%);
+  }
+  .grad-text {
+    background-image: linear-gradient(100deg, hsl(var(--ocean-deep)) 0%, hsl(var(--ocean)) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
   .tabular {
     font-variant-numeric: tabular-nums;
+  }
+
+  /* ==================================================================
+     SKALA TIPOGRAFI — pakai HANYA kelas di bawah ini untuk teks.
+     Jangan menulis text-[10px]/text-[11px]/text-xs dsb. langsung di
+     komponen; kalau butuh ukuran baru, tambahkan langkah baru di sini
+     supaya seluruh halaman tetap seragam.
+
+     t-label       11px  UPPERCASE   label bidang & judul seksi
+     t-meta        11px              teks sekunder, legenda, satuan
+     t-body        12px              isi tabel & paragraf
+     t-card-title  13px  semibold    judul kartu / grafik
+     t-metric      18px  display     angka KPI
+     t-panel-title 19px  display     judul panel (satu per halaman)
+     t-status      30px  display     kata status AMAN/WASPADA/KRITIS
+     t-hero        56px  display     angka raksasa Time-to-Breach
+     ================================================================== */
+  .t-label {
+    font-size: 11px;
+    line-height: 1.35;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: hsl(var(--muted-foreground));
+  }
+  .t-meta {
+    font-size: 11px;
+    line-height: 1.45;
+    color: hsl(var(--muted-foreground));
+  }
+  .t-body {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .t-card-title {
+    font-size: 13px;
+    line-height: 1.35;
+    font-weight: 600;
+    color: hsl(var(--ink));
+  }
+  .t-metric {
+    font-family: var(--font-display), system-ui, sans-serif;
+    font-size: 18px;
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: hsl(var(--ink));
+    font-variant-numeric: tabular-nums;
+  }
+  .t-panel-title {
+    font-family: var(--font-display), system-ui, sans-serif;
+    font-size: 19px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: hsl(var(--ink));
+  }
+  /* Varian untuk latar gelap. Dipisah, bukan menimpa warna lewat
+     kelas Tailwind, karena urutan layer utilities tidak dijamin. */
+  .t-card-title-invert {
+    font-family: var(--font-display), system-ui, sans-serif;
+    font-size: 13px;
+    line-height: 1.3;
+    font-weight: 700;
+    color: #fff;
+  }
+  .t-meta-invert {
+    font-size: 11px;
+    line-height: 1.45;
+    color: hsl(0 0% 100% / 0.6);
+  }
+  /* satuan yang menempel pada angka .t-hero */
+  .t-hero-unit {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  /* pil/tag status — selalu dipasangkan dengan rounded-full + px-2 py-0.5 */
+  .t-pill {
+    font-size: 10px;
+    line-height: 1.4;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .t-status {
+    font-family: var(--font-display), system-ui, sans-serif;
+    font-size: 30px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .t-hero {
+    font-family: var(--font-display), system-ui, sans-serif;
+    font-size: 56px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ==================================================================
+     BENTUK KARTU — satu definisi dipakai semua panel.
+     .card      = kerangka (border + latar + bayangan + radius)
+     .card-p    = padding baku isi kartu
+     Radius: kartu = 2xl, kontrol dalam = xl, pil/tag = full, ubin ikon = lg.
+     ================================================================== */
+  /* Kartu = permukaan kaca. Semua panel memakai ini, jadi mengubah
+     tampilan kartu cukup di satu tempat. */
+  .card {
+    @apply glass rounded-2xl;
+  }
+  .card-p {
+    @apply p-3;
   }
 }

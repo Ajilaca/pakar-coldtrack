@@ -2,9 +2,9 @@ import { Icon } from "@/components/icon";
 
 export function AiRecommendedBadge() {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-coral-soft px-2.5 py-1 text-xs font-semibold text-coral">
-      <Icon size={13} tone="gray" />
-      Direkomendasikan AI
+    <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-coral-soft px-2 py-0.5 t-pill text-coral">
+      <Icon name="ai" size={11} className="text-coral" />
+      AI
     </span>
   );
 }

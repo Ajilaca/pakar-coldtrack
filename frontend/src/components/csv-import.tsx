@@ -37,9 +37,9 @@ export function CsvImport({ onFileSelected, disabled, fileName, variant = "card"
           type="button"
           onClick={() => inputRef.current?.click()}
           disabled={disabled}
-          className="flex items-center gap-2 rounded-xl border border-border bg-card px-3.5 py-2 text-sm font-medium text-ink shadow-frost hover:bg-secondary disabled:opacity-50"
+          className="flex items-center gap-2 glass glass-interactive rounded-xl px-3 py-2 t-body font-medium text-ink disabled:opacity-50"
         >
-          <Icon size={18} tone="gray" />
+          <Icon name="upload" size={18} tone="gray" />
           {fileName ? fileName : "Impor CSV"}
         </button>
       </>
@@ -47,19 +47,19 @@ export function CsvImport({ onFileSelected, disabled, fileName, variant = "card"
   }
 
   return (
-    <div className="rounded-2xl border-2 border-dashed border-border p-3.5">
+    <div className="rounded-2xl bg-secondary/60 p-3">
       {input}
-      <p className="text-xs font-semibold mb-1 text-ink">Impor data CSV</p>
-      <p className="text-[11px] text-muted-foreground mb-2.5 leading-snug">
+      <p className="t-card-title mb-1">Impor data CSV</p>
+      <p className="t-meta mb-2.5">
         Gunakan bacaan sensor truk kamu sendiri untuk dianalisis AI.
       </p>
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
         disabled={disabled}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
+        className="flex w-full items-center justify-center gap-2 grad-brand rounded-xl px-3 py-2 t-body font-medium text-white disabled:opacity-50"
       >
-        <Icon size={16} tone="white" />
+        <Icon name="upload" size={16} tone="white" />
         {fileName ? fileName : "Pilih file .csv"}
       </button>
     </div>

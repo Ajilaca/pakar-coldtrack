@@ -52,6 +52,10 @@ const config: Config = {
         },
         ink: "hsl(var(--ink))",
         "ink-2": "hsl(var(--ink-2))",
+        /* palet mentah Ocean Blue — dipakai untuk gradien & aksen */
+        "ocean-deep": "hsl(var(--ocean-deep))",
+        ocean: "hsl(var(--ocean))",
+        "ocean-light": "hsl(var(--ocean-light))",
         brand: {
           DEFAULT: "hsl(var(--brand))",
           soft: "hsl(var(--brand-soft))",
@@ -73,12 +77,16 @@ const config: Config = {
           soft: "hsl(var(--critical-soft))",
         },
       },
+      /* Sudut dinaikkan mengikuti gaya iOS 26 — lengkung besar dan lembut.
+         xl untuk kontrol di dalam kartu, 2xl untuk kartu, 3xl untuk
+         cangkang terluar (sidebar & wadah isi). */
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
-        "2xl": "1.25rem",
-        "3xl": "1.75rem",
+        xl: "0.9rem",
+        "2xl": "1.5rem",
+        "3xl": "2.25rem",
       },
       fontFamily: {
         display: ["var(--font-display)", "system-ui", "sans-serif"],
