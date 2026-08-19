@@ -25,10 +25,15 @@ Seluruh artefak wajib tersedia dan sudah masuk `main` lewat PR #9 dan #10.
 
 | Head | Metrik | Hasil | Target | Status |
 |---|---|---|---|---|
-| Prediksi suhu | MAE @ t+30 | **0,202 °C** | < 0,8 °C | tercapai |
-| Mode kegagalan | Macro F1 | 0,573 | > 0,80 | belum |
+| Prediksi suhu | MAE @ t+30 | **0,198 °C** | < 0,8 °C | tercapai |
+| Mode kegagalan | Macro F1 | 0,581 | > 0,80 | belum |
 | Time-to-Breach | MAE (≤ 30 menit) | **7,60 menit** | < 8 menit | tercapai |
-| Deteksi anomali | PR-AUC | 0,691 | > 0,85 | belum |
+| Deteksi anomali | PR-AUC | 0,711 | > 0,85 | belum |
+
+> Angka di atas disamakan dengan `ml/reports/metrics.json` pada 19 Agustus. Versi
+> sebelumnya di dokumen ini (0,202 / 0,573 / 0,691) ditulis sebelum pelatihan ulang
+> terakhir dan sudah tidak berlaku. `docs/model_card.md` dan proposal §4.2 sudah
+> memakai angka yang benar.
 
 Dua dari empat target tercapai. Sistem final memakai dua model: GRU untuk prediksi suhu dan
 klasifikasi, XGBoost untuk Time-to-Breach.
@@ -38,15 +43,19 @@ terbaca dari `labels.json`, dan ketiga bug yang dilaporkan ke R3 sudah diperbaik
 
 ---
 
-## Tiga keputusan yang perlu dibawa ke tim
+## Tiga keputusan — SUDAH DIPUTUSKAN (19 Agustus, R2)
 
-Belum dijawab, dan memengaruhi tulisan orang lain.
+| Keputusan | Hasil | Sudah tercermin di |
+|---|---|---|
+| Menulis terbuka bahwa **XGBoost mengungguli GRU** dan **prapelatihan merugikan**? | **Ya, tulis terbuka.** Lebih aman daripada ketahuan saat tanya jawab juri. | `docs/model_card.md` baris 129; proposal §4.2 baris 80–98 |
+| Narasi §4.2 berubah dari rencana awal; R4 perlu tahu sebelum menulis naskah video | **Ya, wajib disampaikan ke R4.** | tertulis di `role/update-r4-frontend.md` bagian "Video PoW & Promosi" — **masih perlu dikonfirmasi R4 sudah membacanya** |
+| Macro F1 (0,581) dan PR-AUC (0,711) belum capai target — laporkan apa adanya atau revisi target? | **Laporkan apa adanya.** Menurunkan target setelah melihat hasil akan terbaca sebagai menyesuaikan ukuran. | proposal §4.2 baris 130–132; `docs/model_card.md` baris 110–112 |
 
-| Keputusan | Rekomendasi |
-|---|---|
-| Apakah tim setuju menulis terbuka bahwa **XGBoost mengungguli GRU** dan **prapelatihan merugikan**? | pertahankan — lebih aman daripada ketahuan saat sesi tanya jawab juri |
-| Narasi §4.2 berubah dari rencana awal; R4 perlu tahu sebelum menulis naskah video | wajib disampaikan |
-| Macro F1 (0,573) dan PR-AUC (0,691) belum tercapai — dilaporkan apa adanya, atau target direvisi? | laporkan apa adanya; menurunkan target setelah melihat hasil akan terbaca sebagai menyesuaikan ukuran |
+Ketiganya sudah terwujud di artefak, jadi tidak ada tulisan yang perlu diubah —
+kecuali satu tindak lanjut: **pastikan R4 benar-benar menerima poin kedua sebelum
+merekam Video PoW.** Kalimat lama *"kami mengambil representasi dari data IoT
+publik lalu menalanya ke domain rantai dingin"* sudah tidak akurat dan akan
+runtuh kalau juri bertanya.
 
 ---
 
