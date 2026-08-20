@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { AppHeader } from "@/components/app-header";
+import { Icon } from "@/components/icon";
 import { ScenarioPicker } from "@/components/scenario-picker";
 import { ResultCard } from "@/components/result-card";
 import { TemperatureChart } from "@/components/temperature-chart";
@@ -195,7 +196,12 @@ export default function Home() {
           <div className="grid min-h-[320px] grid-cols-1 gap-4 lg:grid-cols-[1.25fr_1fr]">
             <div className="card card-p flex min-h-[320px] flex-col">
               <div className="mb-1.5 flex shrink-0 flex-wrap items-baseline justify-between gap-x-3">
-                <p className="t-card-title">Suhu kargo — aktual vs prediksi</p>
+                <p className="t-card-title flex items-center gap-2">
+                  <span className="flex size-6 shrink-0 items-center justify-center rounded-lg bg-brand-soft">
+                    <Icon name="analytics" size={13} className="text-brand" />
+                  </span>
+                  Suhu kargo — aktual vs prediksi
+                </p>
                 <p className="t-meta">
                   garis penuh = aktual · putus-putus = prediksi · pita = {threshold.label}
                 </p>
@@ -213,7 +219,12 @@ export default function Home() {
 
             <div className="card card-p flex min-h-[320px] flex-col">
               <div className="mb-1.5 flex shrink-0 items-baseline justify-between gap-2">
-                <p className="t-card-title">Rute perjalanan</p>
+                <p className="t-card-title flex items-center gap-2">
+                  <span className="flex size-6 shrink-0 items-center justify-center rounded-lg bg-brand-soft">
+                    <Icon name="route" size={13} className="text-brand" />
+                  </span>
+                  Rute perjalanan
+                </p>
                 {lastPoint?.lat != null && lastPoint?.lon != null && (
                   <p className="t-meta font-mono">
                     {lastPoint.lat.toFixed(4)}, {lastPoint.lon.toFixed(4)}

@@ -22,12 +22,19 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      # Harus `args`, BUKAN `environment`. Next.js menanam variabel
+      # NEXT_PUBLIC_* ke dalam bundel saat build; menaruhnya di
+      # `environment` berarti terlambat dan frontend akan diam-diam
+      # kembali memakai data tiruan. Lihat penjelasan di frontend/Dockerfile.
+      args:
+        # localhost, bukan nama service `api` — pemanggilnya adalah browser
+        # di mesin pengguna, bukan proses di dalam jaringan compose.
+        NEXT_PUBLIC_API_URL: http://localhost:8000
+        NEXT_PUBLIC_USE_MOCK: "false"
     container_name: coldtrack-frontend
     ports:
       - "3000:3000"
     depends_on:
       api:
         condition: service_healthy
-    environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8000
     restart: unless-stopped

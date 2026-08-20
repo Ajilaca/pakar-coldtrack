@@ -24,7 +24,11 @@ services:
       - /app/node_modules
       - /app/.next
     environment:
+      # Di sini `environment` memang benar: Dockerfile.dev menjalankan
+      # `next dev`, yang membaca variabel saat proses start — bukan saat
+      # image dibangun seperti pada compose produksi.
       - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NEXT_PUBLIC_USE_MOCK=false
       - WATCHPACK_POLLING=true
     depends_on:
       - backend

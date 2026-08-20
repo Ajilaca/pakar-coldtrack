@@ -1,9 +1,13 @@
 import {
   Activity,
   BrainCircuit,
+  Clock,
+  DoorOpen,
   Flag,
+  Gauge,
   Inbox,
   LayoutDashboard,
+  ListChecks,
   MapPin,
   Package,
   Route,
@@ -11,10 +15,13 @@ import {
   ShieldCheck,
   Snowflake,
   Sparkles,
+  Sun,
   Thermometer,
+  TrendingUp,
   TriangleAlert,
   Truck,
   Upload,
+  Wrench,
   OctagonAlert,
   type LucideIcon,
 } from "lucide-react";
@@ -49,6 +56,15 @@ const ICONS = {
   safe: ShieldCheck,
   warning: TriangleAlert,
   critical: OctagonAlert,
+  // data & penjelasan model
+  rate: TrendingUp,        // laju kenaikan suhu
+  ambient: Sun,            // selisih suhu ambien
+  reefer: Snowflake,       // durasi unit pendingin aktif
+  door: DoorOpen,          // status pintu kargo
+  sensor: Gauge,           // pembacaan sensor
+  duration: Clock,         // durasi / estimasi waktu
+  repair: Wrench,          // kerusakan mekanis
+  steps: ListChecks,       // daftar tindakan
   // keadaan kosong
   empty: Inbox,
 } satisfies Record<string, LucideIcon>;
