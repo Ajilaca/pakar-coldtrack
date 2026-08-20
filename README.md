@@ -2,8 +2,11 @@
 
 Sistem prediksi dini kegagalan rantai dingin (cold chain) berbasis AI, dibangun untuk COMPFEST 18 AI Innovation Challenge — kategori Smart Logistics.
 
-<!-- ![demo](docs/demo.gif) -->
-> 🎬 GIF demo akan ditambahkan di sini.
+![Demo ColdTrack AI — pilih skenario, jalankan analisis, hasil muncul](docs/images/demo.gif)
+
+*Alur demo: pilih salah satu dari lima skenario telemetri, klik "Analisis Perjalanan", lalu sistem
+menampilkan status, Time-to-Breach, diagnosis mode kegagalan, faktor pendorong, dan tiga langkah
+tindakan.*
 
 ## Cara Menjalankan
 
