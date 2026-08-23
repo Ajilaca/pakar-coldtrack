@@ -18,7 +18,7 @@ Sistem ini memakai **dua model** yang berbagi kontrak masukan identik.
 | Jenis | GRU 2 lapis (hidden 64) + statistik ringkasan jendela | XGBoost, 300 pohon |
 | Keluaran | prediksi suhu t+15/30/60, probabilitas 7 mode kegagalan | Time-to-Breach (menit) |
 | Ukuran | 169 KB | 950 KB |
-| Latensi CPU (batch 1) | 1,1 ms | 0,14 ms |
+| Latensi CPU (batch 1) | 1,1 ms | 0,09 ms |
 | Parameter / pohon | 41.443 parameter | 300 pohon |
 
 **Masukan (sama untuk keduanya):** tensor `float32` berbentuk `[batch, 60, 12]` — jendela 60 menit

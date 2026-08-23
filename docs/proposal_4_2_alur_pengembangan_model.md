@@ -20,7 +20,7 @@ Sistem akhir memakai dua model dengan kontrak masukan identik:
 |---|---|---|
 | Arsitektur | GRU 2 lapis (hidden 64) + jalur statistik ringkasan | XGBoost, 300 pohon |
 | Keluaran | prediksi suhu, probabilitas 7 kelas | Time-to-Breach |
-| Ukuran | 169 KB | 946 KB |
+| Ukuran | 169 KB | 950 KB |
 | Latensi CPU | 1,1 ms | 0,09 ms |
 
 Pembagian tugas ini bukan keputusan awal, melainkan hasil pengujian yang diuraikan di §4.2.3.

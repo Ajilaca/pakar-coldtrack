@@ -45,8 +45,13 @@ rentang andal akan memberi kesan presisi yang tidak dimiliki sistem.
 **False negative jauh lebih berbahaya daripada false positive.** Muatan yang dinyatakan aman
 padahal sedang rusak berarti kerugian penuh dan — untuk vaksin — risiko produk tidak berkhasiat
 sampai ke pasien. Sebaliknya, peringatan yang ternyata keliru hanya menimbulkan pemeriksaan yang
-tidak perlu. Seluruh aturan eskalasi kami dirancang asimetris mengikuti ketimpangan ini: aturan
-hanya boleh **menaikkan** keparahan, tidak pernah menurunkan.
+tidak perlu. Aturan **eskalasi** kami karena itu dirancang asimetris mengikuti ketimpangan ini:
+lantai Time-to-Breach hanya boleh **menaikkan** keparahan, tidak pernah menurunkan.
+
+Satu aturan sengaja dikecualikan dari prinsip itu. Pada diagnosis sensor bermasalah, status
+**dijepit dua arah** ke WASPADA — tidak boleh AMAN, tetapi juga tidak boleh KRITIS. Alasannya
+berbeda dari asimetri di atas: ketika alat ukurnya sendiri tidak dapat dipercaya, sistem tidak
+boleh mengklaim ketelitian ke arah mana pun. Rinciannya di `docs/PROPOSAL.md` §4.3.4.
 
 **Contoh nyata dari pengembangan kami.** Pada pengujian ujung-ke-ujung ditemukan bahwa status
 dihitung semata dari prediksi suhu, sementara Time-to-Breach dihasilkan kepala model yang terpisah.

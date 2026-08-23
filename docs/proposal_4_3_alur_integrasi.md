@@ -53,7 +53,7 @@ Setiap permintaan yang masuk ke endpoint `POST /api/v1/analyze` melalui enam tah
    Payload diperiksa terhadap skema `AnalyzeRequest`. Jumlah bacaan telemetri diuji secara ketat ($\ge 60$ langkah). Permintaan dengan $< 60$ bacaan ditolak dengan pesan `HTTP 400 Bad Request` untuk mencegah degradasi statistik ringkasan jendela (*std/trend*) yang tidak pernah dilihat model saat pelatihan.
 
 2. **Prapemrosesan & Rekayasa Fitur (`app/preprocess.py`)**:
-   Data telemetri dikonversi ke `pandas.DataFrame`. Jalur validasi internal (*Forbidden Column Guard*) memastikan tidak ada kolom label target (`is_anomaly`, `failure_mode`, `time_to_breach`, `temp_true_c`) yang lolos ke matriks fitur $X$. Empat fitur turunan dihitung:
+   Data telemetri dikonversi ke `pandas.DataFrame`. Jalur validasi internal (*Forbidden Column Guard*) memastikan tidak ada kolom label target (`is_anomaly`, `failure_mode`, `time_to_breach`, `time_to_breach_min`) yang lolos ke matriks fitur $X$. Empat fitur turunan dihitung:
    * $\Delta \text{temp}_t = \text{temp}_c[t] - \text{temp}_c[t-1]$
    * $\Delta \text{ambient}_t = \text{temp}_c[t] - \text{ambient}_c[t]$
    * $\text{reefer\_duration\_min}$: menit kumulatif unit reefer menyala tanpa jeda.
@@ -118,7 +118,7 @@ CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--worker
 ```
 
 ### Keunggulan Desain Kontainer:
-1. **Pengemasan Bobot ONNX**: Berkas `coldtrack.onnx` (169 KB) dan `coldtrack_ttb.onnx` (946 KB) disalin langsung ke dalam citra saat kompilasi. Citra backend tidak mengunduh artefak apa pun saat runtime, menjamin keberhasilan eksekusi di lingkungan tanpa akses internet.
+1. **Pengemasan Bobot ONNX**: Berkas `coldtrack.onnx` (169 KB) dan `coldtrack_ttb.onnx` (950 KB) disalin langsung ke dalam citra saat kompilasi. Citra backend tidak mengunduh artefak apa pun saat runtime, menjamin keberhasilan eksekusi di lingkungan tanpa akses internet.
 2. **Ukuran Citra Ringan**: Penggunaan `onnxruntime` CPU menggantikan kerangka kerja PyTorch penuh, menekan ukuran citra backend dari $\sim 2.5\text{ GB}$ menjadi hanya $\sim 450\text{ MB}$.
 3. **Pemeriksaan Kesehatan Container**: Endpoint `GET /health` dihubungkan ke fitur `healthcheck` Docker Compose (`interval: 10s`, `retries: 5`). Layanan frontend Next.js dikonfigurasi dengan `condition: service_healthy` untuk menjamin frontend hanya menerima lalu lintas setelah backend siap.
 
