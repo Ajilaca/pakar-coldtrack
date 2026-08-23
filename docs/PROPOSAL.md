@@ -406,7 +406,9 @@ beroperasi *in-memory* tanpa basis data maupun pekerja latar belakang.
    (`is_anomaly`, `failure_mode`, `time_to_breach`, `time_to_breach_min`) lolos ke matriks fitur. Empat
    fitur turunan dihitung: Δtemp, Δambient, `reefer_duration_min`, dan `hour_of_day`.
 3. **Inferensi dua model** dengan kontrak tensor identik `[1, 60, 12]`.
-4. **Skoring risiko dan penetapan status** (§4.3.4).
+4. **Skoring risiko dan penetapan status** (§4.3.4). Bila model tidak mengeluarkan angka
+   Time-to-Breach sementara status berakhir WASPADA atau KRITIS, aturan mengisi cadangannya
+   (§4.3.5).
 5. **Mesin aturan** menghasilkan tiga tindakan berprioritas beserta estimasi waktu.
 6. **Lapisan penjelasan** menghitung tiga faktor pendorong utama (§4.4.1).
 
