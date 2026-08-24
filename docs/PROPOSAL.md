@@ -558,7 +558,8 @@ Antarmuka menampilkan lampu hijau "AMAN" tepat di sebelah tulisan "19 menit lagi
 terlampaui", dan rekomendasi tindakannya berbunyi "lanjutkan pemantauan rutin". Empat dari lima
 skenario terdampak.
 
-Perbaikannya berupa dua aturan eskalasi pada §4.3.4. Kecocokan status terhadap status yang
+Perbaikannya berupa dua aturan keselamatan pada §4.3.4 — lantai Time-to-Breach untuk kasus di atas,
+dan penjepit sensor untuk skenario sensor macet. Kecocokan status terhadap status yang
 diharapkan naik dari **1/5 menjadi 5/5**.
 
 Kami mencantumkan kejadian ini apa adanya karena inilah bentuk verifikasi yang bekerja: ditemukan
@@ -574,6 +575,7 @@ diaudit siapa pun tanpa membaca bobot model.
 | Prediksi suhu t+15/30/60 | Penetapan status AMAN / WASPADA / KRITIS |
 | Klasifikasi mode kegagalan | Pemilihan tiga langkah tindakan |
 | Estimasi Time-to-Breach | Penerapan ambang keselamatan |
+| — | Cadangan Time-to-Breach bila model tidak mengeluarkan angka (§4.3.5) |
 
 Ambang keselamatan berada di `config.yaml` dan dapat ditinjau siapa pun tanpa membaca bobot model.
 Sistem ini adalah **alat bantu keputusan bagi operator**, bukan sistem kendali otomatis — tidak ada
