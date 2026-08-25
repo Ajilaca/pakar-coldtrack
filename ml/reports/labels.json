@@ -88,7 +88,7 @@
   ],
   "model_ttb_terpisah": {
     "file": "coldtrack_ttb.onnx",
-    "alasan": "Head TTB milik GRU tertinggal jauh di rentang yang menentukan keputusan (MAE 17,9 vs 7,6 menit untuk TTB <= 30 menit di split test), sehingga tugas ini dipindahkan ke XGBoost. Forecast suhu dan klasifikasi mode kegagalan tetap ditangani coldtrack.onnx.",
+    "alasan": "Head TTB milik GRU tertinggal di rentang yang menentukan keputusan (MAE 10,8 vs 7,1 menit untuk TTB <= 30 menit di split test), sehingga tugas ini dipindahkan ke XGBoost. Forecast suhu dan klasifikasi mode kegagalan tetap ditangani coldtrack.onnx.",
     "input": {
       "name": "window",
       "shape": [

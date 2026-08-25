@@ -337,7 +337,7 @@ karena itu dilatih dari nol.**
 | Prediksi suhu t+30 (°C) | 0,198 | **0,189** | 0,338 | — |
 | Macro F1 | 0,581 | **0,664** | — | — |
 | PR-AUC anomali | 0,711 | **0,753** | — | 0,371 |
-| Time-to-Breach ≤ 30 menit | 17,9 | **7,1** | — | — |
+| Time-to-Breach ≤ 30 menit | 10,8 | **7,1** | — | — |
 
 **XGBoost mengungguli GRU pada seluruh metrik.** Kami memilih melaporkannya daripada
 menyembunyikannya, dan mengambil konsekuensinya: Time-to-Breach dipindahkan ke XGBoost, karena di
@@ -700,7 +700,7 @@ pangan dan farmasi.
 |---|---|---|
 | A | Kurva loss pretrain vs dari nol | `ml/reports/loss_curves.png` |
 | B | Confusion matrix 7 kelas | `ml/reports/confusion_matrix.png` |
-| C | MAE Time-to-Breach per horizon | `ml/reports/ttb_by_horizon.png` |
+| C | MAE Time-to-Breach per horizon — GRU vs XGBoost | `ml/reports/ttb_by_horizon.png` |
 | D | Model Card lengkap | `docs/model_card.md` |
 | E | Dataset Card lengkap | `docs/dataset_card.md` |
 | F | Kontrak API | `docs/api_contract.md` |

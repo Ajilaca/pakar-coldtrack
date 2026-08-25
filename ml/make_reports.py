@@ -8,6 +8,7 @@ Menjalankan: python -m ml.make_reports
 """
 
 import json
+import os
 
 import matplotlib
 
@@ -26,6 +27,7 @@ from ml.scaler import apply_scaler, load_scaler
 TEST_PATH = "data/processed/windows/windows_test.npz"
 VAL_PATH = "data/processed/windows/windows_val.npz"
 CHECKPOINT = "ml/reports/coldtrack_finetuned.pt"
+TTB_ONNX = "ml/reports/coldtrack_ttb.onnx"
 SCALER_PATH = "ml/reports/scaler_finetune.npz"
 BASELINE_PATH = "ml/reports/baseline_metrics.json"
 ABLATION_PATH = "ml/reports/ablation_results.json"
@@ -43,7 +45,12 @@ BLUE_RAMP = ["#fcfcfb", "#cde2fb", "#b7d3f6", "#9ec5f4", "#86b6ef", "#6da7ec",
              "#5598e7", "#3987e5", "#2a78d6", "#256abf", "#1c5cab", "#184f95",
              "#104281", "#0d366b"]
 
+SERIES_2 = "#c2410c"
+
 HORIZON_BUCKETS = [(0, 10), (10, 30), (30, 60), (60, 120), (120, 400)]
+# Ambang KUMULATIF -- sama persis dengan cara angka TTB dilaporkan di proposal
+# dan di labels.json (MAE untuk semua jendela dengan TTB <= batas).
+CUM_THRESHOLDS = [10, 30, 60, None]
 
 
 def load_model():
@@ -117,34 +124,78 @@ def plot_confusion(d, pred, macro_f1):
     print(f"Tersimpan: {CM_OUT}")
 
 
-def plot_ttb(horizon):
-    label = [h["rentang_menit"] for h in horizon]
-    mae = [h["mae_menit"] for h in horizon]
-    n = [h["n"] for h in horizon]
+def ttb_kumulatif(aktual, pred):
+    """MAE pada ambang kumulatif (TTB <= batas), bukan bucket terpisah.
+    Ini cara yang dipakai di proposal dan labels.json, sehingga angkanya
+    bisa dicocokkan langsung dengan teks."""
+    hasil = []
+    for batas in CUM_THRESHOLDS:
+        sel = np.ones(len(aktual), dtype=bool) if batas is None else aktual <= batas
+        hasil.append({
+            "label": "semua" if batas is None else f"≤ {batas} menit",
+            "n": int(sel.sum()),
+            "mae_menit": float(np.abs(pred[sel] - aktual[sel]).mean()),
+        })
+    return hasil
 
-    fig, ax = plt.subplots(figsize=(7.5, 4.4))
-    ax.bar(range(len(mae)), mae, width=0.62, color=SERIES_1)
+
+def prediksi_ttb_onnx(X):
+    """Prediksi dari coldtrack_ttb.onnx -- model TTB yang benar-benar dipakai
+    produksi. Dikembalikan None bila berkasnya belum diekspor."""
+    if not os.path.exists(TTB_ONNX):
+        return None
+    import onnxruntime as ort
+    sess = ort.InferenceSession(TTB_ONNX)
+    return np.ravel(sess.run(None, {"window": X.astype(np.float32)})[0])
+
+
+def plot_ttb(d, ttb_gru):
+    """Bandingkan head TTB milik GRU dengan coldtrack_ttb.onnx (XGBoost) pada
+    ambang kumulatif yang sama. Grafik lama hanya memplot GRU, padahal TTB
+    yang dikirim ke pengguna berasal dari XGBoost."""
+    msk = d["y_ttb"] != SENTINEL
+    aktual = d["y_ttb"][msk]
+    ttb_xgb = prediksi_ttb_onnx(d["X"][msk])
+
+    seri = [("Head TTB GRU (tidak dipakai)", ttb_kumulatif(aktual, ttb_gru[msk]), SERIES_2)]
+    if ttb_xgb is not None:
+        seri.append(("coldtrack_ttb.onnx (XGBoost, dipakai)",
+                     ttb_kumulatif(aktual, ttb_xgb), SERIES_1))
+
+    label = [h["label"] for h in seri[0][1]]
+    n = [h["n"] for h in seri[0][1]]
+    x = np.arange(len(label))
+    lebar = 0.62 / len(seri)
+    puncak = max(h["mae_menit"] for _, hs, _ in seri for h in hs)
+
+    fig, ax = plt.subplots(figsize=(7.8, 4.6))
+    for i, (nama, hs, warna) in enumerate(seri):
+        pos = x + (i - (len(seri) - 1) / 2) * lebar
+        ax.bar(pos, [h["mae_menit"] for h in hs], width=lebar * 0.92, color=warna, label=nama)
+        for px, h in zip(pos, hs):
+            ax.text(px, h["mae_menit"] + puncak * 0.02, f"{h['mae_menit']:.1f}",
+                    ha="center", fontsize=9, color=INK)
 
     ax.axhline(TARGETS["ttb_mae_menit"][1], color=INK_MUTED, linestyle="--", linewidth=1)
-    ax.text(len(mae) - 0.4, TARGETS["ttb_mae_menit"][1] + 2, "target 8 menit",
+    ax.text(len(label) - 0.42, TARGETS["ttb_mae_menit"][1] + puncak * 0.02, "target 8 menit",
             fontsize=8, color=INK_MUTED, ha="right")
 
-    for i, (v, cnt) in enumerate(zip(mae, n)):
-        ax.text(i, v + 2, f"{v:.1f}", ha="center", fontsize=9, color=INK)
-        ax.text(i, -8, f"n={cnt}", ha="center", fontsize=8, color=INK_MUTED)
+    for xi, cnt in zip(x, n):
+        ax.text(xi, -puncak * 0.09, f"n={cnt}", ha="center", fontsize=8, color=INK_MUTED)
 
-    ax.set_xticks(range(len(label)))
+    ax.set_xticks(x)
     ax.set_xticklabels(label, fontsize=9, color=INK_MUTED)
-    ax.set_xlabel("Time-to-Breach sebenarnya (menit)", fontsize=10, color=INK, labelpad=16)
+    ax.set_xlabel("Time-to-Breach sebenarnya (kumulatif)", fontsize=10, color=INK, labelpad=16)
     ax.set_ylabel("MAE prediksi (menit)", fontsize=10, color=INK)
-    ax.set_title("Akurasi Time-to-Breach makin buruk seiring jaraknya — split test",
+    ax.set_title("Time-to-Breach akurat hanya di rentang yang menentukan keputusan — split test",
                  fontsize=11, color=INK, pad=12)
+    ax.legend(frameon=False, fontsize=9, loc="upper left")
 
     ax.grid(axis="y", color="#e8e7e3", linewidth=0.8)
     ax.set_axisbelow(True)
     ax.tick_params(length=0)
-    for s in ["top", "right", "left"]:
-        ax.spines[s].set_visible(False)
+    for s_ in ["top", "right", "left"]:
+        ax.spines[s_].set_visible(False)
     ax.spines["bottom"].set_color("#e8e7e3")
 
     fig.tight_layout()
@@ -202,7 +253,7 @@ def main():
     print(f"Tersimpan: {METRICS_OUT}")
 
     plot_confusion(d_test, pred_test, m_test["macro_f1"])
-    plot_ttb(horizon)
+    plot_ttb(d_test, ttb_test)
 
     print("\nMetrik test vs target:")
     for nama, s in status.items():

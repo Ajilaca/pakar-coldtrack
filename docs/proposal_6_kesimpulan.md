@@ -31,8 +31,8 @@ lebih baik pada data latih tetapi lebih buruk pada data validasi — pola khas *
 final dilatih dari nol.
 
 **Model pohon mengungguli jaringan saraf pada tugas Time-to-Breach.** Kepala TTB milik GRU
-tertinggal jauh di rentang yang justru menentukan keputusan (MAE 17,9 menit dibanding 7,6 menit
-untuk TTB ≤ 30 menit). Tugas itu kami pindahkan ke XGBoost. Sistem final memakai dua model, bukan
+tertinggal di rentang yang justru menentukan keputusan (MAE 10,8 menit dibanding 7,1 menit
+untuk TTB ≤ 30 menit) — cukup untuk menentukan lolos atau tidaknya target 8 menit. Tugas itu kami pindahkan ke XGBoost. Sistem final memakai dua model, bukan
 satu.
 
 **Kesalahan yang paling berbahaya ditemukan justru di tahap integrasi, bukan di tahap pemodelan.**

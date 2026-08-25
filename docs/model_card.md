@@ -124,7 +124,7 @@ Untuk menjawab pertanyaan "mengapa perlu deep learning", tiga baseline diuji pad
 | Macro F1 | 0,581 | **0,664** | — | — |
 | Akurasi | 0,813 | **0,871** | — | — |
 | PR-AUC anomali | 0,711 | **0,753** | — | 0,371 |
-| TTB ≤ 30 menit (menit) | 17,9 | **7,1** | — | — |
+| TTB ≤ 30 menit (menit) | 10,8 | **7,1** | — | — |
 
 **XGBoost mengungguli GRU pada seluruh metrik.** Temuan ini dilaporkan apa adanya, dan menjadi
 dasar keputusan memakai XGBoost untuk Time-to-Breach.

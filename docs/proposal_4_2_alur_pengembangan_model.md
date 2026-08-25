@@ -110,7 +110,7 @@ Untuk menjawab "mengapa perlu deep learning", kami menguji tiga baseline pada da
 | Prediksi suhu t+30 (°C) | 0,198 | **0,189** | 0,338 | — |
 | Macro F1 | 0,581 | **0,664** | — | — |
 | PR-AUC anomali | 0,711 | **0,753** | — | 0,371 |
-| Time-to-Breach ≤ 30 menit | 17,9 | **7,1** | — | — |
+| Time-to-Breach ≤ 30 menit | 10,8 | **7,1** | — | — |
 
 **XGBoost mengungguli GRU pada seluruh metrik.** Kami memilih melaporkannya daripada menyembunyikannya,
 dan mengambil konsekuensinya: Time-to-Breach dipindahkan ke XGBoost, karena di situlah selisihnya
