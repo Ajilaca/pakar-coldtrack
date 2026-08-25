@@ -116,6 +116,17 @@ di sisi render.
 - `time_to_breach_min` adalah `null` untuk truk sehat (label `normal_sehat`)
   dan untuk TTB di atas display cap 30 menit. Tampilkan "—" atau status risiko,
   bukan angka.
+- **Cadangan berbasis aturan.** Bila model mengembalikan `null` sementara
+  `status` berakhir `WASPADA` atau `KRITIS`, backend mengisi angkanya dengan
+  ekstrapolasi linear dari laju kenaikan suhu lima menit terakhir:
+  `(ambang profil − suhu terkini) ÷ Δtemp rata-rata` (0,0 bila suhu sudah
+  melewati ambang). Angka ini **tidak** berasal dari `coldtrack_ttb.onnx`,
+  sehingga MAE 7,08 menit tidak berlaku untuknya dan nilainya tidak dibatasi
+  display cap 30 menit.
+- **Sensor bermasalah menimpa semua di atas.** Bila `failure_mode.label`
+  mengandung "sensor", `time_to_breach_min` selalu `null` — termasuk hasil
+  cadangan — dan `status` dikunci `WASPADA` dengan indeks risiko dijepit ke
+  0,45–0,60.
 - `failure_mode.label` memakai nama Indonesia: `normal_sehat`,
   `pintu_terbuka_lama`, `kegagalan_reefer_total`, `fluktuasi_ambien_ekstrem`,
   `prapendinginan_buruk`, `degradasi_pendinginan`, `masalah_sensor`.
