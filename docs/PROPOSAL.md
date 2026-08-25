@@ -706,3 +706,6 @@ pangan dan farmasi.
 | F | Kontrak API | `docs/api_contract.md` |
 | G | Skema fitur 12 kolom | `docs/feature_schema.md` |
 | H | Tangkapan layar antarmuka (5 skenario) | `[ISI: belum diambil]` |
+
+> Lampiran D–G tersedia dalam bentuk PNG siap tempel di `docs/lampiran/` (dihasilkan ulang
+> dengan `python docs/build_lampiran.py` setiap kali berkas markdown-nya berubah).
