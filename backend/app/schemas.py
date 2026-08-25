@@ -76,8 +76,8 @@ class AnalyzeResponse(BaseModel):
     forecast: Forecast
     drivers: list[FeatureDriver]
     actions: list[RecommendedAction]
-    model_version: str = Field("v1-finetuned-on-v3", json_schema_extra={"example": "coldtrack-gru-v1.3"})
-    inference_ms: int = Field(..., json_schema_extra={"example": 187})
+    model_version: str = Field("coldtrack-gru-v2-fusion-v4", json_schema_extra={"example": "coldtrack-gru-v2-fusion-v4"})
+    inference_ms: int = Field(..., json_schema_extra={"example": 3})
 
 
 class ScenarioMetadata(BaseModel):
