@@ -18,7 +18,7 @@ Sistem ini memakai **dua model** yang berbagi kontrak masukan identik.
 | Jenis | GRU 2 lapis (hidden 64) + statistik ringkasan jendela | XGBoost, 300 pohon |
 | Keluaran | prediksi suhu t+15/30/60, probabilitas 7 mode kegagalan | Time-to-Breach (menit) |
 | Ukuran | 169 KB | 950 KB |
-| Latensi CPU (batch 1) | 1,1 ms | 0,14 ms |
+| Latensi CPU (batch 1) | 1,1 ms | 0,09 ms |
 | Parameter / pohon | 41.443 parameter | 300 pohon |
 
 **Masukan (sama untuk keduanya):** tensor `float32` berbentuk `[batch, 60, 12]` — jendela 60 menit
@@ -124,7 +124,7 @@ Untuk menjawab pertanyaan "mengapa perlu deep learning", tiga baseline diuji pad
 | Macro F1 | 0,581 | **0,664** | — | — |
 | Akurasi | 0,813 | **0,871** | — | — |
 | PR-AUC anomali | 0,711 | **0,753** | — | 0,371 |
-| TTB ≤ 30 menit (menit) | 17,9 | **7,1** | — | — |
+| TTB ≤ 30 menit (menit) | 10,8 | **7,1** | — | — |
 
 **XGBoost mengungguli GRU pada seluruh metrik.** Temuan ini dilaporkan apa adanya, dan menjadi
 dasar keputusan memakai XGBoost untuk Time-to-Breach.

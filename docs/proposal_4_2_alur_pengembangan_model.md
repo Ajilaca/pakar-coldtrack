@@ -20,7 +20,7 @@ Sistem akhir memakai dua model dengan kontrak masukan identik:
 |---|---|---|
 | Arsitektur | GRU 2 lapis (hidden 64) + jalur statistik ringkasan | XGBoost, 300 pohon |
 | Keluaran | prediksi suhu, probabilitas 7 kelas | Time-to-Breach |
-| Ukuran | 169 KB | 946 KB |
+| Ukuran | 169 KB | 950 KB |
 | Latensi CPU | 1,1 ms | 0,09 ms |
 
 Pembagian tugas ini bukan keputusan awal, melainkan hasil pengujian yang diuraikan di §4.2.3.
@@ -110,7 +110,7 @@ Untuk menjawab "mengapa perlu deep learning", kami menguji tiga baseline pada da
 | Prediksi suhu t+30 (°C) | 0,198 | **0,189** | 0,338 | — |
 | Macro F1 | 0,581 | **0,664** | — | — |
 | PR-AUC anomali | 0,711 | **0,753** | — | 0,371 |
-| Time-to-Breach ≤ 30 menit | 17,9 | **7,1** | — | — |
+| Time-to-Breach ≤ 30 menit | 10,8 | **7,1** | — | — |
 
 **XGBoost mengungguli GRU pada seluruh metrik.** Kami memilih melaporkannya daripada menyembunyikannya,
 dan mengambil konsekuensinya: Time-to-Breach dipindahkan ke XGBoost, karena di situlah selisihnya

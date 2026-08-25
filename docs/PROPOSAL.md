@@ -224,7 +224,7 @@ terakhir, 12 fitur per menit. Sistem akhir memakai **dua model dengan kontrak ma
 |---|---|---|
 | Arsitektur | GRU 2 lapis (hidden 64) + jalur statistik ringkasan | XGBoost, 300 pohon |
 | Keluaran | prediksi suhu, probabilitas 7 kelas | Time-to-Breach |
-| Ukuran | 169 KB | 946 KB |
+| Ukuran | 169 KB | 950 KB |
 | Latensi CPU | 1,1 ms | 0,09 ms |
 
 Pembagian tugas ini bukan keputusan awal, melainkan hasil pengujian yang diuraikan di §4.2.6.
@@ -337,7 +337,7 @@ karena itu dilatih dari nol.**
 | Prediksi suhu t+30 (°C) | 0,198 | **0,189** | 0,338 | — |
 | Macro F1 | 0,581 | **0,664** | — | — |
 | PR-AUC anomali | 0,711 | **0,753** | — | 0,371 |
-| Time-to-Breach ≤ 30 menit | 17,9 | **7,1** | — | — |
+| Time-to-Breach ≤ 30 menit | 10,8 | **7,1** | — | — |
 
 **XGBoost mengungguli GRU pada seluruh metrik.** Kami memilih melaporkannya daripada
 menyembunyikannya, dan mengambil konsekuensinya: Time-to-Breach dipindahkan ke XGBoost, karena di
@@ -403,10 +403,12 @@ beroperasi *in-memory* tanpa basis data maupun pekerja latar belakang.
 1. **Validasi skema.** Permintaan dengan < 60 bacaan ditolak `HTTP 400`, untuk mencegah statistik
    ringkasan jendela yang tidak pernah dilihat model saat pelatihan.
 2. **Prapemrosesan.** Sebuah *Forbidden Column Guard* memastikan tidak ada kolom label
-   (`is_anomaly`, `failure_mode`, `time_to_breach`, `temp_true_c`) lolos ke matriks fitur. Empat
+   (`is_anomaly`, `failure_mode`, `time_to_breach`, `time_to_breach_min`) lolos ke matriks fitur. Empat
    fitur turunan dihitung: Δtemp, Δambient, `reefer_duration_min`, dan `hour_of_day`.
 3. **Inferensi dua model** dengan kontrak tensor identik `[1, 60, 12]`.
-4. **Skoring risiko dan penetapan status** (§4.3.4).
+4. **Skoring risiko dan penetapan status** (§4.3.4). Bila model tidak mengeluarkan angka
+   Time-to-Breach sementara status berakhir WASPADA atau KRITIS, aturan mengisi cadangannya
+   (§4.3.5).
 5. **Mesin aturan** menghasilkan tiga tindakan berprioritas beserta estimasi waktu.
 6. **Lapisan penjelasan** menghitung tiga faktor pendorong utama (§4.4.1).
 
@@ -417,27 +419,51 @@ beroperasi *in-memory* tanpa basis data maupun pekerja latar belakang.
 
 **R = 0,40·R_temp + 0,25·R_rate + 0,20·R_reefer + 0,15·R_door**
 
-Status kemudian ditetapkan secara deterministik, lalu **dinaikkan oleh dua aturan keselamatan**:
+Status dasar ditetapkan secara deterministik — bukan dari R saja, tetapi juga dari prediksi suhu itu
+sendiri — lalu disesuaikan oleh dua aturan keselamatan yang **sengaja bekerja dengan cara berbeda**:
 
-| Aturan | Isi | Alasan |
+| Aturan | Isi | Arah |
 |---|---|---|
-| Dasar | KRITIS bila R ≥ 0,70; WASPADA bila R ≥ 0,35 | penilaian risiko gabungan |
-| **Lantai Time-to-Breach** | TTB ≤ 30 menit → minimal KRITIS; ≤ 60 menit → minimal WASPADA | status dasar hanya melihat prediksi suhu, sedangkan TTB berasal dari model terpisah — keduanya dapat tidak sepakat |
-| **Kunci sensor bermasalah** | diagnosis sensor → status dikunci WASPADA, angka TTB disembunyikan | tidak boleh menyatakan aman dari alat ukur yang rusak, dan tidak boleh mengklaim kepastian dari alat ukur yang sama |
+| Dasar | KRITIS bila R ≥ 0,70 **atau** prediksi suhu maksimum ≥ ambang kritis profil; WASPADA bila R ≥ 0,35 **atau** prediksi suhu maksimum > ambang maksimum profil | — |
+| **Lantai Time-to-Breach** | TTB ≤ 30 menit → minimal KRITIS; ≤ 60 menit → minimal WASPADA | hanya menaikkan |
+| **Penjepit sensor bermasalah** | diagnosis sensor → status ditetapkan WASPADA, indeks risiko dijepit ke 0,45–0,60, angka TTB disembunyikan | menaikkan **dan** menurunkan |
 
-Kedua aturan tambahan hanya dapat **menaikkan** keparahan, tidak pernah menurunkan. Perancangan
-asimetris ini mengikuti ketimpangan konsekuensi: kegagalan yang tidak terdeteksi jauh lebih
-merugikan daripada peringatan berlebih.
+**Lantai TTB murni asimetris.** Ia hanya dipakai bila keparahannya lebih tinggi daripada status
+dasar, sehingga kasus yang sudah benar tidak pernah berubah. Alasannya: status dasar hanya melihat
+prediksi suhu, sedangkan TTB berasal dari model yang sepenuhnya terpisah — keduanya dapat tidak
+sepakat. Perancangan asimetris ini mengikuti ketimpangan konsekuensi: kegagalan yang tidak
+terdeteksi jauh lebih merugikan daripada peringatan berlebih. Aturan ini lahir dari kesalahan nyata
+yang kami temukan pada pengujian ujung-ke-ujung; kasus lengkapnya diuraikan pada §4.4.2.
 
-Aturan lantai TTB lahir dari kesalahan nyata yang kami temukan pada pengujian ujung-ke-ujung; kasus
-lengkapnya diuraikan pada §4.4.2.
+**Penjepit sensor sengaja bekerja dua arah**, dan itu bukan pengecualian yang terlewat melainkan
+konsekuensi dari prinsip yang berbeda. Bila model mendiagnosis sensor macet atau rusak, seluruh
+perhitungan di atas berdiri pada angka yang tidak dapat dipercaya: suhu terlihat stabil justru
+*karena* sensornya beku, bukan karena muatannya aman.
+
+- **Tidak boleh AMAN** — jangan memberi rasa aman palsu dari alat ukur yang sudah diketahui rusak.
+- **Tidak boleh KRITIS** — jangan mengklaim kepastian dari alat ukur yang sama. Pada skenario
+  "sensor macet", 60 bacaan terakhir bernilai identik (3,95 °C) namun model TTB tetap mengeluarkan
+  23,8 menit. Angka itu hasil ekstrapolasi dari sinyal beku; menaikkannya ke KRITIS berarti
+  menampilkan ketelitian yang tidak dimiliki sistem.
+
+Pesan yang benar untuk kondisi ini adalah "alat ukur tidak dapat dipercaya, verifikasi manual" — dan
+itu tepat WASPADA. Prinsipnya: **sistem tidak boleh mengklaim ketelitian yang melampaui alat
+ukurnya**, baik ke arah menenangkan maupun ke arah menakut-nakuti.
 
 #### 4.3.5 Gating Time-to-Breach
 
-- **Truk sehat (kelas A0):** dikembalikan `null`. Model TTB dilatih dengan *masking* pada jendela
-  sehat, sehingga keluarannya pada kondisi normal tidak bermakna secara fisik.
-- **Batas tampilan 30 menit:** di atas itu sistem hanya menyebut ada risiko, tanpa angka —
+- **Truk sehat (kelas A0):** model mengembalikan `null`. Model TTB dilatih dengan *masking* pada
+  jendela sehat, sehingga keluarannya pada kondisi normal tidak bermakna secara fisik.
+- **Batas tampilan 30 menit:** prediksi model di atas 30 menit juga dikembalikan `null` —
   konsekuensi langsung dari profil MAE pada §4.2.5.
+- **Cadangan berbasis aturan.** Bila model mengembalikan `null` sementara status berakhir WASPADA
+  atau KRITIS, backend mengisi angkanya dengan ekstrapolasi linear dari laju kenaikan suhu lima
+  menit terakhir: (ambang profil − suhu terkini) ÷ Δtemp rata-rata. Tanpa ini, layar dapat
+  menampilkan peringatan KRITIS berdampingan dengan hitung mundur kosong. Angka cadangan ini
+  **tidak berasal dari `coldtrack_ttb.onnx`**, sehingga MAE 7,08 menit pada §4.2.5 tidak berlaku
+  untuknya, dan nilainya tidak dibatasi ambang 30 menit di atas.
+- **Sensor bermasalah:** angka TTB disembunyikan sepenuhnya, termasuk hasil cadangan di atas
+  (§4.3.4).
 
 #### 4.3.6 Kontainer dan reproduksibilitas
 
@@ -532,7 +558,8 @@ Antarmuka menampilkan lampu hijau "AMAN" tepat di sebelah tulisan "19 menit lagi
 terlampaui", dan rekomendasi tindakannya berbunyi "lanjutkan pemantauan rutin". Empat dari lima
 skenario terdampak.
 
-Perbaikannya berupa dua aturan eskalasi pada §4.3.4. Kecocokan status terhadap status yang
+Perbaikannya berupa dua aturan keselamatan pada §4.3.4 — lantai Time-to-Breach untuk kasus di atas,
+dan penjepit sensor untuk skenario sensor macet. Kecocokan status terhadap status yang
 diharapkan naik dari **1/5 menjadi 5/5**.
 
 Kami mencantumkan kejadian ini apa adanya karena inilah bentuk verifikasi yang bekerja: ditemukan
@@ -548,6 +575,7 @@ diaudit siapa pun tanpa membaca bobot model.
 | Prediksi suhu t+15/30/60 | Penetapan status AMAN / WASPADA / KRITIS |
 | Klasifikasi mode kegagalan | Pemilihan tiga langkah tindakan |
 | Estimasi Time-to-Breach | Penerapan ambang keselamatan |
+| — | Cadangan Time-to-Breach bila model tidak mengeluarkan angka (§4.3.5) |
 
 Ambang keselamatan berada di `config.yaml` dan dapat ditinjau siapa pun tanpa membaca bobot model.
 Sistem ini adalah **alat bantu keputusan bagi operator**, bukan sistem kendali otomatis — tidak ada
@@ -672,9 +700,12 @@ pangan dan farmasi.
 |---|---|---|
 | A | Kurva loss pretrain vs dari nol | `ml/reports/loss_curves.png` |
 | B | Confusion matrix 7 kelas | `ml/reports/confusion_matrix.png` |
-| C | MAE Time-to-Breach per horizon | `ml/reports/ttb_by_horizon.png` |
+| C | MAE Time-to-Breach per horizon — GRU vs XGBoost | `ml/reports/ttb_by_horizon.png` |
 | D | Model Card lengkap | `docs/model_card.md` |
 | E | Dataset Card lengkap | `docs/dataset_card.md` |
 | F | Kontrak API | `docs/api_contract.md` |
 | G | Skema fitur 12 kolom | `docs/feature_schema.md` |
 | H | Tangkapan layar antarmuka (5 skenario) | `[ISI: belum diambil]` |
+
+> Lampiran D–G tersedia dalam bentuk PNG siap tempel di `docs/lampiran/` (dihasilkan ulang
+> dengan `python docs/build_lampiran.py` setiap kali berkas markdown-nya berubah).

@@ -1,11 +1,11 @@
 # Kontrak API — ColdTrack AI
 
-Dokumen kontrak resmi antara frontend (R4) dan backend (R3) untuk integrasi
-end-to-end. Tujuan dokumen ini: menghilangkan ketidakcocokan nama field dan
-jumlah bacaan yang pernah menyebabkan seluruh permintaan ditolak dengan 422.
+Kontrak resmi antara antarmuka dan layanan backend ColdTrack AI. Dokumen ini
+menetapkan bentuk permintaan, bentuk respons, dan semantik tiap field — termasuk
+kapan sebuah field bernilai `null` dan apa artinya bagi tampilan.
 
-Implementasi backend: `backend/app/schemas.py`, `backend/app/main.py`.
-Status: **dibekukan untuk demo COMPFEST 18** — perubahan hanya lewat kesepakatan R3 + R4.
+Implementasi: `backend/app/schemas.py`, `backend/app/main.py`.
+Status: **dibekukan untuk demo COMPFEST 18**.
 
 ---
 
@@ -49,11 +49,11 @@ Satu-satunya endpoint yang dipakai untuk alur inti (satu input → satu output A
 | `lon` | float | opsional | Bukan fitur model; default `0.0` |
 | `solar_radiation` | float | opsional | Default `0.0` |
 
-> **Nama field WAJIB persis seperti di atas.** Frontend versi lama mengirim
-> `temperature_c`, `ambient_temp_c`, `timestamp`, `door_open` saja — itu ditolak
-> dengan HTTP 422. Enam field model wajib yang sebelumnya tidak dikirim:
-> `ts`, `humidity`, `reefer_on`, `speed_kmh`, `harsh_events` (plus `temp_c` /
-> `ambient_c` yang harus diganti namanya).
+> **Nama field wajib persis seperti di atas.** Validasi Pydantic v2 menolak
+> penamaan lain — misalnya `temperature_c`, `ambient_temp_c`, atau `timestamp` —
+> dengan **HTTP 422**. Penolakan ini disengaja: field yang salah nama akan
+> terbaca sebagai field yang hilang, dan model tidak boleh menerima jendela
+> yang diam-diam tidak lengkap.
 
 ### `cargo_profile`
 
@@ -77,9 +77,8 @@ permintaan), tetapi perilaku ini tidak dijamin untuk demo — gunakan daftar res
 - Model GRU fusion menghitung statistik ringkasan jendela (std/trend) internal;
   jendela yang di-pad menghasilkan prediksi diam-diam salah. Karena itu
   frontend **tidak boleh** mengirim jendela pendek.
-- Skenario demo di frontend saat ini (N=31) **belum memenuhi syarat** dan akan
-  ditolak. Skenario pengganti R1 (minimal 60 bacaan) wajib digunakan di jalur
-  demo sungguhan.
+- Kelima skenario demo yang dikemas bersama layanan masing-masing berisi
+  ≥ 60 bacaan berinterval 1 menit, sehingga memenuhi syarat ini.
 
 ---
 
@@ -103,12 +102,13 @@ permintaan), tetapi perilaku ini tidak dijamin untuk demo — gunakan daftar res
     { "priority": 3, "text": "...", "eta_min": 10 }
   ],
   "model_version": "coldtrack-gru-v2-fusion-v4",
-  "inference_ms": 187
+  "inference_ms": 3
 }
 ```
 
-Kontrak response tidak berubah dari versi awal — frontend prototipe sudah benar
-di sisi render.
+`inference_ms` adalah waktu pemrosesan sisi server, bukan waktu bolak-balik
+jaringan; nilainya biasa berada di angka satu digit (lihat profil latensi pada
+proposal §4.3.7).
 
 ### Semantik penting untuk tampilan
 
@@ -116,6 +116,17 @@ di sisi render.
 - `time_to_breach_min` adalah `null` untuk truk sehat (label `normal_sehat`)
   dan untuk TTB di atas display cap 30 menit. Tampilkan "—" atau status risiko,
   bukan angka.
+- **Cadangan berbasis aturan.** Bila model mengembalikan `null` sementara
+  `status` berakhir `WASPADA` atau `KRITIS`, backend mengisi angkanya dengan
+  ekstrapolasi linear dari laju kenaikan suhu lima menit terakhir:
+  `(ambang profil − suhu terkini) ÷ Δtemp rata-rata` (0,0 bila suhu sudah
+  melewati ambang). Angka ini **tidak** berasal dari `coldtrack_ttb.onnx`,
+  sehingga MAE 7,08 menit tidak berlaku untuknya dan nilainya tidak dibatasi
+  display cap 30 menit.
+- **Sensor bermasalah menimpa semua di atas.** Bila `failure_mode.label`
+  mengandung "sensor", `time_to_breach_min` selalu `null` — termasuk hasil
+  cadangan — dan `status` dikunci `WASPADA` dengan indeks risiko dijepit ke
+  0,45–0,60.
 - `failure_mode.label` memakai nama Indonesia: `normal_sehat`,
   `pintu_terbuka_lama`, `kegagalan_reefer_total`, `fluktuasi_ambien_ekstrem`,
   `prapendinginan_buruk`, `degradasi_pendinginan`, `masalah_sensor`.
@@ -123,19 +134,16 @@ di sisi render.
 
 ---
 
-## 5. Panduan Migrasi Frontend (R4)
+## 5. Catatan integrasi antarmuka
 
-1. Ganti `SensorReading`/payload request di `lib/types.ts` agar mengirim field
-   `TelemetryReading` (lihat tabel §2). Field `t_min` (relatif) boleh tetap
-   dipakai **internal** untuk sumbu-x grafik, tetapi jangan dikirim ke backend —
-   backend butuh `ts` absolut.
-2. Isi nilai default yang masuk akal untuk field yang belum tersedia di data
-   sintetis: `humidity` (~70), `reefer_on` (sesuai skenario), `speed_kmh`,
-   `harsh_events` (0).
-3. Pastikan `scenario-data.ts` menghasilkan **≥ 60 bacaan** (interval tetap,
-   mis. 1 menit). Skema tes sudah mengasumsikan ≥ 60.
-4. Uji dengan `NEXT_PUBLIC_USE_MOCK=false` setelah endpoint asli siap — jangan
-   menunggu M6.
+- Antarmuka boleh memakai penomoran menit relatif untuk sumbu-x grafik, tetapi
+  yang dikirim ke backend harus `ts` absolut — fitur `hour_of_day` diturunkan
+  dari situ.
+- `lat`/`lon` hanya dipakai untuk peta di antarmuka; keduanya tidak pernah masuk
+  ke matriks fitur model.
+- Antarmuka memanggil backend sungguhan bila `NEXT_PUBLIC_USE_MOCK=false`. Nilai
+  ini ditanamkan saat kompilasi Next.js, sehingga harus diteruskan sebagai
+  *build argument* Docker, bukan variabel runtime.
 
 ---
 

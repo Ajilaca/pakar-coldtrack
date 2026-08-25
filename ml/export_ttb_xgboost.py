@@ -2,7 +2,7 @@
 
 Latar belakang. Evaluasi di split test menunjukkan head TTB milik GRU jauh
 tertinggal dari XGBoost pada rentang yang menentukan keputusan operasional:
-MAE 17,9 vs 7,6 menit untuk TTB <= 30 menit. Karena itu TTB dipindahkan ke
+MAE 10,8 vs 7,1 menit untuk TTB <= 30 menit. Karena itu TTB dipindahkan ke
 XGBoost, sementara forecast suhu dan klasifikasi mode kegagalan tetap ditangani
 GRU yang sudah terpasang.
 
@@ -131,7 +131,7 @@ def verifikasi():
 
     print("\nAkurasi di split test (pembanding: head TTB milik GRU):")
     hasil = {}
-    for batas, acuan_gru in [(10, 6.9), (30, 17.9), (10**9, 52.98)]:
+    for batas, acuan_gru in [(10, 3.5), (30, 10.8), (10**9, 52.42)]:
         sel = aktual <= batas
         mae = float(np.abs(pred[sel] - aktual[sel]).mean())
         nama = "keseluruhan" if batas > 1000 else f"TTB <= {batas} menit"
@@ -159,8 +159,8 @@ def perbarui_labels(hasil):
     kontrak["model_ttb_terpisah"] = {
         "file": "coldtrack_ttb.onnx",
         "alasan": (
-            "Head TTB milik GRU tertinggal jauh di rentang yang menentukan keputusan "
-            "(MAE 17,9 vs 7,6 menit untuk TTB <= 30 menit di split test), sehingga tugas "
+            "Head TTB milik GRU tertinggal di rentang yang menentukan keputusan "
+            "(MAE 10,8 vs 7,1 menit untuk TTB <= 30 menit di split test), sehingga tugas "
             "ini dipindahkan ke XGBoost. Forecast suhu dan klasifikasi mode kegagalan "
             "tetap ditangani coldtrack.onnx."
         ),
