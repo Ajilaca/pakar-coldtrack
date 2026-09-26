@@ -67,7 +67,7 @@ def test_analyze_endpoint_success():
     assert "actions" in res_data
     assert len(res_data["actions"]) == 3
     assert "model_version" in res_data
-    assert res_data["model_version"] == "coldtrack-gru-v2-fusion-v4"
+    assert res_data["model_version"] == "coldtrack-hybrid-v3"
     assert "inference_ms" in res_data
     assert res_data["inference_ms"] < 1000  # Latency target < 1000ms
 
@@ -158,9 +158,7 @@ def test_broken_payload_single_reading_returns_400():
 
 
 def test_latency_under_1000ms():
-    """Spec requirement: dual-model inference (coldtrack.onnx + coldtrack_ttb.onnx)
-    must complete well under 1000ms (combined latency ~1.2ms).
-    """
+    """Engine + GRU + XGBoost TTB must complete well under 1000ms."""
     payload = {
         "shipment_id": "TRK-PERF-001",
         "cargo_profile": "vaksin_2_8C",
@@ -173,24 +171,24 @@ def test_latency_under_1000ms():
 
 
 def test_ttb_null_for_healthy_truck():
-    """Bug 1 fix: healthy trucks (A0 class) must always return time_to_breach_min=null.
-
-    The TTB model is trained on failure windows only; its output for healthy
-    trucks is undefined — not a sentinel 999. Gate must use failure_prob, not raw TTB.
-    """
-    # Stable temp, reefer on, door closed — strong signal for healthy prediction
-    payload = {
-        "shipment_id": "TRK-HEALTHY-001",
-        "cargo_profile": "vaksin_2_8C",
-        "readings": make_readings(60, base_temp=4.5, ambient=31.0, door_open=False, reefer_on=True),
-    }
+    """Stable cold cargo, door closed: AMAN and no TTB shown."""
+    readings = make_readings(60, base_temp=4.5, ambient=31.0)
+    for r in readings:
+        r["temp_c"] = 4.5
+    payload = {"shipment_id": "TRK-HEALTHY-001", "cargo_profile": "vaksin_2_8C", "readings": readings}
     response = client.post("/api/v1/analyze", json=payload)
     assert response.status_code == 200
     data = response.json()
-    if data["failure_mode"]["label"] == "normal_sehat":
-        assert data["time_to_breach_min"] is None, (
-            "Healthy truck should never expose a TTB value (Bug 1 regression)"
-        )
+    assert data["status"] == "AMAN"
+    assert data["time_to_breach_min"] is None
+
+
+def test_mass_kg_optional_and_validated():
+    readings = make_readings(60)
+    base = {"shipment_id": "TRK-M", "cargo_profile": "vaksin_2_8C", "readings": readings}
+    assert client.post("/api/v1/analyze", json=base).status_code == 200
+    assert client.post("/api/v1/analyze", json={**base, "mass_kg": 300}).status_code == 200
+    assert client.post("/api/v1/analyze", json={**base, "mass_kg": 0}).status_code == 422
 
 
 @pytest.mark.parametrize("cargo_profile", ["ikan_segar_0_5C", "produk_susu_2_4C"])

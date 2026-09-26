@@ -8,52 +8,48 @@ app:
   mock_mode: false
 
 model:
-  onnx_path: models/coldtrack.onnx
+  gru_onnx_path: models/coldtrack_gru.onnx
   ttb_onnx_path: models/coldtrack_ttb.onnx
-  labels_path: models/labels.json
-  version: coldtrack-gru-v2-fusion-v4
-  ttb_display_cap_min: 30
+  version: coldtrack-hybrid-v3
+# Ambang status dan batas tampil TTB ada di app/core/engine.py :: CFG.
 
+# c_kj_kgc dan mass_kg_default = [ASUMSI] sampai diganti nilai dari `data kalor.pdf`
+# (segar ~3,6-3,9 kJ/kg.C, beku ~1,8). mass_kg_default dipakai bila request tidak
+# mengirim mass_kg; muatan kecil -> alarm lebih sensitif.
 cargo_profiles:
   vaksin_2_8C:
     name: "Vaksin & Produk Biologis (2 - 8°C)"
     min_temp_c: 2.0
     max_temp_c: 8.0
     critical_temp_c: 10.0
+    c_kj_kgc: 3.8
+    mass_kg_default: 1000
   daging_beku_-18C:
     name: "Daging & Makanan Beku (-25 – -18°C)"
     min_temp_c: -25.0
     max_temp_c: -18.0
     critical_temp_c: -12.0
+    c_kj_kgc: 1.8
+    t_set_c: -20.0          # titik setel freezer Isuzu (sama dengan simulator)
+    mass_kg_default: 1000
   buah_segar_2_4C:
     name: "Buah & Sayur Segar (2 - 4°C)"
     min_temp_c: 2.0
     max_temp_c: 4.0
     critical_temp_c: 6.0
+    c_kj_kgc: 3.9
+    mass_kg_default: 1000
   ikan_segar_0_5C:
     name: "Ikan Segar (0 - 5°C)"
     min_temp_c: 0.0
     max_temp_c: 5.0
     critical_temp_c: 8.0
+    c_kj_kgc: 3.6
+    mass_kg_default: 1000
   produk_susu_2_4C:
     name: "Produk Susu (2 - 4°C)"
     min_temp_c: 2.0
     max_temp_c: 4.0
     critical_temp_c: 6.0
-
-risk_weights:
-  temp_breach: 0.40
-  temp_rate_of_rise: 0.25
-  reefer_off: 0.20
-  door_open: 0.15
-
-# Ambang eskalasi status berdasarkan Time-to-Breach.
-#
-# Status utama dihitung dari `forecast`, sedangkan TTB berasal dari kepala
-# model yang terpisah — keduanya bisa tidak sepakat. Nilai di bawah dipakai
-# sebagai LANTAI status: kalau TTB memperkirakan pelanggaran dalam waktu
-# dekat, status tidak boleh tetap AMAN meski forecast masih di dalam ambang.
-# Lihat rules.py :: compute_risk_index.
-ttb_status_thresholds:
-  critical_max_min: 30   # TTB <= 30 menit -> minimal KRITIS
-  warning_max_min: 60    # TTB <= 60 menit -> minimal WASPADA
+    c_kj_kgc: 3.9
+    mass_kg_default: 1000
