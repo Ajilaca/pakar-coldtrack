@@ -69,6 +69,26 @@ def figs(B, R):
     fig.tight_layout(); fig.savefig(RES / FIG.format("noise"), dpi=170); plt.close(fig)
 
 
+def _kit():
+    """Shared PDF styles: headings, body, small print, paragraph/percent/table helpers."""
+    ss = getSampleStyleSheet()
+    H1 = ParagraphStyle("h1", parent=ss["Heading1"], fontSize=15, spaceAfter=6)
+    H2 = ParagraphStyle("h2", parent=ss["Heading2"], fontSize=11.5, spaceBefore=8, spaceAfter=3)
+    Bd = ParagraphStyle("b", parent=ss["BodyText"], fontSize=9, leading=12)
+    S = ParagraphStyle("s", parent=Bd, fontSize=7.5, leading=9.5, textColor=colors.HexColor(GREY))
+    C = ParagraphStyle("c", parent=Bd, fontSize=8, leading=10)
+    p = lambda t, st=Bd: Paragraph(t, st)
+    pct = lambda x: f"{100 * x:.0f}%"
+
+    def table(rows, widths):
+        t = Table([[p(str(c), C) for c in r] for r in rows], colWidths=widths, repeatRows=1)
+        t.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), .4, colors.HexColor("#BBBBBB")),
+                               ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                               ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#E8EAF0"))]))
+        return t
+    return H1, H2, Bd, S, p, pct, table
+
+
 def checks(tag):
     pt = subprocess.run([sys.executable, "-m", "pytest", "eval/test_baseline.py", "-q", "-p", "no:cacheprovider", "-rA"],
                         capture_output=True, text=True, env={**os.environ, "EVAL_TAG": tag}).stdout
@@ -90,21 +110,7 @@ def build(tag):
     a0, ba0 = G5["by_true_mode_status"]["A0"], b5["by_true_mode_status"]["A0"]
     bias = G1["mae_t30_by_cargo"]
 
-    ss = getSampleStyleSheet()
-    H1 = ParagraphStyle("h1", parent=ss["Heading1"], fontSize=15, spaceAfter=6)
-    H2 = ParagraphStyle("h2", parent=ss["Heading2"], fontSize=11.5, spaceBefore=8, spaceAfter=3)
-    Bd = ParagraphStyle("b", parent=ss["BodyText"], fontSize=9, leading=12)
-    S = ParagraphStyle("s", parent=Bd, fontSize=7.5, leading=9.5, textColor=colors.HexColor(GREY))
-    C = ParagraphStyle("c", parent=Bd, fontSize=8, leading=10)
-    p = lambda t, st=Bd: Paragraph(t, st)
-    pct = lambda x: f"{100 * x:.0f}%"
-
-    def table(rows, widths, fs=8):
-        t = Table([[p(str(c), C) for c in r] for r in rows], colWidths=widths, repeatRows=1)
-        t.setStyle(TableStyle([("GRID", (0, 0), (-1, -1), .4, colors.HexColor("#BBBBBB")),
-                               ("VALIGN", (0, 0), (-1, -1), "TOP"),
-                               ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#E8EAF0"))]))
-        return t
+    H1, H2, Bd, S, p, pct, table = _kit()
 
     s = []
     # ---------- intro + summary ----------
@@ -272,6 +278,240 @@ def build(tag):
     print("wrote", OUT_PDF)
 
 
+OUT_PDF2 = RES / "Evaluation_Artifact_Iteration_2.pdf"
+FIG2 = "iteration2_fig_{}.png"
+
+
+def demo_scenarios():
+    """Status the server returns for the 5 demo scenarios the frontend offers."""
+    from fastapi.testclient import TestClient
+    from eval.common import ROOT  # noqa: F401  (puts backend/ on the path)
+    from app.main import app
+    c = TestClient(app)
+    rows = []
+    for m in c.get("/api/v1/scenarios").json():
+        s = c.get(f"/api/v1/scenarios/{m['id']}").json()
+        r = c.post("/api/v1/analyze", json={"shipment_id": s["id"], "cargo_profile": s["cargo_profile"],
+                                            "readings": s["readings"]}).json()
+        rows.append((s["title"], s["expected_status"], r["status"], r["time_to_breach_min"], r["failure_mode"]["label"]))
+    return rows
+
+
+def figs2(B, R1, R2, SW):
+    runs = [(B, "Baseline"), (R1, "Iteration 1"), (R2, "Iteration 2")]
+    fig, axes = plt.subplots(1, 3, figsize=(8.6, 2.9), sharey=True)
+    for ax, (R, title) in zip(axes, runs):
+        G, left = R["G5_end_to_end_api"], np.zeros(len(BUCKETS))
+        for st, col in STATUS_COL:
+            v = np.array([G[k][st] for k, _ in BUCKETS])
+            ax.barh([n for _, n in BUCKETS], v, left=left, color=col, label=st); left += v
+        ax.set_xlim(0, 1); ax.set_title(title, fontsize=9); ax.tick_params(labelsize=7.5)
+        ax.set_xlabel("share of snapshots", fontsize=8)
+    axes[0].invert_yaxis(); axes[0].set_ylabel("breach really happens in", fontsize=8)
+    axes[1].legend(ncol=3, fontsize=7, loc="lower center", bbox_to_anchor=(.5, 1.1))
+    fig.tight_layout(); fig.savefig(RES / FIG2.format("status"), dpi=170); plt.close(fig)
+
+    sw = SW["sweep"]
+    fig, ax = plt.subplots(figsize=(5.2, 3.0))
+    ax.plot([r["healthy_alert"] for r in sw], [r["urgent_aman"] for r in sw], "o-", color=AFTER)
+    for r in sw:
+        ax.annotate(f"{r['margin_2_4C']:.1f} °C", (r["healthy_alert"], r["urgent_aman"]), textcoords="offset points",
+                    xytext=(5, 4), fontsize=7.5, fontweight="bold" if r["frac"] == SW["chosen_frac"] else "normal")
+    ax.axhline(.05, color=GREY, lw=.8, ls=":"); ax.axvline(.10, color=GREY, lw=.8, ls=":")
+    ax.set_xlabel("healthy snapshots with a warning", fontsize=8); ax.set_ylabel("urgent snapshots shown green", fontsize=8)
+    ax.set_xlim(0, .4); ax.set_ylim(-.005, .09); ax.tick_params(labelsize=8)
+    ax.text(.005, .052, "safety limit 5%", fontsize=7, color=GREY); ax.text(.103, .082, "false-warning limit 10%", fontsize=7, color=GREY)
+    fig.tight_layout(); fig.savefig(RES / FIG2.format("margin"), dpi=170); plt.close(fig)
+
+
+def build2(tag1="iter1", tag2="iter2"):
+    B = json.loads((RES / "baseline_results.json").read_text())
+    R1 = json.loads((RES / f"{tag1}_results.json").read_text())
+    R2 = json.loads((RES / f"{tag2}_results.json").read_text())
+    S1 = json.loads((RES / f"sim_v3_{tag1}.json").read_text())
+    S2 = json.loads((RES / f"sim_v3_{tag2}.json").read_text())
+    SW = json.loads((RES / f"margin_sweep_{tag2}.json").read_text())
+    figs2(B, R1, R2, SW)
+    ck1, ck2 = checks(tag1), checks(tag2)
+    n1, n2 = (sum(c == "PASSED" for c, _ in ck) for ck in (ck1, ck2))
+    changed = [(n, c1, c2) for (c1, n), (c2, _) in zip(sorted(ck1, key=lambda x: x[1]), sorted(ck2, key=lambda x: x[1])) if c1 != c2]
+    demo = demo_scenarios()
+    H1, H2, Bd, S, p, pct, table = _kit()
+
+    def g(R, *path):
+        for k in path: R = R[k]
+        return R
+
+    b5, a5, c5 = (R["G5_end_to_end_api"] for R in (B, R1, R2))
+    a3, c3 = R1["G3_imminent_breach"], R2["G3_imminent_breach"]
+    a4, c4 = R1["G4_robustness"], R2["G4_robustness"]
+    stuck1, stuck2 = a4["stuck_sensor_on_imminent_breach"], c4["stuck_sensor_on_imminent_breach"]
+    ev1, ev2 = R1["G2_events"]["per_event"], R2["G2_events"]["per_event"]
+    hw = lambda R: R["G5_end_to_end_api"]["by_true_mode_status"]["A0"]
+    chosen = next(r for r in SW["sweep"] if r["frac"] == SW["chosen_frac"])
+    narrow = next(r for r in SW["sweep"] if r["frac"] == 0.25)
+
+    s = []
+    # ---------- intro + summary ----------
+    s += [p("ColdTrack AI: Evaluation Artifact (Iteration 2)", H1),
+          p(f"AIC COMPFEST 18 Final · Smart Logistics · results tags: {tag1} → {tag2} · follows Evaluation_Artifact_Iteration.pdf", S),
+          Spacer(1, 4), p("What is this document?", H2),
+          p("Iteration 1 replaced the qualifying-round prototype with a physics engine plus a learned model, and fixed its worst failure: "
+            "urgent cases were no longer shown as green. It left others open, listed as N1 to N7 in the iteration 1 artifact. "
+            "Iteration 2 changes four rules in the physics engine and the sensor check to address N1, N2 and N6. "
+            "No model was retrained, so the forecast and the event names (N3, N4, N5) are unchanged.", Bd),
+          p(f"We measured iteration 2 twice. First on the same {R2['n_trips']} test trips as the baseline and iteration 1 "
+            f"({R2['n_windows']:,} snapshots from the old generator, dataset v4), so all three versions can be compared. "
+            f"Then on {S2['n_test_trips']} held-out trips from the new physics simulator (dataset v3, trips the models never trained on). "
+            "The second test exists because we chose the rule settings while looking at dataset v4; if a change only fitted v4, "
+            "it would show up as a loss on dataset v3.", Bd),
+          p("Summary", H2),
+          p(f"Iteration 2 passes {n2} of {len(ck2)} checks, the same count as iteration 1 ({n1}), but the numbers behind them moved:", Bd),
+          table([["What we measure (dataset v4, server)", "Baseline", "Iteration 1", "Iteration 2", "Goal"],
+                 ["Urgent cases (breach within 30 min) shown as green", pct(b5["true_ttb_le30"]["AMAN"]), pct(a5["true_ttb_le30"]["AMAN"]),
+                  pct(c5["true_ttb_le30"]["AMAN"]), "5% or less"],
+                 ["Urgent cases shown as critical", pct(b5["true_ttb_le30"]["KRITIS"]), pct(a5["true_ttb_le30"]["KRITIS"]),
+                  pct(c5["true_ttb_le30"]["KRITIS"]), "no goal set"],
+                 ["Urgent cases with a countdown", pct(b5["true_ttb_le30"]["ttb_shown"]), pct(a5["true_ttb_le30"]["ttb_shown"]),
+                  pct(c5["true_ttb_le30"]["ttb_shown"]), "80% or more"],
+                 ["Healthy snapshots with a warning or critical status", pct(hw(B)["WASPADA"] + hw(B)["KRITIS"]),
+                  pct(hw(R1)["WASPADA"] + hw(R1)["KRITIS"]), pct(hw(R2)["WASPADA"] + hw(R2)["KRITIS"]), "10% or less"],
+                 ["Sensor frozen during a real breach: flagged", pct(B["G4_robustness"]["stuck_sensor_on_imminent_breach"]["pred_masalah_sensor"]),
+                  pct(stuck1["flagged_sensor"]), pct(stuck2["flagged_sensor"]), "50% or more"],
+                 ["Urgent cases treated as safe with 0.3 °C sensor noise", pct(B["G4_robustness"]["sensor_noise_sigma_0.3C"]["imminent_pred_A0_rate"]),
+                  pct(a4["sensor_noise_sigma_0.3C"]["imminent_aman_rate"]), pct(c4["sensor_noise_sigma_0.3C"]["imminent_aman_rate"]), "50% or less"],
+                 ["Checks passed", "8 of 23", f"{n1} of {len(ck1)}", f"{n2} of {len(ck2)}", "lists differ from baseline"]],
+                [6.2*cm, 2.2*cm, 2.3*cm, 2.3*cm, 3.4*cm]),
+          Spacer(1, 4),
+          p(f"On the new simulator's held-out trips nothing got worse for healthy trucks or sensor faults, and the critical status arrives earlier "
+            f"(median {S1['median_lead_kritis_min']:.0f} → {S2['median_lead_kritis_min']:.0f} minutes before the breach). "
+            f"The price is more alarms on door openings that never lead to a breach: critical status on {pct(S1['door_no_breach_any_kritis'])} → "
+            f"{pct(S2['door_no_breach_any_kritis'])} of those trips (section 3).", Bd),
+          p("Checks that changed result: " + (", ".join(f"{n} ({'FAIL → PASS' if c2 == 'PASSED' else 'PASS → FAIL'})" for n, c1, c2 in changed)
+            if changed else "none") + ".", S),
+          PageBreak()]
+
+    # ---------- what changed ----------
+    s += [p("1. What changed", H1),
+          table([["Change", "Finding it targets", "Rule now"],
+                 ["Drift countdown", "N1: urgent cases got a warning but never a countdown or a critical status",
+                  "When the smoothed sensor reading has risen at least 0.3 °C per hour over 20 minutes and the door has been shut for 30 minutes, "
+                  "the engine also counts the minutes until the reading itself would cross the limit, and uses the shorter of this and the physics countdown."],
+                 ["Margin scaled to the cargo range", "N2: healthy trucks warned in 33% of snapshots",
+                  f"The “near the limit” warning starts at {SW['chosen_frac']:.0%} of the cargo range width, capped at 1 °C "
+                  f"(0.7 °C for 2 to 4 °C cargo; 1 °C for vaccine, fish and frozen meat as before). Section 3 shows why this value."],
+                 ["Sensor reading as upper bound", "found while testing the margin change",
+                  "The margin rule looks at the higher of the estimated cargo temperature and the smoothed sensor reading. Without this, "
+                  "the extreme-heat demo showed green with the sensor at 4.1 °C against a 4.0 °C limit, because the estimate for 1,000 kg of cargo lagged at 3.05 °C."],
+                 ["Stuck sensor after a rise", "N6: a sensor frozen 30 minutes before a breach was never flagged",
+                  "A flat reading is suspect once the temperature trend of the 30 minutes before it would have moved it by 0.3 °C."]],
+                [3.3*cm, 4.6*cm, 8.5*cm]),
+          Spacer(1, 4),
+          p("The countdown and the margin rule now treat the sensor reading as an upper bound on the cargo temperature. That is the safe choice while one "
+            "question stays open: the engine was designed for a sensor in the cabin air, but the API documents temp_c as the cargo temperature. "
+            "If the sensor sits in the cargo, the readings are the cargo temperature and these rules are exact. If it sits in the air, they warn earlier "
+            "than needed, which is the cost described in section 3.", Bd),
+          p("Demo scenarios (what the frontend shows)", H2),
+          table([["Scenario", "Expected", "Iteration 2 status", "Countdown", "Diagnosis"]] +
+                [[t, e, st, "none" if ttb is None else f"{ttb:.0f} min", lab] for t, e, st, ttb, lab in demo],
+                [6.2*cm, 2*cm, 2.8*cm, 2*cm, 3.4*cm]),
+          p("The compressor scenario is critical again with an 18-minute countdown, its original design; iteration 1 had lowered it to warning "
+            "because the physics countdown could not see a slow drift.", S),
+          PageBreak()]
+
+    # ---------- v4 results ----------
+    s += [p("2. Results on the baseline test trips (dataset v4)", H1),
+          Image(str(RES / FIG2.format("status")), width=16*cm, height=5.4*cm),
+          p("Each bar groups snapshots by how soon the cargo really leaves its safe range; the top bar should be red. "
+            "Iteration 1 turned the baseline's green into amber; iteration 2 turns part of it red and brings the healthy bar back toward green.", Bd),
+          p("Countdown", H2),
+          p(f"The countdown now appears in {pct(c3['true_ttb_le30']['shown_rate'])} of urgent snapshots (iteration 1: {pct(a3['true_ttb_le30']['shown_rate'])}), "
+            f"and when shown it is off by {c3['true_ttb_le30']['mae_when_shown']:.1f} minutes on average. In the rest the physics countdown was still above the "
+            f"60-minute display limit ({pct(c3['true_ttb_le30']['hidden_physics_ttb_above_60'])}) or the sensor was flagged as broken "
+            f"({pct(c3['true_ttb_le30']['hidden_sensor_broken'])}). Where the reading stays flat or falls until shortly before the breach, "
+            "as in the cases below, there is no trend to project.", Bd),
+          p("Urgent cases still shown as green", H2),
+          p(f"{pct(c5['true_ttb_le30']['AMAN'])} on the server sample, {pct(c3['true_ttb_le30']['AMAN'])} over all urgent snapshots. We looked at the "
+            "ones the narrower margin exposed: all came from 4 trips, the reading sat 0.54 to 0.84 °C below the limit with no upward trend, and it crossed "
+            "within 9 to 30 minutes. Their temperature swing was smaller than that of healthy snapshots (median 0.10 against 0.12 °C), so nothing we "
+            "measure tells them apart from a healthy truck at that moment. Only the margin width catches them (section 3).", Bd),
+          p("Stuck sensor", H2),
+          p(f"Flagged in {pct(stuck2['flagged_sensor'])} of the frozen-sensor cases (iteration 1: {pct(stuck1['flagged_sensor'])}), still below the 50% goal. "
+            f"Status is green in {pct(stuck2['status_aman'])}. The new rule fires only when the reading was rising before it froze, "
+            f"so freezes after a flat stretch are still missed. Faulty sensors in general are named in {pct(ev2['sensor']['recall'])} of cases (iteration 1: {pct(ev1['sensor']['recall'])}), "
+            "with no false sensor alarms.", Bd),
+          p("Unchanged by design", H2),
+          p(f"Forecast error {R2['G1_forecast']['mae_t30']:.2f} °C, door named {pct(ev2['door']['recall'])}, outside heat named "
+            f"{pct(ev2['shock']['recall'])}: these come from the learned model, which was not retrained. Server response time "
+            f"{c5['latency_ms_p95']:.0f} ms at the 95th percentile, no errors in {c5['n_requests']:,} requests.", Bd),
+          PageBreak()]
+
+    # ---------- trade-off + sim ----------
+    s += [p("3. Trade-offs", H1),
+          p("How wide should the “near the limit” margin be?", H2),
+          Image(str(RES / FIG2.format("margin")), width=11*cm, height=6.3*cm),
+          table([["Margin for 2 to 4 °C cargo", "Urgent shown green", "Healthy warned"]] +
+                [[f"{r['margin_2_4C']:.1f} °C" + (" (chosen)" if r["frac"] == SW["chosen_frac"] else ""), pct(r["urgent_aman"]), pct(r["healthy_alert"])]
+                 for r in SW["sweep"]],
+                [6*cm, 4*cm, 4*cm]),
+          p(f"No width meets both goals on dataset v4: urgent and healthy snapshots sit at overlapping distances from the limit. "
+            f"{chosen['margin_2_4C']:.1f} °C is the narrowest width that keeps urgent green at 5% or less ({pct(chosen['urgent_aman'])}); "
+            f"{narrow['margin_2_4C']:.1f} °C would cut healthy warnings to {pct(narrow['healthy_alert'])} but show {pct(narrow['urgent_aman'])} of urgent cases as green. "
+            "The team chose safety. All values in the table are over all urgent and healthy snapshots, not the server sample.", Bd),
+          p("Results on the new simulator's held-out trips (dataset v3)", H2),
+          table([["Per trip", "Iteration 1", "Iteration 2", "Trips"],
+                 ["Breaching trips warned before the breach", pct(S1["breach_warned_before"]), pct(S2["breach_warned_before"]), S2["n_breach_scorable"]],
+                 ["Breaching trips critical before the breach", pct(S1["breach_kritis_before"]), pct(S2["breach_kritis_before"]), S2["n_breach_scorable"]],
+                 ["Median lead of the critical status (minutes)", f"{S1['median_lead_kritis_min']:.0f}", f"{S2['median_lead_kritis_min']:.0f}", ""],
+                 ["Healthy trips with any warning", pct(S1["healthy_trips_any_warning"]), pct(S2["healthy_trips_any_warning"]), S2["n_healthy"]],
+                 ["Door trips without a breach: any warning", pct(S1["door_no_breach_any_warning"]), pct(S2["door_no_breach_any_warning"]), S2["n_door_no_breach"]],
+                 ["Door trips without a breach: critical", pct(S1["door_no_breach_any_kritis"]), pct(S2["door_no_breach_any_kritis"]), S2["n_door_no_breach"]],
+                 ["Sensor-fault trips flagged", pct(S1["sensor_fault_trips_flagged"]), pct(S2["sensor_fault_trips_flagged"]), S2["n_sensor_fault"]],
+                 ["Other trips wrongly flagged as sensor fault", pct(S1["non_sensor_trips_flagged"]), pct(S2["non_sensor_trips_flagged"]), ""]],
+                [7.8*cm, 2.6*cm, 2.6*cm, 1.8*cm]),
+          p("The door trips are where iteration 2 costs something. In the new simulator the sensor measures cabin air, which jumps when the door opens "
+            "and can drift toward the limit while a heavy load keeps the cargo itself safe. Treating the reading as an upper bound "
+            "turns those moments into warnings. When we checked the door trips that reached critical without a breach, most were raised by the door "
+            "and physics rules that iteration 1 already had, and a few by the new drift countdown on loads of 1.8 to 3.3 tonnes. "
+            "Knowing where the sensor sits would settle whether these are false alarms.", Bd),
+          PageBreak()]
+
+    # ---------- open items ----------
+    s += [p("4. Still open", H1),
+          table([["Finding", "Status after iteration 2", "Next step and how we will judge it"],
+                 ["N1 countdown", f"shown in {pct(c3['true_ttb_le30']['shown_rate'])} of urgent cases (goal 80%)",
+                  "Use the learned countdown (XGBoost) when neither physics nor drift can project; judge on both datasets."],
+                 ["N2 false warnings", f"{pct(hw(R2)['WASPADA'] + hw(R2)['KRITIS'])} of healthy snapshots (goal 10%)",
+                  "Needs a signal that separates slow approaches from healthy running; the margin alone cannot (section 3)."],
+                 ["N3 forecast", f"{R2['G1_forecast']['mae_t30']:.2f} °C error, unchanged", "Retrain to predict the change, not the level."],
+                 ["N4 door / outside heat", "unchanged", "Add wall and rack heat storage and a sunlight term to the simulator, retrain."],
+                 ["N5 noise", "event names still collapse at 0.1 °C noise; status now holds (urgent green "
+                  f"{pct(c4['sensor_noise_sigma_0.3C']['imminent_aman_rate'])} at 0.3 °C)", "Train with 0.05 to 0.5 °C noise."],
+                 ["N6 stuck sensor", f"flagged {pct(stuck2['flagged_sensor'])} (goal 50%), green {pct(stuck2['status_aman'])}",
+                  "A flat reading while the estimated cargo should be warming, without needing a prior trend."],
+                 ["N7 test validity", "second test set added (dataset v3 held-out trips)",
+                  "Keep both; report every change on both."],
+                 ["Sensor position", "open question", "Confirm whether the IoT probe sits in the cargo or in the cabin air; it decides the door-trip trade-off."]],
+                [3*cm, 5.6*cm, 7.8*cm]),
+          PageBreak(),
+          p("Appendix: acceptance checks (iteration 2)", H1),
+          table([["Result", "Check"]] + [["PASS" if c == "PASSED" else "FAIL", n] for c, n in ck2], [2*cm, 14.4*cm]),
+          Spacer(1, 6),
+          p(f"Reproduce: python -m eval.run_eval --tag {tag2}; python -m eval.run_eval --tag {tag2} --margin-sweep; "
+            f"python -m eval.sim_check --tag {tag2} (needs ml/dataset_v3.parquet, not in git); EVAL_TAG={tag2} pytest eval/test_baseline.py; "
+            "python -m eval.make_artifact --iteration 2. Iteration 1 simulator numbers were produced with the engine at commit ff9aacd.", S),
+          p("Code commit: " + subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip() +
+            ". Datasets: data/processed/v4_seed1000_700trips.parquet (split=test); ml/dataset_v3.parquet (test split of prep_windows.split_trips, seed 0). "
+            "Cargo mass on v4: profile default (1,000 kg).", S)]
+
+    SimpleDocTemplate(str(OUT_PDF2), pagesize=A4, leftMargin=2*cm, rightMargin=2*cm, topMargin=1.8*cm, bottomMargin=1.6*cm,
+                      title="ColdTrack AI - Evaluation Artifact (Iteration 2)").build(s)
+    print("wrote", OUT_PDF2)
+
+
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(); ap.add_argument("--tag", default="iter1")
-    build(ap.parse_args().tag)
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--tag", default="iter1")
+    ap.add_argument("--iteration", type=int, default=1, choices=[1, 2])
+    a = ap.parse_args()
+    build2() if a.iteration == 2 else build(a.tag)

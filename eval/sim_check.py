@@ -9,7 +9,8 @@ non-breaching door trips with warnings, sensor-fault trips flagged.
 dataset_v3.parquet is not in git (~80 MB); get it from the model owner or regenerate it
 (coldtrack_sim.generate_dataset, see ml/CHECKPOINT2_CONTEXT.md).
 
-Usage: python -m eval.sim_check [--data ml/dataset_v3.parquet]
+Usage: python -m eval.sim_check [--data ml/dataset_v3.parquet] [--tag iter2]
+Output: printed, and eval/results/sim_v3_<tag>.json when --tag is given.
 """
 
 import argparse
@@ -74,4 +75,9 @@ def run(path):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--data", default=str(ROOT / "ml/dataset_v3.parquet"))
-    print(json.dumps(run(ap.parse_args().data), indent=2))
+    ap.add_argument("--tag")
+    a = ap.parse_args()
+    res = json.dumps(run(a.data), indent=2)
+    print(res)
+    if a.tag:
+        (ROOT / "eval/results" / f"sim_v3_{a.tag}.json").write_text(res)

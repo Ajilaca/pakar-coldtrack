@@ -1,0 +1,40 @@
+{
+  "chosen_frac": 0.35,
+  "sweep": [
+    {
+      "frac": 0.25,
+      "margin_2_4C": 0.5,
+      "urgent_aman": 0.07436708860759493,
+      "urgent_kritis": 0.1787974683544304,
+      "healthy_alert": 0.13077960187167895
+    },
+    {
+      "frac": 0.3,
+      "margin_2_4C": 0.6,
+      "urgent_aman": 0.061708860759493674,
+      "urgent_kritis": 0.1787974683544304,
+      "healthy_alert": 0.16131334760885083
+    },
+    {
+      "frac": 0.35,
+      "margin_2_4C": 0.7,
+      "urgent_aman": 0.03639240506329114,
+      "urgent_kritis": 0.1787974683544304,
+      "healthy_alert": 0.19890554365929097
+    },
+    {
+      "frac": 0.4,
+      "margin_2_4C": 0.8,
+      "urgent_aman": 0.0015822784810126582,
+      "urgent_kritis": 0.1787974683544304,
+      "healthy_alert": 0.24791815369973827
+    },
+    {
+      "frac": 0.5,
+      "margin_2_4C": 1.0,
+      "urgent_aman": 0.0,
+      "urgent_kritis": 0.1787974683544304,
+      "healthy_alert": 0.33127131414069316
+    }
+  ]
+}

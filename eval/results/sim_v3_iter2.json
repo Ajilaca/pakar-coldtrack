@@ -1,0 +1,16 @@
+{
+  "n_test_trips": 225,
+  "n_breach_scorable": 76,
+  "breach_warned_before": 1.0,
+  "breach_kritis_before": 0.9473684210526315,
+  "median_lead_warn_min": 64.0,
+  "median_lead_kritis_min": 53.5,
+  "n_healthy": 58,
+  "healthy_trips_any_warning": 0.0,
+  "n_door_no_breach": 27,
+  "door_no_breach_any_warning": 0.9629629629629629,
+  "door_no_breach_any_kritis": 0.6296296296296297,
+  "n_sensor_fault": 75,
+  "sensor_fault_trips_flagged": 0.9866666666666667,
+  "non_sensor_trips_flagged": 0.0
+}

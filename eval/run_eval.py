@@ -199,14 +199,38 @@ def g5_api(trips, D, stride):
     return out
 
 
+def margin_sweep(trips, fracs=(0.25, 0.30, 0.35, 0.40, 0.50)):
+    """Near-limit warning margin (engine.CFG margin_waspada_frac) vs missed and false warnings."""
+    from app.core import engine
+    keep, out = engine.CFG["margin_waspada_frac"], []
+    try:
+        for frac in fracs:
+            engine.CFG["margin_waspada_frac"] = frac
+            D = eval_rows(trips)
+            u, h = D[D.y_ttb <= 30], D[D.raw_mode == "A0"]
+            out.append({"frac": frac, "margin_2_4C": round(2 * frac, 2),
+                        "urgent_aman": float((u.status == "AMAN").mean()),
+                        "urgent_kritis": float((u.status == "KRITIS").mean()),
+                        "healthy_alert": float((h.status != "AMAN").mean())})
+    finally:
+        engine.CFG["margin_waspada_frac"] = keep
+    return {"chosen_frac": keep, "sweep": out}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--tag", default="iter1")
     ap.add_argument("--api-stride", type=int, default=10)
     ap.add_argument("--stuck-stride", type=int, default=3)
+    ap.add_argument("--margin-sweep", action="store_true", help="only write results/margin_sweep_<tag>.json")
     a = ap.parse_args()
     t0 = time.time()
     trips = load_test_trips()
+    if a.margin_sweep:
+        out = ROOT / "eval/results" / f"margin_sweep_{a.tag}.json"
+        out.write_text(json.dumps(margin_sweep(trips), indent=2))
+        print("wrote", out)
+        return
     D = eval_rows(trips)
     print(f"[{time.time()-t0:4.0f}s] {len(D):,} test windows, {D.trip_id.nunique()} trips")
     res = {"tag": a.tag, "contract": "hybrid-v3", "n_windows": int(len(D)), "n_trips": int(D.trip_id.nunique())}
