@@ -1,0 +1,366 @@
+{
+  "tag": "iter2",
+  "contract": "hybrid-v3",
+  "n_windows": 16336,
+  "n_trips": 106,
+  "G1_forecast": {
+    "mae_t15": 1.4229018174099783,
+    "mae_t30": 1.4123004816643767,
+    "mae_t60": 1.4088396268232573,
+    "p95_abs_err_t30": 3.1925000667572023,
+    "max_abs_err_t30": 6.18013382996245,
+    "bias_t30": -0.6910266937018923,
+    "mae_t30_vs_true_temp": 1.4106676275750392,
+    "naive_persistence_mae_t30": 0.19482273668024278,
+    "naive_linear_extrapolation_mae_t30": 0.61651687904566,
+    "moving_windows_n": 85,
+    "moving_windows_gru_mae_t30": 1.731327099464237,
+    "moving_windows_persistence_mae_t30": 1.5641780787559232,
+    "moving_windows_extrapolation_mae_t30": 2.79610740582871,
+    "mae_t30_by_mode": {
+      "A0": 1.383477924533343,
+      "A1": 0.996604918844906,
+      "A2": 0.6986590031006328,
+      "A3": 1.9016927242279051,
+      "A4": 2.288925492288335,
+      "A5": 0.9115391418490707,
+      "A6": 1.397963301119749,
+      "A7": 1.7140309821727664,
+      "A8": 1.6063677750097582
+    },
+    "mae_t30_by_cargo": {
+      "daging_beku": 2.05326222580183,
+      "ikan_segar": 0.4862713236546053,
+      "produk_susu": 0.7770505795448426,
+      "sayur_buah": 0.6742934736170736,
+      "vaksin_2_8C": 2.614764855999667
+    }
+  },
+  "G2_events": {
+    "per_event": {
+      "door": {
+        "n_windows": 324,
+        "n_trips": 4,
+        "recall": 0.0,
+        "precision": null,
+        "gru_auc_vs_healthy": 0.7365934483403487
+      },
+      "shock": {
+        "n_windows": 645,
+        "n_trips": 5,
+        "recall": 0.14728682170542637,
+        "precision": 1.0,
+        "gru_auc_vs_healthy": 0.41562652737893013
+      },
+      "sensor": {
+        "n_windows": 878,
+        "n_trips": 11,
+        "recall": 0.6708428246013668,
+        "precision": 1.0,
+        "gru_auc_vs_healthy": 0.3962346741877796
+      }
+    },
+    "healthy_labelled_fault_rate": 0.19890554365929097,
+    "healthy_alert_rate": 0.19890554365929097,
+    "label_share": {
+      "normal_sehat": 0.7159035259549461,
+      "suhu_muatan_mendekati_batas": 0.24100146914789422,
+      "masalah_sensor": 0.03605533790401567,
+      "kejutan_ambien_ekstrem": 0.00581537708129285,
+      "pintu_terbuka": 0.0012242899118511264
+    },
+    "status_by_true_mode": {
+      "A0": {
+        "AMAN": 0.801094456340709,
+        "WASPADA": 0.18320247442303117,
+        "KRITIS": 0.015703069236259814
+      },
+      "A1": {
+        "AMAN": 0.9382716049382716,
+        "WASPADA": 0.0,
+        "KRITIS": 0.06172839506172839
+      },
+      "A2": {
+        "AMAN": 0.4942528735632184,
+        "WASPADA": 0.3831417624521073,
+        "KRITIS": 0.12260536398467432
+      },
+      "A3": {
+        "AMAN": 0.5442708333333334,
+        "WASPADA": 0.4140625,
+        "KRITIS": 0.041666666666666664
+      },
+      "A4": {
+        "AMAN": 0.7001733102253033,
+        "WASPADA": 0.21663778162911612,
+        "KRITIS": 0.0831889081455806
+      },
+      "A5": {
+        "AMAN": 0.010670731707317074,
+        "WASPADA": 0.989329268292683,
+        "KRITIS": 0.0
+      },
+      "A6": {
+        "AMAN": 0.7747747747747747,
+        "WASPADA": 0.13063063063063063,
+        "KRITIS": 0.0945945945945946
+      },
+      "A7": {
+        "AMAN": 0.6852713178294574,
+        "WASPADA": 0.3147286821705426,
+        "KRITIS": 0.0
+      },
+      "A8": {
+        "AMAN": 0.02735562310030395,
+        "WASPADA": 0.13829787234042554,
+        "KRITIS": 0.8343465045592705
+      }
+    },
+    "trips_per_true_mode": {
+      "A0": 95,
+      "A1": 4,
+      "A2": 2,
+      "A3": 7,
+      "A4": 3,
+      "A5": 3,
+      "A6": 8,
+      "A7": 5,
+      "A8": 6
+    },
+    "uncovered_modes_note": "A2/A4 (cooling degradation), A3 (reefer off), A8 (pre-cooling) have no event; judged only via status/TTB (G3).",
+    "mean_event_recall": 0.2727098821022644,
+    "recall_by_minutes_since_onset": {
+      "0-10": {
+        "n": 136,
+        "recall": 0.14705882352941177
+      },
+      "10-30": {
+        "n": 164,
+        "recall": 0.5182926829268293
+      },
+      "30-60": {
+        "n": 237,
+        "recall": 0.1350210970464135
+      },
+      "60-120": {
+        "n": 526,
+        "recall": 0.34220532319391633
+      },
+      "120-inf": {
+        "n": 784,
+        "recall": 0.46811224489795916
+      }
+    }
+  },
+  "G3_imminent_breach": {
+    "n_breach_windows": 1729,
+    "n_healthy_no_breach": 14607,
+    "true_ttb_le10": {
+      "n": 490,
+      "shown_rate": 0.15510204081632653,
+      "mae_when_shown": 7.476315789473683,
+      "mae_all_incl_missing_as_60": 51.40040816326531,
+      "AMAN": 0.004081632653061225,
+      "WASPADA": 0.8530612244897959,
+      "KRITIS": 0.14285714285714285,
+      "hidden_sensor_broken": 0.0,
+      "hidden_physics_ttb_above_60": 0.8448979591836735
+    },
+    "true_ttb_le30": {
+      "n": 632,
+      "shown_rate": 0.2231012658227848,
+      "mae_when_shown": 9.453191489361704,
+      "mae_all_incl_missing_as_60": 45.72927215189873,
+      "AMAN": 0.03639240506329114,
+      "WASPADA": 0.7848101265822784,
+      "KRITIS": 0.1787974683544304,
+      "hidden_sensor_broken": 0.0,
+      "hidden_physics_ttb_above_60": 0.7768987341772152
+    },
+    "physics_ttb_mae_true_le30_ungated": 184.05803322495325,
+    "xgb_ttb_mae_true_le30": 230.30253468284124,
+    "xgb_ttb_mae_all_breach": 156.51469271358138,
+    "healthy_windows_showing_ttb": 0.0740056137468337,
+    "status_by_true_ttb": {
+      "le30": {
+        "AMAN": 0.03639240506329114,
+        "WASPADA": 0.7848101265822784,
+        "KRITIS": 0.1787974683544304,
+        "n": 632
+      },
+      "30_60": {
+        "AMAN": 0.20465116279069767,
+        "WASPADA": 0.6976744186046512,
+        "KRITIS": 0.09767441860465116,
+        "n": 215
+      },
+      "gt60": {
+        "AMAN": 0.3843537414965986,
+        "WASPADA": 0.590702947845805,
+        "KRITIS": 0.024943310657596373,
+        "n": 882
+      },
+      "no_breach": {
+        "AMAN": 0.7790785239953447,
+        "WASPADA": 0.17108235777367015,
+        "KRITIS": 0.04983911823098514,
+        "n": 14607
+      }
+    },
+    "by_cargo_true_le30": {
+      "daging_beku": {
+        "n": 0,
+        "shown_rate": null,
+        "aman_rate": null
+      },
+      "ikan_segar": {
+        "n": 0,
+        "shown_rate": null,
+        "aman_rate": null
+      },
+      "produk_susu": {
+        "n": 307,
+        "shown_rate": 0.13680781758957655,
+        "aman_rate": 0.07166123778501629
+      },
+      "sayur_buah": {
+        "n": 324,
+        "shown_rate": 0.3055555555555556,
+        "aman_rate": 0.0030864197530864196
+      },
+      "vaksin_2_8C": {
+        "n": 1,
+        "shown_rate": 0.0,
+        "aman_rate": 0.0
+      }
+    }
+  },
+  "G4_robustness": {
+    "clean": {
+      "mean_event_recall": 0.2727098821022644,
+      "forecast_mae_t30": 1.4123004816643767,
+      "imminent_ttb_shown_rate": 0.2231012658227848,
+      "imminent_aman_rate": 0.03639240506329114,
+      "healthy_alert_rate": 0.19890554365929097
+    },
+    "sensor_noise_sigma_0.1C": {
+      "mean_event_recall": 0.04961240310077519,
+      "forecast_mae_t30": 1.4154976144258218,
+      "imminent_ttb_shown_rate": 0.23259493670886075,
+      "imminent_aman_rate": 0.03164556962025317,
+      "healthy_alert_rate": 0.19961931953366643
+    },
+    "sensor_noise_sigma_0.3C": {
+      "mean_event_recall": 0.04909560723514212,
+      "forecast_mae_t30": 1.429502726763466,
+      "imminent_ttb_shown_rate": 0.2721518987341772,
+      "imminent_aman_rate": 0.03322784810126582,
+      "healthy_alert_rate": 0.2105638829407566
+    },
+    "sensor_noise_sigma_0.5C": {
+      "mean_event_recall": 0.04961240310077519,
+      "forecast_mae_t30": 1.4628118408232786,
+      "imminent_ttb_shown_rate": 0.2737341772151899,
+      "imminent_aman_rate": 0.03164556962025317,
+      "healthy_alert_rate": 0.2480767705607106
+    },
+    "hour_shift_utc_vs_wib_+7h": {
+      "mean_event_recall": 0.2680587193115667,
+      "forecast_mae_t30": 1.394314410760608,
+      "imminent_ttb_shown_rate": 0.2231012658227848,
+      "imminent_aman_rate": 0.03639240506329114,
+      "healthy_alert_rate": 0.19890554365929097
+    },
+    "stuck_sensor_on_imminent_breach": {
+      "n": 211,
+      "flagged_sensor": 0.3744075829383886,
+      "status_aman": 0.0995260663507109,
+      "status_kritis": 0.0,
+      "note": "sensor_rules needs >=15 min flat plus context (door/ambient rise) for 'suspect', 60 min for 'broken'."
+    }
+  },
+  "G5_end_to_end_api": {
+    "n_requests": 1634,
+    "n_http_errors": 0,
+    "latency_ms_p50": 92.19395000036457,
+    "latency_ms_p95": 119.96809000065694,
+    "true_ttb_le30": {
+      "AMAN": 0.016129032258064516,
+      "WASPADA": 0.8225806451612904,
+      "KRITIS": 0.16129032258064516,
+      "n": 62,
+      "ttb_shown": 0.22580645161290322
+    },
+    "true_ttb_30_60": {
+      "AMAN": 0.22727272727272727,
+      "WASPADA": 0.6818181818181818,
+      "KRITIS": 0.09090909090909091,
+      "n": 22,
+      "ttb_shown": 0.18181818181818182
+    },
+    "true_ttb_gt60": {
+      "AMAN": 0.375,
+      "WASPADA": 0.6136363636363636,
+      "KRITIS": 0.011363636363636364,
+      "n": 88,
+      "ttb_shown": 0.14772727272727273
+    },
+    "no_breach": {
+      "AMAN": 0.7797537619699042,
+      "WASPADA": 0.17031463748290013,
+      "KRITIS": 0.04993160054719562,
+      "n": 1462,
+      "ttb_shown": 0.07250341997264022
+    },
+    "by_true_mode_status": {
+      "A0": {
+        "AMAN": 0.8050914876690533,
+        "WASPADA": 0.1805887032617343,
+        "KRITIS": 0.014319809069212411
+      },
+      "A1": {
+        "AMAN": 0.9393939393939394,
+        "WASPADA": 0.0,
+        "KRITIS": 0.06060606060606061
+      },
+      "A2": {
+        "AMAN": 0.46153846153846156,
+        "WASPADA": 0.4230769230769231,
+        "KRITIS": 0.11538461538461539
+      },
+      "A3": {
+        "AMAN": 0.5526315789473685,
+        "WASPADA": 0.39473684210526316,
+        "KRITIS": 0.05263157894736842
+      },
+      "A4": {
+        "AMAN": 0.6896551724137931,
+        "WASPADA": 0.2413793103448276,
+        "KRITIS": 0.06896551724137931
+      },
+      "A5": {
+        "AMAN": 0.0,
+        "WASPADA": 1.0,
+        "KRITIS": 0.0
+      },
+      "A6": {
+        "AMAN": 0.7391304347826086,
+        "WASPADA": 0.17391304347826086,
+        "KRITIS": 0.08695652173913043
+      },
+      "A7": {
+        "AMAN": 0.6666666666666666,
+        "WASPADA": 0.3333333333333333,
+        "KRITIS": 0.0
+      },
+      "A8": {
+        "AMAN": 0.030303030303030304,
+        "WASPADA": 0.13636363636363635,
+        "KRITIS": 0.8333333333333334
+      }
+    },
+    "parity_forecast_max_abs_diff_C": 0.0,
+    "parity_status_agreement": 1.0,
+    "parity_label_agreement": 1.0
+  }
+}
