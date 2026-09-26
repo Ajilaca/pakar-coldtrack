@@ -10,7 +10,8 @@ import { cn } from "@/lib/utils";
  * sebagai hitung mundur jarak jauh. Di atas ambang ini kita hanya menyebut
  * status risikonya, tanpa angka, supaya tidak memberi kesan presisi palsu.
  *
- * Nilai yang sama ada di backend/config.yaml sebagai `ttb_display_cap_min`.
+ * Backend (app/core/engine.py :: CFG["ttb_tampil"]) mengirim TTB sampai 60 menit;
+ * frontend sengaja lebih ketat.
  */
 const TTB_RELIABLE_MAX_MIN = 30;
 

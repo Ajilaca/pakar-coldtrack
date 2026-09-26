@@ -72,6 +72,8 @@ export interface ActionStep {
 export interface AnalyzeResponse {
   status: ShipmentStatus;
   time_to_breach_min: number | null;
+  /** TTB XGBoost 0-240 menit, informatif saja (status memakai TTB fisika) */
+  ttb_model_min?: number | null;
   failure_mode: FailureMode;
   forecast: Forecast;
   drivers: Driver[];

@@ -13,11 +13,7 @@ from app.config import settings
 from app.explain import compute_feature_drivers
 from app.inference import inference_engine
 from app.preprocess import prepare_onnx_input_tensor
-from app.rules import (
-    compute_risk_index,
-    evaluate_cargo_limits,
-    generate_recommended_actions,
-)
+from app.rules import generate_recommended_actions
 from app.scenarios import scenario_manager
 from app.schemas import (
     AnalyzeRequest,
@@ -117,76 +113,35 @@ def analyze_telemetry(payload: AnalyzeRequest) -> AnalyzeResponse:
             ),
         )
 
-    # 1. Preprocessing & Feature Engineering
-    tensor_3d, df_features = prepare_onnx_input_tensor(payload.readings)
-    latest_temp = float(df_features["temp_c"].iloc[-1])
+    # df_features only feeds the heuristic driver panel (explain.py).
+    _, df_features = prepare_onnx_input_tensor(payload.readings)
 
-    # 2. Model Inference (ONNX or Fallback)
-    model_version = settings.get("model", {}).get("version", "coldtrack-gru-v1.3")
-    if inference_engine.is_ready:
-        try:
-            forecast_dict, failure_dict, ttb_predicted = inference_engine.predict(
-                tensor_3d
-            )
-            forecast = Forecast(**forecast_dict)
-            failure_mode = FailureMode(**failure_dict)
-            time_to_breach = ttb_predicted
-        except Exception as e:  # noqa: BLE001
-            logger.warning(f"ONNX inference failed, utilizing rule engine: {e}")
-            forecast, failure_mode, time_to_breach = _fallback_inference(
-                latest_temp, df_features, payload.cargo_profile
-            )
-            model_version = "coldtrack-rule-v1.0"
+    # Status, TTB and risk come from the physics engine and never depend on ONNX.
+    # If the GRU failed to load, forecast/diagnosis fall back to heuristics.
+    model_version = settings.get("model", {}).get("version", "coldtrack-hybrid-v3")
+    result = inference_engine.predict(payload.readings, payload.cargo_profile, payload.mass_kg)
+    if result["forecast"] is None:
+        forecast, failure_mode = _fallback_forecast(df_features, result["sensor_status"])
+        model_version = "coldtrack-engine-only"
     else:
-        forecast, failure_mode, time_to_breach = _fallback_inference(
-            latest_temp, df_features, payload.cargo_profile
-        )
-        model_version = "coldtrack-rule-v1.0"
+        forecast = Forecast(**result["forecast"])
+        failure_mode = FailureMode(**result["failure_mode"])
 
-    # 3. Cargo Risk Index & Status Evaluation
-    # TTB ikut dikirim: status yang dihitung dari forecast saja bisa
-    # bertentangan dengan TTB (lihat catatan di rules.py :: compute_risk_index).
-    risk_index, status = compute_risk_index(
-        current_temp=latest_temp,
-        forecast=forecast.model_dump(),
-        cargo_profile=payload.cargo_profile,
-        df_features=df_features,
-        time_to_breach_min=time_to_breach,
-        failure_label=failure_mode.label,
-    )
-
-    # Heuristic TTB fallback if ONNX returned None during warning or critical status
-    if time_to_breach is None and status in ["WASPADA", "KRITIS"]:
-        limits = evaluate_cargo_limits(payload.cargo_profile)
-        max_limit = limits["max_temp_c"]
-        delta_temp_avg = float(df_features["delta_temp"].iloc[-5:].mean())
-        if latest_temp >= max_limit:
-            time_to_breach = 0.0
-        elif delta_temp_avg > 0:
-            time_to_breach = float(round((max_limit - latest_temp) / delta_temp_avg, 1))
-
-    # Sensor bermasalah: sembunyikan angka TTB.
-    # TTB dihitung dari deret suhu yang justru berasal dari sensor yang macet,
-    # jadi angkanya ekstrapolasi dari sinyal beku. Menampilkannya memberi kesan
-    # presisi yang tidak dimiliki sistem. Harus SETELAH blok fallback di atas,
-    # kalau tidak nilainya akan diisi ulang oleh heuristik.
-    if "sensor" in failure_mode.label.lower():
-        time_to_breach = None
-
-    # 4. Recommended Actions & Driver Explanations
     actions = generate_recommended_actions(
-        status=status,
+        status=result["status"],
         failure_label=failure_mode.label,
         cargo_profile=payload.cargo_profile,
     )
     drivers = compute_feature_drivers(df_features)
 
     elapsed_ms = int((time.perf_counter() - start_time) * 1000)
+    logger.info("analyze", shipment_id=payload.shipment_id, status=result["status"], reason=result["reason"])
 
     return AnalyzeResponse(
-        status=status,
-        risk_index=risk_index,
-        time_to_breach_min=time_to_breach,
+        status=result["status"],
+        risk_index=result["risk_index"],
+        time_to_breach_min=result["time_to_breach_min"],
+        ttb_model_min=result["ttb_model_min"],
         failure_mode=failure_mode,
         forecast=forecast,
         drivers=drivers,
@@ -196,36 +151,16 @@ def analyze_telemetry(payload: AnalyzeRequest) -> AnalyzeResponse:
     )
 
 
-def _fallback_inference(
-    latest_temp: float, df_features: Any, cargo_profile: str
-) -> tuple:
-    """Heuristic fallback when ONNX model is uninitialized."""
-    delta_temp = float(df_features["delta_temp"].iloc[-5:].mean())
-    limits = evaluate_cargo_limits(cargo_profile)
-    max_limit = limits["max_temp_c"]
+def _fallback_forecast(df_features: Any, sensor_status: int) -> tuple[Forecast, FailureMode]:
+    """Linear extrapolation + simple diagnosis, used only when the GRU is unavailable."""
+    latest = float(df_features["temp_c"].iloc[-1])
+    rate = float(df_features["delta_temp"].iloc[-5:].mean())
+    forecast = Forecast(**{f"t{h}": float(round(latest + rate * h, 2)) for h in (15, 30, 60)})
 
-    t15 = float(round(latest_temp + delta_temp * 15, 2))
-    t30 = float(round(latest_temp + delta_temp * 30, 2))
-    t60 = float(round(latest_temp + delta_temp * 60, 2))
-    forecast = Forecast(t15=t15, t30=t30, t60=t60)
-
-    door_open = int(df_features["door_open"].iloc[-1])
-    reefer_on = int(df_features["reefer_on"].iloc[-1])
-
-    if door_open == 1:
+    if sensor_status == 2:
+        failure_mode = FailureMode(label="masalah_sensor", confidence=0.9)
+    elif int(df_features["door_open"].iloc[-1]) == 1:
         failure_mode = FailureMode(label="pintu_terbuka_lama", confidence=0.88)
-    elif reefer_on == 0:
-        failure_mode = FailureMode(label="kegagalan_reefer_total", confidence=0.92)
-    elif delta_temp > 0.05:
-        failure_mode = FailureMode(label="degradasi_kompresor", confidence=0.85)
     else:
-        failure_mode = FailureMode(label="normal_sehat", confidence=0.95)
-
-    if delta_temp > 0 and latest_temp < max_limit:
-        ttb = float(round((max_limit - latest_temp) / delta_temp, 1))
-    elif latest_temp >= max_limit:
-        ttb = 0.0
-    else:
-        ttb = None
-
-    return forecast, failure_mode, ttb
+        failure_mode = FailureMode(label="normal_sehat", confidence=0.9)
+    return forecast, failure_mode

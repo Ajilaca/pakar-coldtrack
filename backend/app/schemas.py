@@ -32,6 +32,9 @@ class AnalyzeRequest(BaseModel):
 
     shipment_id: str = Field(..., json_schema_extra={"example": "TRK-JKT-0417"})
     cargo_profile: str = Field("vaksin_2_8C", json_schema_extra={"example": "vaksin_2_8C"})
+    mass_kg: float | None = Field(
+        None, gt=0, description="Cargo mass in kg; defaults to the cargo profile's mass_kg_default"
+    )
     readings: list[TelemetryReading] = Field(..., min_length=1)
 
 
@@ -45,9 +48,9 @@ class FailureMode(BaseModel):
 class Forecast(BaseModel):
     """Temperature prediction for future time horizons."""
 
-    t15: float = Field(..., description="Predicted temperature at +15 minutes (°C)")
-    t30: float = Field(..., description="Predicted temperature at +30 minutes (°C)")
-    t60: float = Field(..., description="Predicted temperature at +60 minutes (°C)")
+    t15: float = Field(..., description="Predicted cargo temperature at +15 minutes (°C)")
+    t30: float = Field(..., description="Predicted cargo temperature at +30 minutes (°C)")
+    t60: float = Field(..., description="Predicted cargo temperature at +60 minutes (°C)")
 
 
 class FeatureDriver(BaseModel):
@@ -72,11 +75,14 @@ class AnalyzeResponse(BaseModel):
     status: str = Field(..., json_schema_extra={"example": "KRITIS"})
     risk_index: float = Field(..., ge=0.0, le=1.0, json_schema_extra={"example": 0.87})
     time_to_breach_min: float | None = Field(None, json_schema_extra={"example": 23.4})
+    ttb_model_min: float | None = Field(
+        None, description="XGBoost TTB (0-240 min), informational; status uses the physics TTB"
+    )
     failure_mode: FailureMode
     forecast: Forecast
     drivers: list[FeatureDriver]
     actions: list[RecommendedAction]
-    model_version: str = Field("coldtrack-gru-v2-fusion-v4", json_schema_extra={"example": "coldtrack-gru-v2-fusion-v4"})
+    model_version: str = Field("coldtrack-hybrid-v3", json_schema_extra={"example": "coldtrack-hybrid-v3"})
     inference_ms: int = Field(..., json_schema_extra={"example": 3})
 
 
