@@ -49,6 +49,8 @@ Thumbs.db
 # --- Data hasil generate (bisa dibuat ulang lewat skrip) ---
 data/raw/
 data/processed/windows/
+# dataset simulator baru (~80 MB/berkas), dibuat lewat coldtrack_sim.generate_dataset (ml/CHECKPOINT2_CONTEXT.md)
+ml/dataset_v*.parquet
 
 # --- Editors ---
 .vscode/
