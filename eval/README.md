@@ -42,3 +42,18 @@ check outcomes are archived in `results/baseline_results.json` and `results/Eval
 | `sim_check.py` | per-trip regression check on the new simulator's held-out trips (guards against tuning to v4) |
 | `make_artifact.py` | builds `Evaluation_Artifact_Iteration.pdf` (`--tag iter1`) and `Evaluation_Artifact_Iteration_2.pdf` (`--iteration 2`) |
 | `results/` | JSON results, figures, PDF |
+
+## Same checks on the new simulator's data (in-distribution)
+
+`run_eval --data` scores the same 19 checks, same thresholds, on a new-simulator parquet
+(`ml/dataset_v3.parquet`, not in git, ~80 MB). The test split is `prep_windows.split_trips` seed 0,
+the same trips `eval/sim_check.py` uses. Mapping and exclusions: `eval/new_sim_data.py`.
+
+```bash
+python -m eval.run_eval --data ml/dataset_v3.parquet --tag sim_iter2   # ~2-4 min
+EVAL_TAG=sim_iter2 pytest eval/test_baseline.py -q
+```
+
+Report it next to the v4 run: v4 is out-of-distribution for the new model (trained on its own
+simulator), the new-simulator run is in-distribution. Known by construction on this data: no vaccine
+trips (the "every cargo profile" check fails), fresh-meat trips (0-4 C) are excluded (no backend profile).
