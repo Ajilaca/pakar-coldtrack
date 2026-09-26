@@ -21,6 +21,8 @@ Model lama dilatih pada data yang seluruhnya sintetis dan hasilnya buruk. Pemban
 | `sensor_rules.py` | Aturan sensor: nilai mustahil, lompatan, datar lama, tegangan (opsional) |
 | `gru_v1.pt`, `scalers_v1.json` | Bobot GRU dan skala normalisasi (dilatih pada `dataset_v3`) |
 | `xgb_ttb.json`, `xgb_features.txt` | Model XGBoost TTB dan urutan fiturnya |
+| `engine.py` | Mesin keputusan: telemetri per menit -> suhu muatan taksiran, TTB, sisa waktu pintu, status sensor, status AMAN/WASPADA/KRITIS + alasan; `check_entry` untuk aturan masuk truk |
+| `export_onnx.py` | Ekspor `coldtrack_gru.onnx` (normalisasi di dalam graf) dan `coldtrack_ttb.onnx` + cek paritas dengan onnxruntime |
 
 Tidak di-commit: `dataset_v*.parquet` (83 MB tiap file, batas GitHub 100 MB) dan data mentah Intel `data.txt` (144 MB).
 
@@ -76,7 +78,8 @@ Sumber makalah truk: https://publications.cnr.it/api/v1/documents/download/18898
 - **Aturan sensor:** status ok/curiga/rusak.
 - **GRU:** kejadian dan prediksi suhu ke depan (jendela 60 menit).
 - **XGBoost:** TTB rentang lebih panjang, dengan fitur fisika.
-- **Aturan keputusan (dari proposal lama):** TTB hanya tampil <= 30 menit; lantai status (TTB <= 30 -> minimal KRITIS, <= 60 -> minimal WASPADA); sensor bermasalah -> WASPADA, risiko dijepit 0,45–0,60, TTB disembunyikan. *(belum dirakit ke kode di checkpoint ini)*
+- **Aturan keputusan (dari proposal lama):** TTB hanya tampil <= 30 menit; lantai status (TTB <= 30 -> minimal KRITIS, <= 60 -> minimal WASPADA); sensor bermasalah -> WASPADA, risiko dijepit 0,45–0,60, TTB disembunyikan. Dirakit di `engine.py` (ambang di dict `CFG`; TTB tampil <= 60 menit, dilonggarkan dari 30 di proposal).
+- **Uji status mesin (600 trip simulasi):** semua trip yang melanggar mendapat minimal WASPADA sebelum/saat melanggar (jeda median 65 menit; KRITIS 95%, jeda median 48 menit). Trip sehat A0: 0% peringatan. Trip A1 yang tidak melanggar: 88% WASPADA, 57% KRITIS, kebanyakan hampir-melanggar (jarak terdekat ke batas median 0,59 K); alarm palsu lebih tinggi untuk muatan kecil.
 - Masukan model: telemetri saja (T_sensor bersih, T_amb, RH, door_open, moving, jam sin/cos, sensor_bad) + info muatan. `reefer_duty`, `T_cargo`, `T_air`, `ev_*` bukan masukan.
 
 ## 7. Hasil (data uji `dataset_v3`, 1.500 trip, di dalam simulator)
@@ -117,5 +120,5 @@ Aturan sensor: 0 dari 1.004 trip tanpa A3 tertandai; deteksi ekstrem 100% (tunda
 8. Rumus pertukaran udara pintu adalah batas atas untuk box kosong.
 
 ## 10. Status pekerjaan
-Selesai: data, simulator bersumber, GRU, XGBoost, penaksir fisika, `door_budget`, aturan sensor.
-Belum: aturan keputusan terpadu, ekspor ONNX + cek paritas, backend/frontend (form + CSV), tabel parameter-sumber final, Evaluation Artifact PDF (20.30), pitch deck bahasa Inggris (23.59).
+Selesai: data, simulator bersumber, GRU, XGBoost, penaksir fisika, `door_budget`, aturan sensor, aturan keputusan terpadu (`engine.py`), skrip ekspor ONNX (`export_onnx.py`).
+Belum: konfirmasi paritas ONNX di laptop, backend/frontend (form + CSV), tabel parameter-sumber final, Evaluation Artifact PDF (20.30), pitch deck bahasa Inggris (23.59).
