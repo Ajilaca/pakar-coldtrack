@@ -1,0 +1,383 @@
+{
+  "tag": "baseline",
+  "n_windows": 16244,
+  "n_trips": 106,
+  "G1_forecast": {
+    "mae_t15": 0.15207628905773163,
+    "mae_t30": 0.19757770001888275,
+    "mae_t60": 0.23718582093715668,
+    "p95_abs_err_t30": 0.494015634059906,
+    "max_abs_err_t30": 5.37882137298584,
+    "bias_t30": 0.011074238456785679,
+    "naive_persistence_mae_t30": 0.1947019398212433,
+    "naive_linear_extrapolation_mae_t30": 0.6137655973434448,
+    "moving_windows_n": 84,
+    "moving_windows_gru_mae_t30": 1.240993857383728,
+    "moving_windows_persistence_mae_t30": 1.5603440999984741,
+    "moving_windows_extrapolation_mae_t30": 2.6507809162139893,
+    "mae_t30_by_mode": {
+      "A0": 0.1888289898633957,
+      "A1": 0.28450825810432434,
+      "A2": 0.25465127825737,
+      "A3": 0.26292043924331665,
+      "A4": 0.2228822410106659,
+      "A5": 0.07677498459815979,
+      "A6": 0.576591432094574,
+      "A7": 0.1739843189716339,
+      "A8": 0.25873249769210815
+    },
+    "mae_t30_by_cargo": {
+      "daging_beku": 0.2201063185930252,
+      "ikan_segar": 0.21407943964004517,
+      "produk_susu": 0.20687831938266754,
+      "sayur_buah": 0.19853432476520538,
+      "vaksin_2_8C": 0.16441091895103455
+    }
+  },
+  "G2_classification": {
+    "macro_f1": 0.5807264495347145,
+    "accuracy": 0.8134080275794139,
+    "anomaly_pr_auc": 0.7105046564759214,
+    "anomaly_recall_at_argmax": 0.5465116279069767,
+    "false_alarm_rate_healthy": 0.07859078590785908,
+    "per_class": {
+      "A0": {
+        "support": 12546,
+        "precision": 0.8733096623101911,
+        "recall": 0.9214092140921409,
+        "f1": 0.8967148896559749
+      },
+      "A1": {
+        "support": 321,
+        "precision": 0.6428571428571429,
+        "recall": 0.5887850467289719,
+        "f1": 0.6146341463414634
+      },
+      "A3": {
+        "support": 379,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "A7": {
+        "support": 642,
+        "precision": 0.4083694083694084,
+        "recall": 0.440809968847352,
+        "f1": 0.42397003745318357
+      },
+      "A8": {
+        "support": 651,
+        "precision": 0.29571106094808125,
+        "recall": 0.2012288786482335,
+        "f1": 0.23948811700182815
+      },
+      "degradasi_bertahap": {
+        "support": 833,
+        "precision": 0.16296296296296298,
+        "recall": 0.1056422569027611,
+        "f1": 0.1281864530225783
+      },
+      "masalah_sensor": {
+        "support": 872,
+        "precision": 0.8860182370820668,
+        "recall": 0.6685779816513762,
+        "f1": 0.7620915032679739
+      }
+    },
+    "confusion_matrix": [
+      [
+        11560,
+        2,
+        0,
+        269,
+        226,
+        420,
+        69
+      ],
+      [
+        77,
+        189,
+        0,
+        0,
+        55,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        379,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        320,
+        0,
+        0,
+        283,
+        4,
+        32,
+        3
+      ],
+      [
+        408,
+        100,
+        0,
+        12,
+        131,
+        0,
+        0
+      ],
+      [
+        661,
+        3,
+        0,
+        52,
+        26,
+        88,
+        3
+      ],
+      [
+        211,
+        0,
+        0,
+        77,
+        1,
+        0,
+        583
+      ]
+    ],
+    "classes": [
+      "A0",
+      "A1",
+      "A3",
+      "A7",
+      "A8",
+      "degradasi_bertahap",
+      "masalah_sensor"
+    ],
+    "trips_per_true_mode": {
+      "A0": 95,
+      "A1": 4,
+      "A2": 2,
+      "A3": 7,
+      "A4": 3,
+      "A5": 3,
+      "A6": 8,
+      "A7": 5,
+      "A8": 6
+    },
+    "macro_f1_ci95": [
+      0.487913485680321,
+      0.6419601418863421
+    ],
+    "degradasi_recall_ci95": [
+      0.0,
+      0.22251308900523561
+    ],
+    "recall_by_minutes_since_onset": {
+      "0-10": {
+        "n": 198,
+        "recall_non_A0": 0.5555555555555556,
+        "recall_exact_class": 0.5151515151515151
+      },
+      "10-30": {
+        "n": 300,
+        "recall_non_A0": 0.6466666666666666,
+        "recall_exact_class": 0.6466666666666666
+      },
+      "30-60": {
+        "n": 440,
+        "recall_non_A0": 0.759090909090909,
+        "recall_exact_class": 0.759090909090909
+      },
+      "60-120": {
+        "n": 925,
+        "recall_non_A0": 0.7351351351351352,
+        "recall_exact_class": 0.6183783783783784
+      },
+      "120-inf": {
+        "n": 1835,
+        "recall_non_A0": 0.38310626702997275,
+        "recall_exact_class": 0.24577656675749318
+      }
+    }
+  },
+  "G3_imminent_breach": {
+    "n_breach_windows": 1714,
+    "n_healthy_no_breach": 14530,
+    "true_ttb_le10": {
+      "n": 485,
+      "shown_rate": 0.31752577319587627,
+      "mae_when_shown": 3.361628532409668,
+      "mae_all_incl_missing_as_30": 20.747817993164062,
+      "miss_gate_A0": 0.6412371134020619,
+      "miss_gate_sensor_class": 0.03917525773195876,
+      "miss_ttb_model_above_cap": 0.010309278350515464
+    },
+    "true_ttb_le30": {
+      "n": 625,
+      "shown_rate": 0.2496,
+      "mae_when_shown": 3.3996825218200684,
+      "mae_all_incl_missing_as_30": 18.342958450317383,
+      "miss_gate_A0": 0.6784,
+      "miss_gate_sensor_class": 0.0528,
+      "miss_ttb_model_above_cap": 0.0256
+    },
+    "raw_xgb_ttb_mae_true_le30_ungated": 7.083976745605469,
+    "raw_xgb_ttb_mae_all_breach": 52.002437591552734,
+    "healthy_windows_showing_ttb": 0.055746730901582935,
+    "by_cargo_true_le30": {
+      "daging_beku": {
+        "n": 0,
+        "mae_raw_ungated": null,
+        "shown_rate": null
+      },
+      "ikan_segar": {
+        "n": 0,
+        "mae_raw_ungated": null,
+        "shown_rate": null
+      },
+      "produk_susu": {
+        "n": 306,
+        "mae_raw_ungated": 8.547403335571289,
+        "shown_rate": 0.23202614379084968
+      },
+      "sayur_buah": {
+        "n": 319,
+        "mae_raw_ungated": 5.680187702178955,
+        "shown_rate": 0.2664576802507837
+      },
+      "vaksin_2_8C": {
+        "n": 0,
+        "mae_raw_ungated": null,
+        "shown_rate": null
+      }
+    }
+  },
+  "G4_robustness": {
+    "clean": {
+      "macro_f1": 0.5807264495347145,
+      "forecast_mae_t30": 0.19757770001888275,
+      "imminent_ttb_shown_rate": 0.2496,
+      "imminent_pred_A0_rate": 0.6784
+    },
+    "sensor_noise_sigma_0.1C": {
+      "macro_f1": 0.5080404807688834,
+      "forecast_mae_t30": 0.20347492396831512,
+      "imminent_ttb_shown_rate": 0.1344,
+      "imminent_pred_A0_rate": 0.7968
+    },
+    "sensor_noise_sigma_0.3C": {
+      "macro_f1": 0.5093924162573661,
+      "forecast_mae_t30": 0.2497093677520752,
+      "imminent_ttb_shown_rate": 0.1088,
+      "imminent_pred_A0_rate": 0.824
+    },
+    "sensor_noise_sigma_0.5C": {
+      "macro_f1": 0.40525821456796,
+      "forecast_mae_t30": 0.315690815448761,
+      "imminent_ttb_shown_rate": 0.0528,
+      "imminent_pred_A0_rate": 0.9056
+    },
+    "hour_shift_utc_vs_wib_+7h": {
+      "macro_f1": 0.5884506992781888,
+      "forecast_mae_t30": 0.19817809760570526,
+      "imminent_ttb_shown_rate": 0.3264,
+      "imminent_pred_A0_rate": 0.6064
+    },
+    "stuck_sensor_on_imminent_breach": {
+      "n": 625,
+      "pred_masalah_sensor": 0.096,
+      "pred_A0_healthy": 0.7328,
+      "pred_other_fault": 0.1712
+    }
+  },
+  "G5_end_to_end_api": {
+    "n_requests": 8122,
+    "n_http_errors": 0,
+    "latency_ms_p50": 11.703769999712677,
+    "latency_ms_p95": 15.062201899809224,
+    "true_ttb_le30": {
+      "n": 312,
+      "AMAN": 0.3173076923076923,
+      "WASPADA": 0.42948717948717946,
+      "KRITIS": 0.2532051282051282,
+      "ttb_shown": 0.6185897435897436
+    },
+    "true_ttb_30_60": {
+      "n": 108,
+      "AMAN": 0.8148148148148148,
+      "WASPADA": 0.10185185185185185,
+      "KRITIS": 0.08333333333333333,
+      "ttb_shown": 0.12962962962962962
+    },
+    "true_ttb_gt60": {
+      "n": 437,
+      "AMAN": 0.8054919908466819,
+      "WASPADA": 0.011441647597254004,
+      "KRITIS": 0.18306636155606407,
+      "ttb_shown": 0.18306636155606407
+    },
+    "no_breach": {
+      "n": 7265,
+      "AMAN": 0.8988300068823124,
+      "WASPADA": 0.043358568479008944,
+      "KRITIS": 0.057811424638678596,
+      "ttb_shown": 0.05808671713695802
+    },
+    "api_ttb_mae_when_shown_true_le30": 1.6367875647668393,
+    "parity_forecast_max_abs_diff_C": 0.5298168659210205,
+    "parity_forecast_mean_abs_diff_C": 0.004874657206882507,
+    "parity_class_disagreement_rate": 0.00627924156611672,
+    "by_true_mode_status": {
+      "A0": {
+        "AMAN": 0.9422739594960932,
+        "WASPADA": 0.023441237442194226,
+        "KRITIS": 0.034284803061712645
+      },
+      "A1": {
+        "AMAN": 0.484472049689441,
+        "WASPADA": 0.012422360248447204,
+        "KRITIS": 0.5031055900621118
+      },
+      "A2": {
+        "AMAN": 0.8307692307692308,
+        "WASPADA": 0.015384615384615385,
+        "KRITIS": 0.15384615384615385
+      },
+      "A3": {
+        "AMAN": 0.164021164021164,
+        "WASPADA": 0.12169312169312169,
+        "KRITIS": 0.7142857142857143
+      },
+      "A4": {
+        "AMAN": 0.9303135888501742,
+        "WASPADA": 0.0,
+        "KRITIS": 0.06968641114982578
+      },
+      "A5": {
+        "AMAN": 0.2804878048780488,
+        "WASPADA": 0.7195121951219512,
+        "KRITIS": 0.0
+      },
+      "A6": {
+        "AMAN": 0.49074074074074076,
+        "WASPADA": 0.49074074074074076,
+        "KRITIS": 0.018518518518518517
+      },
+      "A7": {
+        "AMAN": 0.6677018633540373,
+        "WASPADA": 0.006211180124223602,
+        "KRITIS": 0.32608695652173914
+      },
+      "A8": {
+        "AMAN": 0.9693251533742331,
+        "WASPADA": 0.0,
+        "KRITIS": 0.03067484662576687
+      }
+    }
+  }
+}
