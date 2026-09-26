@@ -1,29 +1,17 @@
 import type { Metadata } from "next";
-import "@fontsource/plus-jakarta-sans/400.css";
-import "@fontsource/plus-jakarta-sans/500.css";
-import "@fontsource/plus-jakarta-sans/600.css";
-import "@fontsource/plus-jakarta-sans/700.css";
-import "@fontsource/plus-jakarta-sans/800.css";
-import "@fontsource/ibm-plex-mono/400.css";
-import "@fontsource/ibm-plex-mono/500.css";
-import "@fontsource/ibm-plex-mono/600.css";
+import "@fontsource-variable/inter";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "ColdTrack AI",
-  description: "AI-based early warning system for cold chain failure prevention",
+  description: "Peringatan dini kegagalan rantai dingin berbasis AI",
+  icons: { icon: "/logo.webp" },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body className="antialiased min-h-screen bg-background text-foreground font-sans">
-        {children}
-      </body>
+    <html lang="id">
+      <body className="min-h-dvh antialiased">{children}</body>
     </html>
   );
 }
