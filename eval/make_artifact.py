@@ -206,18 +206,18 @@ def build(tag):
           p("Causes below are <b>hypotheses</b> unless marked measured; each will be confirmed or rejected with the suite before any change.", S),
           table([["Finding", "Suspected cause (status)", "Planned fix and how we will judge it"],
                  ["F1/F2 green status & silent TTB", "TTB and status floors are gated on the classifier / forecast; both are weak on slow faults (measured: 68% of imminent windows → A0).",
-                  "Adjust TTB guard to apply regardless of class. Judge: F1 AMAN-rate ≤ 5% without raising healthy WASPADA+KRITIS above 10%."],
+                  "Adjust TTB guard to apply regardless of class. Judge: F1 AMAN-rate ≤ 5% without raising healthy WASPADA+KRITIS above 10%."], 
                  ["F3 noise fragility", "Trained only on σ=0.05 °C simulator noise (dataset card, measured). Aggregate features (std, trend) are noise-sensitive (hypothesis).",
                   "Retrain on the physics-simulated trips driven by real BMKG outside-air data, with sensor errors from real Intel Berkeley Lab traces instead of σ=0.05 °C noise; re-run G4. Judge: F1 drop ≤ 0.05 at σ=0.3 (metrics)."],
                  ["F4 stuck sensor", "Frozen temp looks like a stable healthy trace (hypothesis). masalah_sensor recall only 67% even in-distribution (measured).",
-                  "Train masalah_sensor on real faulty-sensor traces (Intel Berkeley Lab), plus an explicit flat-line detector in preprocessing (less than X variance over last N minutes while ambient/reefer state changes) as a rule, independent of the network. May remain unresolved or removed, we will report the residual."],
+                  "Train masalah_sensor on real faulty-sensor traces (Intel Berkeley Lab), plus an explicit flat-line detector in preprocessing (less than X variance over last N minutes while ambient/reefer state changes) as a rule, independent of the network. May remain unresolved or removed, will be reported."],
                  ["F5 forecast metric", "Metric choice, not a model defect (measured).", "Report the moving-window MAE and skill vs persistence as the primary forecast metrics."],
                  ["F6 A7/A8/degradasi", "Label taken at window end; slow faults look healthy early (partly measured: recall is low even 120+ min in, so not only onset latency). Class overlap A0↔A8/A7/degradasi in confusion matrix (measured).",
                   "Scope change: A8 (poor pre-cooling) leaves the classifier and becomes a pre-departure rule; degradasi_bertahap and A3 (total reefer failure) are deferred as a later feature. "
-                  "A7 (extreme ambient) stays: re-simulate it from real BMKG extremes, inspect misclassified windows, consider longer context. May remain unresolved, we will report the residual."],
+                  "A7 (extreme ambient) stays: re-simulate it from real BMKG extremes, inspect misclassified windows, consider longer context. May remain unresolved, will be reported."],
                  ["F7 test validity", "700 simulated trips; 106 in test (measured).",
                   "Regenerate a larger test set from the physics simulator, stratified by cargo (fish, meat, vegetables, fruit, from the product thermal tables) and payload mass; report CIs. "
-                  "Vaccine and dairy are not in the planned thermal tables, so claims for them stay unsupported. Real inputs make the simulation more realistic but still cannot substitute for field data."]],
+                  "Vaccine and dairy are not in the planned thermal tables, so claims for them stay unclear. Real inputs make the simulation more realistic but still cannot substitute for field data."]],
                 [3.2*cm, 6.2*cm, 7*cm]),
           PageBreak()]
 
