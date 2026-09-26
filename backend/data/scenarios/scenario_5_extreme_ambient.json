@@ -3,7 +3,7 @@
   "title": "Skenario 5: Kejut Suhu Ambien saat Macet",
   "description": "Kendaraan berhenti lama di bawah radiasi matahari tinggi, beban termal melonjak.",
   "cargo_profile": "produk_susu_2_4C",
-  "expected_status": "KRITIS",
+  "expected_status": "WASPADA",
   "shipment_id": "TRK-JKT-0421",
   "sumber": {
     "dataset": "v4_seed1000_700trips.parquet",
