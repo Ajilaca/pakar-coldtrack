@@ -107,58 +107,68 @@ class HybridInferenceEngine:
     def is_ready(self) -> bool:
         return self.gru is not None
 
-    def _gru(self, x: np.ndarray, s: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-        ev, temp = self.gru.run(None, {"x": x, "s": s})
-        return ev[0], temp[0]
+    def analyze_trip(self, trip: pd.DataFrame, prod: dict[str, float]) -> pd.DataFrame:
+        """Every minute of a trip, causally (row t only uses data up to t). Rows start at minute W-1.
 
-    def _xgb_ttb(self, trip: pd.DataFrame, x: np.ndarray, s: np.ndarray) -> float | None:
-        if self.ttb is None:
-            return None
-        # Same feature assembly as ml/run_train_xgb.py; stride=1 so the last row is "now".
-        f1, _ = ttb_features.build(x, s)
-        f2, _ = observer.windows_extra(trip, [0], W=WINDOW, stride=1)
-        f3, _ = observer.projection_features(trip, [0], W=WINDOW, stride=1)
-        feats = np.hstack([f1, f2[-1:], f3[-1:]]).astype(np.float32)
-        out = self.ttb.run(None, {"features": feats})[0]
-        return float(round(np.clip(np.ravel(out)[0], 0.0, TTB_MAX), 1))
+        predict() serves the last row; the eval suite scores all rows, so both share this code path.
+        """
+        eng = engine.run(trip, prod, prod["mass_kg"]).iloc[WINDOW - 1:].reset_index(drop=True)
+        out = pd.DataFrame({
+            "minute": eng.minute,
+            "status": eng.status_txt,
+            "reason": eng.reason,
+            "ttb_show": eng.ttb_show.round(1),
+            "ttb_phys": eng.ttb_phys,
+            "sensor_status": eng.sensor_status.astype(int),
+        })
+        out["risk_index"] = [
+            _risk_index(st, float(tp), ss >= 1) for st, tp, ss in zip(out.status, out.ttb_phys, out.sensor_status)
+        ]
+        if self.gru is None:
+            return out
+
+        clean = prep_windows.clean_trip(trip)
+        feats = clean[prep_windows.FEATS].to_numpy(np.float32)
+        ends = np.arange(WINDOW - 1, len(clean))
+        x = feats[ends[:, None] - np.arange(WINDOW - 1, -1, -1)[None, :]]
+        s = np.repeat(clean[prep_windows.STATIC].iloc[:1].to_numpy(np.float32), len(ends), axis=0)
+        ev, temp = self.gru.run(None, {"x": x, "s": s})
+        out[["ev_door", "ev_shock", "ev_sensor"]] = ev
+        out[["t15", "t30", "t60"]] = temp.round(2)
+
+        door_now = trip.door_open.to_numpy()[ends] > 0.5
+        diag = [_diagnose(e, ss, st, d) for e, ss, st, d in zip(ev, out.sensor_status, out.status, door_now)]
+        out["label"] = [d["label"] for d in diag]
+        out["confidence"] = [d["confidence"] for d in diag]
+
+        if self.ttb is not None:
+            # Same feature assembly as ml/run_train_xgb.py, one window per minute.
+            f1, _ = ttb_features.build(x, s)
+            f2, _ = observer.windows_extra(trip, [0], W=WINDOW, stride=1)
+            f3, _ = observer.projection_features(trip, [0], W=WINDOW, stride=1)
+            xgb = self.ttb.run(None, {"features": np.hstack([f1, f2, f3]).astype(np.float32)})[0]
+            out["ttb_model"] = np.clip(np.ravel(xgb), 0.0, TTB_MAX).round(1)
+        return out
 
     def predict(
         self, readings: list[TelemetryReading], cargo_profile: str, mass_kg: float | None = None
     ) -> dict[str, Any]:
         """Needs >= 60 readings (validated in main.py). Uses the full history for the cargo observer."""
         prod = cargo_params(cargo_profile, mass_kg)
-        trip = readings_to_trip(readings, prod)
-
-        now = engine.run(trip, prod, prod["mass_kg"]).iloc[-1]
-        sensor_status = int(now.sensor_status)
-        ttb_show = None if pd.isna(now.ttb_show) else float(round(now.ttb_show, 1))
-
+        now = self.analyze_trip(readings_to_trip(readings, prod), prod).iloc[-1]
         result: dict[str, Any] = {
-            "status": now.status_txt,
+            "status": now.status,
             "reason": now.reason,
-            "time_to_breach_min": ttb_show,
-            "risk_index": _risk_index(now.status_txt, float(now.ttb_phys), sensor_status >= 1),
-            "sensor_status": sensor_status,
+            "time_to_breach_min": None if pd.isna(now.ttb_show) else float(now.ttb_show),
+            "risk_index": float(now.risk_index),
+            "sensor_status": int(now.sensor_status),
             "forecast": None,
             "failure_mode": None,
-            "ttb_model_min": None,
+            "ttb_model_min": float(now.ttb_model) if "ttb_model" in now else None,
         }
-
-        if self.gru is None:
-            return result
-
-        clean = prep_windows.clean_trip(trip)
-        x = clean[prep_windows.FEATS].to_numpy(np.float32)[-WINDOW:][None]
-        s = clean[prep_windows.STATIC].iloc[:1].to_numpy(np.float32)
-        ev, temp = self._gru(x, s)
-
-        result["forecast"] = {
-            "t15": float(round(temp[0], 2)),
-            "t30": float(round(temp[1], 2)),
-            "t60": float(round(temp[2], 2)),
-        }
-        result["failure_mode"] = _diagnose(ev, sensor_status, now.status_txt, bool(trip.door_open.iloc[-1]))
-        result["ttb_model_min"] = self._xgb_ttb(trip, x, s)
+        if "label" in now:
+            result["forecast"] = {h: float(now[h]) for h in ("t15", "t30", "t60")}
+            result["failure_mode"] = {"label": now.label, "confidence": float(now.confidence)}
         return result
 
 
