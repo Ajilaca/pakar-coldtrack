@@ -181,13 +181,22 @@ def build(tag):
     # ---------- (c) before/after ----------
     s += [p("3. Before / after iteration", H1),
           p("Status: <b>baseline only</b>. This section is filled after each iteration (Evaluation Track); the 'after' column is intentionally empty until measured by the same suite.", B),
+          p("<b>Planned iteration 1 (in progress, not yet measured): real inputs + physics simulator + narrower scope.</b> "
+            "(i) Replace the synthetic raw inputs with real data: BMKG daily temperature and humidity for Indonesia (2010–2020) as the air outside the truck; "
+            "product thermal tables (fish, meat, vegetables, fruit) combined with a user-entered payload mass; and real faulty-sensor traces from the Intel Berkeley Lab dataset to imitate sensor errors. "
+            "This changes are made to allow a wider range of product (that can degrade) to be detected by our product."
+            "(ii) Generate trips with a physics-based truck model (heat ingress from outside air; heavier payload warms more slowly). "
+            "(iii) Reduce the classifier to <b>4 scenarios</b>: healthy (A0), door open (A1), sudden extreme ambient (A7) and sensor fault (masalah_sensor). "
+            "Total reefer failure (A3) and cooling degradation (degradasi_bertahap) are deferred as a later feature; poor pre-cooling (A8) becomes a rule checked before departure. "
+            "Consequence for comparison: per-class 'after' numbers exist only for the 4 kept classes, and macro-F1 over 4 classes is not directly comparable to the 7-class baseline.", B),
           table([["Metric (test split)", "Baseline", "After iteration", "Change / reason"],
                  ["Acceptance checks passed", f"{n_pass}/{len(checks)}", "—", "—"],
                  ["Imminent breach shown as AMAN (API)", pct(G5["true_ttb_le30"]["AMAN"]), "—", "—"],
                  ["Imminent breach: TTB shown (API)", pct(G5["true_ttb_le30"]["ttb_shown"]), "—", "—"],
                  ["Imminent breach labelled A0 (models)", pct(G3["true_ttb_le30"]["miss_gate_A0"]), "—", "—"],
-                 ["Macro-F1", f"{G2['macro_f1']:.3f}", "—", "—"],
-                 ["Recall degradasi / A8 / A7", f"{G2['per_class']['degradasi_bertahap']['recall']:.2f} / {G2['per_class']['A8']['recall']:.2f} / {G2['per_class']['A7']['recall']:.2f}", "—", "—"],
+                 ["Macro-F1", f"{G2['macro_f1']:.3f} (7 classes)", "—", "After: 4 classes; not directly comparable"],
+                 ["Recall degradasi / A8 / A7", f"{G2['per_class']['degradasi_bertahap']['recall']:.2f} / {G2['per_class']['A8']['recall']:.2f} / {G2['per_class']['A7']['recall']:.2f}", "—",
+                  "degradasi deferred, A8 → pre-departure rule; only A7 compared"],
                  ["Macro-F1 at σ=0.3 °C noise", f"{G4['sensor_noise_sigma_0.3C']['macro_f1']:.3f}", "—", "—"],
                  ["Stuck sensor → flagged masalah_sensor", pct(G4["stuck_sensor_on_imminent_breach"]["pred_masalah_sensor"]), "—", "—"],
                  ["Forecast MAE@30 on moving windows", f"{G1['moving_windows_gru_mae_t30']:.2f} °C", "—", "—"]],
@@ -197,15 +206,18 @@ def build(tag):
           p("Causes below are <b>hypotheses</b> unless marked measured; each will be confirmed or rejected with the suite before any change.", S),
           table([["Finding", "Suspected cause (status)", "Planned fix and how we will judge it"],
                  ["F1/F2 green status & silent TTB", "TTB and status floors are gated on the classifier / forecast; both are weak on slow faults (measured: 68% of imminent windows → A0).",
-                  "Add a forecast-independent guard: a physics/rate-based trigger from current temp vs cargo limit and recent slope, applying regardless of class. Judge: F1 AMAN-rate ≤ 5% without raising healthy WASPADA+KRITIS above 10%."],
+                  "Adjust TTB guard to apply regardless of class. Judge: F1 AMAN-rate ≤ 5% without raising healthy WASPADA+KRITIS above 10%."],
                  ["F3 noise fragility", "Trained only on σ=0.05 °C simulator noise (dataset card, measured). Aggregate features (std, trend) are noise-sensitive (hypothesis).",
-                  "Noise augmentation at train time or smoothing before feature aggregation; retrain, re-run G4. Judge: F1 drop ≤ 0.05 at σ=0.3."],
+                  "Retrain on the physics-simulated trips driven by real BMKG outside-air data, with sensor errors from real Intel Berkeley Lab traces instead of σ=0.05 °C noise; re-run G4. Judge: F1 drop ≤ 0.05 at σ=0.3 (metrics)."],
                  ["F4 stuck sensor", "Frozen temp looks like a stable healthy trace (hypothesis). masalah_sensor recall only 67% even in-distribution (measured).",
-                  "Explicit flat-line detector in preprocessing (zero variance over last N minutes while ambient/reefer state changes) as a rule, independent of the network."],
+                  "Train masalah_sensor on real faulty-sensor traces (Intel Berkeley Lab), plus an explicit flat-line detector in preprocessing (less than X variance over last N minutes while ambient/reefer state changes) as a rule, independent of the network. May remain unresolved or removed, we will report the residual."],
                  ["F5 forecast metric", "Metric choice, not a model defect (measured).", "Report the moving-window MAE and skill vs persistence as the primary forecast metrics."],
                  ["F6 A7/A8/degradasi", "Label taken at window end; slow faults look healthy early (partly measured: recall is low even 120+ min in, so not only onset latency). Class overlap A0↔A8/A7/degradasi in confusion matrix (measured).",
-                  "Inspect misclassified windows per class; consider longer context or class-specific features. May remain unresolved — we will report the residual."],
-                 ["F7 test validity", "700 simulated trips; 106 in test (measured).", "Regenerate a larger, cargo-stratified test set (data/ only); report CIs. Cannot substitute for field data."]],
+                  "Scope change: A8 (poor pre-cooling) leaves the classifier and becomes a pre-departure rule; degradasi_bertahap and A3 (total reefer failure) are deferred as a later feature. "
+                  "A7 (extreme ambient) stays: re-simulate it from real BMKG extremes, inspect misclassified windows, consider longer context. May remain unresolved, we will report the residual."],
+                 ["F7 test validity", "700 simulated trips; 106 in test (measured).",
+                  "Regenerate a larger test set from the physics simulator, stratified by cargo (fish, meat, vegetables, fruit, from the product thermal tables) and payload mass; report CIs. "
+                  "Vaccine and dairy are not in the planned thermal tables, so claims for them stay unsupported. Real inputs make the simulation more realistic but still cannot substitute for field data."]],
                 [3.2*cm, 6.2*cm, 7*cm]),
           PageBreak()]
 
