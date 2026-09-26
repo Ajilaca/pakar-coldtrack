@@ -12,7 +12,11 @@ CFG = dict(
     ttb_kritis=30,          # TTB <= 30 menit -> minimal KRITIS      (proposal lama)
     ttb_waspada=60,         # TTB <= 60 menit -> minimal WASPADA     (proposal lama)
     ttb_tampil=60,          # TTB hanya ditampilkan bila <= ini       (proposal lama: 30; dilonggarkan, lihat dokumen)
-    margin_waspada_k=1.0,   # muatan < 1 K dari batas atas -> WASPADA (DESAIN)
+    margin_waspada_k=1.0,   # muatan < 1 K dari batas atas -> WASPADA (DESAIN) ...
+    margin_waspada_frac=0.35,  # ... tapi maks. 35% lebar rentang (rentang 2-4 C -> 0,7 K). Kompromi terukur di v4:
+                               # 0,5 K -> 7% pelanggaran dekat tampil AMAN; 0,7 K -> 4% (lolos <=5%), sehat diperingatkan 20%
+    drift_min_c_per_min=0.005, # kenaikan sensor >= 0,3 C/jam dianggap hanyut (DESAIN)
+    drift_door_free_min=30,    # proyeksi hanyut hanya bila pintu tertutup 30 menit terakhir (pintu ditangani aturan pintu)
     door_waspada_min=30,    # pintu terbuka dan sisa waktu kasus terburuk <= 30 menit -> WASPADA (DESAIN)
     entry_tol_k=2.0,        # suhu awal muatan > t_set + 2 K -> peringatan pra-pendinginan (DESAIN)
 )
@@ -46,6 +50,23 @@ def ttb_series(ts_clean, tc, tamb, door, moving, k, thi, slope_thr=0.15):
     return ttb, cab
 
 
+def drift_ttb(ts_clean, door, thi, cfg=CFG):
+    """Menit sampai SENSOR sendiri melewati batas bila kenaikan 20 menit terakhir berlanjut.
+
+    Proyeksi fisika di atas hanya melihat pelanggaran bila kabin sudah di atas batas, sehingga hanyut pelan
+    (kompresor melemah, sensor di muatan) tidak pernah terhitung. Sensor dipakai sebagai batas atas muatan:
+    bila sensor = udara kabin, hasilnya lebih awal dari muatan (sisi aman).
+    """
+    n = len(ts_clean); ts10 = _roll_mean(ts_clean, 10)
+    slope = np.zeros(n); slope[20:] = (ts10[20:] - ts10[:-20]) / 20.0
+    w = cfg["drift_door_free_min"]
+    door_recent = np.convolve(door > 0.5, np.ones(w), mode="full")[:n] > 0
+    ttb = np.full(n, 240.0)
+    ok = (slope >= cfg["drift_min_c_per_min"]) & ~door_recent & (ts10 < thi)
+    ttb[ok] = np.clip((thi - ts10[ok]) / slope[ok], 0, 240)
+    return ttb
+
+
 def run(tel, prod, mass_kg, cfg=CFG):
     """
     tel : DataFrame per menit dengan kolom T_sensor, T_amb, door_open, moving  (RH_amb dan hour_of_day opsional)
@@ -63,9 +84,13 @@ def run(tel, prod, mass_kg, cfg=CFG):
     tc = ob.estimate_cargo(ts, mass_kg, c)
     k = db._k_cargo(mass_kg, c)
     ttb, cab = ttb_series(ts, tc, tamb, door, moving, k, thi)
+    ttb = np.minimum(ttb, drift_ttb(ts, door, thi, cfg))
     # sisa waktu pintu (kasus terburuk: kabin = suhu luar)
     worst = np.array([db._time_to_limit(tc[i], tamb[i], thi, k) if door[i] > 0.5 else np.nan for i in range(len(ts))])
     margin = thi - tc
+    margin_k = min(cfg["margin_waspada_k"], cfg["margin_waspada_frac"] * (thi - tlo))
+    # sensor = batas atas muatan (sama dengan drift_ttb): bacaan di/atas batas tidak boleh AMAN walau taksiran muatan tertinggal
+    margin_read = thi - np.maximum(tc, _roll_mean(ts, 10))
 
     status = np.zeros(len(ts), dtype=int); reason = [""] * len(ts)
     for i in range(len(ts)):
@@ -76,7 +101,7 @@ def run(tel, prod, mass_kg, cfg=CFG):
         if tc[i] >= thi or tc[i] < tlo: up(KRITIS, "Suhu muatan di luar batas aman.")
         if ttb[i] <= cfg["ttb_kritis"]: up(KRITIS, f"Muatan diperkirakan melewati batas dalam {ttb[i]:.0f} menit.")
         if ttb[i] <= cfg["ttb_waspada"]: up(WASPADA, f"Muatan diperkirakan melewati batas dalam {ttb[i]:.0f} menit.")
-        if margin[i] < cfg["margin_waspada_k"]: up(WASPADA, "Suhu muatan mendekati batas atas.")
+        if margin_read[i] < margin_k: up(WASPADA, "Suhu mendekati atau melewati batas atas.")
         if door[i] > 0.5 and worst[i] <= cfg["door_waspada_min"]: up(WASPADA, f"Pintu terbuka; sisa waktu kasus terburuk ~{worst[i]:.0f} menit. Tutup pintu.")
         if sst[i] >= 1:                                        # penjepit sensor: tidak boleh AMAN, dan tidak boleh KRITIS karena angka sensor
             if sst[i] == 2: s, why = WASPADA, "Sensor rusak. Verifikasi manual diperlukan; sisa waktu tidak ditampilkan."
