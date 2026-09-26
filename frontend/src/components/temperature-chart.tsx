@@ -1,130 +1,84 @@
 "use client";
 
 import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ReferenceArea,
-  Legend,
+  Area, CartesianGrid, ComposedChart, Line, ReferenceArea, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from "recharts";
-import { CargoThreshold, ChartPoint, Forecast } from "@/lib/types";
+import { ChartLineUp } from "@phosphor-icons/react/dist/ssr";
+import { CardTitle } from "./card-title";
+import { CargoProfile, Forecast, TelemetryReading } from "@/lib/types";
 
-interface TemperatureChartProps {
-  readings: ChartPoint[];
+interface Props {
+  readings: TelemetryReading[];
   forecast: Forecast;
-  threshold: CargoThreshold;
-  showAmbient?: boolean;
-  compact?: boolean;
+  profile: CargoProfile;
 }
 
-export function TemperatureChart({ readings, forecast, threshold, showAmbient, compact }: TemperatureChartProps) {
-  const last = readings[readings.length - 1];
-  const lastT = last?.t_min ?? 0;
-  const lastTemp = last?.temp_c ?? 0;
+export function TemperatureChart({ readings, forecast, profile }: Props) {
+  const n = readings.length;
+  const last = readings[n - 1].temp_c;
+  const data: { t: number; actual?: number; forecast?: number }[] = readings.map((r, i) => ({
+    t: i - (n - 1),
+    actual: r.temp_c,
+  }));
+  data[n - 1].forecast = last;
+  data.push({ t: 15, forecast: forecast.t15 }, { t: 30, forecast: forecast.t30 }, { t: 60, forecast: forecast.t60 });
 
-  const data = [
-    ...readings.map((r) => ({
-      t: r.t_min,
-      actual: r.temp_c,
-      ambient: r.ambient_c,
-      forecast: undefined as number | undefined,
-    })),
-    { t: lastT, actual: lastTemp, ambient: undefined, forecast: lastTemp }, // titik jembatan actual -> forecast
-    { t: lastT + 15, actual: undefined, ambient: undefined, forecast: forecast.t15 },
-    { t: lastT + 30, actual: undefined, ambient: undefined, forecast: forecast.t30 },
-    { t: lastT + 60, actual: undefined, ambient: undefined, forecast: forecast.t60 },
-  ];
+  const values = [...readings.map((r) => r.temp_c), forecast.t15, forecast.t30, forecast.t60, profile.min, profile.critical];
+  const lo = Math.floor(Math.min(...values) - 1);
+  const hi = Math.ceil(Math.max(...values) + 1);
+
+  const summary = `Suhu muatan sekarang ${last.toFixed(1)}°C. Prediksi ${forecast.t15.toFixed(1)}°C dalam 15 menit, ${forecast.t30.toFixed(1)}°C dalam 30 menit, dan ${forecast.t60.toFixed(1)}°C dalam 60 menit. Batas aman ${profile.min} sampai ${profile.max}°C.`;
 
   return (
-    <div className={compact ? "h-full w-full" : "space-y-2"}>
-      {!compact && (
-        <p className="t-meta">
-          Suhu kargo — aktual (garis penuh) vs prediksi (garis putus-putus)
-        </p>
-      )}
-      <div className={compact ? "h-full w-full" : "h-64 w-full"}>
+    <section className="card flex flex-col gap-3 p-5">
+      <CardTitle icon={ChartLineUp}>Suhu muatan</CardTitle>
+      <div>
+        <ul className="flex flex-wrap gap-x-4 gap-y-1 text-[12px] text-muted">
+          <li className="flex items-center gap-1.5"><span className="h-0.5 w-4 bg-accent" />Aktual</li>
+          <li className="flex items-center gap-1.5"><span className="h-0 w-4 border-t-2 border-dashed border-accent" />Prediksi</li>
+          <li className="flex items-center gap-1.5"><span className="h-2.5 w-4 rounded-sm bg-ok-soft" />Rentang aman</li>
+          <li className="flex items-center gap-1.5"><span className="h-0 w-4 border-t border-dashed border-crit" />Batas kritis</li>
+        </ul>
+      </div>
+      <p className="sr-only">{summary}</p>
+      <div className="h-[240px] w-full" aria-hidden>
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 8, right: 12, left: -12, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+          <ComposedChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
+            <CartesianGrid stroke="var(--border)" vertical={false} />
             <XAxis
-              dataKey="t"
-              type="number"
-              domain={["dataMin", "dataMax"]}
-              tickFormatter={(v) => `${v}m`}
-              tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+              dataKey="t" type="number" domain={[-(n - 1), 60]} ticks={[-60, -45, -30, -15, 0, 15, 30, 45, 60]}
+              tickFormatter={(v: number) => (v === 0 ? "sekarang" : `${v > 0 ? "+" : ""}${v}m`)}
+              tick={{ fontSize: 11, fill: "var(--text-muted)" }} stroke="var(--border)"
             />
-            <YAxis tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} unit="°C" width={44} />
+            <YAxis
+              domain={[lo, hi]} width={48} tickFormatter={(v: number) => `${v}°`}
+              tick={{ fontSize: 11, fill: "var(--text-muted)" }} stroke="var(--border)"
+            />
+            <ReferenceArea y1={profile.min} y2={profile.max} fill="var(--ok)" fillOpacity={0.08} stroke="none" />
+            <ReferenceLine
+              y={profile.critical} stroke="var(--crit)" strokeWidth={1.5} strokeDasharray="6 4"
+              label={{ value: `Batas kritis ${profile.critical}°C`, position: "insideTopRight", fontSize: 11, fill: "var(--crit)" }}
+            />
+            <ReferenceLine x={0} stroke="var(--border)" />
             <Tooltip
-              contentStyle={{ borderRadius: 12, border: "1px solid hsl(var(--border))", background: "hsl(var(--card))", color: "hsl(var(--ink))", fontSize: 11, boxShadow: "0 12px 28px -12px hsl(var(--ocean-deep) / 0.25)" }}
-              formatter={(value: unknown, name: unknown) => [
-                `${Number(value)}°C`,
-                name === "actual" ? "Aktual" : name === "ambient" ? "Ambien" : "Prediksi",
-              ]}
-              labelFormatter={(v) => `t = ${v} menit`}
+              contentStyle={{ borderRadius: 6, border: "1px solid var(--border)", background: "var(--surface)", fontSize: 12 }}
+              labelFormatter={(v) => (Number(v) === 0 ? "Sekarang" : `${Number(v) > 0 ? "+" : ""}${v} menit`)}
+              formatter={(v, name) => [`${Number(v).toFixed(1)}°C`, name === "actual" ? "Aktual" : "Prediksi"]}
             />
-            {!compact && (
-              <Legend
-                formatter={(value) => (value === "actual" ? "Aktual" : value === "ambient" ? "Ambien" : "Prediksi")}
-                wrapperStyle={{ fontSize: 10 }}
-              />
-            )}
-            {/* pita ambang aman */}
-            <ReferenceArea
-              y1={threshold.min}
-              y2={threshold.max}
-              fill="hsl(var(--mint))"
-              fillOpacity={0.14}
-              stroke="hsl(var(--mint))"
-              strokeOpacity={0.35}
-              label={
-                compact
-                  ? undefined
-                  : {
-                      value: `Ambang aman (${threshold.label})`,
-                      position: "insideTopLeft",
-                      fontSize: 10,
-                      fill: "hsl(var(--mint))",
-                    }
-              }
-            />
+            <defs>
+              <linearGradient id="actualFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="var(--accent)" stopOpacity={0.18} />
+                <stop offset="100%" stopColor="var(--accent)" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <Area dataKey="actual" stroke="var(--accent)" strokeWidth={2.5} fill="url(#actualFill)" dot={false} isAnimationActive={false} baseValue={lo} />
             <Line
-              type="monotone"
-              dataKey="actual"
-              stroke="hsl(var(--brand))"
-              strokeWidth={2.5}
-              dot={false}
-              connectNulls={false}
-              isAnimationActive={false}
+              dataKey="forecast" stroke="var(--accent)" strokeWidth={2} strokeDasharray="6 4"
+              dot={{ r: 3.5, fill: "var(--accent)", strokeWidth: 0 }} connectNulls isAnimationActive={false}
             />
-            <Line
-              type="monotone"
-              dataKey="forecast"
-              stroke="hsl(var(--ink-2))"
-              strokeWidth={2.5}
-              strokeDasharray="5 5"
-              dot={false}
-              connectNulls
-              isAnimationActive={false}
-            />
-            {showAmbient && (
-              <Line
-                type="monotone"
-                dataKey="ambient"
-                stroke="hsl(var(--ink-2))"
-                strokeOpacity={0.55}
-                strokeWidth={1.75}
-                dot={false}
-                connectNulls={false}
-                isAnimationActive={false}
-              />
-            )}
-          </LineChart>
+          </ComposedChart>
         </ResponsiveContainer>
       </div>
-    </div>
+    </section>
   );
 }

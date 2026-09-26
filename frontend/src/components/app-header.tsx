@@ -1,36 +1,25 @@
-import { Icon } from "@/components/icon";
+import Image from "next/image";
 
-/**
- * Header — elemen 1 dari "Anatomi satu halaman":
- * nama produk, satu kalimat positioning, badge mode demo.
- */
-export function AppHeader({ usingMock }: { usingMock: boolean }) {
+export function AppHeader({ model }: { model?: string }) {
   return (
-    <header className="glass-strong flex flex-wrap items-center justify-between gap-3 rounded-2xl px-4 py-3">
+    <header className="flex items-center justify-between gap-3 px-4 pt-4 lg:px-6">
       <div className="flex items-center gap-3">
-        <div className="grad-brand flex size-10 shrink-0 items-center justify-center rounded-xl">
-          <Icon name="logo" size={22} tone="white" />
-        </div>
+        <Image src="/logo.webp" alt="" width={64} height={33} priority className="h-9 w-auto" />
         <div>
-          <h1 className="t-panel-title">ColdTrack AI</h1>
-          <p className="t-meta">
-            Mengubah telemetri rantai dingin jadi keputusan: berapa menit lagi muatan aman, dan apa yang harus dilakukan.
+          <h1 className="text-[24px] font-extrabold leading-none tracking-[-0.03em] text-brand-strong">
+            Cold<span className="italic text-accent">Track</span>
+          </h1>
+          <p className="mt-1 hidden text-[12px] text-muted sm:block">
+            Berapa menit lagi muatan aman, dan apa yang harus dilakukan sekarang.
           </p>
         </div>
       </div>
-
-      <div className="flex items-center gap-2">
-        {/* Pengungkapan jujur — parameter model statis selama demo. */}
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-amberwarn-soft px-2.5 py-1 t-pill text-amberwarn">
-          <span className="size-1.5 rounded-full bg-amberwarn" />
-          Mode Demo — parameter statis
+      {model && (
+        <span className="hidden items-center gap-2 rounded-full border bg-surface px-3 py-1.5 text-[12px] font-medium text-muted md:flex">
+          <span className="size-2 rounded-full bg-ok" aria-hidden />
+          Model aktif · <span className="num">{model}</span>
         </span>
-        {usingMock && (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-2.5 py-1 t-pill text-muted-foreground">
-            Data tiruan
-          </span>
-        )}
-      </div>
+      )}
     </header>
   );
 }

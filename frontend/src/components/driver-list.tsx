@@ -1,75 +1,30 @@
-import { Icon, IconName } from "@/components/icon";
-import { ProgressRing } from "@/components/progress-ring";
+import { Lightbulb } from "@phosphor-icons/react/dist/ssr";
 import { Driver } from "@/lib/types";
-
-/**
- * Baris "Mengapa AI berpikir begini" — tiga fitur pendorong teratas, masing-
- * masing dalam kotaknya sendiri dengan cincin persentase.
- */
-
-/**
- * Peta nama fitur dari backend (app/explain.py) ke ikon + nama yang terbaca
- * manusia. Backend mengirim snake_case seperti "laju_kenaikan_suhu"; itu nama
- * internal, tidak layak tampil apa adanya di depan juri.
- *
- * Kalau R3 menambah fitur pendorong baru, tambahkan barisnya di sini —
- * yang belum terdaftar akan jatuh ke tampilan cadangan di bawah.
- */
-const FEATURE_META: Record<string, { icon: IconName; label: string }> = {
-  laju_kenaikan_suhu: { icon: "rate", label: "Laju kenaikan suhu" },
-  delta_suhu_ambien: { icon: "ambient", label: "Kenaikan suhu ambien" },
-  beban_panas_berhenti: { icon: "ambient", label: "Panas saat berhenti" },
-  durasi_reefer_aktif: { icon: "reefer", label: "Durasi pendingin aktif" },
-  status_pintu: { icon: "door", label: "Status pintu kargo" },
-  variansi_suhu: { icon: "sensor", label: "Variansi pembacaan suhu" },
-};
-
-/** Cadangan: ubah snake_case jadi kalimat berkapital. */
-function humanize(feature: string) {
-  const s = feature.replace(/_/g, " ");
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
+import { driverText, visibleDrivers } from "@/lib/labels";
+import { CardTitle } from "./card-title";
 
 export function DriverList({ drivers }: { drivers: Driver[] }) {
-  if (drivers.length === 0) return null;
-  const top3 = [...drivers].sort((a, b) => b.contribution - a.contribution).slice(0, 3);
-
+  const shown = visibleDrivers(drivers);
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-      {top3.map((d, i) => {
-        const meta = FEATURE_META[d.feature];
-        const label = meta?.label ?? humanize(d.feature);
-        const icon: IconName = meta?.icon ?? "sensor";
-
-        return (
-          <div
-            key={d.feature}
-            className="card glass-interactive flex flex-col items-center gap-2.5 px-3 py-4 text-center"
-          >
-            <ProgressRing value={d.contribution} size={76} />
-
-            <div className="min-w-0 space-y-1">
-              <div className="flex items-center justify-center gap-1.5">
-                <span className="flex size-6 shrink-0 items-center justify-center rounded-lg bg-brand-soft">
-                  <Icon name={icon} size={13} className="text-brand" />
-                </span>
-                <p className="t-body truncate font-semibold text-ink" title={label}>
-                  {label}
-                </p>
+    <section className="card flex flex-col gap-4 p-5">
+      <CardTitle icon={Lightbulb}>Mengapa AI berpikir begini</CardTitle>
+      <ul className="flex flex-col gap-2.5">
+        {shown.map((d) => {
+          const pct = Math.round(d.contribution * 100);
+          return (
+            <li key={d.feature} className="tile flex flex-col gap-2">
+              <div className="flex items-baseline justify-between gap-3">
+                <span className="font-semibold text-brand-strong">{driverText(d.feature)}</span>
+                <span className="num text-[15px] font-bold text-accent">{pct}%</span>
               </div>
-              <p className="t-meta truncate" title={d.value}>
-                {d.value}
-              </p>
-            </div>
-
-            {i === 0 && (
-              <span className="rounded-full bg-brand-soft px-2 py-0.5 t-pill text-brand">
-                Paling berpengaruh
-              </span>
-            )}
-          </div>
-        );
-      })}
-    </div>
+              <div className="h-2 overflow-hidden rounded-full bg-tint" aria-hidden>
+                <div className="h-full rounded-full bg-accent" style={{ width: `${pct}%` }} />
+              </div>
+              <span className="text-[12px] text-muted">{d.value}</span>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
   );
 }
