@@ -19,7 +19,8 @@ sys.path.insert(0, str(ROOT / "backend"))
 from app.inference import WINDOW, cargo_params, inference_engine, readings_to_trip  # noqa: E402
 from app.schemas import TelemetryReading  # noqa: E402
 
-DATA_PATH = ROOT / "data/processed/v4_seed1000_700trips.parquet"
+DATA_PATH = ROOT / "data/processed/v4_seed1000_700trips.parquet"   # run_eval --data overrides
+DATA_INFO = {"data": DATA_PATH.name, "kind": "v4_old_generator", "split": "test"}
 HORIZONS = [15, 30, 60]
 SENTINEL = 999.0
 
@@ -40,6 +41,13 @@ EVENTS = list(EVENT_LABEL)
 
 
 def load_test_trips() -> dict[int, pd.DataFrame]:
+    """v4 by default; a new-simulator parquet (eval/new_sim_data.py) when DATA_PATH points at one."""
+    global DATA_INFO
+    from eval import new_sim_data
+    if new_sim_data.is_new_sim(DATA_PATH):
+        trips, DATA_INFO = new_sim_data.load_trips(DATA_PATH)
+        return trips
+    DATA_INFO = {"data": Path(DATA_PATH).name, "kind": "v4_old_generator", "split": "test"}
     df = pd.read_parquet(DATA_PATH)
     df = df[df["split"] == "test"]
     return {tid: g.sort_values("minute").reset_index(drop=True) for tid, g in df.groupby("trip_id")}
@@ -68,7 +76,7 @@ def trip_readings(g: pd.DataFrame, temp: np.ndarray | None = None, hour_shift: i
 def score_trip(g: pd.DataFrame, temp: np.ndarray | None = None, hour_shift: int = 0) -> pd.DataFrame:
     """Deployed output for every minute of one trip (inference_engine.analyze_trip)."""
     prof = CARGO_TO_PROFILE[g["cargo_type"].iloc[0]]
-    prod = cargo_params(prof, None)
+    prod = cargo_params(prof, float(g["mass_kg"].iloc[0]) if "mass_kg" in g else None)  # v4: no mass -> default
     return inference_engine.analyze_trip(readings_to_trip(trip_readings(g, temp, hour_shift), prod), prod)
 
 
@@ -85,8 +93,10 @@ def eval_rows(trips: dict[int, pd.DataFrame], **kw) -> pd.DataFrame:
             continue
         out = score_trip(g, **kw).set_index("minute")
         temp = g["temp_c"].to_numpy()
+        # forecast target: cargo temperature. v4 has no separate one (sensor == cargo there).
+        target = g["forecast_target_c"].to_numpy() if "forecast_target_c" in g else temp
         for t in range(WINDOW - 1, n - max(HORIZONS)):
-            tg = [temp[t + h] for h in HORIZONS]
+            tg = [target[t + h] for h in HORIZONS]
             if np.isnan(temp[t - WINDOW + 1:t + 1]).any() or np.isnan(tg).any():
                 continue
             r = out.loc[t].to_dict()

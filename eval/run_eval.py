@@ -14,6 +14,7 @@ Groups (same test trips/windows as the baseline; metrics follow the new contract
 import argparse
 import json
 import time
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -176,6 +177,8 @@ def g5_api(trips, D, stride):
         g = trips[tid].iloc[:t + 1]
         body = {"shipment_id": f"EVAL-{tid}-{t}", "cargo_profile": CARGO_TO_PROFILE[g.cargo_type.iloc[0]],
                 "readings": [r.model_dump(mode="json") for r in trip_readings(g)]}
+        if "mass_kg" in g:  # new-simulator data carries the true mass; v4 has none (profile default)
+            body["mass_kg"] = float(g.mass_kg.iloc[0])
         t0 = time.perf_counter()
         r = client.post("/api/v1/analyze", json=body)
         lat.append((time.perf_counter() - t0) * 1000)
@@ -223,8 +226,13 @@ def main():
     ap.add_argument("--api-stride", type=int, default=10)
     ap.add_argument("--stuck-stride", type=int, default=3)
     ap.add_argument("--margin-sweep", action="store_true", help="only write results/margin_sweep_<tag>.json")
+    ap.add_argument("--data", help="parquet to score (default: v4). A new-simulator file is converted by "
+                                   "eval/new_sim_data.py; the checks and thresholds stay the same.")
     a = ap.parse_args()
     t0 = time.time()
+    import eval.common as common
+    if a.data:
+        common.DATA_PATH = Path(a.data)
     trips = load_test_trips()
     if a.margin_sweep:
         out = ROOT / "eval/results" / f"margin_sweep_{a.tag}.json"
@@ -233,7 +241,8 @@ def main():
         return
     D = eval_rows(trips)
     print(f"[{time.time()-t0:4.0f}s] {len(D):,} test windows, {D.trip_id.nunique()} trips")
-    res = {"tag": a.tag, "contract": "hybrid-v3", "n_windows": int(len(D)), "n_trips": int(D.trip_id.nunique())}
+    res = {"tag": a.tag, "contract": "hybrid-v3", "data_info": common.DATA_INFO,
+           "n_windows": int(len(D)), "n_trips": int(D.trip_id.nunique())}
     res["G1_forecast"] = g1_forecast(D)
     res["G2_events"] = g2_events(D)
     res["G3_imminent_breach"] = g3_imminent(D)
