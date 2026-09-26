@@ -84,123 +84,146 @@ def build(tag):
         t.setStyle(TableStyle(st)); return t
 
     s = []
+    A1, A2, A3 = G5["true_ttb_le30"], G3["true_ttb_le30"], G4["stuck_sensor_on_imminent_breach"]
+    N3 = G4["sensor_noise_sigma_0.3C"]
     s += [p("ColdTrack AI — Evaluation Artifact (Baseline)", H1),
-          p(f"AIC COMPFEST 18 Final · Smart Logistics · tag <b>{tag}</b> · system under test: MVP from the qualifying round "
-            f"(<font face='Courier'>coldtrack.onnx</font> GRU + <font face='Courier'>coldtrack_ttb.onnx</font> XGBoost + backend rule engine), "
-            f"evaluated <b>as deployed</b> on the held-out test split "
-            f"({R['n_windows']:,} sliding windows, {R['n_trips']} trips; split by trip).", B),
-          Spacer(1, 6), p("Executive summary", H2),
-          p(f"Baseline score: <b>{n_pass}/{len(checks)} acceptance checks pass</b>. The headline model metrics from the qualifying round "
-            f"reproduce exactly (macro-F1 {G2['macro_f1']:.3f}, forecast MAE@30 {G1['mae_t30']:.3f} °C), but the deployed system fails where it matters operationally:", B),
-          table([["#", "Finding (evidence)", "Severity"],
-                 ["F1", f"<b>1 in 3 imminent breaches gets a green status.</b> End-to-end API, windows whose true time-to-breach ≤ 30 min: "
-                        f"AMAN {pct(G5['true_ttb_le30']['AMAN'])}, WASPADA {pct(G5['true_ttb_le30']['WASPADA'])}, KRITIS {pct(G5['true_ttb_le30']['KRITIS'])} (n={G5['true_ttb_le30']['n']}).", "Critical"],
-                 ["F2", f"<b>The TTB is silenced by the classifier.</b> Of windows with true TTB ≤ 30 min, {pct(G3['true_ttb_le30']['miss_gate_A0'])} are classified "
-                        f"healthy (A0) and the backend hides TTB for A0; the two ONNX models show a TTB in only {pct(G3['true_ttb_le30']['shown_rate'])}.", "Critical"],
-                 ["F3", f"<b>Fragile to realistic sensor noise.</b> Adding N(0, 0.3 °C) to temp_c (training noise was 0.05 °C): macro-F1 {G4['clean']['macro_f1']:.2f} → "
-                        f"{G4['sensor_noise_sigma_0.3C']['macro_f1']:.2f}; imminent breaches labelled healthy {pct(G4['clean']['imminent_pred_A0_rate'])} → {pct(G4['sensor_noise_sigma_0.3C']['imminent_pred_A0_rate'])}.", "High"],
-                 ["F4", f"<b>Stuck sensor while cargo warms is read as healthy.</b> Only {pct(G4['stuck_sensor_on_imminent_breach']['pred_masalah_sensor'])} flagged masalah_sensor; "
-                        f"{pct(G4['stuck_sensor_on_imminent_breach']['pred_A0_healthy'])} predicted A0.", "High"],
-                 ["F5", f"<b>Forecast target is met by a trivial baseline.</b> 'Temperature stays the same' scores {G1['naive_persistence_mae_t30']:.3f} °C vs GRU {G1['mae_t30']:.3f} °C; "
-                        f"only {G1['moving_windows_n']} of {R['n_windows']:,} test windows move ≥1 °C in 30 min.", "High (metric validity)"],
-                 ["F6", f"<b>Three fault classes are largely undetected</b>: recall A7 {pct(G2['per_class']['A7']['recall'])}, A8 {pct(G2['per_class']['A8']['recall'])}, "
-                        f"degradasi_bertahap {pct(G2['per_class']['degradasi_bertahap']['recall'])} (95% CI {pct(G2['degradasi_recall_ci95'][0])}–{pct(G2['degradasi_recall_ci95'][1])}).", "High"],
-                 ["F7", "<b>Test set cannot support per-class or per-cargo claims.</b> 2–4 test trips for A1/A2/A4/A5; the vaccine, frozen-meat and fish profiles have zero imminent-breach test windows.", "Medium (validity)"]],
-                [1*cm, 14*cm, 2.4*cm]), PageBreak()]
+          p("AIC COMPFEST 18 Final · Smart Logistics · version tag: <b>%s</b>" % tag, S),
+          Spacer(1, 4), p("What is this document?", H2),
+          p("ColdTrack AI watches the sensors of a refrigerated truck and warns the operator before the cargo gets too warm. "
+            "This document reports how well the <b>prototype from the qualifying round</b> does that <b>today, before any improvement</b>. "
+            "We tested it the way an operator would use it: feed in the last 60 minutes of sensor readings, then look at the status "
+            "(<b>AMAN</b> = safe, <b>WASPADA</b> = warning, <b>KRITIS</b> = critical) and at the countdown to the moment the cargo leaves its safe temperature range. "
+            f"The test used {R['n_trips']} simulated trips ({R['n_windows']:,} one-hour snapshots) that the model never saw while it was being trained.", B),
+          p("Key terms", H2),
+          table([["Term", "Meaning"],
+                 ["Breach", "The cargo temperature goes outside its safe range (for example above 8 °C for vaccines)."],
+                 ["Countdown (time-to-breach)", "Minutes left before a breach. This is the main feature of the product."],
+                 ["Window", "One snapshot: the last 60 minutes of sensor readings from one truck."],
+                 ["Imminent breach", "A window where a breach really happens within 30 minutes (this is when the operator must act)."],
+                 ["Fault types", "A0 = healthy · A1 = door left open · A3 = cooling unit fully off · A7 = sudden extreme outside heat · A8 = poor pre-cooling · "
+                                 "degradasi = cooling slowly getting weaker · masalah_sensor = faulty temperature sensor."]],
+                [4.2*cm, 12.2*cm]),
+          Spacer(1, 4), p("Summary", H2),
+          p(f"The prototype passed <b>{n_pass} of {len(checks)}</b> checks. It is good at predicting temperature, "
+            f"and the scores we reported in the qualifying round are confirmed (fault-identification score {G2['macro_f1']:.2f}, forecast error {G1['mae_t30']:.2f} °C). "
+            "However, when we looked at what an operator would actually see, the system often <b>fails to raise the alarm when it matters most</b>:", B),
+          table([["#", "What we found", "Why it matters", "Severity"],
+                 ["F1", f"When the cargo was less than 30 minutes from a breach, the system still showed <b>green (AMAN) in {pct(A1['AMAN'])} of cases</b> (about 1 in 3). "
+                        f"It showed warning in {pct(A1['WASPADA'])} and critical in only {pct(A1['KRITIS'])}.", "A false “all clear” is the most dangerous mistake for a cold chain.", "Critical"],
+                 ["F2", f"The countdown is often missing when it is needed. The two AI models alone show it in only {pct(A2['shown_rate'])} of urgent cases "
+                        f"({pct(A1['ttb_shown'])} once the backup rule in the server is added). Reason: the system first decides if the truck is healthy, "
+                        f"and it wrongly said “healthy” for {pct(A2['miss_gate_A0'])} of the urgent cases, which hides the countdown.", "The main feature of the product does not appear in many urgent situations.", "Critical"],
+                 ["F3", f"Sensor noise confuses it. With small random noise (0.3 °C, common in real sensors) urgent cases judged “healthy” rise from {pct(G4['clean']['imminent_pred_A0_rate'])} to {pct(N3['imminent_pred_A0_rate'])}. "
+                        "Our training data had almost no noise (0.05 °C).", "Real trucks have noisier sensors than our simulator.", "High"],
+                 ["F4", f"A frozen (stuck) temperature sensor is read as “healthy”: {pct(A3['pred_A0_healthy'])} of such cases, and only {pct(A3['pred_masalah_sensor'])} are flagged as a sensor problem.", "A stuck sensor hides real warming.", "High"],
+                 ["F5", f"The temperature-forecast score looks good but proves little. Simply guessing “the temperature stays the same” has an error of {G1['naive_persistence_mae_t30']:.3f} °C, "
+                        f"which is as good as our AI ({G1['mae_t30']:.3f} °C). In almost all test snapshots the temperature barely moves (only {G1['moving_windows_n']} of {R['n_windows']:,} change by 1 °C or more).", "The forecast target we passed does not show the AI is useful.", "High"],
+                 ["F6", f"Three fault types are mostly missed: sudden outside heat (A7) is found {pct(G2['per_class']['A7']['recall'])} of the time, poor pre-cooling (A8) {pct(G2['per_class']['A8']['recall'])}, "
+                        f"and slowly weakening cooling (degradasi) only {pct(G2['per_class']['degradasi_bertahap']['recall'])}.", "These faults would go unnoticed.", "High"],
+                 ["F7", "Our test data is too small to prove much. Some fault types appear in only 2–4 test trips, and there are no urgent cases for vaccine, frozen meat or fish.", "Some results could be luck, and the vaccine use case is untested.", "Medium"]],
+                [1*cm, 9.2*cm, 4.6*cm, 1.6*cm]), PageBreak()]
 
     # ---------- (a) test suite ----------
-    s += [p("1. Test suite: scope, cases, metrics and why", H1),
-          p("Design principle: test the system <b>the user actually sees</b> (raw ONNX outputs → backend gating → rule engine → HTTP response), not just the network. "
-            "Code: <font face='Courier'>eval/</font> — <font face='Courier'>run_eval.py</font> (measurements), <font face='Courier'>test_baseline.py</font> "
-            "(23 acceptance checks), <font face='Courier'>make_artifact.py</font> (this PDF). Reproduce: "
-            "<font face='Courier'>python -m eval.run_eval --tag baseline; pytest eval/test_baseline.py</font>.", B),
-          table([["Group", "Test cases", "Metric(s)", "Why this metric / what it does NOT capture"],
-                 ["G1 Forecast", f"{R['n_windows']:,} test windows; sliced by fault mode and cargo; compared to naive persistence and linear extrapolation",
-                  "MAE t+15/30/60, p95 and max error, MAE on windows that really move",
-                  "MAE is dominated by the ~99% of windows where nothing changes; hence the persistence comparison and the 'moving windows' slice. MAE says nothing about whether the alarm fires."],
-                 ["G2 Classification", "7 classes; bootstrap over <i>trips</i> (200×) for CIs; recall vs minutes since fault onset",
-                  "per-class P/R/F1, macro-F1, PR-AUC, confusion matrix",
-                  "Macro-F1 hides which fault is missed → per-class recall checks. Windows of one trip are highly correlated, so window-level CIs would be far too narrow."],
-                 ["G3 Imminent breach", "windows with true TTB ≤ 10 / ≤ 30 min, gated exactly like backend/app/inference.py",
-                  "TTB shown-rate, MAE when shown, miss reasons (classifier said A0 / sensor / above cap)",
-                  "The qualifying-round 'MAE 7.08 min for TTB ≤ 30' conditions on the true answer and ignores silent misses. Shown-rate + reason exposes them."],
-                 ["G4 Robustness", "sensor noise σ∈{0.1,0.3,0.5} °C (delta features recomputed); +7 h hour shift (UTC vs WIB); stuck sensor injected into imminent-breach windows",
-                  "macro-F1, forecast MAE, imminent-breach A0 rate, class chosen under stuck sensor",
-                  "Training data is a clean simulator (σ=0.05 °C, ACF too smooth per dataset card). Real loggers are noisier. Perturbations are synthetic, so they show <i>sensitivity</i>, not real-world error."],
-                 ["G5 End-to-end API", f"{G5['n_requests']:,} windows (every 2nd) POSTed to /api/v1/analyze via FastAPI TestClient, cargo profile mapped from the trip",
-                  "status × true-TTB bucket, TTB shown, latency, parity with raw ONNX, HTTP errors",
-                  "Ground truth = simulator's time_to_breach (threshold = cargo max limit; verified equal to config.yaml). Says nothing about real trucks."]],
-                [2.3*cm, 5.3*cm, 3.8*cm, 6*cm]),
+    s += [p("1. How we tested", H1),
+          p("Idea: test what the <b>user really sees</b> (status, countdown, fault type), not only the AI models inside. "
+            "We built 5 groups of tests and 23 pass/fail checks. Each check states a minimum we consider acceptable for a real fleet operator.", B),
+          table([["Test group", "What we did", "What we measured", "What this can NOT tell us"],
+                 ["1. Temperature forecast", f"Compared the predicted temperature 15, 30 and 60 minutes ahead with what really happened in {R['n_windows']:,} test snapshots. Also compared with a “no change” guess.",
+                  "Average error in °C, worst-case error, and error only on snapshots where the temperature really changes.",
+                  "Most snapshots are calm, so the average hides performance when it matters. It also says nothing about whether an alarm would ring."],
+                 ["2. Fault identification", "Asked which of the 7 conditions each snapshot shows. Repeated the scoring 200 times on random samples of trips to see how uncertain the numbers are.",
+                  "How many real faults of each type were found, how many alarms were correct, and a confusion chart.",
+                  "A fault type with only 2–3 test trips cannot be judged reliably."],
+                 ["3. Urgent-breach warnings", "Took only snapshots where the cargo really was 30 minutes or less from a breach, and checked whether the countdown was shown and how accurate it was.",
+                  "Share of urgent cases with a countdown, average countdown error, and why the countdown was missing.",
+                  "In qualifying we reported “7 min error” for these cases, but that ignored the cases where no countdown appeared at all."],
+                 ["4. Stress tests", "Added sensor noise (0.1 / 0.3 / 0.5 °C), shifted the clock by 7 hours (a time-zone mix-up), and froze the temperature sensor during a real warming.",
+                  "Fault-identification score, and how many urgent cases are judged healthy.",
+                  "The noise is artificial, so this shows sensitivity, not the exact error on real trucks."],
+                 ["5. Whole-system check", f"Sent {G5['n_requests']:,} snapshots through the real server (the same request the app sends) and read the status and countdown like a user.",
+                  "Status by how close the breach really is, countdown shown, response time, and match with the raw AI models.",
+                  "The “correct answer” comes from our simulator, not from real trucks."]],
+                [2.8*cm, 5.5*cm, 4.2*cm, 3.9*cm]),
           Spacer(1, 6),
-          p("Pre-existing checks (run for reference, not part of the graded suite): backend pytest <b>24/24 pass</b>, ml/tests data-contract <b>7/7 pass</b>. "
-            "XGBoost/Linear/IsolationForest baselines (ml/baselines.py) re-run on the <i>test</i> split: forecast MAE@30 linear 0.192 / XGB 0.190; "
-            "macro-F1 XGB 0.667; PR-AUC XGB 0.749, IsolationForest 0.352. The committed <font face='Courier'>baseline_metrics.json</font> is from the validation split of v3 and is stale.", B),
-          p("Caveats we did not remove: 106 test trips (27 anomalous); all data synthetic; acceptance thresholds are our own operational choices, set with sight of the qualifying-round numbers and open to challenge.", S),
+          p("Existing checks from the qualifying round (run for reference, not graded here): the server tests pass 24/24 and the data-format tests pass 7/7. "
+            "Simple comparison models (XGBoost, linear, Isolation Forest) re-run on the same test data score about the same as our AI on the forecast (error 0.19 °C) and better on fault identification (0.67 vs 0.58).", B),
+          p("Limits of this evaluation: only 106 test trips (27 with a fault); all data is simulated; the pass marks are our own choices, set after seeing the qualifying numbers, so they are open to challenge. "
+            "Technical details of every test are in Appendix A.", S),
           PageBreak()]
 
     # ---------- (b) baseline findings ----------
-    s += [p("2. Baseline failure findings (where the system fails, with evidence)", H1),
-          p("F1 · Imminent breaches shown as AMAN", H2),
+    s += [p("2. What we found (where the system fails, with evidence)", H1),
+          p("F1 · Urgent cases shown as “safe”", H2),
           Image(str(RES / f"{tag}_fig_status.png"), width=13*cm, height=6.1*cm),
-          p(f"Root causes visible in code: (i) status is driven by the forecast head, which is ~persistence (F5); (ii) the TTB floor in rules.py only applies when a TTB exists, and "
-            f"it is None whenever the classifier says A0; (iii) the backend heuristic TTB fallback only runs after WASPADA/KRITIS. "
-            f"When shown, API TTB is accurate (MAE {G5['api_ttb_mae_when_shown_true_le30']:.1f} min) — the failure is <i>coverage</i>, not precision. "
-            f"Also: only {pct(G5['true_ttb_30_60']['WASPADA']+G5['true_ttb_30_60']['KRITIS'])} of windows 30–60 min before breach are above AMAN, so the 60-min warning path in config.yaml is effectively unreachable (TTB display cap = 30).", B),
-          p("F2 · TTB depends on the weakest component", H2),
-          table([["True TTB ≤ 30 min (n=%d)" % G3["true_ttb_le30"]["n"], "Share"],
-                 ["TTB shown by the two ONNX models + gate", pct(G3["true_ttb_le30"]["shown_rate"])],
-                 ["Hidden because classifier said A0 (healthy)", pct(G3["true_ttb_le30"]["miss_gate_A0"])],
-                 ["Hidden because classifier said masalah_sensor", pct(G3["true_ttb_le30"]["miss_gate_sensor_class"])],
-                 ["Hidden because TTB model output ≥ 30 min cap", pct(G3["true_ttb_le30"]["miss_ttb_model_above_cap"])],
-                 ["MAE when shown / counting misses as '30 min'", f"{G3['true_ttb_le30']['mae_when_shown']:.1f} min / {G3['true_ttb_le30']['mae_all_incl_missing_as_30']:.1f} min"]],
-                [11*cm, 5*cm]),
-          p("F3/F4 · Robustness", H2), Image(str(RES / f"{tag}_fig_noise.png"), width=12.5*cm, height=5.1*cm),
-          p(f"Timezone hypothesis tested and <b>refuted</b>: shifting hour_of_day by +7 h leaves macro-F1 at {G4['hour_shift_utc_vs_wib_+7h']['macro_f1']:.3f} (clean {G4['clean']['macro_f1']:.3f}). "
-            f"Serving parity is good: API vs raw ONNX forecast mean |Δ| {G5['parity_forecast_mean_abs_diff_C']:.3f} °C (max {G5['parity_forecast_max_abs_diff_C']:.2f} °C), "
-            f"class disagreement {100*G5['parity_class_disagreement_rate']:.1f}% — no significant train/serve skew.", B),
+          p("How to read the chart: each bar is a group of snapshots, grouped by how soon the cargo <i>really</i> leaves its safe range. Colors show what the system displayed. "
+            "The top bar (breach within 30 minutes) should be almost all red, but a third of it is green.", B),
+          p(f"Why: the status mostly follows the temperature forecast, which is roughly “no change” (F5). A rule that raises the status when a countdown exists does not help, "
+            f"because the countdown is hidden whenever the system believes the truck is healthy. When the countdown is shown it is accurate "
+            f"(average error {G5['api_ttb_mae_when_shown_true_le30']:.1f} minutes), so the problem is <b>missing warnings, not wrong numbers</b>. "
+            f"Also, only {pct(G5['true_ttb_30_60']['WASPADA']+G5['true_ttb_30_60']['KRITIS'])} of snapshots 30–60 minutes before a breach get any warning, "
+            "so the 60-minute early-warning setting never really triggers.", B),
+          p("F2 · The countdown depends on the weakest part", H2),
+          table([[f"Urgent cases (breach within 30 min, n={A2['n']})", "Share"],
+                 ["Countdown shown by the two AI models", pct(A2["shown_rate"])],
+                 ["Hidden because the system judged the truck “healthy”", pct(A2["miss_gate_A0"])],
+                 ["Hidden because the system judged “faulty sensor”", pct(A2["miss_gate_sensor_class"])],
+                 ["Hidden because the countdown was above the 30-minute display limit", pct(A2["miss_ttb_model_above_cap"])],
+                 ["Average countdown error when shown / if a missing countdown counts as “30 min”", f"{A2['mae_when_shown']:.1f} min / {A2['mae_all_incl_missing_as_30']:.1f} min"]],
+                [11.4*cm, 5*cm]),
+          p("F3 / F4 · Noise and a stuck sensor", H2), Image(str(RES / f"{tag}_fig_noise.png"), width=12.5*cm, height=5.1*cm),
+          p("Left: the fault-identification score drops as we add noise. Right: the more noise, the more urgent cases are wrongly judged “healthy”. "
+            f"When the temperature sensor freezes during a real warming, {pct(A3['pred_A0_healthy'])} of cases are judged healthy and only {pct(A3['pred_masalah_sensor'])} are flagged as a sensor problem.", B),
+          p(f"Two things we checked and found <b>fine</b>: (1) a 7-hour clock shift (time zone) barely changes results (score {G4['hour_shift_utc_vs_wib_+7h']['macro_f1']:.2f} vs {G4['clean']['macro_f1']:.2f}); "
+            f"(2) the server gives the same answers as the raw AI models (average difference {G5['parity_forecast_mean_abs_diff_C']:.3f} °C), so nothing is lost between them.", B),
           PageBreak(),
-          p("F5 · The forecast target is not discriminative", H2),
-          table([["t+30 min MAE (°C)", "All windows", f"Moving windows (n={G1['moving_windows_n']})"],
-                 ["GRU (deployed)", f"{G1['mae_t30']:.3f}", f"{G1['moving_windows_gru_mae_t30']:.2f}"],
-                 ["Naive persistence ('same as now')", f"{G1['naive_persistence_mae_t30']:.3f}", f"{G1['moving_windows_persistence_mae_t30']:.2f}"],
-                 ["Linear extrapolation of last 5 min", f"{G1['naive_linear_extrapolation_mae_t30']:.3f}", f"{G1['moving_windows_extrapolation_mae_t30']:.2f}"]],
-                [7*cm, 4*cm, 5*cm]),
-          p("The '<0.8 °C — target met' claim is true but uninformative. On the few windows where temperature changes, GRU beats persistence by ~20%, which is the honest headline.", B),
-          p("F6 · Fault classes", H2), Image(str(RES / f"{tag}_fig_confusion.png"), width=10.5*cm, height=8.0*cm),
-          table([["Class", "test windows", "test trips", "precision", "recall", "F1"]] +
-                [[k, v["support"], {"A0": 95, "A1": 4, "A3": 7, "A7": 5, "A8": 6, "degradasi_bertahap": "2 (A2) + 3 (A4)", "masalah_sensor": "3 (A5) + 8 (A6)"}[k],
-                  f"{v['precision']:.2f}", f"{v['recall']:.2f}", f"{v['f1']:.2f}"] for k, v in G2["per_class"].items()],
-                [4*cm, 2.6*cm, 3.6*cm, 2*cm, 2*cm, 2*cm]),
-          p("Detection vs minutes since fault onset (any non-A0): " + "; ".join(f"{k} min: {pct(v['recall_non_A0'])} (n={v['n']})" for k, v in G2["recall_by_minutes_since_onset"].items()) +
-            ". Recall is <i>lowest deep into a fault</i> (120+ min) — so 'the fault has not shown yet' does not explain the misses. We have not yet established why (see §4).", B),
-          p("F7 · Test-set validity", H2),
-          p("Imminent-breach (TTB ≤ 30) test windows exist only for produce (%d) and dairy (%d); none for vaccine, frozen meat or fish — the flagship vaccine use case has no imminent-breach evidence. "
-            "Bootstrap 95%% CI for macro-F1 is %.2f–%.2f." % (G3["by_cargo_true_le30"]["sayur_buah"]["n"], G3["by_cargo_true_le30"]["produk_susu"]["n"], *G2["macro_f1_ci95"]), B),
+          p("F5 · The forecast score is not a strong proof", H2),
+          table([["Average error of the 30-minute forecast (°C, lower is better)", "All snapshots", f"Only snapshots where temperature changes (n={G1['moving_windows_n']})"],
+                 ["Our AI (deployed)", f"{G1['mae_t30']:.3f}", f"{G1['moving_windows_gru_mae_t30']:.2f}"],
+                 ["Guess “same temperature as now”", f"{G1['naive_persistence_mae_t30']:.3f}", f"{G1['moving_windows_persistence_mae_t30']:.2f}"],
+                 ["Continue the trend of the last 5 minutes", f"{G1['naive_linear_extrapolation_mae_t30']:.3f}", f"{G1['moving_windows_extrapolation_mae_t30']:.2f}"]],
+                [8*cm, 3.6*cm, 4.8*cm]),
+          p("Our target (error below 0.8 °C) was met, but the “no change” guess meets it too. The honest result is on the few snapshots where the temperature really moves: there our AI is about 20% better than the “no change” guess.", B),
+          p("F6 · Which faults are found", H2), Image(str(RES / f"{tag}_fig_confusion.png"), width=10.5*cm, height=8.0*cm),
+          p("How to read the chart: each row is the real condition, each column is what the system said. A perfect system has 1.00 on the diagonal. "
+            "Rows for A7, A8 and degradasi are mostly spread into the “A0” (healthy) column, meaning these faults are called healthy.", B),
+          table([["Fault type", "Test snapshots", "Test trips", "Alarms that were correct", "Real faults found"]] +
+                [[{"A0": "A0 · healthy", "A1": "A1 · door open", "A3": "A3 · cooling unit off", "A7": "A7 · sudden outside heat", "A8": "A8 · poor pre-cooling",
+                   "degradasi_bertahap": "degradasi · weakening cooling", "masalah_sensor": "masalah_sensor · faulty sensor"}[k],
+                  v["support"], {"A0": 95, "A1": 4, "A3": 7, "A7": 5, "A8": 6, "degradasi_bertahap": "5", "masalah_sensor": "11"}[k],
+                  pct(v["precision"]), pct(v["recall"])] for k, v in G2["per_class"].items()],
+                [5.2*cm, 2.6*cm, 2.2*cm, 3.4*cm, 3*cm]),
+          p("An odd pattern: after a fault starts, the system finds it best 30–120 minutes later (about " +
+            pct(G2["recall_by_minutes_since_onset"]["30-60"]["recall_non_A0"]) + ") and worst after 2 hours (" + pct(G2["recall_by_minutes_since_onset"]["120-inf"]["recall_non_A0"]) +
+            "). So “the fault is too new to see” does not explain the misses. We do not yet know the reason (see section 4).", B),
+          p("F7 · The test data is too thin", H2),
+          p("Urgent cases (breach within 30 minutes) exist in the test data only for vegetables/fruit (%d snapshots) and dairy (%d). There are none for vaccine, frozen meat or fish, "
+            "so the main vaccine use case has no evidence for urgent cases. The uncertainty of the overall fault-identification score is large: somewhere between %.2f and %.2f (95%% range)."
+            % (G3["by_cargo_true_le30"]["sayur_buah"]["n"], G3["by_cargo_true_le30"]["produk_susu"]["n"], *G2["macro_f1_ci95"]), B),
           PageBreak()]
 
     # ---------- (c) before/after ----------
-    s += [p("3. Before / after iteration", H1),
-          p("Status: <b>baseline only</b>. This section is filled after each iteration (Evaluation Track); the 'after' column is intentionally empty until measured by the same suite.", B),
-          p("<b>Planned iteration 1 (in progress, not yet measured): real inputs + physics simulator + narrower scope.</b> "
-            "(i) Replace the synthetic raw inputs with real data: BMKG daily temperature and humidity for Indonesia (2010–2020) as the air outside the truck; "
-            "product thermal tables (fish, meat, vegetables, fruit) combined with a user-entered payload mass; and real faulty-sensor traces from the Intel Berkeley Lab dataset to imitate sensor errors. "
-            "This changes are made to allow a wider range of product (that can degrade) to be detected by our product."
-            "(ii) Generate trips with a physics-based truck model (heat ingress from outside air; heavier payload warms more slowly). "
-            "(iii) Reduce the classifier to <b>4 scenarios</b>: healthy (A0), door open (A1), sudden extreme ambient (A7) and sensor fault (masalah_sensor). "
-            "Total reefer failure (A3) and cooling degradation (degradasi_bertahap) are deferred as a later feature; poor pre-cooling (A8) becomes a rule checked before departure. "
-            "Consequence for comparison: per-class 'after' numbers exist only for the 4 kept classes, and macro-F1 over 4 classes is not directly comparable to the 7-class baseline.", B),
-          table([["Metric (test split)", "Baseline", "After iteration", "Change / reason"],
-                 ["Acceptance checks passed", f"{n_pass}/{len(checks)}", "—", "—"],
-                 ["Imminent breach shown as AMAN (API)", pct(G5["true_ttb_le30"]["AMAN"]), "—", "—"],
-                 ["Imminent breach: TTB shown (API)", pct(G5["true_ttb_le30"]["ttb_shown"]), "—", "—"],
-                 ["Imminent breach labelled A0 (models)", pct(G3["true_ttb_le30"]["miss_gate_A0"]), "—", "—"],
-                 ["Macro-F1", f"{G2['macro_f1']:.3f} (7 classes)", "—", "After: 4 classes; not directly comparable"],
-                 ["Recall degradasi / A8 / A7", f"{G2['per_class']['degradasi_bertahap']['recall']:.2f} / {G2['per_class']['A8']['recall']:.2f} / {G2['per_class']['A7']['recall']:.2f}", "—",
-                  "degradasi deferred, A8 → pre-departure rule; only A7 compared"],
-                 ["Macro-F1 at σ=0.3 °C noise", f"{G4['sensor_noise_sigma_0.3C']['macro_f1']:.3f}", "—", "—"],
-                 ["Stuck sensor → flagged masalah_sensor", pct(G4["stuck_sensor_on_imminent_breach"]["pred_masalah_sensor"]), "—", "—"],
-                 ["Forecast MAE@30 on moving windows", f"{G1['moving_windows_gru_mae_t30']:.2f} °C", "—", "—"]],
-                [6.2*cm, 3*cm, 3.2*cm, 4*cm]),
+    s += [p("3. Before and after improvement", H1),
+          p("Status: <b>baseline only</b>. The “After” column stays empty until an improvement is built and measured with the same tests.", B),
+          p("<b>Planned improvement 1 (in progress, not yet measured)</b>", H2),
+          p("• <b>Use real inputs instead of made-up ones.</b> Real outside temperature and humidity for Indonesia (BMKG, 2010–2020); "
+            "real product heat tables (fish, meat, vegetables, fruit) with the payload weight entered by the user; and real faulty-sensor recordings (Intel Berkeley Lab) to copy real sensor errors. "
+            "This lets the product handle a wider range of goods.", B),
+          p("• <b>Simulate the truck with physics.</b> Heat enters from the outside air, and a heavier load warms up more slowly.", B),
+          p("• <b>Focus on 4 situations:</b> healthy, door open, sudden extreme outside heat, and faulty sensor. "
+            "Cooling unit fully off (A3) and weakening cooling (degradasi) are postponed to a later version. Poor pre-cooling (A8) becomes a simple check before the truck leaves.", B),
+          p("Because of this, the “After” results cover only 4 situations, and the fault-identification score over 4 situations cannot be compared directly with the 7-situation baseline.", S),
+          table([["What we measure (test data)", "Before (baseline)", "After", "Comment"],
+                 ["Checks passed", f"{n_pass} of {len(checks)}", "—", "—"],
+                 ["Urgent cases shown as “safe” (whole system)", pct(A1["AMAN"]), "—", "Goal: 5% or less"],
+                 ["Urgent cases with a countdown (whole system)", pct(A1["ttb_shown"]), "—", "Goal: 80% or more"],
+                 ["Urgent cases judged “healthy” by the AI", pct(A2["miss_gate_A0"]), "—", "Goal: 10% or less"],
+                 ["Fault-identification score", f"{G2['macro_f1']:.2f} (7 situations)", "—", "After: 4 situations, not directly comparable"],
+                 ["Faults found: weakening cooling / poor pre-cooling / outside heat", f"{pct(G2['per_class']['degradasi_bertahap']['recall'])} / {pct(G2['per_class']['A8']['recall'])} / {pct(G2['per_class']['A7']['recall'])}", "—",
+                  "First two postponed or moved to a rule; only outside heat is compared"],
+                 ["Fault-identification score with 0.3 °C sensor noise", f"{N3['macro_f1']:.2f}", "—", "Goal: drop of 0.05 or less"],
+                 ["Frozen sensor flagged as sensor problem", pct(A3["pred_masalah_sensor"]), "—", "Goal: 50% or more"],
+                 ["Forecast error where temperature really changes", f"{G1['moving_windows_gru_mae_t30']:.2f} °C", "—", "—"]],
+                [6.6*cm, 3.2*cm, 2*cm, 4.6*cm]),
           Spacer(1, 8),
           p("4. Findings not yet fixed — causes and plan", H1),
           p("Causes below are <b>hypotheses</b> unless marked measured; each will be confirmed or rejected with the suite before any change.", S),
@@ -222,7 +245,26 @@ def build(tag):
           PageBreak()]
 
     # ---------- appendix ----------
-    s += [p("Appendix — acceptance checks (baseline)", H1),
+    s += [p("Appendix A — technical detail of the test groups", H1),
+          p("System under test: <font face='Courier'>coldtrack.onnx</font> (GRU) + <font face='Courier'>coldtrack_ttb.onnx</font> (XGBoost) + backend rule engine, evaluated as deployed on the held-out test split of dataset v4 (split by trip). "
+            "Reproduce: <font face='Courier'>python -m eval.run_eval --tag baseline; pytest eval/test_baseline.py</font>.", B),
+          table([["Group", "Test cases", "Metric(s)", "Why this metric / what it does NOT capture"],
+                 ["G1 Forecast", "sliced by fault mode and cargo; compared to naive persistence and linear extrapolation", "MAE t+15/30/60, p95 and max error, MAE on windows that really move",
+                  "MAE is dominated by the ~99% of windows where nothing changes; hence the persistence comparison and the moving-windows slice."],
+                 ["G2 Classification", "7 classes; bootstrap over trips (200×) for CIs; recall vs minutes since fault onset", "per-class P/R/F1, macro-F1, PR-AUC, confusion matrix",
+                  "Macro-F1 hides which fault is missed; windows of one trip are highly correlated, so window-level CIs would be far too narrow."],
+                 ["G3 Imminent breach", "windows with true TTB ≤ 10 / ≤ 30 min, gated exactly like backend/app/inference.py", "TTB shown-rate, MAE when shown, miss reasons",
+                  "The qualifying-round 'MAE 7.08 min for TTB ≤ 30' conditions on the true answer and ignores silent misses."],
+                 ["G4 Robustness", "sensor noise σ∈{0.1,0.3,0.5} °C; +7 h hour shift; stuck sensor injected into imminent-breach windows", "macro-F1, forecast MAE, imminent-breach A0 rate",
+                  "Training data is a clean simulator (σ=0.05 °C); perturbations are synthetic, so they show sensitivity, not real-world error."],
+                 ["G5 End-to-end API", "every 2nd test window POSTed to /api/v1/analyze via FastAPI TestClient", "status × true-TTB bucket, TTB shown, latency, parity with raw ONNX",
+                  "Ground truth = simulator time_to_breach (threshold = cargo max limit; equals config.yaml)."]],
+                [2.3*cm, 5.3*cm, 3.8*cm, 5*cm]),
+          Spacer(1, 6),
+          p("Also: XGBoost/Linear/IsolationForest baselines (ml/baselines.py) re-run on the test split: forecast MAE@30 linear 0.192 / XGB 0.190; macro-F1 XGB 0.667; PR-AUC XGB 0.749, IsolationForest 0.352. "
+            "The committed baseline_metrics.json is from the v3 validation split and is stale.", B),
+          PageBreak(),
+          p("Appendix B — acceptance checks (baseline)", H1),
           table([["Result", "Check"]] + [["PASS" if c == "PASSED" else "FAIL", n] for c, n in checks], [2*cm, 14.4*cm]),
           Spacer(1, 6),
           p("Commit of the code that produced these numbers: " +
