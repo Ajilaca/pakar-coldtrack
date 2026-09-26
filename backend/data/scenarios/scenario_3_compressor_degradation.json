@@ -3,7 +3,7 @@
   "title": "Skenario 3: Kompresor Melemah Bertahap",
   "description": "Kapasitas pendinginan meluruh perlahan. Kenaikan suhu terlalu halus untuk disadari manusia, tetapi terdeteksi model beserta estimasi waktunya.",
   "cargo_profile": "produk_susu_2_4C",
-  "expected_status": "WASPADA",
+  "expected_status": "KRITIS",
   "shipment_id": "TRK-JKT-0419",
   "sumber": {
     "dataset": "v4_seed1000_700trips.parquet",

@@ -9,6 +9,7 @@ JUMP_C = 5.0                           # Intel: lompatan >5 C antar pembacaan ha
 FLAT_SURE_MIN = 60                     # Intel: rangkaian datar sehat p99 ~34 menit; >=60 menit hanya 5 rangkaian di 2 mote
 FLAT_SUSPECT_MIN = 15                  # curiga bila datar >=15 menit DAN ada konteks yang seharusnya mengubah suhu
 CTX_AMB_RISE = 3.0                     # kenaikan T_amb 30 menit terakhir (C)
+FLAT_EXPECT_C = 0.3                    # tren 30 menit sebelum datar x lama datar >= 0,3 C -> seharusnya sudah bergerak (DESAIN)
 
 
 def sensor_status(t_sensor, door_open, t_amb, moving=None, battery_v=None):
@@ -31,6 +32,9 @@ def sensor_status(t_sensor, door_open, t_amb, moving=None, battery_v=None):
         if flat >= FLAT_SURE_MIN: st[i] = 2
         elif flat >= FLAT_SUSPECT_MIN:
             ctx = door_open[max(0, i - flat):i + 1].any() or (t_amb[i] - t_amb[max(0, i - 30)]) >= CTX_AMB_RISE
+            s = i - flat                                 # awal rangkaian datar: bila sebelumnya suhu naik, macet mencurigakan
+            if not ctx and s >= 30 and not bad[s - 30:s + 1].any():
+                ctx = (ts[s] - ts[s - 30]) / 30.0 * flat >= FLAT_EXPECT_C
             if ctx: st[i] = max(st[i], 1)
     if battery_v is not None:                            # Intel: nilai ekstrem hanya muncul saat tegangan < 2,4 V
         st[(np.asarray(battery_v) < 2.4) & (st == 0)] = 1
