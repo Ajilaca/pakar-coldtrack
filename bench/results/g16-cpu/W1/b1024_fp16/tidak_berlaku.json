@@ -1,0 +1,22 @@
+{
+  "workload": "W1",
+  "config_id": "b1024_fp16",
+  "konfigurasi": {
+    "batch_size": 1024,
+    "amp": "fp16",
+    "n_epochs": 30,
+    "lr": [
+      0.0005,
+      0.002
+    ],
+    "loss_weights": {
+      "forecast": 30.0,
+      "failure": 1.0,
+      "ttb": 8.0
+    }
+  },
+  "tag": "g16-cpu",
+  "status": "tidak berlaku",
+  "alasan": "varian khusus GPU (AMP / pin_memory / workers)",
+  "waktu_utc": "2026-10-10T16:55:15+00:00"
+}

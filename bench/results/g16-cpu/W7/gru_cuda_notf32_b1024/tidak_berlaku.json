@@ -1,0 +1,14 @@
+{
+  "workload": "W7",
+  "config_id": "gru_cuda_notf32_b1024",
+  "konfigurasi": {
+    "model": "ml/reports/coldtrack.onnx",
+    "ep": "cuda",
+    "tf32": 0,
+    "batch": 1024
+  },
+  "tag": "g16-cpu",
+  "status": "tidak berlaku",
+  "alasan": "CUDA EP butuh GPU NVIDIA",
+  "waktu_utc": "2026-10-10T18:19:40+00:00"
+}

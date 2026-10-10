@@ -1,0 +1,75 @@
+{
+  "workload": "W2",
+  "config_id": "cpu_hist",
+  "konfigurasi": {
+    "n_estimators": 300,
+    "max_depth": 6,
+    "learning_rate": 0.1,
+    "n_jobs": -1,
+    "tree_method": "hist",
+    "device": "cpu"
+  },
+  "tag": "g16-cpu",
+  "device": "cpu",
+  "run": 0,
+  "pemanasan": true,
+  "seed": 1000,
+  "waktu_utc": "2026-10-10T17:55:25+00:00",
+  "git": {
+    "commit": "009ed574ba582fcabcd8ad0c93d283c541543bd6",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "env": "bench/results/g16-cpu/env/env_20261010-201459.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Turbo",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": null
+  },
+  "protokol": {
+    "repeats": 5,
+    "warmup": 1,
+    "cooldown_s": 60
+  },
+  "waktu": {
+    "muat_s": 0.6991089639996062,
+    "praproses_s": 0.6290534940017096,
+    "latih_s": 1.2348550700007763,
+    "prediksi_s": 0.004338767001172528,
+    "dinding_total_s": 2.5689454680032213
+  },
+  "n_latih": 15330,
+  "metrik_val": {
+    "ttb_mae_le10_menit": 3.2388389110565186,
+    "ttb_mae_le30_menit": 5.141827583312988,
+    "ttb_mae_semua_menit": 24.014829635620117,
+    "n_val": 3717
+  },
+  "telemetri": {
+    "tersedia": true,
+    "n_sampel": 3,
+    "energi_wh": 0.011094444444444443,
+    "daya_w": {
+      "median": 13.52,
+      "maks": 13.55
+    },
+    "suhu_c": {
+      "median": 59.0,
+      "maks": 59.0
+    },
+    "clock_sm_mhz": {
+      "median": 1425.0,
+      "min": 1425.0,
+      "p5": 1425.0
+    },
+    "utilisasi_pct_median": 0.0,
+    "vram_terpakai_mb_maks": 0.0,
+    "throttle_reasons_hex": [
+      "0x0000000000000000"
+    ],
+    "csv": "bench/results/telemetry/g16-cpu/W2_cpu_hist_run0_20261011-005522.csv"
+  }
+}

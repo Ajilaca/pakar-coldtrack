@@ -1,0 +1,92 @@
+{
+  "workload": "W7",
+  "config_id": "gru_cuda_b1",
+  "konfigurasi": {
+    "model": "ml/reports/coldtrack.onnx",
+    "ep": "cuda",
+    "tf32": null,
+    "batch": 1
+  },
+  "tag": "g16-gpu",
+  "device": "cuda",
+  "run": 4,
+  "pemanasan": false,
+  "seed": 1003,
+  "waktu_utc": "2026-10-10T12:53:27+00:00",
+  "git": {
+    "commit": "009ed574ba582fcabcd8ad0c93d283c541543bd6",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "env": "bench/results/g16-gpu/env/env_20261010-180138.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Turbo",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": null
+  },
+  "protokol": {
+    "repeats": 5,
+    "warmup": 1,
+    "cooldown_s": 15
+  },
+  "python": "/home/tsabita/.venvs/coldtrack-ort/bin/python",
+  "waktu": {
+    "session_init_s": 0.2887304470004892,
+    "latensi_p50_ms": 3.43602,
+    "dinding_total_s": 4.4841959239984135
+  },
+  "inferensi": {
+    "onnxruntime": "1.31.0",
+    "ep_diminta": "cuda",
+    "tf32": null,
+    "providers_aktif": [
+      "CUDAExecutionProvider",
+      "CPUExecutionProvider"
+    ],
+    "cuda_ep_aktif": true,
+    "batch": 1,
+    "n_iter": 818,
+    "session_init_s": 0.2887304470004892,
+    "latensi_ms": {
+      "p50": 3.43602,
+      "p95": 4.7816452,
+      "p99": 8.966467820000002,
+      "mean": 3.6671098349633255,
+      "min": 2.384009
+    },
+    "throughput_jendela_per_s": 291.0343944447355,
+    "kualitas_val": {
+      "ttb_mae_semua_menit": 21.215314865112305,
+      "ttb_mae_le30_menit": 4.204308986663818,
+      "forecast_t30_mae_c": 0.2109435647726059,
+      "akurasi_mode": 0.7856707688558547
+    }
+  },
+  "telemetri": {
+    "tersedia": true,
+    "n_sampel": 6,
+    "energi_wh": 0.025086111111111108,
+    "daya_w": {
+      "median": 10.605,
+      "maks": 28.6
+    },
+    "suhu_c": {
+      "median": 47.5,
+      "maks": 49.0
+    },
+    "clock_sm_mhz": {
+      "median": 1425.0,
+      "min": 180.0,
+      "p5": 491.25
+    },
+    "utilisasi_pct_median": 15.5,
+    "vram_terpakai_mb_maks": 2907.0,
+    "throttle_reasons_hex": [
+      "0x0000000000000000"
+    ],
+    "csv": "bench/results/telemetry/g16-gpu/W7_gru_cuda_b1_run4_20261010-195320.csv"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "workload": "W2",
+  "config_id": "cuda_hist",
+  "konfigurasi": {
+    "n_estimators": 300,
+    "max_depth": 6,
+    "learning_rate": 0.1,
+    "n_jobs": -1,
+    "tree_method": "hist",
+    "device": "cuda"
+  },
+  "tag": "g16-gpu",
+  "device": "cuda",
+  "run": 0,
+  "pemanasan": true,
+  "seed": 1000,
+  "waktu_utc": "2026-10-10T12:46:56+00:00",
+  "git": {
+    "commit": "009ed574ba582fcabcd8ad0c93d283c541543bd6",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "env": "bench/results/g16-gpu/env/env_20261010-180138.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Turbo",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": null
+  },
+  "protokol": {
+    "repeats": 5,
+    "warmup": 1,
+    "cooldown_s": 60
+  },
+  "waktu": {
+    "muat_s": 0.9530185250005161,
+    "praproses_s": 0.8123726600006194,
+    "latih_s": 1.7653569630001584,
+    "prediksi_s": 0.026296992000425234,
+    "dinding_total_s": 3.563658086999567
+  },
+  "n_latih": 15330,
+  "metrik_val": {
+    "ttb_mae_le10_menit": 3.2388389110565186,
+    "ttb_mae_le30_menit": 5.1418304443359375,
+    "ttb_mae_semua_menit": 24.014829635620117,
+    "n_val": 3717
+  },
+  "telemetri": {
+    "tersedia": true,
+    "n_sampel": 5,
+    "energi_wh": 0.021027777777777774,
+    "daya_w": {
+      "median": 7.94,
+      "maks": 33.94
+    },
+    "suhu_c": {
+      "median": 55.0,
+      "maks": 58.0
+    },
+    "clock_sm_mhz": {
+      "median": 225.0,
+      "min": 180.0,
+      "p5": 180.0
+    },
+    "utilisasi_pct_median": 0.0,
+    "vram_terpakai_mb_maks": 2688.0,
+    "throttle_reasons_hex": [
+      "0x0000000000000000"
+    ],
+    "csv": "bench/results/telemetry/g16-gpu/W2_cuda_hist_run0_20261010-194651.csv"
+  }
+}

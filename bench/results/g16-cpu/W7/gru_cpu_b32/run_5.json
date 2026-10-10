@@ -1,0 +1,92 @@
+{
+  "workload": "W7",
+  "config_id": "gru_cpu_b32",
+  "konfigurasi": {
+    "model": "ml/reports/coldtrack.onnx",
+    "ep": "cpu",
+    "tf32": null,
+    "batch": 32
+  },
+  "tag": "g16-cpu",
+  "device": "cpu",
+  "run": 5,
+  "pemanasan": false,
+  "seed": 1004,
+  "waktu_utc": "2026-10-10T18:04:57+00:00",
+  "git": {
+    "commit": "009ed574ba582fcabcd8ad0c93d283c541543bd6",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "env": "bench/results/g16-cpu/env/env_20261010-201459.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Turbo",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": null
+  },
+  "protokol": {
+    "repeats": 5,
+    "warmup": 1,
+    "cooldown_s": 15
+  },
+  "python": "/home/tsabita/.venvs/coldtrack/bin/python",
+  "waktu": {
+    "session_init_s": 0.027931994998652954,
+    "latensi_p50_ms": 2.9730115,
+    "dinding_total_s": 5.685657740999886
+  },
+  "inferensi": {
+    "onnxruntime": "1.31.0",
+    "ep_diminta": "cpu",
+    "tf32": null,
+    "providers_aktif": [
+      "CPUExecutionProvider"
+    ],
+    "cuda_ep_aktif": false,
+    "batch": 32,
+    "n_iter": 900,
+    "session_init_s": 0.027931994998652954,
+    "latensi_ms": {
+      "p50": 2.9730115,
+      "p95": 4.134875549999999,
+      "p99": 4.424371659999999,
+      "mean": 3.3332451544444446,
+      "min": 2.685708
+    },
+    "throughput_jendela_per_s": 10763.496878501815,
+    "kualitas_val": {
+      "ttb_mae_semua_menit": 21.21879005432129,
+      "ttb_mae_le30_menit": 4.19782018661499,
+      "forecast_t30_mae_c": 0.2109597772359848,
+      "akurasi_mode": 0.7857316924576581
+    }
+  },
+  "telemetri": {
+    "tersedia": true,
+    "n_sampel": 5,
+    "energi_wh": 0.01715833333333333,
+    "daya_w": {
+      "median": 12.94,
+      "maks": 13.01
+    },
+    "suhu_c": {
+      "median": 51.0,
+      "maks": 51.0
+    },
+    "clock_sm_mhz": {
+      "median": 1425.0,
+      "min": 225.0,
+      "p5": 465.0
+    },
+    "utilisasi_pct_median": 0.0,
+    "vram_terpakai_mb_maks": 0.0,
+    "throttle_reasons_hex": [
+      "0x0000000000000000",
+      "0x0000000000000004"
+    ],
+    "csv": "bench/results/telemetry/g16-cpu/W7_gru_cpu_b32_run5_20261011-010452.csv"
+  }
+}
