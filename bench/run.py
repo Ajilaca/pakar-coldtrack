@@ -17,7 +17,7 @@ from types import SimpleNamespace
 
 import yaml
 
-from bench.common import DEVICES_DIR, RESULTS_DIR, SEEDS, rel, write_json
+from bench.common import DEVICES_DIR, RESULTS_DIR, ROOT, SEEDS, rel, write_json
 
 
 def load_profiles():
@@ -84,6 +84,7 @@ def main(argv=None):
     if unknown:
         ap.error(f"workload tidak dikenal: {unknown}. Lihat --list")
 
+    os.chdir(ROOT)                  # skrip ml/ memakai path relatif terhadap root repo
     profile, kind = resolve_tag(a.tag)
     apply_device_env(kind)          # harus sebelum import torch di bawah
     check_cuda_or_die(kind)

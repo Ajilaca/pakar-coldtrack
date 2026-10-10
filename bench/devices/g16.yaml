@@ -24,9 +24,9 @@ lingkungan: WSL2 Ubuntu
 # Isi/periksa SEBELUM setiap sesi benchmark; disalin apa adanya ke setiap JSON hasil.
 # Kondisi harus sama untuk semua run yang dibandingkan.
 kondisi:
-  charger: null            # true / false
-  mode_daya: null          # Armoury Crate: Silent / Performance / Turbo / Manual
-  pendingin: null          # mis. "cooling pad", "meja keras tanpa cooling pad"
-  aplikasi_berat_ditutup: null
-  wslconfig_memory: null   # mis. "12GB" (juga dicatat otomatis dari .wslconfig)
+  charger: true            # true / false (juga dicek otomatis di env.json)
+  mode_daya: Turbo         # Armoury Crate: Silent / Performance / Turbo / Manual
+  pendingin: meja keras tanpa cooling pad
+  aplikasi_berat_ditutup: true
+  wslconfig_memory: 12GB   # juga dicatat otomatis dari .wslconfig
   catatan: null

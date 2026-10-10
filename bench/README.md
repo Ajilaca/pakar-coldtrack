@@ -41,26 +41,36 @@ memory=12GB
 
 lalu `wsl --shutdown`. Nilainya ikut tercatat otomatis di `env.json`.
 
-### Di dalam WSL
+### Di dalam WSL (dari root repo, mis. `cd /mnt/c/Users/<user>/pakar-coldtrack`)
 
 ```bash
-sudo apt-get update && sudo apt-get install -y git
-curl -LsSf https://astral.sh/uv/install.sh | sh && source ~/.local/bin/env
-uv venv --python 3.11 ~/.venvs/coldtrack && source ~/.venvs/coldtrack/bin/activate
-cd /mnt/c/Users/<user>/pakar-coldtrack
-
-# G16 (CUDA, Blackwell butuh CUDA 12.8+):
-uv pip install torch --index-url https://download.pytorch.org/whl/cu128
-uv pip install -r bench/requirements.txt onnxruntime-gpu
-
-# d0-old (CPU saja):
-uv pip install torch --index-url https://download.pytorch.org/whl/cpu
-uv pip install -r bench/requirements.txt onnxruntime
+bash bench/setup_wsl.sh cuda    # G16
+bash bench/setup_wsl.sh cpu     # d0-old
 ```
 
-Versi persis yang dipakai di G16 ada di `bench/requirements.lock.txt`; samakan di `d0-old`.
+Skrip memasang uv, Python 3.11, dan paket dengan versi dari `bench/requirements.lock.txt`
+(dibangkitkan di G16 oleh `bench/freeze_lock.sh`), jadi `d0-old` memakai versi yang sama.
+
+**Dua venv di G16 (temuan B0, 2026-10-10).** `onnxruntime-gpu` 1.31 dibangun untuk CUDA 13,
+sedangkan PyTorch cu128 memakai CUDA 12. Memasang pustaka CUDA 13 di venv torch menimpa
+`libcudnn.so.9` milik torch (cuDNN 9.19 -> 9.27) tanpa error. Karena itu:
+
+| venv | Isi | Dipakai untuk |
+|---|---|---|
+| `~/.venvs/coldtrack` | torch cu128 + `onnxruntime` CPU (sama di semua device) | semua workload |
+| `~/.venvs/coldtrack-ort` | `onnxruntime-gpu[cuda,cudnn]` (CUDA 13) | hanya jalur CUDA EP (smoke, W7) lewat `bench/ort_probe.py` |
+
+Catatan paritas ONNX Runtime CUDA EP vs CPU EP (jendela val asli):
+- GRU: TF32 bawaan CUDA EP membuat selisih forecast ~4e-3 C; dengan `use_tf32=0` ~1e-5.
+  W7 mengukur keduanya dan menyebut mana yang dipakai.
+- XGBoost TTB: ~35-39% jendela berbeda > 1e-3 (maks ~30-37 menit) dengan atau tanpa TF32, tetapi
+  MAE agregat setara (23,67 vs 23,65 menit). Agregat float dihitung dengan urutan berbeda di GPU
+  sehingga sebagian nilai melewati ambang split pohon. Kualitas dinilai lewat MAE, bukan selisih maks.
 
 ## Menjalankan
+
+Dari PowerShell, `bench/wsl_run.sh` menjalankan perintah di venv WSL dari root repo:
+`wsl -e bash bench/wsl_run.sh python -m bench.run --tag g16-gpu --workloads smoke`
 
 ```bash
 python -m bench.run --list                         # daftar workload + status

@@ -108,32 +108,32 @@ def cek_xgboost(kind):
 
 
 def cek_onnxruntime(kind):
-    import onnxruntime as ort
+    """Jalur cpu: ORT di venv ini. Jalur cuda: ORT di venv ORT GPU terpisah (lihat bench/ort_probe.py)."""
+    import json
+    import subprocess
+    import sys
 
-    out = {"available_providers": ort.get_available_providers(), "models": {}}
-    minta = ["CUDAExecutionProvider", "CPUExecutionProvider"] if kind == "cuda" else ["CPUExecutionProvider"]
-    rng = np.random.default_rng(0)
-    for nama, path in ONNX_MODELS.items():
-        r = {"path": path.relative_to(ROOT).as_posix(), "diminta": minta}
-        try:
-            cpu = ort.InferenceSession(str(path), providers=["CPUExecutionProvider"])
-            inp = cpu.get_inputs()[0]
-            x = rng.normal(size=(32, 60, 12)).astype(np.float32)
-            ref = cpu.run(None, {inp.name: x})
-            if kind == "cuda":
-                sess = ort.InferenceSession(str(path), providers=minta)
-                r["aktif"] = sess.get_providers()
-                r["cuda_ep_aktif"] = r["aktif"][0] == "CUDAExecutionProvider"
-                got = sess.run(None, {inp.name: x})
-                r["paritas_maxabs_vs_cpu_ep"] = max(float(np.abs(np.asarray(p) - np.asarray(q)).max())
-                                                    for p, q in zip(got, ref))
-            else:
-                r["aktif"] = cpu.get_providers()
-            r["ok"] = True
-        except Exception as e:  # noqa: BLE001 -- EP gagal dimuat adalah temuan, dicatat apa adanya
-            r["ok"] = False
-            r["error"] = f"{type(e).__name__}: {e}"
-        out["models"][nama] = r
+    from bench.common import ort_gpu_python
+
+    if kind == "cuda":
+        py = ort_gpu_python()
+        if py is None:
+            return {"ok": False, "error": "venv ORT GPU tidak ditemukan (jalankan bench/setup_wsl.sh cuda)"}
+        minta = "CUDAExecutionProvider,CPUExecutionProvider"
+    else:
+        py, minta = sys.executable, "CPUExecutionProvider"
+    win = ROOT / "data" / "processed" / "windows" / "windows_val.npz"
+    r = subprocess.run([py, str(ROOT / "bench" / "ort_probe.py"), "--providers", minta,
+                        *(["--windows", str(win)] if win.exists() else []),
+                        *[str(p) for p in ONNX_MODELS.values()]],
+                       check=False, capture_output=True, text=True, timeout=300)
+    if r.returncode != 0:
+        return {"ok": False, "python": py, "error": r.stderr[-2000:]}
+    out = json.loads(r.stdout.strip().splitlines()[-1])
+    out["python"] = py
+    # kunci model -> nama pendek, path relatif repo
+    out["models"] = {nama: out["models"][str(p)] | {"path": p.relative_to(ROOT).as_posix()}
+                     for nama, p in ONNX_MODELS.items()}
     return out
 
 

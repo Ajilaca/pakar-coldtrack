@@ -181,6 +181,14 @@ def frameworks_info():
     except ImportError:
         pass
 
+    from bench.common import ort_gpu_python
+
+    py = ort_gpu_python()
+    if py:
+        v = run_cmd([py, "-c", "import onnxruntime as o; print(o.__version__, *o.get_available_providers())"],
+                    timeout=60)
+        out["venv_ort_gpu"] = {"python": py, "versi_dan_providers": v}
+
     try:
         import xgboost as xgb
 

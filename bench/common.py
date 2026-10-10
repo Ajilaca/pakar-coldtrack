@@ -124,3 +124,12 @@ def write_json(path, obj):
 def rel(path):
     """Path relatif terhadap root repo (untuk pointer di JSON hasil)."""
     return Path(path).resolve().relative_to(ROOT).as_posix()
+
+
+def ort_gpu_python():
+    """Python di venv ONNX Runtime GPU (CUDA 13) yang terpisah dari venv torch (CUDA 12).
+
+    Bisa diatur lewat COLDTRACK_ORT_PY. None bila tidak ada (mis. di d0-old yang CPU saja).
+    """
+    cand = os.environ.get("COLDTRACK_ORT_PY") or str(Path.home() / ".venvs" / "coldtrack-ort" / "bin" / "python")
+    return cand if Path(cand).exists() else None
