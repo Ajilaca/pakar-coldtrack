@@ -26,8 +26,12 @@ lingkungan: WSL2 Ubuntu 24.04
 # Diisi 2026-10-11 dari pengecekan otomatis di laptop ini (run dijalankan oleh Claude Code)
 kondisi:
   charger: true            # Win32_Battery BatteryStatus=2 (AC) saat run dimulai
-  mode_daya: Windows "Best performance"   # overlay ded574b5 di AC & DC; mode Lenovo Vantage tidak diverifikasi
-  pendingin: tidak diverifikasi   # posisi laptop/cooling pad tidak bisa dicek program
+  mode_daya: Lenovo Extreme Performance (Fn+Q) + Windows "Best performance"   # LITSSVC MMC CurrentSetting=3; overlay ded574b5
+  pendingin: meja keras tanpa cooling pad   # dari user
   aplikasi_berat_ditutup: true   # iCloudPhotos, OneDrive, ChatGPT, Creative Cloud ditutup sebelum run
   wslconfig_memory: 12GB
-  catatan: Claude Code desktop tetap berjalan sebagai pengendali run (beban CPU ~1-2%)
+  catatan: >-
+    Run pertama (mode Lenovo otomatis/Intelligent Cooling) dibatalkan: suhu CPU mencapai ~100 C lalu
+    di-clamp ke ~22% performa (~400 MHz) selama 4-8 menit, berulang tiap ~10 menit. Hasilnya tidak
+    dipakai. Claude Code desktop tetap berjalan sebagai pengendali run (beban CPU ~1-2%), ditambah
+    perekam suhu/performa Windows tiap ~12 detik.
