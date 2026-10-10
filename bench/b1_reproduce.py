@@ -11,7 +11,7 @@ import argparse
 import sys
 import time
 
-from bench.common import RESULTS_DIR, SEEDS, git_info, now_iso, rel, write_json
+from bench.common import RESULTS_DIR, SEEDS, git_info, now_iso, rel, stamp, write_json
 
 
 def main(argv=None):
@@ -33,7 +33,8 @@ def main(argv=None):
 
     quick = a.epochs is not None
     out_dir = RESULTS_DIR / ("_quick" if quick else "") / a.tag / "B1"
-    env_path = write_json(out_dir / "env.json", capture(a.tag, profile))
+    # satu env per pemanggilan (bukan ditimpa): tiap JSON hasil menunjuk env saat ia dibuat
+    env_path = write_json(out_dir / f"env_{stamp()}.json", capture(a.tag, profile))
     seeds = [int(s) for s in a.seeds.split(",")]
     models = a.models.split(",")
     t_windows = tl.ensure_windows()
