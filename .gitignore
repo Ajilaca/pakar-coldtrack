@@ -52,6 +52,13 @@ data/processed/windows/
 # dataset simulator baru (~80 MB/berkas), dibuat lewat coldtrack_sim.generate_dataset (ml/CHECKPOINT2_CONTEXT.md)
 ml/dataset_v*.parquet
 
+# --- Benchmark (bench/) ---
+# JSON hasil per run DIKOMIT (sumber angka laporan); telemetri CSV besar dan run uji tidak.
+bench/results/telemetry/
+bench/results/_quick/
+# Data Kaggle Intel Berkeley (~144 MB) -- lokal saja
+data/berkeley/
+
 # --- Editors ---
 .vscode/
 .idea/

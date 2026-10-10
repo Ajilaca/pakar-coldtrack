@@ -1,0 +1,32 @@
+# Profil device lama (pembanding "sebelum vs sesudah"). TEMPLATE -- diisi user di device itu.
+#
+# GPU Radeon terintegrasi tidak mendukung CUDA, jadi d0-old hanya menjalankan jalur CPU
+# (PyTorch CPU, XGBoost hist CPU, ONNX Runtime CPU). Variasi khusus GPU (AMP, CUDA EP)
+# dicatat "tidak berlaku", bukan dikosongkan.
+#
+# Spesifikasi terukur diambil otomatis oleh bench/env_capture.py saat dijalankan di sana.
+
+device: d0-old
+deskripsi: Lenovo Yoga 6
+
+# Info dari user (2026-10-10), bukan hasil ukur
+dari_user:
+  cpu: AMD Ryzen 7 5700U
+  gpu: AMD Radeon (terintegrasi, tidak dipakai untuk komputasi)
+  ram: 16 GB
+  os: null                 # belum diketahui -- dicatat otomatis oleh env_capture
+
+tags:
+  d0-old: {device: cpu}
+
+# Usahakan setara dengan G16 (WSL2 Ubuntu). Bila memakai Windows native, tulis di sini:
+# batas memorinya berbeda dan itu harus disebut di laporan.
+lingkungan: null
+
+kondisi:
+  charger: null            # wajib true selama benchmark
+  mode_daya: null          # mis. Lenovo Vantage "Extreme Performance" / Windows "Best performance"
+  pendingin: null
+  aplikasi_berat_ditutup: null
+  wslconfig_memory: null
+  catatan: null
