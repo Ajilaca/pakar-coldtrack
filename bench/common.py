@@ -74,9 +74,13 @@ def git_info():
     if exe is None:
         return {"commit": None, "branch": None, "dirty": None, "catatan": "git tidak ditemukan"}
 
+    # Repo di disk Windows di-checkout dengan CRLF; git di WSL tanpa autocrlf menganggap SEMUA
+    # berkas berubah (dirty palsu). autocrlf=true menormalkan perbandingan tanpa mengubah berkas.
+    crlf = ["-c", "core.autocrlf=true"] if is_wsl() else []
+
     def g(*a):
         try:
-            r = subprocess.run([exe, "-C", str(ROOT), *a], check=False, capture_output=True, text=True,
+            r = subprocess.run([exe, *crlf, "-C", str(ROOT), *a], check=False, capture_output=True, text=True,
                                timeout=20)
         except (OSError, subprocess.TimeoutExpired):
             return None
