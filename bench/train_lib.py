@@ -265,8 +265,11 @@ def train_eval_xgb_clf(data, seed, device):
 
     from ml.preprocess.build_windows import FAILURE_CLASSES
 
+    # disable_default_eval_metric: XGBoost 3.2.0 build CUDA crash (cudaErrorNoDevice) saat menghitung
+    # metrik latih multi:softprob dengan device="cpu" bila GPU disembunyikan (g16-cpu, d0-old).
+    # Metrik latih tidak dipakai (tanpa eval_set) dan tidak memengaruhi pohon; prediksi identik.
     clf = xgb.XGBClassifier(objective="multi:softprob", num_class=len(FAILURE_CLASSES),
-                            **xgb_params(seed, device))
+                            disable_default_eval_metric=True, **xgb_params(seed, device))
     t0 = time.perf_counter()
     clf.fit(data["Xtr"], data["mode_tr"])
     t_fit = time.perf_counter() - t0
