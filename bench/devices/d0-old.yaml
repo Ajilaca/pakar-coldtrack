@@ -21,12 +21,13 @@ tags:
 
 # Usahakan setara dengan G16 (WSL2 Ubuntu). Bila memakai Windows native, tulis di sini:
 # batas memorinya berbeda dan itu harus disebut di laporan.
-lingkungan: null
+lingkungan: WSL2 Ubuntu 24.04
 
+# Diisi 2026-10-11 dari pengecekan otomatis di laptop ini (run dijalankan oleh Claude Code)
 kondisi:
-  charger: null            # wajib true selama benchmark
-  mode_daya: null          # mis. Lenovo Vantage "Extreme Performance" / Windows "Best performance"
-  pendingin: null
-  aplikasi_berat_ditutup: null
-  wslconfig_memory: null
-  catatan: null
+  charger: true            # Win32_Battery BatteryStatus=2 (AC) saat run dimulai
+  mode_daya: Windows "Best performance"   # overlay ded574b5 di AC & DC; mode Lenovo Vantage tidak diverifikasi
+  pendingin: tidak diverifikasi   # posisi laptop/cooling pad tidak bisa dicek program
+  aplikasi_berat_ditutup: true   # iCloudPhotos, OneDrive, ChatGPT, Creative Cloud ditutup sebelum run
+  wslconfig_memory: 12GB
+  catatan: Claude Code desktop tetap berjalan sebagai pengendali run (beban CPU ~1-2%)
