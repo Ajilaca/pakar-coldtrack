@@ -78,7 +78,17 @@ python -m bench.env_capture --tag g16-gpu          # catat lingkungan saja
 python -m bench.run --tag g16-gpu --workloads smoke
 python -m bench.run --tag g16-cpu --workloads smoke
 python -m bench.run --tag d0-old  --workloads smoke
+
+# B2: benchmark W1 (latih GRU), W2 (XGBoost), W7 (inferensi ONNX); 1 pemanasan + 5 ulangan (seed 1000-1004)
+python -m bench.run --tag g16-gpu --workloads W1,W2,W7
+python -m bench.run --tag g16-cpu --workloads W1,W2,W7
+python -m bench.run --tag d0-old  --workloads W1,W2,W7       # varian khusus GPU tercatat "tidak berlaku"
+python -m bench.g2_check --cpu-tag g16-cpu --gpu-tag g16-gpu  # gerbang G2 (paritas kualitas)
 ```
+
+Konfigurasi yang sudah lengkap dilewati (bisa dilanjutkan setelah terputus); `--overwrite` mengulang,
+`--configs b256_fp32,b1024_fp32` membatasi ke config tertentu. W7 memakai jeda 15 detik (run ~3-20 detik),
+workload lain 60 detik.
 
 `--quick` menjalankan versi kecil untuk menguji harness; hasilnya ke `bench/results/_quick/`
 (tidak dikomit, bukan angka benchmark).

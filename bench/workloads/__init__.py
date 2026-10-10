@@ -24,12 +24,12 @@ class Workload:
 REGISTRY = {w.id: w for w in [
     Workload("smoke", "Smoke test: forward/backward GRU, XGBoost, ONNX Runtime per device", "B0",
              "bench.workloads.smoke"),
-    Workload("W1", "Latih GRU (batch 256/1024/4096, fp32 vs AMP)", "B2", None),
-    Workload("W2", "Latih XGBoost TTB 300 pohon (CPU hist vs cuda)", "B2", None),
+    Workload("W1", "Latih GRU (batch 256/1024/4096, fp32 vs AMP, pemuatan data)", "B2", "bench.workloads.w1_gru"),
+    Workload("W2", "Latih XGBoost TTB 300 pohon (CPU hist vs cuda)", "B2", "bench.workloads.w2_xgb"),
     Workload("W3", "Sweep hyperparameter Optuna GRU", "B5", None),
     Workload("W4", "Ablation multi-seed", "B5", None),
     Workload("W5", "Skala data simulator", "B5", None),
     Workload("W6", "Model sensor-health Berkeley", "B5", None),
-    Workload("W7", "Inferensi ONNX (CPU EP vs CUDA EP, batch 1/32/256/1024)", "B2", None),
+    Workload("W7", "Inferensi ONNX (CPU EP vs CUDA EP, batch 1/32/256/1024)", "B2", "bench.workloads.w7_onnx"),
     Workload("W8", "Siklus worker inferensi end-to-end", "B5", None),
 ]}

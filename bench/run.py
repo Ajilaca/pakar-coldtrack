@@ -66,6 +66,8 @@ def main(argv=None):
     ap.add_argument("--cooldown", type=int, default=60, help="jeda pendinginan antar run (detik)")
     ap.add_argument("--quick", action="store_true",
                     help="mode uji harness: ukuran kecil, hasil ditulis ke results/_quick (bukan benchmark)")
+    ap.add_argument("--configs", default="", help="batasi ke config_id tertentu, dipisah koma")
+    ap.add_argument("--overwrite", action="store_true", help="ulangi config yang sudah lengkap")
     ap.add_argument("--list", action="store_true")
     a = ap.parse_args(argv)
 
@@ -85,6 +87,8 @@ def main(argv=None):
         ap.error(f"workload tidak dikenal: {unknown}. Lihat --list")
 
     os.chdir(ROOT)                  # skrip ml/ memakai path relatif terhadap root repo
+    if a.quick:                     # uji harness: 1 pemanasan + 1 ulangan, tanpa jeda
+        a.repeats, a.warmup, a.cooldown = 1, 1, 0
     profile, kind = resolve_tag(a.tag)
     apply_device_env(kind)          # harus sebelum import torch di bawah
     check_cuda_or_die(kind)
@@ -101,6 +105,7 @@ def main(argv=None):
     ctx = SimpleNamespace(
         tag=a.tag, device=kind, profile=profile, out_root=out_root, env_path=rel(env_path),
         repeats=a.repeats, warmup=a.warmup, cooldown=a.cooldown, quick=a.quick, seeds=SEEDS,
+        configs=[c for c in a.configs.split(",") if c], overwrite=a.overwrite or a.quick,
     )
 
     gagal = 0

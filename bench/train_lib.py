@@ -88,10 +88,12 @@ def _loss(model, batch, loss_fns, w):
 
 
 def train_gru(data, seed, device, batch_size=None, n_epochs=None, amp=None, num_workers=0,
-              pin_memory=False, log=print):
+              pin_memory=False, resident=False, log=print):
     """Latih ColdTrackGRU persis seperti ml.finetune.main, di device mana pun.
 
     amp: None (fp32) | "bf16" | "fp16" (hanya bermakna di cuda).
+    resident: seluruh tensor latih/val dipindah ke device sekali di awal (tanpa DataLoader);
+      waktu pemindahan dicatat terpisah sebagai transfer_ke_device_s.
     Kembalikan (model terbaik, riwayat per epoch, ringkasan waktu).
     """
     from ml import finetune as ft
@@ -106,10 +108,34 @@ def train_gru(data, seed, device, batch_size=None, n_epochs=None, amp=None, num_
 
     seed_all(seed)
     g = torch.Generator().manual_seed(seed)
-    train_loader = DataLoader(data["train"], batch_size=batch_size, shuffle=True, generator=g,
-                              num_workers=num_workers, pin_memory=pin_memory)
-    val_loader = DataLoader(data["val"], batch_size=batch_size, shuffle=False,
-                            num_workers=num_workers, pin_memory=pin_memory)
+    t_transfer = 0.0
+    if resident:
+        _sync(dev)
+        t0 = time.perf_counter()
+        tr_t = [t.to(dev) for t in data["train"].tensors]
+        va_t = [t.to(dev) for t in data["val"].tensors]
+        _sync(dev)
+        t_transfer = time.perf_counter() - t0
+
+        def train_batches():
+            perm = torch.randperm(len(tr_t[0]), generator=g).to(dev)
+            for i in range(0, len(perm), batch_size):
+                yield [t[perm[i:i + batch_size]] for t in tr_t]
+
+        def val_batches():
+            for i in range(0, len(va_t[0]), batch_size):
+                yield [t[i:i + batch_size] for t in va_t]
+    else:
+        train_loader = DataLoader(data["train"], batch_size=batch_size, shuffle=True, generator=g,
+                                  num_workers=num_workers, pin_memory=pin_memory)
+        val_loader = DataLoader(data["val"], batch_size=batch_size, shuffle=False,
+                                num_workers=num_workers, pin_memory=pin_memory)
+
+        def train_batches():
+            return (to_dev(b) for b in train_loader)
+
+        def val_batches():
+            return (to_dev(b) for b in val_loader)
 
     model = ColdTrackGRU().to(dev)
     head_params = (list(model.head_forecast.parameters()) + list(model.head_failure.parameters())
@@ -141,8 +167,7 @@ def train_gru(data, seed, device, batch_size=None, n_epochs=None, amp=None, num_
         t0 = time.perf_counter()
         model.train(True)
         tr_sum, n = 0.0, 0
-        for batch in train_loader:
-            batch = to_dev(batch)
+        for batch in train_batches():
             with torch.autocast(dev.type, dtype=amp_dtype, enabled=amp_dtype is not None):
                 loss = _loss(model, batch, loss_fns, ft.LOSS_WEIGHTS)
             opt.zero_grad()
@@ -159,8 +184,7 @@ def train_gru(data, seed, device, batch_size=None, n_epochs=None, amp=None, num_
         model.train(False)
         va_sum, nv = 0.0, 0
         with torch.no_grad():
-            for batch in val_loader:
-                batch = to_dev(batch)
+            for batch in val_batches():
                 with torch.autocast(dev.type, dtype=amp_dtype, enabled=amp_dtype is not None):
                     va_sum += _loss(model, batch, loss_fns, ft.LOSS_WEIGHTS) * batch[0].size(0)
                 nv += batch[0].size(0)
@@ -174,13 +198,15 @@ def train_gru(data, seed, device, batch_size=None, n_epochs=None, amp=None, num_
             best_state = {k: v.detach().clone() for k, v in model.state_dict().items()}
         history.append({"epoch": epoch, "train_loss": float(tr_sum / n), "val_loss": val,
                         "detik_latih": t_train, "detik_val": t_val,
-                        "sampel_per_detik": n / t_train})
+                        "sampel_per_detik": n / t_train,
+                        "detik_kumulatif": time.perf_counter() - t_total})
         log(f"  epoch {epoch:2d}/{n_epochs} train={history[-1]['train_loss']:.3f} val={val:.3f} "
             f"({t_train:.1f}s + {t_val:.1f}s){'  <- terbaik' if terbaik else ''}")
 
     model.load_state_dict(best_state)
     ringkas = {
         "detik_total_loop": time.perf_counter() - t_total,
+        "transfer_ke_device_s": t_transfer if resident else None,
         "epoch_terbaik": best_epoch,
         "val_loss_terbaik": best_val,
         "vram_puncak_mb": round(torch.cuda.max_memory_allocated() / 2**20, 1) if dev.type == "cuda" else None,
