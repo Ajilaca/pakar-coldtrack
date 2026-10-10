@@ -1,0 +1,24 @@
+[
+  {
+    "id": "baseline_proposal",
+    "model": "ml/reports/coldtrack.onnx",
+    "sha256_model": "3948c447631301bf3ea5c7cd78d8e68be1e870513a48157a15073da9da6428ab",
+    "waktu_utc": "2026-10-10T22:53:08+00:00",
+    "git": {
+      "commit": "1e668e1d81c01de17cadcb576790447409a9c4f1",
+      "branch": "feat/model-retrain-g16",
+      "dirty": false
+    }
+  },
+  {
+    "id": "kandidat_b3",
+    "model": "backend/models/candidates/coldtrack_gru_b3.onnx",
+    "sha256_model": "fab911760e87dd1a9b44e3ea56cb4e8cc089da0aad7bca09481cf05e014da60c",
+    "waktu_utc": "2026-10-10T22:53:13+00:00",
+    "git": {
+      "commit": "1e668e1d81c01de17cadcb576790447409a9c4f1",
+      "branch": "feat/model-retrain-g16",
+      "dirty": false
+    }
+  }
+]

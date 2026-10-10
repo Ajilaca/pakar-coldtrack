@@ -303,6 +303,29 @@ def bagian_b3():
     return out
 
 
+def bagian_g3():
+    tdir = RESULTS_DIR / "test"
+    files = {p.stem: _load(p) for p in sorted(tdir.glob("*.json"))} if tdir.exists() else {}
+    if not files:
+        return []
+    log = _load(RESULTS_DIR / "test_access_log.json")
+    kunci = list(next(iter(files.values()))["metrik_test"])
+    out = ["## Gerbang G3: split test (dipakai sekali per model)", "",
+           "| metrik (test) | " + " | ".join(files) + " |", "|---" * (len(files) + 1) + "|"]
+    for k in kunci:
+        out.append(f"| {k} | " + " | ".join(_fmt(f["metrik_test"].get(k)) for f in files.values()) + " |")
+    out += ["", "Log akses split test (dicatat sebelum evaluasi; run kedua untuk id yang sama ditolak):", ""]
+    out += [f"- `{e['id']}`: {e['model']} (sha256 {e['sha256_model'][:12]}…), {e['waktu_utc']}, commit "
+            f"{(e['git']['commit'] or '')[:7]}" for e in log]
+    kep = RESULTS_DIR / "keputusan" / "G3.json"
+    if kep.exists():
+        k = _load(kep)
+        out += ["", f"**Keputusan G3: {k['status']}** ({k['tanggal']}). " + " ".join(k.get("alasan", []))]
+    else:
+        out += ["", "**Keputusan G3: menunggu keputusan user** (model mana yang diganti, trade-off latensi)."]
+    return out + ["", "Sumber: `bench/results/test/*.json`, `bench/results/test_access_log.json`", ""]
+
+
 def tulis_summary_csv():
     import csv
 
@@ -355,6 +378,7 @@ def main():
         *bagian_g1(),
         *bagian_b2(g2, gambar),
         *bagian_b3(),
+        *bagian_g3(),
     ]
     OUT.write_text("\n".join(lines), encoding="utf-8")
     print(f"Tersimpan: {OUT.relative_to(ROOT).as_posix()} + summary.csv + {len(gambar)} grafik")

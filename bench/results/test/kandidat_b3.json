@@ -1,0 +1,23 @@
+{
+  "id": "kandidat_b3",
+  "model": "backend/models/candidates/coldtrack_gru_b3.onnx",
+  "sha256_model": "fab911760e87dd1a9b44e3ea56cb4e8cc089da0aad7bca09481cf05e014da60c",
+  "waktu_utc": "2026-10-10T22:53:13+00:00",
+  "git": {
+    "commit": "1e668e1d81c01de17cadcb576790447409a9c4f1",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "split": "test",
+  "metrik_test": {
+    "forecast_t15_mae_c": 0.1564929336309433,
+    "forecast_t30_mae_c": 0.19240903854370117,
+    "forecast_t60_mae_c": 0.23462000489234924,
+    "macro_f1": 0.6679623219852494,
+    "akurasi": 0.869428712139867,
+    "anomali_pr_auc": 0.7861581536542359,
+    "ttb_mae_semua_menit": 48.07509994506836,
+    "ttb_mae_le10_menit": 5.116097450256348,
+    "ttb_mae_le30_menit": 12.15694522857666
+  }
+}

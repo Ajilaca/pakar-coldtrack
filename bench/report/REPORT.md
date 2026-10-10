@@ -1,6 +1,6 @@
 # Laporan latih ulang ColdTrack + benchmark device
 
-> Dibangkitkan oleh `bench/report/build_report.py` pada 2026-10-10T21:49:43+00:00. Jangan diedit manual:
+> Dibangkitkan oleh `bench/report/build_report.py` pada 2026-10-10T22:53:56+00:00. Jangan diedit manual:
 > setiap angka berasal dari JSON di `bench/results/`. Tabel lengkap: `summary.csv`.
 
 ## Gerbang G1 (reproduksi)
@@ -243,3 +243,26 @@ Sumber: `bench/results/g16-gpu/B3/keputusan_kandidat.json`
 | kandidat_b3 | 1.474 | 464.7 |
 
 Sumber: `bench/results/g16-cpu/B3/latensi_kandidat.json`
+
+## Gerbang G3: split test (dipakai sekali per model)
+
+| metrik (test) | baseline_proposal | kandidat_b3 |
+|---|---|---|
+| forecast_t15_mae_c | 0.1521 | 0.1565 |
+| forecast_t30_mae_c | 0.1976 | 0.1924 |
+| forecast_t60_mae_c | 0.2372 | 0.2346 |
+| macro_f1 | 0.5807 | 0.6680 |
+| akurasi | 0.8134 | 0.8694 |
+| anomali_pr_auc | 0.7105 | 0.7862 |
+| ttb_mae_semua_menit | 52.4063 | 48.0751 |
+| ttb_mae_le10_menit | 3.4301 | 5.1161 |
+| ttb_mae_le30_menit | 10.8016 | 12.1569 |
+
+Log akses split test (dicatat sebelum evaluasi; run kedua untuk id yang sama ditolak):
+
+- `baseline_proposal`: ml/reports/coldtrack.onnx (sha256 3948c4476313…), 2026-10-10T22:53:08+00:00, commit 1e668e1
+- `kandidat_b3`: backend/models/candidates/coldtrack_gru_b3.onnx (sha256 fab911760e87…), 2026-10-10T22:53:13+00:00, commit 1e668e1
+
+**Keputusan G3: menunggu keputusan user** (model mana yang diganti, trade-off latensi).
+
+Sumber: `bench/results/test/*.json`, `bench/results/test_access_log.json`
