@@ -33,6 +33,9 @@ CONFIGS = [
     ("b1024_fp32_w2pin", {"batch_size": 1024, "num_workers": 2, "pin_memory": True}, True),
     # data dipindah ke device sekali, tanpa DataLoader -- berlaku juga di CPU (membuang overhead loader)
     ("b1024_fp32_resident", {"batch_size": 1024, "resident": True}, False),
+    # ditambahkan setelah run B2 pertama: batch asli + data resident (kandidat config tercepat yang
+    # tetap berkualitas asli; b1024 resident cepat tetapi batch besar menurunkan kualitas)
+    ("b256_fp32_resident", {"batch_size": 256, "resident": True}, False),
 ]
 
 
