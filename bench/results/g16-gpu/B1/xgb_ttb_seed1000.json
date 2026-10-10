@@ -1,0 +1,38 @@
+{
+  "tahap": "B1",
+  "model": "xgb_ttb",
+  "tag": "g16-gpu",
+  "device": "cuda",
+  "seed": 1000,
+  "split_evaluasi": "val",
+  "waktu_utc": "2026-10-10T10:19:02+00:00",
+  "git": {
+    "commit": "6a1a3e0076925fda19d98e7e75f32922e6400323",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "env": "bench/results/g16-gpu/B1/env_20261010-171850.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Turbo",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": null
+  },
+  "detik_bangun_jendela": 0.0,
+  "konfigurasi": "ml.baselines.XGB_PARAMS + pola ml.export_ttb_xgboost.latih_model",
+  "waktu": {
+    "muat_s": 0.8542702569993708,
+    "praproses_s": 0.7707298460009042,
+    "latih_s": 2.2736502470015694,
+    "n_latih": 15330,
+    "eval_s": 0.040921474999777274
+  },
+  "metrik_val": {
+    "ttb_mae_le10_menit": 3.2388389110565186,
+    "ttb_mae_le30_menit": 5.1418304443359375,
+    "ttb_mae_semua_menit": 24.014829635620117,
+    "n_val": 3717
+  }
+}

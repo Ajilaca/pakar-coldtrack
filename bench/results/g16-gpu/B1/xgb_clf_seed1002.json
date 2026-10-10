@@ -1,0 +1,35 @@
+{
+  "tahap": "B1",
+  "model": "xgb_clf",
+  "tag": "g16-gpu",
+  "device": "cuda",
+  "seed": 1002,
+  "split_evaluasi": "val",
+  "waktu_utc": "2026-10-10T10:19:30+00:00",
+  "git": {
+    "commit": "6a1a3e0076925fda19d98e7e75f32922e6400323",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "env": "bench/results/g16-gpu/B1/env_20261010-171850.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Turbo",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": null
+  },
+  "detik_bangun_jendela": 0.0,
+  "konfigurasi": "ml.baselines (XGBClassifier multi:softprob)",
+  "waktu": {
+    "muat_s": 0.8542702569993708,
+    "praproses_s": 0.7707298460009042,
+    "latih_s": 6.980510395000238
+  },
+  "metrik_val": {
+    "macro_f1": 0.68645141007144,
+    "akurasi": 0.858048007798221,
+    "anomali_pr_auc": 0.7566349950060229
+  }
+}

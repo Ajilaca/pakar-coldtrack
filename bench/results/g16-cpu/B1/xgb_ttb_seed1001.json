@@ -1,0 +1,38 @@
+{
+  "tahap": "B1",
+  "model": "xgb_ttb",
+  "tag": "g16-cpu",
+  "device": "cpu",
+  "seed": 1001,
+  "split_evaluasi": "val",
+  "waktu_utc": "2026-10-10T10:18:01+00:00",
+  "git": {
+    "commit": "6a1a3e0076925fda19d98e7e75f32922e6400323",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "env": "bench/results/g16-cpu/B1/env_20261010-171733.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Turbo",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": null
+  },
+  "detik_bangun_jendela": 0.0,
+  "konfigurasi": "ml.baselines.XGB_PARAMS + pola ml.export_ttb_xgboost.latih_model",
+  "waktu": {
+    "muat_s": 0.8289558449996548,
+    "praproses_s": 0.7816318869990937,
+    "latih_s": 0.5984998549993179,
+    "n_latih": 15330,
+    "eval_s": 0.0027779289994214196
+  },
+  "metrik_val": {
+    "ttb_mae_le10_menit": 3.2388389110565186,
+    "ttb_mae_le30_menit": 5.141827583312988,
+    "ttb_mae_semua_menit": 24.014829635620117,
+    "n_val": 3717
+  }
+}
