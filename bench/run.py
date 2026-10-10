@@ -17,7 +17,7 @@ from types import SimpleNamespace
 
 import yaml
 
-from bench.common import DEVICES_DIR, RESULTS_DIR, ROOT, SEEDS, rel, write_json
+from bench.common import DEVICES_DIR, RESULTS_DIR, ROOT, SEEDS, rel, stamp, write_json
 
 
 def load_profiles():
@@ -100,7 +100,8 @@ def main(argv=None):
     from bench.env_capture import capture
 
     out_root = RESULTS_DIR / ("_quick" if a.quick else "") / a.tag
-    env_path = write_json(out_root / "env.json", capture(a.tag, profile))
+    # satu env per pemanggilan (tidak menimpa env run sebelumnya, yang dirujuk hasil lama)
+    env_path = write_json(out_root / "env" / f"env_{stamp()}.json", capture(a.tag, profile))
 
     ctx = SimpleNamespace(
         tag=a.tag, device=kind, profile=profile, out_root=out_root, env_path=rel(env_path),

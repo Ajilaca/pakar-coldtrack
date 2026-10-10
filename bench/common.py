@@ -86,7 +86,9 @@ def git_info():
             return None
         return r.stdout.strip() if r.returncode == 0 else None
 
-    status = g("status", "--porcelain", "--untracked-files=no")
+    # dirty = berkas KODE terlacak berubah. bench/results/ dikecualikan: hasil run bukan kode, dan
+    # run yang sedang berjalan menulis ke sana.
+    status = g("status", "--porcelain", "--untracked-files=no", "--", ".", ":(exclude)bench/results")
     return {
         "commit": g("rev-parse", "HEAD"),
         "branch": g("rev-parse", "--abbrev-ref", "HEAD"),
