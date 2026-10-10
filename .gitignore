@@ -45,6 +45,8 @@ Thumbs.db
 !backend/models/coldtrack.onnx
 !backend/models/coldtrack_ttb.onnx
 !ml/reports/coldtrack_ttb.onnx
+# Kandidat B3 (menunggu G3), tidak menimpa model produksi
+!backend/models/candidates/*.onnx
 
 # --- Data hasil generate (bisa dibuat ulang lewat skrip) ---
 data/raw/

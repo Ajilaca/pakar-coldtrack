@@ -1,0 +1,63 @@
+{
+  "model": "xgb",
+  "tag": "g16-gpu",
+  "n_trial": 60,
+  "detik_total": 642.4231799350018,
+  "trial_per_jam": 336.22564966514943,
+  "terbaik": [
+    {
+      "trial": 47,
+      "skor": 0.7294208444079433,
+      "params": {
+        "n_estimators": 550,
+        "max_depth": 5,
+        "learning_rate": 0.07860779680826342,
+        "subsample": 0.8114708858753967,
+        "colsample_bytree": 0.6077386497425317,
+        "min_child_weight": 1.542776857298446,
+        "reg_lambda": 2.3251780800841657,
+        "class_weight_power": 0.23369288882664185
+      }
+    },
+    {
+      "trial": 44,
+      "skor": 0.7281446687685922,
+      "params": {
+        "n_estimators": 450,
+        "max_depth": 6,
+        "learning_rate": 0.07411538908042366,
+        "subsample": 0.741403592745267,
+        "colsample_bytree": 0.7290627156570781,
+        "min_child_weight": 1.115038766894476,
+        "reg_lambda": 1.1791089196269913,
+        "class_weight_power": 0.09873034356936403
+      }
+    },
+    {
+      "trial": 49,
+      "skor": 0.7276124973786839,
+      "params": {
+        "n_estimators": 450,
+        "max_depth": 5,
+        "learning_rate": 0.07939442512402446,
+        "subsample": 0.7914917174051728,
+        "colsample_bytree": 0.6583772741089985,
+        "min_child_weight": 2.0166830755616005,
+        "reg_lambda": 3.1883178478474528,
+        "class_weight_power": 0.28041628742159147
+      }
+    }
+  ],
+  "aturan": {
+    "skor": "(macro_f1 + anomali_pr_auc) / 2",
+    "batas_forecast_t30": 0.25,
+    "seed_trial": 1000,
+    "sampler": "TPE seed 0"
+  },
+  "waktu_utc": "2026-10-10T21:05:12+00:00",
+  "git": {
+    "commit": "5b64886f2a28bcc72a21b8d8d3cb0f7a35207265",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  }
+}

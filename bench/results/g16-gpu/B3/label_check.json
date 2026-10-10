@@ -1,0 +1,65 @@
+{
+  "waktu_utc": "2026-10-10T19:51:45+00:00",
+  "git": {
+    "commit": "5b64886f2a28bcc72a21b8d8d3cb0f7a35207265",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "split": "val",
+  "kelas": {
+    "A1": {
+      "jumlah_jendela": 594,
+      "porsi_tanpa_jejak_total": 0.5841750841750841,
+      "per_bucket_menit_sejak_onset": {
+        "0-10": {
+          "n": 45,
+          "porsi_tanpa_jejak": 0.0
+        },
+        "10-30": {
+          "n": 61,
+          "porsi_tanpa_jejak": 0.0
+        },
+        "30-60": {
+          "n": 87,
+          "porsi_tanpa_jejak": 0.0
+        },
+        "60-120": {
+          "n": 137,
+          "porsi_tanpa_jejak": 0.6058394160583942
+        },
+        "120-inf": {
+          "n": 264,
+          "porsi_tanpa_jejak": 1.0
+        }
+      },
+      "porsi_A0_dengan_jejak": 0.0
+    },
+    "A7": {
+      "jumlah_jendela": 545,
+      "porsi_tanpa_jejak_total": 0.5045871559633027,
+      "per_bucket_menit_sejak_onset": {
+        "0-10": {
+          "n": 6,
+          "porsi_tanpa_jejak": 0.0
+        },
+        "10-30": {
+          "n": 17,
+          "porsi_tanpa_jejak": 0.0
+        },
+        "30-60": {
+          "n": 125,
+          "porsi_tanpa_jejak": 0.0
+        },
+        "60-120": {
+          "n": 220,
+          "porsi_tanpa_jejak": 0.44545454545454544
+        },
+        "120-inf": {
+          "n": 177,
+          "porsi_tanpa_jejak": 1.0
+        }
+      },
+      "porsi_A0_dengan_jejak": 0.0
+    }
+  }
+}

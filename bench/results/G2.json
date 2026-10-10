@@ -1,5 +1,5 @@
 {
-  "waktu_utc": "2026-10-10T18:20:24+00:00",
+  "waktu_utc": "2026-10-10T19:46:34+00:00",
   "cpu_tag": "g16-cpu",
   "gpu_tag": "g16-gpu",
   "kriteria": {
@@ -663,6 +663,79 @@
         "bench/results/g16-cpu/W1/b256_fp32/run_3.json",
         "bench/results/g16-cpu/W1/b256_fp32/run_4.json",
         "bench/results/g16-cpu/W1/b256_fp32/run_5.json"
+      ]
+    },
+    "b256_fp32_resident": {
+      "acuan_cpu": "g16-cpu/W1/b256_fp32_resident",
+      "n_seed": [
+        5,
+        5
+      ],
+      "setara": true,
+      "metrik": {
+        "forecast_t15_mae_c": {
+          "mean_gpu": 0.1596112072467804,
+          "mean_cpu": 0.15899913609027863,
+          "selisih": 0.0006120711565017756,
+          "batas_rentang_antar_seed": 0.01012200117111206,
+          "setara": true
+        },
+        "forecast_t30_mae_c": {
+          "mean_gpu": 0.20928414463996886,
+          "mean_cpu": 0.20986961722373962,
+          "selisih": -0.0005854725837707575,
+          "batas_rentang_antar_seed": 0.00783124566078186,
+          "setara": true
+        },
+        "forecast_t60_mae_c": {
+          "mean_gpu": 0.25542786717414856,
+          "mean_cpu": 0.25627635717391967,
+          "selisih": -0.0008484899997711071,
+          "batas_rentang_antar_seed": 0.012413382530212402,
+          "setara": true
+        },
+        "macro_f1": {
+          "mean_gpu": 0.5838840031019263,
+          "mean_cpu": 0.5891195815160626,
+          "selisih": -0.005235578414136244,
+          "batas_rentang_antar_seed": 0.02412965648431098,
+          "setara": true
+        },
+        "akurasi": {
+          "mean_gpu": 0.7942244425490435,
+          "mean_cpu": 0.7971487754356037,
+          "selisih": -0.0029243328865602436,
+          "batas_rentang_antar_seed": 0.013525039600341127,
+          "setara": true
+        },
+        "ttb_mae_menit": {
+          "mean_gpu": 21.72083969116211,
+          "mean_cpu": 22.15026435852051,
+          "selisih": -0.42942466735840057,
+          "batas_rentang_antar_seed": 3.0228710174560547,
+          "setara": true
+        },
+        "anomali_pr_auc": {
+          "mean_gpu": 0.6845544700067491,
+          "mean_cpu": 0.6874470153458364,
+          "selisih": -0.002892545339087338,
+          "batas_rentang_antar_seed": 0.020734740580637956,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W1/b256_fp32_resident/run_0.json",
+        "bench/results/g16-gpu/W1/b256_fp32_resident/run_1.json",
+        "bench/results/g16-gpu/W1/b256_fp32_resident/run_2.json",
+        "bench/results/g16-gpu/W1/b256_fp32_resident/run_3.json",
+        "bench/results/g16-gpu/W1/b256_fp32_resident/run_4.json",
+        "bench/results/g16-gpu/W1/b256_fp32_resident/run_5.json",
+        "bench/results/g16-cpu/W1/b256_fp32_resident/run_0.json",
+        "bench/results/g16-cpu/W1/b256_fp32_resident/run_1.json",
+        "bench/results/g16-cpu/W1/b256_fp32_resident/run_2.json",
+        "bench/results/g16-cpu/W1/b256_fp32_resident/run_3.json",
+        "bench/results/g16-cpu/W1/b256_fp32_resident/run_4.json",
+        "bench/results/g16-cpu/W1/b256_fp32_resident/run_5.json"
       ]
     },
     "b4096_bf16": {
@@ -1408,8 +1481,8 @@
     }
   },
   "_ringkas": {
-    "n_config": 25,
-    "n_setara": 25,
+    "n_config": 26,
+    "n_setara": 26,
     "tidak_setara": []
   }
 }

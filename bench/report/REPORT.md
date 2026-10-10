@@ -1,7 +1,7 @@
 # Laporan latih ulang ColdTrack + benchmark device
 
-> Dibangkitkan oleh `bench/report/build_report.py` pada 2026-10-10T10:39:12+00:00. Jangan diedit manual:
-> setiap angka berasal dari JSON di `bench/results/`.
+> Dibangkitkan oleh `bench/report/build_report.py` pada 2026-10-10T21:49:43+00:00. Jangan diedit manual:
+> setiap angka berasal dari JSON di `bench/results/`. Tabel lengkap: `summary.csv`.
 
 ## Gerbang G1 (reproduksi)
 
@@ -68,3 +68,178 @@ Sumber: `bench/results/g16-cpu/B1/G1_investigasi.json`
 **Baseline baru:** Nilai B1 dari pipeline sekarang menjadi baseline pembanding untuk B3 dan G3 (split val). Sumber: `bench/results/g16-cpu/B1/`, `bench/results/g16-gpu/B1/`.
 
 Catatan terbuka: Selisih XGBoost CPU vs GPU pada seed yang sama (classifier) diperiksa di gerbang G2.
+
+## B2: benchmark W1 / W2 / W7
+
+Protokol: 1 pemanasan dibuang + 5 ulangan (seed 1000–1004), median [min–maks]. Kondisi per run tercatat di JSON (`kondisi_manual`, `env`, `telemetri`). `belum diukur` = device belum menjalankan; `tidak berlaku` = varian tidak bermakna di device itu.
+
+### W1: latih GRU (30 epoch, split val)
+
+| config | g16-gpu detik latih | g16-cpu detik latih | d0-old detik latih | F1 val (mean, GPU) | time-to-target GPU |
+|---|---|---|---|---|---|
+| b1024_bf16 | 45.9 [40.5–54.6] | tidak berlaku | belum diukur | 0.4759 | tidak tercapai (0/5) |
+| b1024_fp16 | 46.8 [46.2–48.1] | tidak berlaku | belum diukur | 0.4780 | tidak tercapai (0/5) |
+| b1024_fp32 | 38.8 [38.6–39.2] | 809 [807–832] | belum diukur | 0.4751 | tidak tercapai (0/5) |
+| b1024_fp32_pin | 42.4 [42–44] | tidak berlaku | belum diukur | 0.4751 | tidak tercapai (0/5) |
+| b1024_fp32_resident | 17.7 [17.5–18] | 706 [690–726] | belum diukur | 0.4742 | tidak tercapai (0/5) |
+| b1024_fp32_w2pin | 35.5 [34.9–37.1] | tidak berlaku | belum diukur | 0.4751 | tidak tercapai (0/5) |
+| b256_bf16 | 70.1 [63.5–73.9] | tidak berlaku | belum diukur | 0.5927 | 37 s (4/5) |
+| b256_fp16 | 70.1 [67.1–78.1] | tidak berlaku | belum diukur | 0.5871 | 37 s (4/5) |
+| b256_fp32 | 60.5 [57.1–61.7] | 928 [882–1.05e+03] | belum diukur | 0.5863 | 29 s (5/5) |
+| b256_fp32_resident | 35.1 [34.3–36.8] | 913 [905–928] | belum diukur | 0.5839 | 20 s (5/5) |
+| b4096_bf16 | 47.9 [47.3–51] | tidak berlaku | belum diukur | 0.4715 | tidak tercapai (0/5) |
+| b4096_fp16 | 54.8 [53.2–57.4] | tidak berlaku | belum diukur | 0.4723 | tidak tercapai (0/5) |
+| b4096_fp32 | 46.8 [46–48] | 902 [883–909] | belum diukur | 0.4710 | tidak tercapai (0/5) |
+
+Sumber: `bench/results/<tag>/W1/<config>/run_*.json`
+
+### Speedup (median pembanding / median yang dibandingkan, CI 95 % bootstrap)
+
+| workload | config | perbandingan | arti | speedup | CI 95 % | G2 |
+|---|---|---|---|---|---|---|
+| W1 | b1024_fp32 -> b1024_bf16 | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 17.65× | [14.83, 19.98] | setara |
+| W1 | b1024_fp32 -> b1024_fp16 | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 17.29× | [16.81, 17.92] | setara |
+| W1 | b1024_fp32 | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 20.84× | [20.65, 21.49] | setara |
+| W1 | b1024_fp32 -> b1024_fp32_pin | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 19.09× | [18.33, 19.74] | setara |
+| W1 | b1024_fp32_resident | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 39.96× | [39.01, 41.10] | setara |
+| W1 | b1024_fp32 -> b1024_fp32_w2pin | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 22.83× | [21.79, 23.59] | setara |
+| W1 | b256_fp32 -> b256_bf16 | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 13.23× | [12.31, 14.97] | setara |
+| W1 | b256_fp32 -> b256_fp16 | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 13.24× | [11.61, 14.98] | setara |
+| W1 | b256_fp32 | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 15.35× | [14.58, 17.36] | setara |
+| W1 | b256_fp32_resident | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 26.02× | [24.82, 26.98] | setara |
+| W1 | b4096_fp32 -> b4096_bf16 | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 18.84× | [17.70, 19.14] | setara |
+| W1 | b4096_fp32 -> b4096_fp16 | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 16.48× | [15.73, 16.97] | setara |
+| W1 | b4096_fp32 | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 19.28× | [18.69, 19.61] | setara |
+| W2 | cpu_hist -> cuda_hist | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 0.42× | [0.38, 0.44] | setara |
+| W7 | gru_cpu_b1 -> gru_cuda_b1 | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 0.04× | [0.04, 0.06] | setara |
+| W7 | gru_cpu_b1024 -> gru_cuda_b1024 | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 22.18× | [21.83, 22.38] | setara |
+| W7 | gru_cpu_b256 -> gru_cuda_b256 | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 7.65× | [7.34, 7.79] | setara |
+| W7 | gru_cpu_b32 -> gru_cuda_b32 | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 1.02× | [0.84, 1.23] | setara |
+| W7 | gru_cpu_b1 -> gru_cuda_notf32_b1 | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 0.05× | [0.04, 0.06] | setara |
+| W7 | gru_cpu_b1024 -> gru_cuda_notf32_b1024 | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 21.49× | [21.14, 21.65] | setara |
+| W7 | gru_cpu_b256 -> gru_cuda_notf32_b256 | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 5.76× | [5.23, 5.87] | setara |
+| W7 | gru_cpu_b32 -> gru_cuda_notf32_b32 | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 0.90× | [0.74, 1.08] | setara |
+| W7 | xgb_ttb_cpu_b1 -> xgb_ttb_cuda_b1 | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 0.07× | [0.06, 0.07] | setara |
+| W7 | xgb_ttb_cpu_b1024 -> xgb_ttb_cuda_b1024 | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 0.61× | [0.53, 0.65] | setara |
+| W7 | xgb_ttb_cpu_b256 -> xgb_ttb_cuda_b256 | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 0.46× | [0.41, 0.48] | setara |
+| W7 | xgb_ttb_cpu_b32 -> xgb_ttb_cuda_b32 | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 0.27× | [0.25, 0.39] | setara |
+
+Speedup < 1 berarti yang dibandingkan lebih LAMBAT. Batch besar (b1024/b4096) setara antar-device pada batch yang sama, tetapi kualitasnya di bawah konfigurasi asli b256 dan tidak mencapai target time-to-target: kecepatannya tidak boleh dibaca sebagai percepatan pelatihan model yang sama.
+
+### W2: XGBoost TTB (detik latih)
+
+| config | g16-gpu | g16-cpu | d0-old |
+|---|---|---|---|
+| cpu_hist | belum diukur | 0.516 [0.501–0.531] | belum diukur |
+| cuda_hist | 1.23 [1.18–1.36] | tidak berlaku | belum diukur |
+
+Sumber: `bench/results/<tag>/W2/<config>/run_*.json`
+
+### W7: inferensi ONNX (latensi p50, ms)
+
+| config | g16-gpu | g16-cpu | d0-old |
+|---|---|---|---|
+| gru_cpu_b1 | belum diukur | 0.152 [0.138–0.193] | belum diukur |
+| gru_cpu_b1024 | belum diukur | 98.6 [97–98.9] | belum diukur |
+| gru_cpu_b256 | belum diukur | 24.1 [23.6–24.6] | belum diukur |
+| gru_cpu_b32 | belum diukur | 3.61 [2.97–4.33] | belum diukur |
+| gru_cuda_b1 | 3.44 [3.06–3.74] | tidak berlaku | belum diukur |
+| gru_cuda_b1024 | 4.45 [4.41–4.47] | tidak berlaku | belum diukur |
+| gru_cuda_b256 | 3.16 [3.1–3.28] | tidak berlaku | belum diukur |
+| gru_cuda_b32 | 3.53 [3.09–3.77] | tidak berlaku | belum diukur |
+| gru_cuda_notf32_b1 | 3 [2.98–3.49] | tidak berlaku | belum diukur |
+| gru_cuda_notf32_b1024 | 4.59 [4.56–4.61] | tidak berlaku | belum diukur |
+| gru_cuda_notf32_b256 | 4.19 [4.19–4.62] | tidak berlaku | belum diukur |
+| gru_cuda_notf32_b32 | 4 [3.97–4.39] | tidak berlaku | belum diukur |
+| xgb_ttb_cpu_b1 | belum diukur | 0.0397 [0.0386–0.0416] | belum diukur |
+| xgb_ttb_cpu_b1024 | belum diukur | 0.978 [0.97–0.992] | belum diukur |
+| xgb_ttb_cpu_b256 | belum diukur | 0.388 [0.371–0.406] | belum diukur |
+| xgb_ttb_cpu_b32 | belum diukur | 0.153 [0.149–0.226] | belum diukur |
+| xgb_ttb_cuda_b1 | 0.597 [0.571–0.606] | tidak berlaku | belum diukur |
+| xgb_ttb_cuda_b1024 | 1.6 [1.52–1.84] | tidak berlaku | belum diukur |
+| xgb_ttb_cuda_b256 | 0.843 [0.827–0.938] | tidak berlaku | belum diukur |
+| xgb_ttb_cuda_b32 | 0.576 [0.521–0.59] | tidak berlaku | belum diukur |
+
+Sumber: `bench/results/<tag>/W7/<config>/run_*.json`
+
+## Gerbang G2 (paritas kualitas CPU vs GPU)
+
+**26/26 config setara.** Kriteria ditetapkan sebelum run penuh (`bench/g2_check.py`): W1 selisih mean ≤ rentang antar-seed; W2/W7 selisih relatif ≤ 2%, akurasi ≤ 0.005.
+Tidak setara: tidak ada.
+
+Sumber: `bench/results/G2.json`
+
+### Grafik
+
+![1_speedup_gpu_murni](figures/1_speedup_gpu_murni.png)
+![2_komponen_W1_b256_fp32](figures/2_komponen_W1_b256_fp32.png)
+![2_komponen_W1_b256_fp32_resident](figures/2_komponen_W1_b256_fp32_resident.png)
+![3_time_to_target_W1](figures/3_time_to_target_W1.png)
+![4a_latensi_W7](figures/4a_latensi_W7.png)
+![4b_throughput_W7](figures/4b_throughput_W7.png)
+![5_telemetri_run_terpanjang](figures/5_telemetri_run_terpanjang.png)
+
+## B3: latih ulang sesuai PRD (split val)
+
+### Diagnosis baseline
+
+| kelas | F1 GRU (mean 5 seed) | F1 XGBoost | n |
+|---|---|---|---|
+| A0 | 0.876 | 0.913 | 12325 |
+| A1 | 0.586 | 0.617 | 594 |
+| A3 | 1.000 | 1.000 | 541 |
+| A7 | 0.436 | 0.627 | 545 |
+| A8 | 0.332 | 0.348 | 700 |
+| degradasi_bertahap | 0.194 | 0.381 | 1122 |
+| masalah_sensor | 0.663 | 0.918 | 587 |
+
+| menit sejak onset | 0-10 | 10-30 | 30-60 | 60-120 | 120-inf |
+|---|---|---|---|---|---|
+| akurasi mode GRU | 0.568 | 0.648 | 0.673 | 0.522 | 0.287 |
+
+Sumber: `bench/results/g16-gpu/B3/diagnosis.json`
+
+### Batas label implisit (dari data, tanpa model)
+
+Label `failure_mode` bertahan dari onset sampai akhir trip, sedangkan A1 (pintu) dan A7 (kejut ambien) adalah peristiwa sementara. Porsi jendela berlabel kelas itu yang tidak memuat jejak peristiwanya:
+
+| kelas | total tanpa jejak | 0-10 | 10-30 | 30-60 | 60-120 | 120-inf | jendela A0 dengan jejak |
+|---|---|---|---|---|---|---|---|
+| A1 | 58.4% | 0.0% | 0.0% | 0.0% | 60.6% | 100.0% | 0.0% |
+| A7 | 50.5% | 0.0% | 0.0% | 0.0% | 44.5% | 100.0% | 0.0% |
+
+Jendela tanpa jejak tidak bisa dibedakan dari jendela sehat oleh model berbasis jendela apa pun; ini membatasi Macro F1 yang dapat dicapai. Definisi metrik dan target TIDAK diubah.
+Sumber: `bench/results/g16-gpu/B3/label_check.json`
+
+### Sweep (W3) dan konfirmasi 5 seed + ablation (W4)
+
+- Sweep gru: 60 trial, 71 menit (51 trial/jam, g16-gpu), skor terbaik 0.7540.
+- Sweep xgb: 60 trial, 11 menit (336 trial/jam, g16-gpu), skor terbaik 0.7294.
+
+| model | varian | skor mean | rentang | Macro F1 | PR-AUC | forecast t+30 |
+|---|---|---|---|---|---|---|
+| gru | baseline | 0.6342 | 0.0219 | 0.5839 | 0.6846 | 0.2093 |
+| gru | baseline_tanpa_stat | 0.2997 | 1.0302 | 0.4146 | 0.5848 | 0.2348 |
+| gru | sweep_top1 | 0.7292 | 0.0393 | 0.6756 | 0.7829 | 0.2088 |
+| gru | sweep_top2 | 0.7184 | 0.0451 | 0.6737 | 0.7632 | 0.2088 |
+| gru | sweep_top3 | 0.7076 | 0.0909 | 0.6582 | 0.7570 | 0.2075 |
+| gru | top1_tanpa_stat | 0.7203 | 0.0260 | 0.6815 | 0.7591 | 0.2121 |
+| gru | top1_bobot_asli | 0.6405 | 0.1208 | 0.5774 | 0.7035 | 0.2180 |
+| xgb | baseline | 0.7215 | 0.0000 | 0.6865 | 0.7566 | - |
+| xgb | sweep_top1 | 0.7247 | 0.0094 | 0.6948 | 0.7545 | - |
+| xgb | sweep_top2 | 0.7260 | 0.0041 | 0.6943 | 0.7577 | - |
+| xgb | sweep_top3 | 0.7231 | 0.0069 | 0.6887 | 0.7575 | - |
+
+Aturan adopsi (didaftarkan sebelum sweep): kandidat lolos bila skor mean > mean baseline + rentang baseline. Kandidat lolos: {'gru': 'gru/sweep_top1', 'xgb': 'xgb/sweep_top2'}. Untuk XGBoost, baseline deterministik (rentang 0) sehingga selisih sekecil apa pun lolos; kenaikannya tidak berarti secara praktis.
+Sumber: `bench/results/g16-gpu/B3/keputusan_kandidat.json`
+
+### Kandidat yang diajukan ke G3
+
+`backend/models/candidates/coldtrack_gru_b3.onnx` (sweep_top1, 254,883 parameter, seed final 1000); paritas ONNX vs PyTorch: OK. Metrik val yang dilaporkan adalah mean 5 seed di tabel atas; metrik model seed 1000 optimistis karena konfigurasinya dipilih memakai seed itu.
+
+| model (CPU EP) | p50 batch 1 (ms) | p50 batch 1024 (ms) |
+|---|---|---|
+| proposal | 0.170 | 150.7 |
+| kandidat_b3 | 1.474 | 464.7 |
+
+Sumber: `bench/results/g16-cpu/B3/latensi_kandidat.json`

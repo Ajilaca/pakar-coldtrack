@@ -1,0 +1,195 @@
+{
+  "status": "KANDIDAT -- belum menggantikan model produksi (menunggu gerbang G3 + uji split test sekali)",
+  "dibuat_utc": "2026-10-10T21:43:33+00:00",
+  "git": {
+    "commit": "5b64886f2a28bcc72a21b8d8d3cb0f7a35207265",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "device_latih": "g16-gpu",
+  "seed_final": 1000,
+  "varian": "sweep_top1",
+  "konfigurasi": {
+    "hidden_size": 128,
+    "num_layers": 3,
+    "dropout": 0.06207278144394572,
+    "lr_backbone": 0.0009047397390909649,
+    "lr_heads": 0.0009773288137341434,
+    "w_forecast": 24.729262075408155,
+    "w_failure": 1.0,
+    "w_ttb": 1.2234075804271196,
+    "class_weight_power": 0.25974218643437624,
+    "freeze_epochs": 0,
+    "n_epochs": 30,
+    "batch_size": 256,
+    "weight_decay": 0.01,
+    "label_smoothing": 0.08307957729490462,
+    "pakai_statistik": true
+  },
+  "parameter": 254883,
+  "kontrak": {
+    "input": {
+      "name": "window",
+      "shape": [
+        "batch",
+        60,
+        12
+      ],
+      "features": [
+        "temp_c",
+        "delta_temp",
+        "ambient_c",
+        "delta_ambient",
+        "solar_radiation",
+        "humidity",
+        "door_open",
+        "reefer_on",
+        "reefer_duration_min",
+        "speed_kmh",
+        "harsh_events",
+        "hour_of_day"
+      ],
+      "catatan": "identik dengan ml/reports/coldtrack.onnx"
+    },
+    "outputs": {
+      "forecast_c": {
+        "horizons_menit": [
+          15,
+          30,
+          60
+        ]
+      },
+      "failure_prob": {
+        "classes": [
+          "A0",
+          "A1",
+          "A3",
+          "A7",
+          "A8",
+          "degradasi_bertahap",
+          "masalah_sensor"
+        ]
+      },
+      "time_to_breach_min": {
+        "catatan": "head GRU; TTB produksi tetap XGBoost"
+      }
+    }
+  },
+  "metrik_val_mean_5_seed": {
+    "skor_mean": 0.7292301499220891,
+    "macro_f1_mean": 0.6755672048285102,
+    "anomali_pr_auc_mean": 0.782893095015668,
+    "akurasi_mean": 0.8479590593395882,
+    "forecast_t30_mae_c_mean": 0.20880852341651918,
+    "ttb_mae_menit_mean": 21.240961837768555
+  },
+  "metrik_val_model_final_seed1000": {
+    "forecast_t15_mae_c": 0.1658158153295517,
+    "forecast_t30_mae_c": 0.20743882656097412,
+    "forecast_t60_mae_c": 0.2557390630245209,
+    "macro_f1": 0.6948879194602579,
+    "akurasi": 0.8604240282685512,
+    "ttb_mae_menit": 21.110368728637695,
+    "anomali_pr_auc": 0.8131820637197715,
+    "per_kelas": {
+      "A0": {
+        "presisi": 0.8736764705882353,
+        "recall": 0.9640567951318458,
+        "f1": 0.9166441658630665,
+        "n": 12325
+      },
+      "A1": {
+        "presisi": 1.0,
+        "recall": 0.44276094276094274,
+        "f1": 0.6137689614935823,
+        "n": 594
+      },
+      "A3": {
+        "presisi": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "n": 541
+      },
+      "A7": {
+        "presisi": 0.9442508710801394,
+        "recall": 0.4972477064220184,
+        "f1": 0.6514423076923077,
+        "n": 545
+      },
+      "A8": {
+        "presisi": 0.4944237918215613,
+        "recall": 0.19,
+        "f1": 0.27450980392156865,
+        "n": 700
+      },
+      "degradasi_bertahap": {
+        "presisi": 0.5828571428571429,
+        "recall": 0.45454545454545453,
+        "f1": 0.5107661492238358,
+        "n": 1122
+      },
+      "masalah_sensor": {
+        "presisi": 0.9032815198618307,
+        "recall": 0.8909710391822828,
+        "f1": 0.8970840480274442,
+        "n": 587
+      }
+    }
+  },
+  "paritas_onnx_vs_pytorch": {
+    "forecast_c": {
+      "maxabs": 9.5367431640625e-06,
+      "rel": 4.428155915724045e-07,
+      "ok": true
+    },
+    "failure_prob": {
+      "maxabs": 4.172325134277344e-07,
+      "rel": 4.175812192488716e-07,
+      "ok": true
+    },
+    "time_to_breach_min": {
+      "maxabs": 0.0007476806640625,
+      "rel": 2.4617882731459595e-06,
+      "ok": true
+    }
+  },
+  "paritas_ok": true,
+  "sumber_keputusan": "bench/results/g16-gpu/B3/keputusan_kandidat.json",
+  "latih": {
+    "detik_latih": 75.41489327300224,
+    "epoch_terbaik": 10,
+    "val_loss_terbaik": 1.8778782541312906,
+    "riwayat_val_loss": [
+      3.0328759545746538,
+      2.2691683546117183,
+      2.1498575791584034,
+      2.0506248659754664,
+      2.1096747126491553,
+      2.123930617751136,
+      2.0623268204658,
+      2.0067370114234095,
+      2.2090668158277285,
+      1.8778782541312906,
+      1.9038872448349604,
+      1.9351723531109706,
+      1.971114377120213,
+      1.9462156965103048,
+      1.9530854366635295,
+      2.029757012225133,
+      1.972607983005487,
+      2.0195023909808514,
+      2.0515701906448944,
+      2.0807230763071067,
+      2.121087471489147,
+      2.1501364570246757,
+      2.1400816080354375,
+      2.1741383135267918,
+      2.1416487076170077,
+      2.154691929777691,
+      2.1530458283101916,
+      2.1726384261093985,
+      2.171613818765108,
+      2.165051055648839
+    ]
+  }
+}

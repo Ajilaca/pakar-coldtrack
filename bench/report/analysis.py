@@ -90,18 +90,37 @@ def speedups(workload, g2=None):
     ditandai 'tidak dilaporkan sebagai speedup' (aturan G2).
     """
     rows = []
-    for cid, per_tag in waktu_per_config(workload).items():
+    data = waktu_per_config(workload)
+    for cid, per_tag in data.items():
         for a, b, arti in PASANGAN:
-            if per_tag.get(a, {}).get("status") != "ada" or per_tag.get(b, {}).get("status") != "ada":
+            # sisi GPU dibandingkan dengan config CPU padanannya (mis. cuda_hist <-> cpu_hist)
+            cid_a = acuan_cpu(workload, cid) if b == "g16-gpu" else cid
+            va = data.get(cid_a, {}).get(a, {})
+            vb = per_tag.get(b, {})
+            if va.get("status") != "ada" or vb.get("status") != "ada":
                 continue
-            s = bootstrap_speedup(per_tag[a]["nilai"], per_tag[b]["nilai"])
+            s = bootstrap_speedup(va["nilai"], vb["nilai"])
             setara = None
-            if g2 and "gpu" in b and cid in g2.get(workload, {}):
+            if g2 and b == "g16-gpu" and cid in g2.get(workload, {}):
                 setara = g2[workload][cid]["setara"]
-            rows.append({"workload": workload, "config": cid, "pembanding": a, "dibandingkan": b, "arti": arti,
-                         "metrik": per_tag[a]["metrik"], **s, "g2_setara": setara,
+            label = cid if cid_a == cid else f"{cid_a} -> {cid}"
+            rows.append({"workload": workload, "config": label, "pembanding": a, "dibandingkan": b, "arti": arti,
+                         "metrik": va["metrik"], **s, "g2_setara": setara,
                          "dilaporkan_sebagai_speedup": setara is not False})
     return rows
+
+
+def acuan_cpu(workload, cid):
+    """Config CPU padanan sebuah config jalur GPU (sama dengan pasangan di bench/g2_check.py)."""
+    import re
+
+    from bench.g2_check import W1_ACUAN_CPU
+
+    if workload == "W1":
+        return W1_ACUAN_CPU.get(cid, cid)
+    if workload == "W2":
+        return "cpu_hist" if cid == "cuda_hist" else cid
+    return re.sub(r"_cuda(_notf32)?_", "_cpu_", cid)
 
 
 def summary_rows():

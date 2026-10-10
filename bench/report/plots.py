@@ -99,34 +99,48 @@ def grafik_komponen(out, cid="b256_fp32"):
 
 
 def grafik_time_to_target(out):
-    """(3) Time-to-target W1 per config, seri = device."""
+    """(3) Time-to-target W1: hanya config yang mencapai target di >= 1 device; sisanya dicantumkan
+    sebagai catatan di bawah grafik (batch besar tidak pernah mencapai target)."""
     plt = _plt()
-    cfgs = an.configs("W1")
-    nilai = {t: [an.time_to_target(t, c) for c in cfgs] for t in an.TAGS}
-    if not any(v for vs in nilai.values() for v in vs):
+    from matplotlib.ticker import FuncFormatter
+
+    semua = an.configs("W1")
+    nilai = {c: {t: an.time_to_target(t, c) for t in an.TAGS} for c in semua}
+    cfgs = [c for c in semua if any(v and v["median_detik"] for v in nilai[c].values())]
+    gagal = [c for c in semua if c not in cfgs and any(nilai[c].values())]
+    if not cfgs:
         return None
-    fig, ax = plt.subplots(figsize=(8, 0.45 * len(cfgs) + 1.6))
-    tags = [t for t in an.TAGS if any(nilai[t])]
+    tags = [t for t in an.TAGS if any(nilai[c][t] and nilai[c][t]["median_detik"] for c in cfgs)]
+    fig, ax = plt.subplots(figsize=(8, 0.75 * len(cfgs) + 2.0))
     h = 0.8 / len(tags)
-    for j, t in enumerate(tags):
-        for i, v in enumerate(nilai[t]):
+    sudah_label = set()
+    for i, c in enumerate(cfgs):
+        for j, t in enumerate(tags):
+            v = nilai[c][t]
+            yy = i + (j - (len(tags) - 1) / 2) * h
             if not v:
                 continue
-            yy = i + (j - (len(tags) - 1) / 2) * h
             if v["median_detik"] is None:
-                ax.text(1, yy, f"{t}: target tidak tercapai ({v['n_tercapai']}/{v['n_run']})", va="center", fontsize=7,
-                        color=INK2)
+                ax.text(ax.get_xlim()[0], yy, f"  {t}: tidak tercapai (0/{v['n_run']})", va="center",
+                        fontsize=7, color=INK2)
                 continue
             ax.barh(yy, v["median_detik"], height=h * 0.9, color=WARNA[t], edgecolor=SURFACE, linewidth=2,
-                    label=t if i == next(k for k, x in enumerate(nilai[t]) if x) else None)
-            ax.text(v["median_detik"] * 1.03, yy, f"{v['median_detik']:.0f} s ({v['n_tercapai']}/{v['n_run']})",
-                    va="center", fontsize=7)
+                    label=None if t in sudah_label else t)
+            sudah_label.add(t)
+            ax.text(v["median_detik"] * 1.04, yy, f"{v['median_detik']:.0f} s ({v['n_tercapai']}/{v['n_run']})",
+                    va="center", fontsize=8)
     ax.set_xscale("log")
-    ax.set_yticks(range(len(cfgs)), cfgs, fontsize=8)
-    target = next(v["target"] for vs in nilai.values() for v in vs if v)
-    ax.set_xlabel(f"detik sampai val loss <= {target:.3f} (median run yang mencapai target; log)")
-    ax.set_title("W1 time-to-target")
-    ax.legend(frameon=False, fontsize=8)
+    ax.xaxis.set_major_formatter(FuncFormatter(lambda x, _: f"{x:g}"))
+    ax.xaxis.set_minor_formatter(FuncFormatter(lambda x, _: ""))
+    ax.set_xlim(right=ax.get_xlim()[1] * 1.6)
+    ax.set_yticks(range(len(cfgs)), cfgs, fontsize=9)
+    target = next(v["target"] for c in semua for v in nilai[c].values() if v)
+    ax.set_xlabel(f"detik sampai val loss <= {target:.3f} (median run yang mencapai target, skala log)")
+    ax.set_title("W1 time-to-target (lebih pendek = lebih baik)")
+    ax.legend(frameon=False, fontsize=8, loc="lower right")
+    if gagal:
+        fig.text(0.01, -0.02, "Tidak pernah mencapai target di device mana pun: " + ", ".join(gagal),
+                 fontsize=7, color=INK2, wrap=True)
     return _simpan(fig, out / "3_time_to_target_W1.png")
 
 
