@@ -65,3 +65,6 @@ data/berkeley/
 # --- Editors ---
 .vscode/
 .idea/
+
+# Artefak model sensor-health (dibangkitkan ulang lewat python -m ml.sensor_health.train)
+ml/sensor_health/artifacts/
