@@ -1,0 +1,109 @@
+{
+  "tag": "g16-gpu",
+  "waktu_utc": "2026-10-11T10:15:01+00:00",
+  "git": {
+    "commit": "5d1349051fe0cb80c2a5e21a5963e64963a9afa3",
+    "branch": "feat/fleet-online",
+    "dirty": false
+  },
+  "data": {
+    "path": "data/processed/v4_seed1000_700trips.parquet",
+    "bytes": 10787082,
+    "sha256": "fe9a409f36c99086886320cb102eb5f68e5c25a829eada437fc847fe6698bc3e"
+  },
+  "os": {
+    "platform": "Linux-6.18.40.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "system": "Linux",
+    "release": "6.18.40.1-microsoft-standard-WSL2",
+    "wsl": true,
+    "distro": "Ubuntu 24.04.5 LTS",
+    "windows": "Microsoft Windows 11 Home Single Language build 26200",
+    "machine": "ASUSTeK COMPUTER INC. ROG Strix G16 G614PP_G614PP",
+    "wslconfig": "[wsl2]\nmemory=12GB"
+  },
+  "cpu": {
+    "model": "AMD Ryzen 9 8940HX with Radeon Graphics",
+    "logical_cores": 32,
+    "physical_cores": 16,
+    "freq_max_dilaporkan_os_mhz": null
+  },
+  "memori": {
+    "total_gb": 11.68,
+    "available_gb_saat_capture": 10.54,
+    "host_physical_gb": 15.21
+  },
+  "gpu": {
+    "nvidia_smi": true,
+    "driver_cuda_version": "13.1",
+    "gpus": [
+      {
+        "name": "NVIDIA GeForce RTX 5070 Laptop GPU",
+        "memory.total": "8151",
+        "driver_version": "591.97",
+        "enforced.power.limit": "115.00",
+        "power.max_limit": "115.00",
+        "clocks.max.sm": "3090",
+        "clocks.max.mem": "12001",
+        "pcie.link.gen.max": "4",
+        "pcie.link.width.max": "8"
+      }
+    ]
+  },
+  "daya": {
+    "skema_daya_windows": "Power Scheme GUID: 6fecc5ae-f350-48a5-b669-b472cb895ccf  (Turbo)",
+    "charger_terpasang": true
+  },
+  "framework": {
+    "python": "3.11.17",
+    "numpy": "2.4.6",
+    "pandas": "3.0.6",
+    "sklearn": "1.9.1",
+    "torch": "2.11.0+cu128",
+    "xgboost": "3.2.0",
+    "onnxruntime": "1.31.0",
+    "onnx": "1.23.2",
+    "optuna": "5.0.0",
+    "torch_detail": {
+      "cuda_available": true,
+      "torch_cuda": "12.8",
+      "cudnn": 91900,
+      "num_threads": 16,
+      "arch_list": [
+        "sm_75",
+        "sm_80",
+        "sm_86",
+        "sm_90",
+        "sm_100",
+        "sm_120"
+      ],
+      "device_name": "NVIDIA GeForce RTX 5070 Laptop GPU",
+      "capability": "sm_120",
+      "arch_cocok": true,
+      "vram_total_gb": 7.96
+    },
+    "onnxruntime_providers": [
+      "AzureExecutionProvider",
+      "CPUExecutionProvider"
+    ],
+    "venv_ort_gpu": {
+      "python": "/home/tsabita/.venvs/coldtrack-ort/bin/python",
+      "versi_dan_providers": "1.31.0 TensorrtExecutionProvider CUDAExecutionProvider CPUExecutionProvider"
+    },
+    "xgboost_use_cuda": true
+  },
+  "env_vars": {
+    "CUDA_VISIBLE_DEVICES": null,
+    "OMP_NUM_THREADS": null,
+    "MKL_NUM_THREADS": null,
+    "CUBLAS_WORKSPACE_CONFIG": null
+  },
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Turbo",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": null
+  },
+  "lingkungan_dipilih": "WSL2 Ubuntu"
+}
