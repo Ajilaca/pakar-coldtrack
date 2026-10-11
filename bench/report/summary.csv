@@ -1,106 +1,136 @@
 workload,config,tag,status,metrik,n,median,min,maks,sumber
 W1,b1024_bf16,g16-gpu,ada,latih_loop_s,5,45.86527640000031,40.505426896000245,54.57352949999995,bench/results/g16-gpu/W1/b1024_bf16/run_*.json
 W1,b1024_bf16,g16-cpu,tidak berlaku,,,,,,
-W1,b1024_bf16,d0-old,belum diukur,,,,,,
+W1,b1024_bf16,d0-old,tidak berlaku,,,,,,
 W1,b1024_fp16,g16-gpu,ada,latih_loop_s,5,46.812169573000574,46.213970114000404,48.095368275999135,bench/results/g16-gpu/W1/b1024_fp16/run_*.json
 W1,b1024_fp16,g16-cpu,tidak berlaku,,,,,,
-W1,b1024_fp16,d0-old,belum diukur,,,,,,
+W1,b1024_fp16,d0-old,tidak berlaku,,,,,,
 W1,b1024_fp32,g16-gpu,ada,latih_loop_s,5,38.84803425300015,38.59345748700002,39.205217620999974,bench/results/g16-gpu/W1/b1024_fp32/run_*.json
 W1,b1024_fp32,g16-cpu,ada,latih_loop_s,5,809.4953392320003,806.5060268050001,832.4062108779999,bench/results/g16-cpu/W1/b1024_fp32/run_*.json
-W1,b1024_fp32,d0-old,belum diukur,,,,,,
+W1,b1024_fp32,d0-old,ada,latih_loop_s,5,1460.4118432190007,1453.4518368560002,1504.0432288310003,bench/results/d0-old/W1/b1024_fp32/run_*.json
 W1,b1024_fp32_pin,g16-gpu,ada,latih_loop_s,5,42.39646151600027,42.01242192499922,44.04038373499952,bench/results/g16-gpu/W1/b1024_fp32_pin/run_*.json
 W1,b1024_fp32_pin,g16-cpu,tidak berlaku,,,,,,
-W1,b1024_fp32_pin,d0-old,belum diukur,,,,,,
+W1,b1024_fp32_pin,d0-old,tidak berlaku,,,,,,
 W1,b1024_fp32_resident,g16-gpu,ada,latih_loop_s,5,17.677669669999887,17.532337825000468,18.01838675700037,bench/results/g16-gpu/W1/b1024_fp32_resident/run_*.json
 W1,b1024_fp32_resident,g16-cpu,ada,latih_loop_s,5,706.4379338639992,689.6619417149996,726.4846959979986,bench/results/g16-cpu/W1/b1024_fp32_resident/run_*.json
-W1,b1024_fp32_resident,d0-old,belum diukur,,,,,,
+W1,b1024_fp32_resident,d0-old,ada,latih_loop_s,5,1254.682056679001,1207.321316878999,1394.844046279999,bench/results/d0-old/W1/b1024_fp32_resident/run_*.json
 W1,b1024_fp32_w2pin,g16-gpu,ada,latih_loop_s,5,35.45199880099972,34.9215352250003,37.14738421699985,bench/results/g16-gpu/W1/b1024_fp32_w2pin/run_*.json
 W1,b1024_fp32_w2pin,g16-cpu,tidak berlaku,,,,,,
-W1,b1024_fp32_w2pin,d0-old,belum diukur,,,,,,
+W1,b1024_fp32_w2pin,d0-old,tidak berlaku,,,,,,
 W1,b256_bf16,g16-gpu,ada,latih_loop_s,5,70.12825586700001,63.47703221699976,73.85744670200029,bench/results/g16-gpu/W1/b256_bf16/run_*.json
 W1,b256_bf16,g16-cpu,tidak berlaku,,,,,,
-W1,b256_bf16,d0-old,belum diukur,,,,,,
+W1,b256_bf16,d0-old,tidak berlaku,,,,,,
 W1,b256_fp16,g16-gpu,ada,latih_loop_s,5,70.07013333300074,67.12040093300038,78.08901206099927,bench/results/g16-gpu/W1/b256_fp16/run_*.json
 W1,b256_fp16,g16-cpu,tidak berlaku,,,,,,
-W1,b256_fp16,d0-old,belum diukur,,,,,,
+W1,b256_fp16,d0-old,tidak berlaku,,,,,,
 W1,b256_fp32,g16-gpu,ada,latih_loop_s,5,60.464229509000006,57.12027234900006,61.741840209999964,bench/results/g16-gpu/W1/b256_fp32/run_*.json
 W1,b256_fp32,g16-cpu,ada,latih_loop_s,5,927.8714152829998,881.7922005960008,1049.540430553001,bench/results/g16-cpu/W1/b256_fp32/run_*.json
-W1,b256_fp32,d0-old,belum diukur,,,,,,
+W1,b256_fp32,d0-old,ada,latih_loop_s,5,2426.4481579109997,1622.729643908,2675.916459164001,bench/results/d0-old/W1/b256_fp32/run_*.json
 W1,b256_fp32_resident,g16-gpu,ada,latih_loop_s,5,35.09095322000212,34.32973169199977,36.75982859599753,bench/results/g16-gpu/W1/b256_fp32_resident/run_*.json
 W1,b256_fp32_resident,g16-cpu,ada,latih_loop_s,5,913.0461981219996,904.5299193030005,927.5149157839987,bench/results/g16-cpu/W1/b256_fp32_resident/run_*.json
-W1,b256_fp32_resident,d0-old,belum diukur,,,,,,
+W1,b256_fp32_resident,d0-old,ada,latih_loop_s,5,1462.8387557380047,1450.3922150190047,1513.8828572990024,bench/results/d0-old/W1/b256_fp32_resident/run_*.json
 W1,b4096_bf16,g16-gpu,ada,latih_loop_s,5,47.87330105000001,47.26938969599996,50.97257468800035,bench/results/g16-gpu/W1/b4096_bf16/run_*.json
 W1,b4096_bf16,g16-cpu,tidak berlaku,,,,,,
-W1,b4096_bf16,d0-old,belum diukur,,,,,,
+W1,b4096_bf16,d0-old,tidak berlaku,,,,,,
 W1,b4096_fp16,g16-gpu,ada,latih_loop_s,5,54.75031959300031,53.1575983849998,57.35181422599999,bench/results/g16-gpu/W1/b4096_fp16/run_*.json
 W1,b4096_fp16,g16-cpu,tidak berlaku,,,,,,
-W1,b4096_fp16,d0-old,belum diukur,,,,,,
+W1,b4096_fp16,d0-old,tidak berlaku,,,,,,
 W1,b4096_fp32,g16-gpu,ada,latih_loop_s,5,46.78834105800024,45.989891000999705,47.953384727999946,bench/results/g16-gpu/W1/b4096_fp32/run_*.json
 W1,b4096_fp32,g16-cpu,ada,latih_loop_s,5,902.0303503120012,883.2777236399997,908.8839089449975,bench/results/g16-cpu/W1/b4096_fp32/run_*.json
-W1,b4096_fp32,d0-old,belum diukur,,,,,,
+W1,b4096_fp32,d0-old,ada,latih_loop_s,5,1247.5609499230013,1188.6866905740026,1363.4908238179996,bench/results/d0-old/W1/b4096_fp32/run_*.json
 W2,cpu_hist,g16-gpu,belum diukur,,,,,,
 W2,cpu_hist,g16-cpu,ada,latih_s,5,0.5155254590026743,0.5010383970002295,0.53127244800271,bench/results/g16-cpu/W2/cpu_hist/run_*.json
-W2,cpu_hist,d0-old,belum diukur,,,,,,
+W2,cpu_hist,d0-old,ada,latih_s,5,1.1660170199975255,1.1440814749948913,1.3007807390022208,bench/results/d0-old/W2/cpu_hist/run_*.json
 W2,cuda_hist,g16-gpu,ada,latih_s,5,1.2252479749995473,1.183828060000451,1.364510600000358,bench/results/g16-gpu/W2/cuda_hist/run_*.json
 W2,cuda_hist,g16-cpu,tidak berlaku,,,,,,
-W2,cuda_hist,d0-old,belum diukur,,,,,,
+W2,cuda_hist,d0-old,tidak berlaku,,,,,,
 W7,gru_cpu_b1,g16-gpu,belum diukur,,,,,,
 W7,gru_cpu_b1,g16-cpu,ada,latensi_p50_ms,5,0.152226,0.13804,0.192668,bench/results/g16-cpu/W7/gru_cpu_b1/run_*.json
-W7,gru_cpu_b1,d0-old,belum diukur,,,,,,
+W7,gru_cpu_b1,d0-old,ada,latensi_p50_ms,5,0.47082999999999997,0.460613,0.479186,bench/results/d0-old/W7/gru_cpu_b1/run_*.json
 W7,gru_cpu_b1024,g16-gpu,belum diukur,,,,,,
 W7,gru_cpu_b1024,g16-cpu,ada,latensi_p50_ms,5,98.610405,97.03699,98.909675,bench/results/g16-cpu/W7/gru_cpu_b1024/run_*.json
-W7,gru_cpu_b1024,d0-old,belum diukur,,,,,,
+W7,gru_cpu_b1024,d0-old,ada,latensi_p50_ms,5,185.15804300000002,181.669374,189.2775115,bench/results/d0-old/W7/gru_cpu_b1024/run_*.json
 W7,gru_cpu_b256,g16-gpu,belum diukur,,,,,,
 W7,gru_cpu_b256,g16-cpu,ada,latensi_p50_ms,5,24.134847999999998,23.605347000000002,24.5901135,bench/results/g16-cpu/W7/gru_cpu_b256/run_*.json
-W7,gru_cpu_b256,d0-old,belum diukur,,,,,,
+W7,gru_cpu_b256,d0-old,ada,latensi_p50_ms,5,43.9199155,43.3782005,44.7914965,bench/results/d0-old/W7/gru_cpu_b256/run_*.json
 W7,gru_cpu_b32,g16-gpu,belum diukur,,,,,,
 W7,gru_cpu_b32,g16-cpu,ada,latensi_p50_ms,5,3.6065120000000004,2.9730115,4.334235,bench/results/g16-cpu/W7/gru_cpu_b32/run_*.json
-W7,gru_cpu_b32,d0-old,belum diukur,,,,,,
+W7,gru_cpu_b32,d0-old,ada,latensi_p50_ms,5,7.463849,7.349646,7.515591,bench/results/d0-old/W7/gru_cpu_b32/run_*.json
 W7,gru_cuda_b1,g16-gpu,ada,latensi_p50_ms,5,3.43602,3.056206,3.7385885,bench/results/g16-gpu/W7/gru_cuda_b1/run_*.json
 W7,gru_cuda_b1,g16-cpu,tidak berlaku,,,,,,
-W7,gru_cuda_b1,d0-old,belum diukur,,,,,,
+W7,gru_cuda_b1,d0-old,tidak berlaku,,,,,,
 W7,gru_cuda_b1024,g16-gpu,ada,latensi_p50_ms,5,4.445678,4.406306,4.4711425,bench/results/g16-gpu/W7/gru_cuda_b1024/run_*.json
 W7,gru_cuda_b1024,g16-cpu,tidak berlaku,,,,,,
-W7,gru_cuda_b1024,d0-old,belum diukur,,,,,,
+W7,gru_cuda_b1024,d0-old,tidak berlaku,,,,,,
 W7,gru_cuda_b256,g16-gpu,ada,latensi_p50_ms,5,3.1560625,3.104451,3.2797324999999997,bench/results/g16-gpu/W7/gru_cuda_b256/run_*.json
 W7,gru_cuda_b256,g16-cpu,tidak berlaku,,,,,,
-W7,gru_cuda_b256,d0-old,belum diukur,,,,,,
+W7,gru_cuda_b256,d0-old,tidak berlaku,,,,,,
 W7,gru_cuda_b32,g16-gpu,ada,latensi_p50_ms,5,3.532145,3.092488,3.769325,bench/results/g16-gpu/W7/gru_cuda_b32/run_*.json
 W7,gru_cuda_b32,g16-cpu,tidak berlaku,,,,,,
-W7,gru_cuda_b32,d0-old,belum diukur,,,,,,
+W7,gru_cuda_b32,d0-old,tidak berlaku,,,,,,
 W7,gru_cuda_notf32_b1,g16-gpu,ada,latensi_p50_ms,5,3.004188,2.9778510000000002,3.4930975,bench/results/g16-gpu/W7/gru_cuda_notf32_b1/run_*.json
 W7,gru_cuda_notf32_b1,g16-cpu,tidak berlaku,,,,,,
-W7,gru_cuda_notf32_b1,d0-old,belum diukur,,,,,,
+W7,gru_cuda_notf32_b1,d0-old,tidak berlaku,,,,,,
 W7,gru_cuda_notf32_b1024,g16-gpu,ada,latensi_p50_ms,5,4.589302,4.562445,4.613527,bench/results/g16-gpu/W7/gru_cuda_notf32_b1024/run_*.json
 W7,gru_cuda_notf32_b1024,g16-cpu,tidak berlaku,,,,,,
-W7,gru_cuda_notf32_b1024,d0-old,belum diukur,,,,,,
+W7,gru_cuda_notf32_b1024,d0-old,tidak berlaku,,,,,,
 W7,gru_cuda_notf32_b256,g16-gpu,ada,latensi_p50_ms,5,4.192352,4.185299,4.6171365,bench/results/g16-gpu/W7/gru_cuda_notf32_b256/run_*.json
 W7,gru_cuda_notf32_b256,g16-cpu,tidak berlaku,,,,,,
-W7,gru_cuda_notf32_b256,d0-old,belum diukur,,,,,,
+W7,gru_cuda_notf32_b256,d0-old,tidak berlaku,,,,,,
 W7,gru_cuda_notf32_b32,g16-gpu,ada,latensi_p50_ms,5,3.997017,3.967421,4.38513,bench/results/g16-gpu/W7/gru_cuda_notf32_b32/run_*.json
 W7,gru_cuda_notf32_b32,g16-cpu,tidak berlaku,,,,,,
-W7,gru_cuda_notf32_b32,d0-old,belum diukur,,,,,,
+W7,gru_cuda_notf32_b32,d0-old,tidak berlaku,,,,,,
 W7,xgb_ttb_cpu_b1,g16-gpu,belum diukur,,,,,,
 W7,xgb_ttb_cpu_b1,g16-cpu,ada,latensi_p50_ms,5,0.039704,0.038563,0.041645,bench/results/g16-cpu/W7/xgb_ttb_cpu_b1/run_*.json
-W7,xgb_ttb_cpu_b1,d0-old,belum diukur,,,,,,
+W7,xgb_ttb_cpu_b1,d0-old,ada,latensi_p50_ms,5,0.065312,0.064799,0.070111,bench/results/d0-old/W7/xgb_ttb_cpu_b1/run_*.json
 W7,xgb_ttb_cpu_b1024,g16-gpu,belum diukur,,,,,,
 W7,xgb_ttb_cpu_b1024,g16-cpu,ada,latensi_p50_ms,5,0.977965,0.970199,0.991744,bench/results/g16-cpu/W7/xgb_ttb_cpu_b1024/run_*.json
-W7,xgb_ttb_cpu_b1024,d0-old,belum diukur,,,,,,
+W7,xgb_ttb_cpu_b1024,d0-old,ada,latensi_p50_ms,5,2.7571425,2.658417,3.246375,bench/results/d0-old/W7/xgb_ttb_cpu_b1024/run_*.json
 W7,xgb_ttb_cpu_b256,g16-gpu,belum diukur,,,,,,
 W7,xgb_ttb_cpu_b256,g16-cpu,ada,latensi_p50_ms,5,0.3878485,0.370856,0.406382,bench/results/g16-cpu/W7/xgb_ttb_cpu_b256/run_*.json
-W7,xgb_ttb_cpu_b256,d0-old,belum diukur,,,,,,
+W7,xgb_ttb_cpu_b256,d0-old,ada,latensi_p50_ms,5,0.7302305,0.72237,0.841193,bench/results/d0-old/W7/xgb_ttb_cpu_b256/run_*.json
 W7,xgb_ttb_cpu_b32,g16-gpu,belum diukur,,,,,,
 W7,xgb_ttb_cpu_b32,g16-cpu,ada,latensi_p50_ms,5,0.152801,0.14853349999999998,0.226429,bench/results/g16-cpu/W7/xgb_ttb_cpu_b32/run_*.json
-W7,xgb_ttb_cpu_b32,d0-old,belum diukur,,,,,,
+W7,xgb_ttb_cpu_b32,d0-old,ada,latensi_p50_ms,5,0.48275500000000005,0.473375,0.499211,bench/results/d0-old/W7/xgb_ttb_cpu_b32/run_*.json
 W7,xgb_ttb_cuda_b1,g16-gpu,ada,latensi_p50_ms,5,0.59719,0.571334,0.606145,bench/results/g16-gpu/W7/xgb_ttb_cuda_b1/run_*.json
 W7,xgb_ttb_cuda_b1,g16-cpu,tidak berlaku,,,,,,
-W7,xgb_ttb_cuda_b1,d0-old,belum diukur,,,,,,
+W7,xgb_ttb_cuda_b1,d0-old,tidak berlaku,,,,,,
 W7,xgb_ttb_cuda_b1024,g16-gpu,ada,latensi_p50_ms,5,1.6001195,1.515917,1.839229,bench/results/g16-gpu/W7/xgb_ttb_cuda_b1024/run_*.json
 W7,xgb_ttb_cuda_b1024,g16-cpu,tidak berlaku,,,,,,
-W7,xgb_ttb_cuda_b1024,d0-old,belum diukur,,,,,,
+W7,xgb_ttb_cuda_b1024,d0-old,tidak berlaku,,,,,,
 W7,xgb_ttb_cuda_b256,g16-gpu,ada,latensi_p50_ms,5,0.8429225,0.827179,0.937647,bench/results/g16-gpu/W7/xgb_ttb_cuda_b256/run_*.json
 W7,xgb_ttb_cuda_b256,g16-cpu,tidak berlaku,,,,,,
-W7,xgb_ttb_cuda_b256,d0-old,belum diukur,,,,,,
+W7,xgb_ttb_cuda_b256,d0-old,tidak berlaku,,,,,,
 W7,xgb_ttb_cuda_b32,g16-gpu,ada,latensi_p50_ms,5,0.576294,0.5209360000000001,0.5895965000000001,bench/results/g16-gpu/W7/xgb_ttb_cuda_b32/run_*.json
 W7,xgb_ttb_cuda_b32,g16-cpu,tidak berlaku,,,,,,
-W7,xgb_ttb_cuda_b32,d0-old,belum diukur,,,,,,
+W7,xgb_ttb_cuda_b32,d0-old,tidak berlaku,,,,,,
+W3,gru,g16-gpu,ada,sweep_s,1,69.01785960599955,69.01785960599955,69.01785960599955,bench/results/g16-gpu/W3/gru/run_*.json
+W3,gru,g16-cpu,ada,sweep_s,1,1793.132382036998,1793.132382036998,1793.132382036998,bench/results/g16-cpu/W3/gru/run_*.json
+W3,gru,d0-old,belum diukur,,,,,,
+W3,xgb_cpu,g16-gpu,belum diukur,,,,,,
+W3,xgb_cpu,g16-cpu,ada,sweep_s,1,174.66386698200222,174.66386698200222,174.66386698200222,bench/results/g16-cpu/W3/xgb_cpu/run_*.json
+W3,xgb_cpu,d0-old,belum diukur,,,,,,
+W3,xgb_cuda,g16-gpu,ada,sweep_s,1,158.845617777999,158.845617777999,158.845617777999,bench/results/g16-gpu/W3/xgb_cuda/run_*.json
+W3,xgb_cuda,g16-cpu,tidak berlaku,,,,,,
+W3,xgb_cuda,d0-old,belum diukur,,,,,,
+W4,stat_vs_tanpa,g16-gpu,ada,ablation_total_s,1,102.84832680999898,102.84832680999898,102.84832680999898,bench/results/g16-gpu/W4/stat_vs_tanpa/run_*.json
+W4,stat_vs_tanpa,g16-cpu,ada,ablation_total_s,1,2427.745768066001,2427.745768066001,2427.745768066001,bench/results/g16-cpu/W4/stat_vs_tanpa/run_*.json
+W4,stat_vs_tanpa,d0-old,belum diukur,,,,,,
+W6,cpu_hist,g16-gpu,belum diukur,,,,,,
+W6,cpu_hist,g16-cpu,ada,dinding_total_s,5,8.414161925000371,8.33759071699751,9.358623170999635,bench/results/g16-cpu/W6/cpu_hist/run_*.json
+W6,cpu_hist,d0-old,belum diukur,,,,,,
+W6,cuda_hist,g16-gpu,ada,dinding_total_s,5,8.04330912000296,7.873141557000054,8.763263957000163,bench/results/g16-gpu/W6/cuda_hist/run_*.json
+W6,cuda_hist,g16-cpu,tidak berlaku,,,,,,
+W6,cuda_hist,d0-old,belum diukur,,,,,,
+W8,truk100,g16-gpu,tidak berlaku,,,,,,
+W8,truk100,g16-cpu,ada,siklus_median_s,5,3.0921616640043794,3.039299433999986,3.2297673350039986,bench/results/g16-cpu/W8/truk100/run_*.json
+W8,truk100,d0-old,belum diukur,,,,,,
+W8,truk100_2inti,g16-gpu,tidak berlaku,,,,,,
+W8,truk100_2inti,g16-cpu,ada,siklus_median_s,5,2.5747110539959976,2.491226878002635,2.6898262510003406,bench/results/g16-cpu/W8/truk100_2inti/run_*.json
+W8,truk100_2inti,d0-old,belum diukur,,,,,,
+W8,truk24,g16-gpu,tidak berlaku,,,,,,
+W8,truk24,g16-cpu,ada,siklus_median_s,5,0.6465191160023096,0.6060553620045539,0.738104973002919,bench/results/g16-cpu/W8/truk24/run_*.json
+W8,truk24,d0-old,belum diukur,,,,,,
+W8,truk500,g16-gpu,tidak berlaku,,,,,,
+W8,truk500,g16-cpu,ada,siklus_median_s,5,18.679533286995138,17.779315649000637,19.092285362996336,bench/results/g16-cpu/W8/truk500/run_*.json
+W8,truk500,d0-old,belum diukur,,,,,,
