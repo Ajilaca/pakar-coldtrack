@@ -1,5 +1,5 @@
 {
-  "status": "KANDIDAT -- belum menggantikan model produksi (menunggu gerbang G3 + uji split test sekali)",
+  "status": "LULUS G3 (2026-10-11): dipromosikan ke ml/reports/coldtrack_b3.onnx sebagai model acuan v3; backend belum beralih (B7)",
   "dibuat_utc": "2026-10-10T21:43:33+00:00",
   "git": {
     "commit": "5b64886f2a28bcc72a21b8d8d3cb0f7a35207265",

@@ -1,0 +1,27 @@
+{
+  "gerbang": "G3",
+  "status": "lulus: kandidat B3 diadopsi sebagai model acuan v3",
+  "tanggal": "2026-10-11",
+  "diputuskan_oleh": "user (Tsabita Khoirunnisa), lewat chat Claude Code",
+  "alasan": [
+    "Kandidat lebih baik dari baseline di split val (5 seed, aturan adopsi yang didaftarkan sebelum sweep) dan di split test yang dipakai sekali.",
+    "Forecast tidak memburuk berarti; TTB produksi tetap XGBoost sehingga penurunan head TTB GRU tidak berdampak.",
+    "Trade-off latensi diterima user: tetap jauh di bawah batas PRD 300 ms per panggilan.",
+    "Target Macro F1 dan PR-AUC PRD belum tercapai; batasnya dilaporkan (label implisit)."
+  ],
+  "pelaksanaan": {
+    "model_acuan_baru": "ml/reports/coldtrack_b3.onnx",
+    "kontrak": "ml/reports/labels_b3.json",
+    "model_proposal_dipertahankan": "ml/reports/coldtrack.onnx tidak ditimpa: dipakai benchmark W7/smoke dan export_demo_scenarios, sehingga d0-old harus mengukur berkas yang sama dengan G16",
+    "backend": "backend/models/coldtrack_gru.onnx (garis checkpoint-2, kontrak keluaran berbeda) TIDAK diganti sekarang; peralihan backend di B7 lewat registry/provider"
+  },
+  "sumber": {
+    "val": "bench/results/g16-gpu/B3/keputusan_kandidat.json",
+    "test": ["bench/results/test/baseline_proposal.json", "bench/results/test/kandidat_b3.json"],
+    "log_akses_test": "bench/results/test_access_log.json",
+    "latensi": "bench/results/g16-cpu/B3/latensi_kandidat.json"
+  },
+  "rekomendasi_terbuka": [
+    "Tim data/PRD: tinjau definisi label failure_mode menjadi 'peristiwa masih aktif atau masih berdampak di dalam jendela' agar target klasifikasi dapat dicapai."
+  ]
+}

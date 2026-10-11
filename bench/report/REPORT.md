@@ -1,6 +1,6 @@
 # Laporan latih ulang ColdTrack + benchmark device
 
-> Dibangkitkan oleh `bench/report/build_report.py` pada 2026-10-10T22:53:56+00:00. Jangan diedit manual:
+> Dibangkitkan oleh `bench/report/build_report.py` pada 2026-10-11T01:27:17+00:00. Jangan diedit manual:
 > setiap angka berasal dari JSON di `bench/results/`. Tabel lengkap: `summary.csv`.
 
 ## Gerbang G1 (reproduksi)
@@ -263,6 +263,6 @@ Log akses split test (dicatat sebelum evaluasi; run kedua untuk id yang sama dit
 - `baseline_proposal`: ml/reports/coldtrack.onnx (sha256 3948c4476313…), 2026-10-10T22:53:08+00:00, commit 1e668e1
 - `kandidat_b3`: backend/models/candidates/coldtrack_gru_b3.onnx (sha256 fab911760e87…), 2026-10-10T22:53:13+00:00, commit 1e668e1
 
-**Keputusan G3: menunggu keputusan user** (model mana yang diganti, trade-off latensi).
+**Keputusan G3: lulus: kandidat B3 diadopsi sebagai model acuan v3** (2026-10-11). Kandidat lebih baik dari baseline di split val (5 seed, aturan adopsi yang didaftarkan sebelum sweep) dan di split test yang dipakai sekali. Forecast tidak memburuk berarti; TTB produksi tetap XGBoost sehingga penurunan head TTB GRU tidak berdampak. Trade-off latensi diterima user: tetap jauh di bawah batas PRD 300 ms per panggilan. Target Macro F1 dan PR-AUC PRD belum tercapai; batasnya dilaporkan (label implisit).
 
 Sumber: `bench/results/test/*.json`, `bench/results/test_access_log.json`

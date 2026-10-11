@@ -83,6 +83,31 @@ mirip fluktuasi wajar, dan pembacaan yang diam bisa berarti sensor rusak maupun 
 bekerja sangat baik. Kami melaporkannya apa adanya, dan tidak menjadikan keyakinan sebagai penentu
 status.
 
+**Batas label implisit (temuan latih ulang B3, Oktober 2026).** Label mode kegagalan bertahan dari
+onset sampai akhir perjalanan, sedangkan pintu terbuka (A1) dan kejut ambien (A7) adalah peristiwa
+sementara. Pengecekan data menunjukkan sebagian besar jendela berlabel A1/A7 jauh setelah onset
+tidak memuat jejak peristiwanya (`bench/results/g16-gpu/B3/label_check.json`). Konsekuensinya bagi
+pengguna: kelas mode kegagalan untuk peristiwa yang **sudah lewat** tidak dapat diandalkan, dan
+skor klasifikasi agregat dibatasi oleh definisi label, bukan hanya oleh model. Mitigasi tetap sama:
+status tidak ditentukan oleh keyakinan klasifikasi.
+
+## Pembaruan Model dan Evaluasi
+
+Penggantian model mengikuti gerbang yang dapat diaudit (`bench/README.md`, `bench/report/REPORT.md`):
+
+1. **Reproduksi (G1)** model lama dengan 5 seed sebelum mencoba perbaikan.
+2. **Paritas device (G2):** model yang dilatih di GPU harus setara kualitasnya dengan pelatihan di
+   CPU; percepatan yang mengorbankan kualitas tidak dilaporkan sebagai percepatan.
+3. **Seleksi di split validasi saja**, dengan objektif dan aturan adopsi yang didaftarkan sebelum
+   pencarian hyperparameter dijalankan.
+4. **Split test dipakai sekali per model** (G3), tercatat di `bench/results/test_access_log.json`
+   beserta hash model; evaluasi ulang model yang sama ditolak oleh skrip.
+5. Model baru diekspor ke jalur kandidat dulu; model produksi tidak ditimpa sebelum keputusan G3,
+   dan peralihan backend dikerjakan terpisah dengan tes paritas ONNX.
+
+Penggantian v2 → v3 (11 Oktober 2026) melalui seluruh langkah di atas
+(`bench/results/keputusan/G1.json`, `G3.json`, `bench/results/G2.json`).
+
 ## Monitoring
 
 **Yang dipantau saat ini** sebatas yang dapat dilakukan tanpa basis data, sesuai batasan MVP:

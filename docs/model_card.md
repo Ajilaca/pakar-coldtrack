@@ -1,6 +1,44 @@
 # Model Card — ColdTrack AI
 
-**Versi:** v2 (hibrida) · **Tanggal:** 7 Agustus 2026 · **Penanggung jawab:** R2 (AI Model Engineer)
+**Versi aktif:** v3 (11 Oktober 2026, lihat bagian berikut) · **Versi sebelumnya:** v2 (hibrida),
+7 Agustus 2026 · **Penanggung jawab:** R2 (AI Model Engineer)
+
+## Pembaruan v3 — GRU hasil latih ulang B3 (11 Oktober 2026)
+
+Model klasifikasi + forecast diganti dengan `ml/reports/coldtrack_b3.onnx` (kontrak:
+`ml/reports/labels_b3.json`), setelah lulus gerbang G3 (`bench/results/keputusan/G3.json`).
+`coldtrack_ttb.onnx` (XGBoost TTB) **tidak berubah**. Kontrak masukan/keluaran identik dengan
+`coldtrack.onnx`; berkas v2 tetap disimpan untuk keterlacakan dan benchmark.
+
+| | v2 `coldtrack.onnx` | v3 `coldtrack_b3.onnx` |
+|---|---|---|
+| Arsitektur | GRU 2 lapis, hidden 64 + statistik ringkasan | GRU 3 lapis, hidden 128 + statistik ringkasan |
+| Pelatihan | bobot loss 30/1/8, class weight sqrt | hasil sweep Optuna 60 trial: bobot loss forecast/TTB lebih rendah, label smoothing, class weight lebih lunak (`labels_b3.json: konfigurasi`) |
+| Macro F1 (test) | 0,581 | **0,668** |
+| PR-AUC anomali (test) | 0,711 | **0,786** |
+| Forecast MAE t+30 (test) | 0,198 °C | **0,192 °C** |
+| Latensi CPU batch 1 (p50, G16) | 0,21 ms | 1,38 ms |
+
+Sumber angka: `bench/results/test/{baseline_proposal,kandidat_b3}.json` (split test, dipakai sekali
+per model, akses tercatat di `bench/results/test_access_log.json`) dan
+`bench/results/g16-cpu/B3/latensi_kandidat.json`. Angka val 5 seed dan seluruh proses seleksi ada di
+`bench/report/REPORT.md` bagian B3.
+
+**Yang belum berubah dan tetap diakui:**
+- Target Macro F1 > 0,80 dan PR-AUC > 0,85 **belum tercapai**.
+- Penyebab utama yang terukur: label `failure_mode` bertahan dari onset sampai akhir trip, padahal
+  A1 (pintu) dan A7 (kejut ambien) adalah peristiwa sementara. Sebagian besar jendela A1/A7 jauh
+  setelah onset tidak memuat jejak peristiwanya sama sekali (`bench/results/g16-gpu/B3/label_check.json`),
+  sehingga tidak dapat dibedakan dari kondisi sehat oleh model berbasis jendela apa pun. Definisi
+  metrik dan target tidak diubah; peninjauan definisi label direkomendasikan ke tim data.
+- Head `time_to_breach_min` milik GRU v3 lebih buruk dari v2 untuk TTB ≤ 30 menit; TTB produksi
+  tetap dari XGBoost.
+- Backend saat ini masih memuat `backend/models/coldtrack_gru.onnx` (garis checkpoint-2, kontrak
+  keluaran berbeda); peralihan ke v3 dikerjakan terpisah lewat registry/provider.
+
+Bagian di bawah ini mendeskripsikan **v2** dan dipertahankan sebagai riwayat.
+
+---
 
 Dokumen ini menjelaskan model yang dipakai ColdTrack AI, cara pengujiannya, dan — sama
 pentingnya — **di mana model ini tidak bisa diandalkan**. Seluruh angka di sini berasal dari
