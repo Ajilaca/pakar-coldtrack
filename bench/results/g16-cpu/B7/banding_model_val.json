@@ -1,0 +1,96 @@
+{
+  "split": "val",
+  "n_jendela": 16500,
+  "n_trip": 105,
+  "waktu_utc": "2026-10-11T02:06:41+00:00",
+  "git": {
+    "commit": "23f581b3eb5899e61565bb576ebdddd019b22b0c",
+    "branch": "feat/model-retrain-g16",
+    "dirty": true
+  },
+  "detik_ckpt2_analyze": 8.375678528999998,
+  "bias": [
+    "v3 dipilih di split val (sedikit optimistis)",
+    "v4 out-of-distribution untuk checkpoint-2 (dilatih di simulator garis checkpoint-2)"
+  ],
+  "catatan_target_forecast": "checkpoint-2 memprediksi suhu muatan; di v4 sensor == muatan (eval/common.py)",
+  "model": {
+    "checkpoint2_backend": {
+      "forecast": {
+        "mae_t15": 1.4018849960937223,
+        "mae_t30": 1.3982524607692626,
+        "mae_t60": 1.375577398005077
+      },
+      "event": {
+        "door": {
+          "n_pos": 595,
+          "auroc_vs_sehat": 0.6131718245186012,
+          "recall_label": 0.0
+        },
+        "shock": {
+          "n_pos": 549,
+          "auroc_vs_sehat": 0.48315258104734854,
+          "recall_label": 0.04189435336976321
+        },
+        "sensor": {
+          "n_pos": 590,
+          "auroc_vs_sehat": 0.34053606176464957,
+          "recall_label": 0.5847457627118644
+        }
+      },
+      "sehat_dilabel_gangguan": 0.23776844824802196
+    },
+    "v2_proposal": {
+      "forecast": {
+        "mae_t15": 0.1595342039832351,
+        "mae_t30": 0.2110452530298402,
+        "mae_t60": 0.25553238301129355
+      },
+      "event": {
+        "door": {
+          "n_pos": 595,
+          "auroc_vs_sehat": 0.7276867213864392,
+          "recall_label": 0.4151260504201681
+        },
+        "shock": {
+          "n_pos": 549,
+          "auroc_vs_sehat": 0.8597160199378993,
+          "recall_label": 0.5100182149362478
+        },
+        "sensor": {
+          "n_pos": 590,
+          "auroc_vs_sehat": 0.9775836305068325,
+          "recall_label": 0.6830508474576271
+        }
+      },
+      "sehat_dilabel_gangguan": 0.10180849346035847,
+      "macro_f1_7kelas": 0.5805347687689808
+    },
+    "v3_b3": {
+      "forecast": {
+        "mae_t15": 0.1658326488486702,
+        "mae_t30": 0.20756400658836052,
+        "mae_t60": 0.25591232573107087
+      },
+      "event": {
+        "door": {
+          "n_pos": 595,
+          "auroc_vs_sehat": 0.8368148098897237,
+          "recall_label": 0.44201680672268906
+        },
+        "shock": {
+          "n_pos": 549,
+          "auroc_vs_sehat": 0.8937010085715791,
+          "recall_label": 0.5009107468123861
+        },
+        "sensor": {
+          "n_pos": 590,
+          "auroc_vs_sehat": 0.9752534983455897,
+          "recall_label": 0.8898305084745762
+        }
+      },
+      "sehat_dilabel_gangguan": 0.035846923946391086,
+      "macro_f1_7kelas": 0.6956697326644686
+    }
+  }
+}
