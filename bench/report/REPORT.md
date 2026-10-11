@@ -1,6 +1,6 @@
 # Laporan latih ulang ColdTrack + benchmark device
 
-> Dibangkitkan oleh `bench/report/build_report.py` pada 2026-10-11T22:07:08+00:00. Jangan diedit manual:
+> Dibangkitkan oleh `bench/report/build_report.py` pada 2026-10-11T22:12:07+00:00. Jangan diedit manual:
 > setiap angka berasal dari JSON di `bench/results/`. Tabel lengkap: `summary.csv`.
 
 ## Ringkasan
@@ -10,23 +10,24 @@ Pertanyaan: seberapa besar laptop baru (ASUS ROG Strix G16, RTX 5070 Laptop) mem
 | pekerjaan | perbandingan | speedup (median) | CI 95 % | kesimpulan | n run |
 |---|---|---|---|---|---|
 | Latih GRU 30 epoch (konfigurasi asli, data di GPU) (W1) | g16-cpu → g16-gpu | 26.02× | [24.82, 26.98] | lebih cepat | 5 |
-| Sweep GRU 8 trial × 5 epoch (W3) | g16-cpu → g16-gpu | 25.98× | - (1 run) | lebih cepat | 1 |
-| Ablation GRU 5 seed × 2 varian × 10 epoch (W4) | g16-cpu → g16-gpu | 23.61× | - (1 run) | lebih cepat | 1 |
+| Sweep GRU 8 trial × 5 epoch (W3) | g16-cpu → g16-gpu | 25.98× | - (1 run) | lebih cepat (1 run, tanpa CI) | 1 |
+| Ablation GRU 5 seed × 2 varian × 10 epoch (W4) | g16-cpu → g16-gpu | 23.61× | - (1 run) | lebih cepat (1 run, tanpa CI) | 1 |
 | Latih XGBoost TTB (W2) | g16-cpu → g16-gpu | 0.42× | [0.38, 0.44] | lebih LAMBAT | 5 |
-| Sweep XGBoost 20 trial (W3) | g16-cpu → g16-gpu | 1.10× | - (1 run) | lebih cepat | 1 |
+| Sweep XGBoost 20 trial (W3) | g16-cpu → g16-gpu | 1.10× | - (1 run) | selisih kecil, 1 run (tidak dapat disimpulkan) | 1 |
 | Sensor-health Berkeley (fitur + latih) (W6) | g16-cpu → g16-gpu | 1.05× | [0.96, 1.16] | tidak berbeda nyata | 5 |
-| Inferensi GRU ONNX, batch 1 (W7) | g16-cpu → g16-gpu | 0.04× | [0.04, 0.06] | lebih LAMBAT | 5 |
+| Inferensi GRU ONNX, batch 1 (W7) | g16-cpu → g16-gpu | 0.04× | [0.04, 0.06] | lebih LAMBAT; ⚠ sebaran run besar: g16-cpu 36% | 5 |
 | Inferensi GRU ONNX, batch 1024 (W7) | g16-cpu → g16-gpu | 22.18× | [21.83, 22.38] | lebih cepat | 5 |
-| Latih GRU 30 epoch: laptop lama → G16 tanpa GPU (W1) | d0-old → g16-cpu | 2.62× | [1.75, 2.95] | lebih cepat | 5 |
+| Latih GRU 30 epoch: laptop lama → G16 tanpa GPU (W1) | d0-old → g16-cpu | 1.60× | [1.57, 1.66] | lebih cepat | 5 |
+| Latih GRU 30 epoch (DataLoader): laptop lama → G16 tanpa GPU (W1) | d0-old → g16-cpu | 2.62× | [1.75, 2.95] | lebih cepat; ⚠ sebaran run besar: d0-old 43% | 5 |
 | Latih XGBoost: laptop lama → G16 CPU (W2) | d0-old → g16-cpu | 2.26× | [2.19, 2.52] | lebih cepat | 5 |
-| Inferensi GRU batch 1: laptop lama → G16 CPU (W7) | d0-old → g16-cpu | 3.09× | [2.44, 3.42] | lebih cepat | 5 |
+| Inferensi GRU batch 1: laptop lama → G16 CPU (W7) | d0-old → g16-cpu | 3.09× | [2.44, 3.42] | lebih cepat; ⚠ sebaran run besar: g16-cpu 36% | 5 |
 | Latih GRU 30 epoch: laptop lama → G16 GPU (W1) | d0-old → g16-gpu | 41.69× | [39.65, 43.30] | lebih cepat | 5 |
-| Sweep GRU: laptop lama → G16 CPU (W3) | d0-old → g16-cpu | 2.01× | - (1 run) | lebih cepat | 1 |
-| Ablation GRU: laptop lama → G16 CPU (W4) | d0-old → g16-cpu | 1.89× | - (1 run) | lebih cepat | 1 |
-| Ablation GRU: laptop lama → G16 GPU (W4) | d0-old → g16-gpu | 44.65× | - (1 run) | lebih cepat | 1 |
+| Sweep GRU: laptop lama → G16 CPU (W3) | d0-old → g16-cpu | 2.01× | - (1 run) | lebih cepat (1 run, tanpa CI) | 1 |
+| Ablation GRU: laptop lama → G16 CPU (W4) | d0-old → g16-cpu | 1.89× | - (1 run) | lebih cepat (1 run, tanpa CI) | 1 |
+| Ablation GRU: laptop lama → G16 GPU (W4) | d0-old → g16-gpu | 44.65× | - (1 run) | lebih cepat (1 run, tanpa CI) | 1 |
 | Siklus inferensi 100 truk: laptop lama → G16 CPU (kode berbeda, lihat B5) (W8) | d0-old → g16-cpu | 2.44× | [2.28, 2.54] | lebih cepat | 5 |
 
-Cara membaca: speedup = waktu median pembanding / waktu median yang dibandingkan; > 1 berarti yang dibandingkan lebih cepat. Kualitas model antar-device dicek terpisah (G2 dan tabel B5).
+Cara membaca: speedup = waktu median pembanding / waktu median yang dibandingkan; > 1 berarti yang dibandingkan lebih cepat. Kualitas model antar-device dicek terpisah (G2 dan tabel B5). ⚠ = rentang (maks − min) / median antar-run > 25%, mis. akibat throttling termal; angka median baris itu kurang andal.
 
 ## Device dan kondisi
 
@@ -469,7 +470,7 @@ Median [min–maks] dari 5 ulangan; satu angka = satu run terukur. '—' = varia
 | W4 | stat_vs_tanpa | 69 | 53.0 | 45 | 0x0000000000000000 |
 | W6 | cuda_hist | 49 | 3.4 | 0 | 0x0000000000000000 |
 
-Alasan throttle `0x4` = batas daya perangkat lunak (wajar di laptop), `0x0` = tidak ada. Tidak ada alasan termal (`0x20`/`0x40`) yang tercatat.
+Alasan throttle `0x4` = batas daya perangkat lunak (wajar di laptop), `0x0` = tidak ada. Tidak ada alasan termal/perlambatan perangkat keras (0x8/0x20/0x40) yang tercatat.
 
 ### Catatan B5
 

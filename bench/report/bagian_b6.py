@@ -18,7 +18,8 @@ PERBANDINGAN_UTAMA = [
     ("W6", "cuda_hist", "g16-cpu", "g16-gpu", "Sensor-health Berkeley (fitur + latih)"),
     ("W7", "gru_cuda_b1", "g16-cpu", "g16-gpu", "Inferensi GRU ONNX, batch 1"),
     ("W7", "gru_cuda_b1024", "g16-cpu", "g16-gpu", "Inferensi GRU ONNX, batch 1024"),
-    ("W1", "b256_fp32", "d0-old", "g16-cpu", "Latih GRU 30 epoch: laptop lama → G16 tanpa GPU"),
+    ("W1", "b256_fp32_resident", "d0-old", "g16-cpu", "Latih GRU 30 epoch: laptop lama → G16 tanpa GPU"),
+    ("W1", "b256_fp32", "d0-old", "g16-cpu", "Latih GRU 30 epoch (DataLoader): laptop lama → G16 tanpa GPU"),
     ("W2", "cpu_hist", "d0-old", "g16-cpu", "Latih XGBoost: laptop lama → G16 CPU"),
     ("W7", "gru_cpu_b1", "d0-old", "g16-cpu", "Inferensi GRU batch 1: laptop lama → G16 CPU"),
     ("W1", "b256_fp32_resident", "d0-old", "g16-gpu", "Latih GRU 30 epoch: laptop lama → G16 GPU"),
@@ -38,6 +39,16 @@ def _cari_speedup(w, cid, a, b, g2):
 
 def _n_run(tag, w, cid):
     return len(an.load_runs(tag, w, cid)[0])
+
+
+SEBARAN_BESAR = 0.25   # (maks - min) / median di atas ini = run tidak stabil (mis. throttling termal)
+
+
+def _sebaran(tag, w, cid):
+    runs, _ = an.load_runs(tag, w, cid)
+    _, ambil = an.WAKTU_UTAMA[w]
+    v = [ambil(r) for r in runs]
+    return (max(v) - min(v)) / median(v) if len(v) >= 2 else None
 
 
 def _kata(s):
@@ -69,15 +80,25 @@ def bagian_ringkasan(g2):
         cid_a = an.acuan_cpu(w, cid) if b == "g16-gpu" else cid
         n = min(_n_run(a, w, cid_a), _n_run(b, w, cid))
         ci = f"[{s['ci95'][0]:.2f}, {s['ci95'][1]:.2f}]" if n >= 3 else "- (1 run)"
-        kata = _kata(s) if n >= 3 else ("lebih cepat" if s["speedup"] > 1 else "lebih LAMBAT")
+        if n >= 3:
+            kata = _kata(s)
+        elif 0.85 <= s["speedup"] <= 1.15:
+            kata = "selisih kecil, 1 run (tidak dapat disimpulkan)"
+        else:
+            kata = ("lebih cepat" if s["speedup"] > 1 else "lebih LAMBAT") + " (1 run, tanpa CI)"
         if s.get("g2_setara") is False:
             kata = "kualitas tidak setara: bukan speedup"
+        lebar = [(t, x) for t, c in ((a, cid_a), (b, cid)) if (x := _sebaran(t, w, c)) is not None and x > SEBARAN_BESAR]
+        if lebar:
+            kata += "; ⚠ sebaran run besar: " + ", ".join(f"{t} {x:.0%}" for t, x in lebar)
         out.append(f"| {label} ({w}) | {a} → {b} | {s['speedup']:.2f}× | {ci} | {kata} | {n} |")
     belum = [w for w in an.B5 if not any(an.status_config("d0-old", w, c) == "ada" for c in an.configs(w))]
     out += [
         "",
         ("Cara membaca: speedup = waktu median pembanding / waktu median yang dibandingkan; > 1 berarti yang "
-        "dibandingkan lebih cepat. Kualitas model antar-device dicek terpisah (G2 dan tabel B5)."),
+        "dibandingkan lebih cepat. Kualitas model antar-device dicek terpisah (G2 dan tabel B5). "
+        f"⚠ = rentang (maks − min) / median antar-run > {SEBARAN_BESAR:.0%}, mis. akibat throttling termal; "
+        "angka median baris itu kurang andal."),
         "",
     ]
     if belum:
@@ -168,6 +189,23 @@ def _telemetri_b5():
     return rows
 
 
+def _catatan_throttle():
+    """Bit NVML clocks_event_reasons: 0x4 SW power cap, 0x8 HW slowdown, 0x20 SW thermal, 0x40 HW thermal."""
+    bits = set()
+    for w in an.B5:
+        for cid in an.configs(w):
+            for r in an.load_runs("g16-gpu", w, cid)[0]:
+                for h in (r.get("telemetri") or {}).get("throttle_reasons_hex", []):
+                    bits.add(int(h, 16))
+    gabung = 0
+    for b in bits:
+        gabung |= b
+    termal = [n for m, n in ((0x8, "HW slowdown 0x8"), (0x20, "SW thermal 0x20"), (0x40, "HW thermal 0x40")) if gabung & m]
+    teks = "Alasan throttle `0x4` = batas daya perangkat lunak (wajar di laptop), `0x0` = tidak ada. "
+    return teks + ("Alasan termal yang tercatat: " + ", ".join(termal) + "." if termal else
+                   "Tidak ada alasan termal/perlambatan perangkat keras (0x8/0x20/0x40) yang tercatat.")
+
+
 def bagian_b5(g2):
     out = [
         "## B5: benchmark W3 / W4 / W6 / W8",
@@ -241,8 +279,7 @@ def bagian_b5(g2):
             "|---|---|---|---|---|---|",
             *tel,
             "",
-            ("Alasan throttle `0x4` = batas daya perangkat lunak (wajar di laptop), `0x0` = tidak ada. Tidak ada alasan "
-            "termal (`0x20`/`0x40`) yang tercatat."),
+            _catatan_throttle(),
             "",
         ]
     w6 = {}
