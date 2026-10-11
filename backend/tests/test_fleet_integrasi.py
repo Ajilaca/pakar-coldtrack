@@ -230,7 +230,8 @@ def test_patch_insiden_maju_saja_dan_audit(db, truk_uji):
         with api.stream("GET", "/api/v1/stream", timeout=20) as r:
             for baris in r.iter_lines():
                 terima.append(baris)
-                if f'"id": {inc_id}' in baris:
+                # cocokkan event INSIDEN; id notifikasi bisa sama dengan id insiden di DB baru (CI)
+                if '"type": "incident"' in baris and f'"id": {inc_id},' in baris:
                     return
 
     t = threading.Thread(target=dengar, daemon=True)
