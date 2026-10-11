@@ -22,6 +22,10 @@ PERBANDINGAN_UTAMA = [
     ("W2", "cpu_hist", "d0-old", "g16-cpu", "Latih XGBoost: laptop lama → G16 CPU"),
     ("W7", "gru_cpu_b1", "d0-old", "g16-cpu", "Inferensi GRU batch 1: laptop lama → G16 CPU"),
     ("W1", "b256_fp32_resident", "d0-old", "g16-gpu", "Latih GRU 30 epoch: laptop lama → G16 GPU"),
+    ("W3", "gru", "d0-old", "g16-cpu", "Sweep GRU: laptop lama → G16 CPU"),
+    ("W4", "stat_vs_tanpa", "d0-old", "g16-cpu", "Ablation GRU: laptop lama → G16 CPU"),
+    ("W4", "stat_vs_tanpa", "d0-old", "g16-gpu", "Ablation GRU: laptop lama → G16 GPU"),
+    ("W8", "truk100", "d0-old", "g16-cpu", "Siklus inferensi 100 truk: laptop lama → G16 CPU (kode berbeda, lihat B5)"),
 ]
 
 
@@ -263,6 +267,92 @@ def bagian_b5(g2):
     return out
 
 
+# jalur kode yang menentukan hasil tiap workload (untuk cek kesamaan kode antar-device)
+JALUR_KODE = {
+    "W3": ["bench", "ml"],
+    "W4": ["bench", "ml"],
+    "W6": ["bench", "ml"],
+    "W8": ["bench", "backend/app", "backend/models", "backend/config.yaml"],
+}
+
+
+def _commit_workload(tag, w):
+    import json
+
+    return {json.loads(f.read_text(encoding="utf-8"))["git"]["commit"][:7]
+            for f in (an.RESULTS_DIR / tag / w).glob("*/run_*.json")}
+
+
+def _kode_sama(c1, c2, jalur):
+    """(identik?, berkas berbeda) untuk jalur kode antara dua commit, tanpa hasil, laporan, dan dokumen."""
+    import subprocess
+
+    spec = [*jalur, ":(exclude)bench/results", ":(exclude)bench/report", ":(exclude)*.md"]
+    r = subprocess.run(["git", "diff", "--name-only", c1, c2, "--", *spec], capture_output=True, text=True, check=False)
+    if r.returncode != 0:
+        return None, []
+    beda = [f for f in r.stdout.split() if f]
+    return not beda, beda
+
+
+def _dipakai(path, w):
+    """Apakah berkas yang berubah ikut menentukan hasil workload w.
+
+    Tidak dipakai: metadata device (bench/devices/*.yaml, disalin ke JSON sebagai kondisi), modul workload lain,
+    dan modul Python yang tidak di-import oleh kode mana pun di bench/ atau ml/ (mis. skrip seed armada).
+    """
+    import re
+    from pathlib import Path
+
+    if path.startswith("bench/devices/"):
+        return False
+    m = re.match(r"bench/workloads/(w\d)_", path)
+    if m:
+        return m.group(1).upper() == w
+    if not path.endswith(".py") or path.startswith("backend/"):
+        return True
+    stem = Path(path).stem
+    pola = re.compile(rf"(import|from)\s+[\w.]*\b{re.escape(stem)}\b")
+    for f in [*an.ROOT.joinpath("bench").rglob("*.py"), *an.ROOT.joinpath("ml").rglob("*.py")]:
+        if f.as_posix().endswith(path) or "__pycache__" in f.parts:
+            continue
+        if pola.search(f.read_text(encoding="utf-8", errors="ignore")):
+            return True
+    return False
+
+
+def bagian_kesamaan_kode():
+    out = [
+        "### Kesamaan kode antar-device (B5)",
+        "",
+        "| workload | commit g16-cpu | commit d0-old | kode workload | berkas berbeda |",
+        "|---|---|---|---|---|",
+    ]
+    for w, jalur in JALUR_KODE.items():
+        cg, cd = sorted(_commit_workload("g16-cpu", w)), sorted(_commit_workload("d0-old", w))
+        if not cg or not cd:
+            out.append(f"| {w} | {', '.join(cg) or '-'} | {', '.join(cd) or '-'} | belum dapat dibandingkan | - |")
+            continue
+        sama, beda = _kode_sama(cg[0], cd[0], jalur)
+        relevan = [b for b in beda if _dipakai(b, w)]
+        if sama is None:
+            status = "tidak dapat dicek"
+        elif not relevan:
+            status = "identik" if sama else "identik (berkas berbeda tidak dipakai workload ini)"
+        else:
+            status = "**berbeda**"
+        daftar = ", ".join(f"`{b}`" for b in (relevan or beda)[:6]) + (" …" if len(relevan or beda) > 6 else "")
+        out.append(f"| {w} | {', '.join(cg)} | {', '.join(cd)} | {status} | {daftar or '-'} |")
+    out += [
+        "",
+        ("W8 mengirim jendela 60 bacaan ke `POST /api/v1/analyze`; di kedua versi backend model dijalankan untuk satu "
+         "jendela, tetapi kodenya tidak identik (versi armada menambah `predict_last` dan konversi zona waktu). "
+         "Perbandingan W8 antar-device dibaca dengan catatan ini."),
+        "",
+    ]
+    return out
+
+
 def bagian_keterbatasan():
     return [
         "## Keterbatasan",
@@ -273,7 +363,10 @@ def bagian_keterbatasan():
         "- Data simulasi (dataset v4), bukan logger truk nyata.",
         "- WSL2 dengan batas memori 12 GB di kedua laptop; Windows native tidak diukur.",
         ("- Laptop lama mengalami throttling termal pada run pertama; run itu dibatalkan dan diulang dalam mode "
-        "Extreme Performance. Hasilnya bergantung pada pendinginan saat itu."),
+         "Extreme Performance. Menurut pesan commit `4c193ca`, CPU-nya tetap di-throttle termal secara berkala selama "
+         "paket B5 (±100 °C → ±22 % performa); data suhunya tidak ada di repo. Angka laptop lama, terutama B5, bisa "
+         "lebih lambat daripada kemampuan CPU itu dengan pendinginan baik, sehingga speedup laptop lama → G16 "
+         "cenderung dilebih-lebihkan."),
         "- Commit run laptop lama dan berkas env capture-nya belum dapat diverifikasi dari repo (lihat Provenance).",
         "",
     ]

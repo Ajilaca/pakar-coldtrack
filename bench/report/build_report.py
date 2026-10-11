@@ -473,6 +473,7 @@ def main():
         *bagian_g3(),
         *bagian_g4(),
         *b6.bagian_b5(g2),
+        *b6.bagian_kesamaan_kode(),
         *b6.bagian_keterbatasan(),
     ]
     OUT.write_text("\n".join(lines), encoding="utf-8")

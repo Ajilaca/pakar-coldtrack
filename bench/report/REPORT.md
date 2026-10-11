@@ -1,6 +1,6 @@
 # Laporan latih ulang ColdTrack + benchmark device
 
-> Dibangkitkan oleh `bench/report/build_report.py` pada 2026-10-11T14:31:00+00:00. Jangan diedit manual:
+> Dibangkitkan oleh `bench/report/build_report.py` pada 2026-10-11T22:07:08+00:00. Jangan diedit manual:
 > setiap angka berasal dari JSON di `bench/results/`. Tabel lengkap: `summary.csv`.
 
 ## Ringkasan
@@ -21,10 +21,12 @@ Pertanyaan: seberapa besar laptop baru (ASUS ROG Strix G16, RTX 5070 Laptop) mem
 | Latih XGBoost: laptop lama → G16 CPU (W2) | d0-old → g16-cpu | 2.26× | [2.19, 2.52] | lebih cepat | 5 |
 | Inferensi GRU batch 1: laptop lama → G16 CPU (W7) | d0-old → g16-cpu | 3.09× | [2.44, 3.42] | lebih cepat | 5 |
 | Latih GRU 30 epoch: laptop lama → G16 GPU (W1) | d0-old → g16-gpu | 41.69× | [39.65, 43.30] | lebih cepat | 5 |
+| Sweep GRU: laptop lama → G16 CPU (W3) | d0-old → g16-cpu | 2.01× | - (1 run) | lebih cepat | 1 |
+| Ablation GRU: laptop lama → G16 CPU (W4) | d0-old → g16-cpu | 1.89× | - (1 run) | lebih cepat | 1 |
+| Ablation GRU: laptop lama → G16 GPU (W4) | d0-old → g16-gpu | 44.65× | - (1 run) | lebih cepat | 1 |
+| Siklus inferensi 100 truk: laptop lama → G16 CPU (kode berbeda, lihat B5) (W8) | d0-old → g16-cpu | 2.44× | [2.28, 2.54] | lebih cepat | 5 |
 
 Cara membaca: speedup = waktu median pembanding / waktu median yang dibandingkan; > 1 berarti yang dibandingkan lebih cepat. Kualitas model antar-device dicek terpisah (G2 dan tabel B5).
-
-**Belum lengkap:** paket B5 laptop lama (W3, W4, W6, W8) belum diukur.
 
 ## Device dan kondisi
 
@@ -32,7 +34,7 @@ Cara membaca: speedup = waktu median pembanding / waktu median yang dibandingkan
 |---|---|---|---|---|---|---|---|
 | g16-gpu | AMD Ryzen 9 8940HX with Radeon Graphics | 16/32 | 11.68 | NVIDIA GeForce RTX 5070 Laptop GPU | WSL2 Ubuntu | Turbo | `bench/results/g16-gpu/env/env_20261011-170742.json` |
 | g16-cpu | AMD Ryzen 9 8940HX with Radeon Graphics | 16/32 | 11.68 | dimatikan (CUDA_VISIBLE_DEVICES="") | WSL2 Ubuntu | Turbo | `bench/results/g16-cpu/env/env_20261011-184051.json` |
-| d0-old | AMD Ryzen 7 5700U (dari user) | - | 12GB | Radeon terintegrasi, tidak dipakai | WSL2 Ubuntu 24.04 (bench/devices/d0-old.yaml) | Lenovo Extreme Performance (Fn+Q) + Windows "Best performance" | **tidak ada** (`bench/results/d0-old/env/env_20261011-183115.json` dirujuk tetapi tidak ikut dikirim) |
+| d0-old | AMD Ryzen 7 5700U (dari user) | - | 12GB | Radeon terintegrasi, tidak dipakai | WSL2 Ubuntu 24.04 (bench/devices/d0-old.yaml) | Lenovo Extreme Performance (Fn+Q) + Windows "Best performance" | **tidak ada** (`bench/results/d0-old/env/env_20261011-212135.json` dirujuk tetapi tidak ikut dikirim) |
 
 ### Provenance (commit tiap run)
 
@@ -45,6 +47,7 @@ Cara membaca: speedup = waktu median pembanding / waktu median yang dibandingkan
 | g16-cpu | `5d13490` | False | 33 | ya |
 | g16-cpu | `5b64886` | False | 6 | ya |
 | d0-old | `fcd0fb0` | False | 78 | **tidak** |
+| d0-old | `fd61a98` | False | 33 | ya |
 | d0-old | `9d97fe9` | False | 6 | ya |
 
 **Terbuka:** commit d0-old `fcd0fb0` (78 run) tidak ada di repo. Kemungkinan commit lokal di device itu yang hash-nya berubah saat di-rebase/amend sebelum push. Kesamaan kodenya dengan commit di repo belum dapat diverifikasi dari sini; data tetap dipakai dengan catatan ini.
@@ -413,16 +416,16 @@ Sumber: `bench/results/test/b4_berkeley_v1_kesehatan.json`, `bench/results/keput
 
 | workload | config | metrik | g16-gpu | g16-cpu | d0-old |
 |---|---|---|---|---|---|
-| W3 | gru | sweep_s (s) | 69.02 | 1793 | belum diukur |
-| W3 | xgb_cpu | sweep_s (s) | — | 174.7 | belum diukur |
-| W3 | xgb_cuda | sweep_s (s) | 158.8 | tidak berlaku | belum diukur |
-| W4 | stat_vs_tanpa | ablation_total_s (s) | 102.8 | 2428 | belum diukur |
-| W6 | cpu_hist | dinding_total_s (s) | — | 8.414 [8.338–9.359] | belum diukur |
-| W6 | cuda_hist | dinding_total_s (s) | 8.043 [7.873–8.763] | tidak berlaku | belum diukur |
-| W8 | truk100 | siklus_median_s (s) | tidak berlaku | 3.092 [3.039–3.23] | belum diukur |
-| W8 | truk100_2inti | siklus_median_s (s) | tidak berlaku | 2.575 [2.491–2.69] | belum diukur |
-| W8 | truk24 | siklus_median_s (s) | tidak berlaku | 0.6465 [0.6061–0.7381] | belum diukur |
-| W8 | truk500 | siklus_median_s (s) | tidak berlaku | 18.68 [17.78–19.09] | belum diukur |
+| W3 | gru | sweep_s (s) | 69.02 | 1793 | 3612 |
+| W3 | xgb_cpu | sweep_s (s) | — | 174.7 | 545.2 |
+| W3 | xgb_cuda | sweep_s (s) | 158.8 | tidak berlaku | tidak berlaku |
+| W4 | stat_vs_tanpa | ablation_total_s (s) | 102.8 | 2428 | 4592 |
+| W6 | cpu_hist | dinding_total_s (s) | — | 8.414 [8.338–9.359] | 16.03 [15.34–17.53] |
+| W6 | cuda_hist | dinding_total_s (s) | 8.043 [7.873–8.763] | tidak berlaku | tidak berlaku |
+| W8 | truk100 | siklus_median_s (s) | tidak berlaku | 3.092 [3.039–3.23] | 7.537 [7.213–7.818] |
+| W8 | truk100_2inti | siklus_median_s (s) | tidak berlaku | 2.575 [2.491–2.69] | 5.761 [5.675–6.087] |
+| W8 | truk24 | siklus_median_s (s) | tidak berlaku | 0.6465 [0.6061–0.7381] | 1.719 [1.551–1.873] |
+| W8 | truk500 | siklus_median_s (s) | tidak berlaku | 18.68 [17.78–19.09] | 40.32 [39.93–42.24] |
 
 Median [min–maks] dari 5 ulangan; satu angka = satu run terukur. '—' = varian CPU tidak dijalankan di tag GPU (pasangannya diukur di g16-cpu). Sumber: `bench/results/<tag>/<W3|W4|W6|W8>/<config>/run_*.json`
 
@@ -431,19 +434,31 @@ Median [min–maks] dari 5 ulangan; satu angka = satu run terukur. '—' = varia
 | workload | config | perbandingan | arti | speedup | CI 95 % |
 |---|---|---|---|---|---|
 | W3 | gru | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 25.98× | - (1 run) |
+| W3 | gru | d0-old → g16-cpu | efek mesin baru tanpa GPU | 2.01× | - (1 run) |
+| W3 | gru | d0-old → g16-gpu | sebelum vs sesudah (gabungan) | 52.33× | - (1 run) |
+| W3 | xgb_cpu | d0-old → g16-cpu | efek mesin baru tanpa GPU | 3.12× | - (1 run) |
 | W3 | xgb_cpu -> xgb_cuda | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 1.10× | - (1 run) |
+| W3 | xgb_cpu -> xgb_cuda | d0-old → g16-gpu | sebelum vs sesudah (gabungan) | 3.43× | - (1 run) |
 | W4 | stat_vs_tanpa | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 23.61× | - (1 run) |
+| W4 | stat_vs_tanpa | d0-old → g16-cpu | efek mesin baru tanpa GPU | 1.89× | - (1 run) |
+| W4 | stat_vs_tanpa | d0-old → g16-gpu | sebelum vs sesudah (gabungan) | 44.65× | - (1 run) |
+| W6 | cpu_hist | d0-old → g16-cpu | efek mesin baru tanpa GPU | 1.91× | [1.71, 2.08] |
 | W6 | cpu_hist -> cuda_hist | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 1.05× | [0.96, 1.16] |
+| W6 | cpu_hist -> cuda_hist | d0-old → g16-gpu | sebelum vs sesudah (gabungan) | 1.99× | [1.83, 2.18] |
+| W8 | truk100 | d0-old → g16-cpu | efek mesin baru tanpa GPU | 2.44× | [2.28, 2.54] |
+| W8 | truk100_2inti | d0-old → g16-cpu | efek mesin baru tanpa GPU | 2.24× | [2.14, 2.36] |
+| W8 | truk24 | d0-old → g16-cpu | efek mesin baru tanpa GPU | 2.66× | [2.33, 2.93] |
+| W8 | truk500 | d0-old → g16-cpu | efek mesin baru tanpa GPU | 2.16× | [2.11, 2.27] |
 
 ### Paritas kualitas B5 (val)
 
 | workload | config | metrik | g16-gpu | g16-cpu | d0-old |
 |---|---|---|---|---|---|
-| W3 | gru / gru | skor terbaik sweep | 0.6249 | 0.6196 | - |
-| W3 | xgb_cuda / xgb_cpu | skor terbaik sweep | 0.7252 | 0.7248 | - |
-| W4 | stat_vs_tanpa / stat_vs_tanpa | macro F1 mean 5 seed, dengan statistik | 0.5096 | 0.5109 | - |
-| W4 | stat_vs_tanpa / stat_vs_tanpa | macro F1 mean 5 seed, tanpa statistik | 0.3572 | 0.3558 | - |
-| W6 | cuda_hist / cpu_hist | PR-AUC mote val | 0.8725 | 0.8738 | - |
+| W3 | gru / gru | skor terbaik sweep | 0.6249 | 0.6196 | 0.6283 |
+| W3 | xgb_cuda / xgb_cpu | skor terbaik sweep | 0.7252 | 0.7248 | 0.7248 |
+| W4 | stat_vs_tanpa / stat_vs_tanpa | macro F1 mean 5 seed, dengan statistik | 0.5096 | 0.5109 | 0.5114 |
+| W4 | stat_vs_tanpa / stat_vs_tanpa | macro F1 mean 5 seed, tanpa statistik | 0.3572 | 0.3558 | 0.3558 |
+| W6 | cuda_hist / cpu_hist | PR-AUC mote val | 0.8725 | 0.8738 | 0.8738 |
 
 ### Telemetri GPU selama B5 (g16-gpu)
 
@@ -462,11 +477,22 @@ Alasan throttle `0x4` = batas daya perangkat lunak (wajar di laptop), `0x0` = ti
 - **W8** mengukur komputasi siklus inferensi (`POST /api/v1/analyze`, sama dengan `predict_last` worker armada) tanpa database dan broker. Varian 2 inti adalah G16 yang dibatasi 2 inti, **bukan** VPS 2 vCPU; tidak ada klaim target PRD (< 30 s / 100 truk di VPS 2 vCPU) terpenuhi.
 - **W3/W4** satu run terukur per tag (banyak pelatihan di dalamnya), jadi speedup-nya tanpa CI.
 
+### Kesamaan kode antar-device (B5)
+
+| workload | commit g16-cpu | commit d0-old | kode workload | berkas berbeda |
+|---|---|---|---|---|
+| W3 | 5d13490 | fd61a98 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml`, `bench/workloads/w8_siklus.py`, `ml/preprocess/export_fleet.py` |
+| W4 | 5d13490 | fd61a98 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml`, `bench/workloads/w8_siklus.py`, `ml/preprocess/export_fleet.py` |
+| W6 | 5d13490 | fd61a98 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml`, `bench/workloads/w8_siklus.py`, `ml/preprocess/export_fleet.py` |
+| W8 | 5d13490 | fd61a98 | **berbeda** | `backend/app/adapters/__init__.py`, `backend/app/clock.py`, `backend/app/db/__init__.py`, `backend/app/db/migrate.py`, `backend/app/db/seed.py`, `backend/app/fleet/__init__.py` … |
+
+W8 mengirim jendela 60 bacaan ke `POST /api/v1/analyze`; di kedua versi backend model dijalankan untuk satu jendela, tetapi kodenya tidak identik (versi armada menambah `predict_last` dan konversi zona waktu). Perbandingan W8 antar-device dibaca dengan catatan ini.
+
 ## Keterbatasan
 
 - Satu unit per device dan satu mode daya; hasil laptop lain dengan seri yang sama bisa berbeda (termal, BIOS).
 - Model kecil (GRU 3×128, XGBoost), sehingga GPU sering tidak terpakai penuh; percepatan GPU untuk model besar tidak dapat disimpulkan dari sini.
 - Data simulasi (dataset v4), bukan logger truk nyata.
 - WSL2 dengan batas memori 12 GB di kedua laptop; Windows native tidak diukur.
-- Laptop lama mengalami throttling termal pada run pertama; run itu dibatalkan dan diulang dalam mode Extreme Performance. Hasilnya bergantung pada pendinginan saat itu.
+- Laptop lama mengalami throttling termal pada run pertama; run itu dibatalkan dan diulang dalam mode Extreme Performance. Menurut pesan commit `4c193ca`, CPU-nya tetap di-throttle termal secara berkala selama paket B5 (±100 °C → ±22 % performa); data suhunya tidak ada di repo. Angka laptop lama, terutama B5, bisa lebih lambat daripada kemampuan CPU itu dengan pendinginan baik, sehingga speedup laptop lama → G16 cenderung dilebih-lebihkan.
 - Commit run laptop lama dan berkas env capture-nya belum dapat diverifikasi dari repo (lihat Provenance).

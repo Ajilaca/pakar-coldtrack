@@ -7,7 +7,7 @@ import json
 
 import numpy as np
 
-from bench.common import RESULTS_DIR, rel
+from bench.common import RESULTS_DIR, ROOT, rel  # noqa: F401  (ROOT dipakai bagian_b6)
 
 TAGS = ["g16-gpu", "g16-cpu", "d0-old"]
 
