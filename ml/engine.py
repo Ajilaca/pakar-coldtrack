@@ -13,8 +13,11 @@ CFG = dict(
     ttb_waspada=60,         # TTB <= 60 menit -> minimal WASPADA     (proposal lama)
     ttb_tampil=60,          # TTB hanya ditampilkan bila <= ini       (proposal lama: 30; dilonggarkan, lihat dokumen)
     margin_waspada_k=1.0,   # muatan < 1 K dari batas atas -> WASPADA (DESAIN) ...
-    margin_waspada_frac=0.35,  # ... tapi maks. 35% lebar rentang (rentang 2-4 C -> 0,7 K). Kompromi terukur di v4:
-                               # 0,5 K -> 7% pelanggaran dekat tampil AMAN; 0,7 K -> 4% (lolos <=5%), sehat diperingatkan 20%
+    margin_waspada_frac=0.25,  # ... tapi maks. 25% lebar rentang (rentang 2-4 C -> 0,5 K). Keputusan user 2026-10-11 dari
+                               # sapuan split VAL (eval/results/margin_sweep_val.json): alarm palsu menit trip normal
+                               # 24,3% -> 17,6%, breach terlewat 0/20 tetap, jendela TTB<=30 tampil AMAN 0% -> 0,4%,
+                               # lead time median 84 -> 37,5 mnt, episode alarm/jam 0,36 -> 0,39. Nilai lama 0,35
+                               # dipilih dari sapuan split TEST (eval/results/margin_sweep_iter2.json).
     drift_min_c_per_min=0.005, # kenaikan sensor >= 0,3 C/jam dianggap hanyut (DESAIN)
     drift_door_free_min=30,    # proyeksi hanyut hanya bila pintu tertutup 30 menit terakhir (pintu ditangani aturan pintu)
     door_waspada_min=30,    # pintu terbuka dan sisa waktu kasus terburuk <= 30 menit -> WASPADA (DESAIN)

@@ -7,7 +7,7 @@
   "kriteria": "alarm palsu terendah dengan breach_terlewat_lead_lt10 <= margin sekarang (0,35); ditetapkan sebelum hasil",
   "sekarang": 0.35,
   "usulan_frac": 0.2,
-  "diterapkan": false,
+  "diterapkan": true,
   "catatan": "Sapuan lama eval/results/margin_sweep_iter2.json memakai split TEST; tidak dipakai di sini.",
   "sapuan": [
     {
@@ -143,5 +143,11 @@
       "n_menit_urgent": 2936
     }
   ],
-  "durasi_s": 1.3
+  "durasi_s": 1.3,
+  "keputusan": {
+    "frac": 0.25,
+    "oleh": "user",
+    "tanggal": "2026-10-11",
+    "catatan": "Usulan kriteria = 0,20; user memilih 0,25 sebagai kompromi (episode alarm/jam dan jendela TTB<=30 tampil AMAN lebih rendah dari 0,20)."
+  }
 }

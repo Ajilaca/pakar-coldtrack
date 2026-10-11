@@ -95,6 +95,16 @@ sebelum fitur dihitung (`backend/app/inference.ke_zona_armada`), sama dengan wor
 - Angka evaluasi di atas tidak terpengaruh, karena dihitung langsung dari jendela latih, bukan lewat
   `/analyze`.
 
+**Ambang "suhu mendekati batas" mesin fisika (11 Oktober 2026):**
+- `margin_waspada_frac` diturunkan dari 0,35 ke **0,25**. Keputusan user, dari sapuan split **val**
+  (`eval/results/margin_sweep_val.json`).
+- Nilai lama 0,35 dipilih dari sapuan split **test**.
+- Status AMAN/WASPADA/KRITIS berubah: alarm pada menit trip normal di val turun 24,3% → 17,6%,
+  dengan breach terlewat tetap 0/20 (sampel kecil).
+- Peringatan datang lebih lambat (lead time median 84 → 37,5 mnt), dan 0,4% jendela dengan TTB ≤ 30 mnt
+  sempat tampil AMAN.
+- Angka evaluasi status di bagian riwayat di bawah dihitung dengan 0,35.
+
 Bagian di bawah ini mendeskripsikan **v2** dan dipertahankan sebagai riwayat.
 
 ---

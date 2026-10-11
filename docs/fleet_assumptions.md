@@ -79,6 +79,25 @@ insiden kondisi. Penyebabnya mesin fisika, bukan worker:
 - Ambang mesin tidak diubah di Fase 3. Perubahannya harus diputuskan dan divalidasi ulang di split val
   (lihat `docs/model_card.md` §6: ambang condong ke sisi waspada).
 
+**Tindak lanjut (11 Oktober 2026):**
+- **Sapuan val.** Margin peringatan "suhu mendekati batas" disapu di split **val**
+  (`eval/margin_sweep_val.py`, `eval/results/margin_sweep_val.json`).
+  - Kriteria yang ditetapkan sebelum hasil dilihat mengusulkan 0,20.
+  - User memilih **0,25** sebagai kompromi.
+- **Dampak di val, dibanding 0,35:**
+
+  | Metrik | 0,35 | 0,25 |
+  |---|---|---|
+  | Alarm palsu per menit trip normal | 24,3% | 17,6% |
+  | Breach terlewat | 0/20 | 0/20 |
+  | Jendela TTB ≤ 30 mnt tampil AMAN | 0% | 0,4% |
+  | Lead time median | 84 mnt | 37,5 mnt |
+  | Episode alarm per jam | 0,36 | 0,39 |
+
+  Profil 2–4 °C tetap paling sering beralarm (±40–47% menit). Sisa alarm juga datang dari aturan TTB ≤ 60
+  menit (±6% menit normal), yang tidak terpengaruh margin.
+- **Asal nilai lama.** Margin 0,35 dulu dipilih dari sapuan split **test** (`margin_sweep_iter2.json`).
+
 ### Catatan simulator
 
 Simulator memutar ulang trip seed dengan ts = jam bersama. Jam asli trip v4 tidak dipertahankan, sehingga
