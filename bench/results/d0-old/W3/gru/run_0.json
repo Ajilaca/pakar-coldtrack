@@ -1,0 +1,86 @@
+{
+  "workload": "W3",
+  "config_id": "gru",
+  "konfigurasi": {
+    "model": "gru",
+    "trial": 8,
+    "epoch": 5
+  },
+  "tag": "d0-old",
+  "device": "cpu",
+  "run": 0,
+  "pemanasan": false,
+  "seed": 1000,
+  "waktu_utc": "2026-10-11T15:19:38+00:00",
+  "git": {
+    "commit": "fd61a980e9a92fa81c32579fdf0d79f005fcf52a",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "env": "bench/results/d0-old/env/env_20261011-212135.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Lenovo Extreme Performance (Fn+Q) + Windows \"Best performance\"",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": "Run pertama (mode Lenovo otomatis/Intelligent Cooling) dibatalkan: suhu CPU mencapai ~100 C lalu di-clamp ke ~22% performa (~400 MHz) selama 4-8 menit, berulang tiap ~10 menit. Hasilnya tidak dipakai. Claude Code desktop tetap berjalan sebagai pengendali run (beban CPU ~1-2%), ditambah perekam suhu/performa Windows tiap ~12 detik."
+  },
+  "protokol": {
+    "repeats": 1,
+    "warmup": 0,
+    "cooldown_s": 60
+  },
+  "waktu": {
+    "sweep_s": 3612.020520859005,
+    "trial_per_jam": 7.973376627758147,
+    "dinding_total_s": 3617.480877754002
+  },
+  "n_trial": 8,
+  "skor_terbaik": 0.6283115311661285,
+  "per_trial": [
+    {
+      "trial": 0,
+      "detik": 206.660866926999,
+      "skor": 0.5790013181278815
+    },
+    {
+      "trial": 1,
+      "detik": 886.9558510770003,
+      "skor": 0.6283115311661285
+    },
+    {
+      "trial": 2,
+      "detik": 354.7204728210054,
+      "skor": 0.5146946549980389
+    },
+    {
+      "trial": 3,
+      "detik": 119.27628648200334,
+      "skor": 0.5400855861482253
+    },
+    {
+      "trial": 4,
+      "detik": 520.5490009709974,
+      "skor": 0.5395423812651544
+    },
+    {
+      "trial": 5,
+      "detik": 804.0597375490033,
+      "skor": 0.5516436428542852
+    },
+    {
+      "trial": 6,
+      "detik": 183.44156813799782,
+      "skor": 0.5653114301910741
+    },
+    {
+      "trial": 7,
+      "detik": 536.3314894710056,
+      "skor": -0.4705343750937513
+    }
+  ],
+  "telemetri": {
+    "tersedia": false
+  }
+}
