@@ -1,0 +1,147 @@
+{
+  "split": "val",
+  "data": "v4_seed1000_700trips.parquet",
+  "n_trip": 105,
+  "n_trip_normal_A0": 62,
+  "n_trip_breach": 31,
+  "kriteria": "alarm palsu terendah dengan breach_terlewat_lead_lt10 <= margin sekarang (0,35); ditetapkan sebelum hasil",
+  "sekarang": 0.35,
+  "usulan_frac": 0.2,
+  "diterapkan": false,
+  "catatan": "Sapuan lama eval/results/margin_sweep_iter2.json memakai split TEST; tidak dipakai di sini.",
+  "sapuan": [
+    {
+      "frac": 0.15,
+      "margin_2_4C_K": 0.3,
+      "margin_2_8C_K": 0.9,
+      "alarm_palsu_per_menit_normal": 0.134004884004884,
+      "episode_alarm_per_jam_normal": 0.4532967032967033,
+      "alarm_per_menit_label_A0": 0.14636957356895888,
+      "alarm_palsu_per_profil": {
+        "buah_segar_2_4C": 0.35942566002779064,
+        "daging_beku_-18C": 0.00034246575342465754,
+        "ikan_segar_0_5C": 0.0008503401360544217,
+        "produk_susu_2_4C": 0.303416149068323,
+        "vaksin_2_8C": 0.0
+      },
+      "n_trip_breach_dinilai": 20,
+      "breach_terlewat_lead_lt10": 3,
+      "breach_tanpa_peringatan": 0,
+      "lead_median_menit": 21.5,
+      "urgent_aman": 0.035422343324250684,
+      "n_menit_normal": 13104,
+      "n_menit_urgent": 2936
+    },
+    {
+      "frac": 0.2,
+      "margin_2_4C_K": 0.4,
+      "margin_2_8C_K": 1.0,
+      "alarm_palsu_per_menit_normal": 0.15331196581196582,
+      "episode_alarm_per_jam_normal": 0.4532967032967033,
+      "alarm_per_menit_label_A0": 0.16871558458189267,
+      "alarm_palsu_per_profil": {
+        "buah_segar_2_4C": 0.41824918943955536,
+        "daging_beku_-18C": 0.00034246575342465754,
+        "ikan_segar_0_5C": 0.0008503401360544217,
+        "produk_susu_2_4C": 0.3425465838509317,
+        "vaksin_2_8C": 0.0
+      },
+      "n_trip_breach_dinilai": 20,
+      "breach_terlewat_lead_lt10": 0,
+      "breach_tanpa_peringatan": 0,
+      "lead_median_menit": 34.5,
+      "urgent_aman": 0.015667574931880108,
+      "n_menit_normal": 13104,
+      "n_menit_urgent": 2936
+    },
+    {
+      "frac": 0.25,
+      "margin_2_4C_K": 0.5,
+      "margin_2_8C_K": 1.0,
+      "alarm_palsu_per_menit_normal": 0.17574786324786323,
+      "episode_alarm_per_jam_normal": 0.3891941391941392,
+      "alarm_per_menit_label_A0": 0.19067742348572161,
+      "alarm_palsu_per_profil": {
+        "buah_segar_2_4C": 0.4687355257063455,
+        "daging_beku_-18C": 0.00034246575342465754,
+        "ikan_segar_0_5C": 0.0008503401360544217,
+        "produk_susu_2_4C": 0.4,
+        "vaksin_2_8C": 0.0
+      },
+      "n_trip_breach_dinilai": 20,
+      "breach_terlewat_lead_lt10": 0,
+      "breach_tanpa_peringatan": 0,
+      "lead_median_menit": 37.5,
+      "urgent_aman": 0.0044277929155313355,
+      "n_menit_normal": 13104,
+      "n_menit_urgent": 2936
+    },
+    {
+      "frac": 0.3,
+      "margin_2_4C_K": 0.6,
+      "margin_2_8C_K": 1.0,
+      "alarm_palsu_per_menit_normal": 0.20512820512820512,
+      "episode_alarm_per_jam_normal": 0.39377289377289376,
+      "alarm_per_menit_label_A0": 0.22013061851709567,
+      "alarm_palsu_per_profil": {
+        "buah_segar_2_4C": 0.5229272811486799,
+        "daging_beku_-18C": 0.00034246575342465754,
+        "ikan_segar_0_5C": 0.0008503401360544217,
+        "produk_susu_2_4C": 0.4832298136645963,
+        "vaksin_2_8C": 0.0
+      },
+      "n_trip_breach_dinilai": 20,
+      "breach_terlewat_lead_lt10": 0,
+      "breach_tanpa_peringatan": 0,
+      "lead_median_menit": 45.5,
+      "urgent_aman": 0.0003405994550408719,
+      "n_menit_normal": 13104,
+      "n_menit_urgent": 2936
+    },
+    {
+      "frac": 0.35,
+      "margin_2_4C_K": 0.7,
+      "margin_2_8C_K": 1.0,
+      "alarm_palsu_per_menit_normal": 0.24336080586080586,
+      "episode_alarm_per_jam_normal": 0.3617216117216117,
+      "alarm_per_menit_label_A0": 0.2548341657062364,
+      "alarm_palsu_per_profil": {
+        "buah_segar_2_4C": 0.5937934228809634,
+        "daging_beku_-18C": 0.00034246575342465754,
+        "ikan_segar_0_5C": 0.0008503401360544217,
+        "produk_susu_2_4C": 0.591304347826087,
+        "vaksin_2_8C": 0.0
+      },
+      "n_trip_breach_dinilai": 20,
+      "breach_terlewat_lead_lt10": 0,
+      "breach_tanpa_peringatan": 0,
+      "lead_median_menit": 84.0,
+      "urgent_aman": 0.0,
+      "n_menit_normal": 13104,
+      "n_menit_urgent": 2936
+    },
+    {
+      "frac": 0.4,
+      "margin_2_4C_K": 0.8,
+      "margin_2_8C_K": 1.0,
+      "alarm_palsu_per_menit_normal": 0.2851037851037851,
+      "episode_alarm_per_jam_normal": 0.31135531135531136,
+      "alarm_per_menit_label_A0": 0.29401972083493405,
+      "alarm_palsu_per_profil": {
+        "buah_segar_2_4C": 0.682260305697082,
+        "daging_beku_-18C": 0.00034246575342465754,
+        "ikan_segar_0_5C": 0.0008503401360544217,
+        "produk_susu_2_4C": 0.7018633540372671,
+        "vaksin_2_8C": 0.0
+      },
+      "n_trip_breach_dinilai": 20,
+      "breach_terlewat_lead_lt10": 0,
+      "breach_tanpa_peringatan": 0,
+      "lead_median_menit": 89.0,
+      "urgent_aman": 0.0,
+      "n_menit_normal": 13104,
+      "n_menit_urgent": 2936
+    }
+  ],
+  "durasi_s": 1.3
+}
