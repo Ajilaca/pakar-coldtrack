@@ -1,0 +1,96 @@
+{
+  "workload": "W1",
+  "config_id": "b256_fp32_resident",
+  "konfigurasi": {
+    "batch_size": 256,
+    "resident": true,
+    "n_epochs": 30,
+    "lr": [
+      0.0005,
+      0.002
+    ],
+    "loss_weights": {
+      "forecast": 30.0,
+      "failure": 1.0,
+      "ttb": 8.0
+    }
+  },
+  "tag": "d0-old",
+  "device": "cpu",
+  "run": 0,
+  "pemanasan": true,
+  "seed": 1000,
+  "waktu_utc": "2026-10-11T11:32:12+00:00",
+  "git": {
+    "commit": "9d97fe96afc127c24f59922f799b12f9c71a4af4",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "env": "bench/results/d0-old/env/env_20261011-183115.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Lenovo Extreme Performance (Fn+Q) + Windows \"Best performance\"",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": "Run pertama (mode Lenovo otomatis/Intelligent Cooling) dibatalkan: suhu CPU mencapai ~100 C lalu di-clamp ke ~22% performa (~400 MHz) selama 4-8 menit, berulang tiap ~10 menit. Hasilnya tidak dipakai. Claude Code desktop tetap berjalan sebagai pengendali run (beban CPU ~1-2%), ditambah perekam suhu/performa Windows tiap ~12 detik."
+  },
+  "protokol": {
+    "repeats": 5,
+    "warmup": 1,
+    "cooldown_s": 60
+  },
+  "waktu": {
+    "muat_s": 1.604809659998864,
+    "praproses_s": 3.3647877479961608,
+    "transfer_ke_device_s": 0.00019383199833100662,
+    "latih_loop_s": 37.630450926000776,
+    "eval_s": 2.9035999459956656,
+    "detik_latih_per_epoch_median": 34.79144219199952,
+    "sampel_per_detik_median": 2233.394050502115,
+    "dinding_total_s": 47.52443736699934
+  },
+  "time_to_target": {
+    "target_val_loss": 2.534773635864258,
+    "sumber_target": [
+      "bench/results/g16-cpu/B1/gru_seed1000.json",
+      "bench/results/g16-cpu/B1/gru_seed1001.json",
+      "bench/results/g16-cpu/B1/gru_seed1002.json",
+      "bench/results/g16-cpu/B1/gru_seed1003.json",
+      "bench/results/g16-cpu/B1/gru_seed1004.json"
+    ],
+    "tercapai": false,
+    "epoch": null,
+    "detik": null
+  },
+  "ringkas_latih": {
+    "detik_total_loop": 37.630450926000776,
+    "transfer_ke_device_s": 0.00019383199833100662,
+    "epoch_terbaik": 1,
+    "val_loss_terbaik": 4.957956790924072,
+    "vram_puncak_mb": null
+  },
+  "metrik_val": {
+    "forecast_t15_mae_c": 0.20711562037467957,
+    "forecast_t30_mae_c": 0.2990032434463501,
+    "forecast_t60_mae_c": 0.3082562983036041,
+    "macro_f1": 0.4791027775953173,
+    "akurasi": 0.8169245765809675,
+    "ttb_mae_menit": 29.576086044311523,
+    "anomali_pr_auc": 0.58067406016469
+  },
+  "riwayat": [
+    {
+      "epoch": 1,
+      "train_loss": 11.427270889282227,
+      "val_loss": 4.957956790924072,
+      "detik_latih": 34.79144219199952,
+      "detik_val": 2.8377721270007896,
+      "sampel_per_detik": 2233.394050502115,
+      "detik_kumulatif": 37.62998126800085
+    }
+  ],
+  "telemetri": {
+    "tersedia": false
+  }
+}
