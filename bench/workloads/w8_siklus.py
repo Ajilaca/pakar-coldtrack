@@ -1,7 +1,9 @@
 """W8 -- siklus worker inferensi end-to-end: 24 / 100 / 500 truk virtual per siklus.
 
-HARNESS berbasis endpoint backend POST /api/v1/analyze (bench/w8_cycle.py), BUKAN worker Fase 3
-rencana armada (belum ada). Backend memakai ONNX Runtime CPU, jadi W8 hanya bermakna di jalur CPU;
+HARNESS berbasis endpoint backend POST /api/v1/analyze (bench/w8_cycle.py). Worker Fase 3
+(backend/app/workers/infer.py) kini ada dan memakai jalur komputasi yang sama (inference.predict_last:
+mesin fisika atas riwayat + model untuk jendela terakhir), tetapi juga I/O TimescaleDB; W8 sengaja hanya
+mengukur komputasinya, tanpa database dan broker. Backend memakai ONNX Runtime CPU, jadi W8 hanya bermakna di jalur CPU;
 tag GPU dicatat "tidak berlaku". Varian 2 inti (afinitas CPU) membandingkan dengan acuan PRD:
 < 30 detik per siklus untuk 100 truk di VPS 2 vCPU.
 """
