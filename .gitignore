@@ -44,6 +44,9 @@ Thumbs.db
 !ml/reports/coldtrack.onnx
 !backend/models/coldtrack.onnx
 !backend/models/coldtrack_ttb.onnx
+# Provider diagnosis v3 (default) + TTB kontrak jendela
+!backend/models/coldtrack_v3.onnx
+!backend/models/coldtrack_ttb_window.onnx
 !ml/reports/coldtrack_ttb.onnx
 !ml/reports/coldtrack_b3.onnx
 # Kandidat B3 (menunggu G3), tidak menimpa model produksi

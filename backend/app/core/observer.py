@@ -1,6 +1,8 @@
 """Penaksir suhu muatan (kausal) dari riwayat penuh trip. Memakai fisika: kopling = h*A, muatan mengikuti udara kabin."""
 import numpy as np
+
 from . import coldtrack_sim as _cs
+
 H_CONV, RHO_BULK = _cs.TRUCK["h_conv"], _cs.TRUCK["rho_bulk"]   # ikut TRUCK di coldtrack_sim.py
 
 def estimate_cargo(ts_clean, mass_kg, c_kj):

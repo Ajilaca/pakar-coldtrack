@@ -1,0 +1,32 @@
+{
+  "dibuat_utc": "2026-10-11T02:17:54+00:00",
+  "git": {
+    "commit": "8d3f72eec59838cb5d95d7e67c984e79e85fa0b1",
+    "branch": "feat/model-retrain-g16",
+    "dirty": true
+  },
+  "onnx_acuan": "ml/reports/coldtrack_b3.onnx",
+  "sha256_onnx": "fab911760e87dd1a9b44e3ea56cb4e8cc089da0aad7bca09481cf05e014da60c",
+  "masukan": "64 jendela pertama split VAL v4 (mentah)",
+  "toleransi": {
+    "abs": 0.0001,
+    "rel": 0.0001,
+    "aturan": "lulus bila maxabs < abs ATAU maxabs/maks|acuan| < rel, per keluaran"
+  },
+  "selisih_saat_dibuat": {
+    "forecast_c": {
+      "maxabs": 7.62939453125e-06,
+      "rel": 3.542524732579236e-07
+    },
+    "failure_prob": {
+      "maxabs": 4.172325134277344e-07,
+      "rel": 4.3902291561640886e-07
+    },
+    "time_to_breach_min": {
+      "maxabs": 0.000640869140625,
+      "rel": 2.3297550883792593e-06
+    }
+  },
+  "seed": 1000,
+  "device_latih": "g16-gpu"
+}

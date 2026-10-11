@@ -3,8 +3,10 @@
 from datetime import datetime, timedelta, timezone
 
 import pytest
-from app.main import app
 from fastapi.testclient import TestClient
+
+from app.inference import inference_engine
+from app.main import app
 
 client = TestClient(app)
 
@@ -67,7 +69,9 @@ def test_analyze_endpoint_success():
     assert "actions" in res_data
     assert len(res_data["actions"]) == 3
     assert "model_version" in res_data
-    assert res_data["model_version"] == "coldtrack-hybrid-v3"
+    # versi mengikuti provider aktif (config.yaml: model.diagnosis_provider, bawaan v3)
+    assert res_data["model_version"] == inference_engine.version
+    assert res_data["diagnosis_provider"] == inference_engine.provider_name
     assert "inference_ms" in res_data
     assert res_data["inference_ms"] < 1000  # Latency target < 1000ms
 

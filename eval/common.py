@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "backend"))
 
 from app.inference import WINDOW, cargo_params, inference_engine, readings_to_trip  # noqa: E402
+from app.preprocess import features_per_minute  # noqa: E402
 from app.schemas import TelemetryReading  # noqa: E402
 
 DATA_PATH = ROOT / "data/processed/v4_seed1000_700trips.parquet"   # run_eval --data overrides
@@ -77,7 +78,9 @@ def score_trip(g: pd.DataFrame, temp: np.ndarray | None = None, hour_shift: int 
     """Deployed output for every minute of one trip (inference_engine.analyze_trip)."""
     prof = CARGO_TO_PROFILE[g["cargo_type"].iloc[0]]
     prod = cargo_params(prof, float(g["mass_kg"].iloc[0]) if "mass_kg" in g else None)  # v4: no mass -> default
-    return inference_engine.analyze_trip(readings_to_trip(trip_readings(g, temp, hour_shift), prod), prod)
+    readings = trip_readings(g, temp, hour_shift)
+    # features_per_minute: the 12 window features the v3 provider needs (ignored by checkpoint2)
+    return inference_engine.analyze_trip(readings_to_trip(readings, prod), prod, features_per_minute(readings))
 
 
 def eval_rows(trips: dict[int, pd.DataFrame], **kw) -> pd.DataFrame:

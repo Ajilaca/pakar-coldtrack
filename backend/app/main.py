@@ -9,7 +9,6 @@ import structlog
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.config import settings
 from app.explain import compute_feature_drivers
 from app.inference import inference_engine
 from app.preprocess import prepare_onnx_input_tensor
@@ -118,11 +117,12 @@ def analyze_telemetry(payload: AnalyzeRequest) -> AnalyzeResponse:
 
     # Status, TTB and risk come from the physics engine and never depend on ONNX.
     # If the GRU failed to load, forecast/diagnosis fall back to heuristics.
-    model_version = settings.get("model", {}).get("version", "coldtrack-hybrid-v3")
+    model_version = inference_engine.version
+    provider = inference_engine.provider_name
     result = inference_engine.predict(payload.readings, payload.cargo_profile, payload.mass_kg)
     if result["forecast"] is None:
         forecast, failure_mode = _fallback_forecast(df_features, result["sensor_status"])
-        model_version = "coldtrack-engine-only"
+        model_version, provider = "coldtrack-engine-only", "engine-only"
     else:
         forecast = Forecast(**result["forecast"])
         failure_mode = FailureMode(**result["failure_mode"])
@@ -147,6 +147,9 @@ def analyze_telemetry(payload: AnalyzeRequest) -> AnalyzeResponse:
         drivers=drivers,
         actions=actions,
         model_version=model_version,
+        diagnosis_provider=provider,
+        data_lengkap=result["data_lengkap"],
+        catatan_data=result["catatan_data"],
         inference_ms=max(1, elapsed_ms),
     )
 

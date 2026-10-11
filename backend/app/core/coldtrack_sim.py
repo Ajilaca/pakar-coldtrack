@@ -4,7 +4,9 @@ A0 sehat | A1 pintu terbuka | A2 kejut ambien ekstrem | A3 sensor rusak
 Pelanggaran dinilai dari SUHU MUATAN terhadap rentang optimal produk.
 Truk = Isuzu 18 CBM refrigerated box; tiap parameter diberi tag [SUMBER]/[ATP]/[ASUMSI]/[DESAIN] di TRUCK.
 """
-import os, json
+import json
+import os
+
 import numpy as np
 import pandas as pd
 

@@ -8,9 +8,20 @@ app:
   mock_mode: false
 
 model:
-  gru_onnx_path: models/coldtrack_gru.onnx
-  ttb_onnx_path: models/coldtrack_ttb.onnx
-  version: coldtrack-hybrid-v3
+  # Sumber forecast + failure_mode. Status AMAN/WASPADA/KRITIS selalu dari mesin fisika (app/core/engine.py).
+  #   v3          (default sejak 2026-10-11, lulus G3) GRU 3x128, 7 kelas kegagalan
+  #   checkpoint2 model sebelumnya (3 kejadian). ROLLBACK: ganti nilai di bawah ke checkpoint2, restart backend.
+  diagnosis_provider: v3
+  providers:
+    v3:
+      gru_onnx_path: models/coldtrack_v3.onnx            # = ml/reports/coldtrack_b3.onnx
+      ttb_onnx_path: models/coldtrack_ttb_window.onnx    # = ml/reports/coldtrack_ttb.onnx (XGBoost, kontrak jendela)
+      labels_path: models/coldtrack_v3.labels.json       # urutan kelas + keterbatasan
+      version: coldtrack-hybrid-v3-gru-b3
+    checkpoint2:
+      gru_onnx_path: models/coldtrack_gru.onnx
+      ttb_onnx_path: models/coldtrack_ttb.onnx
+      version: coldtrack-hybrid-v3
 # Ambang status dan batas tampil TTB ada di app/core/engine.py :: CFG.
 
 # c_kj_kgc dan mass_kg_default = [ASUMSI] sampai diganti nilai dari `data kalor.pdf`
