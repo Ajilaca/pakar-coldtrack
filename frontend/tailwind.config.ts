@@ -17,6 +17,8 @@ const config: Config = {
         ok: { DEFAULT: "var(--ok)", soft: "var(--ok-soft)" },
         warn: { DEFAULT: "var(--warn)", soft: "var(--warn-soft)" },
         crit: { DEFAULT: "var(--crit)", soft: "var(--crit-soft)" },
+        offline: { DEFAULT: "var(--offline)", soft: "var(--offline-soft)" },
+        page: "var(--page)",
       },
       borderRadius: { md: "6px", lg: "8px" },
       fontFamily: {

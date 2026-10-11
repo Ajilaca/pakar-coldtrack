@@ -16,6 +16,7 @@ from psycopg.rows import dict_row
 from pydantic import BaseModel, Field
 
 from app import clock
+from app.fleet import loss
 from app.fleet import queries as q
 from app.fleet.incidents import FASE_TERBUKA
 
@@ -60,8 +61,12 @@ def fleet_truck(truck_id: str) -> dict[str, Any]:
                               "ORDER BY detected_at DESC LIMIT 20", (truck_id,)).fetchall()
         notif = cur.execute("SELECT id, created_at, level, title, body, read_at FROM notifications "
                             "WHERE truck_id = %s ORDER BY created_at DESC LIMIT 20", (truck_id,)).fetchall()
-    return {**truk[0], "sensor_health": state.get("sensor_health"), "perlu_diperbarui": state.get("perlu_diperbarui"),
-            "insiden": insiden, "notifikasi": notif}
+        t = truk[0]
+        label = ((t["kondisi"] or {}).get("failure_mode") or {}).get("label")
+        profil = ((t["trip"] or {}).get("profil") or {}).get("id")
+        detail = q.konteks_detail(c, truck_id, t["status"], label, profil, clock.now())
+    return {**t, "sensor_health": state.get("sensor_health"), "perlu_diperbarui": state.get("perlu_diperbarui"),
+            "insiden": insiden, "notifikasi": notif, **detail}
 
 
 @router.get("/fleet/trucks/{truck_id}/history")
@@ -105,10 +110,29 @@ def incidents(phase: str | None = None, jenis: str | None = "kondisi", truck_id:
         syarat.append(("" if terbuka else "NOT ") + "(i.phase = ANY(%s))")
         p.append(list(FASE_TERBUKA))
     with _conn() as c:
+        rows = c.cursor(row_factory=dict_row).execute(
+            "SELECT i.*, t.label, tr.cargo_profile, s.last_prediction->>'risk_index' AS risk_now, "
+            "s.last_prediction->>'time_to_breach_min' AS ttb_now, "
+            "(SELECT row_to_json(e) FROM (SELECT actor, at, from_phase, to_phase, note FROM incident_events "
+            " WHERE incident_id = i.id ORDER BY at DESC, id DESC LIMIT 1) e) AS last_event "
+            "FROM incidents i JOIN trucks t ON t.id = i.truck_id LEFT JOIN trips tr ON tr.id = i.trip_id "
+            "LEFT JOIN truck_state s ON s.truck_id = i.truck_id AND s.trip_id = i.trip_id "
+            f"WHERE {' AND '.join(syarat)} ORDER BY i.detected_at DESC LIMIT %s", (*p, limit)).fetchall()
+    for r in rows:                                   # nilai kerugian per insiden (estimasi [ASUMSI])
+        risk = r.pop("risk_now")
+        ttb = r.pop("ttb_now")
+        r["ttb_now_min"] = float(ttb) if ttb is not None else None
+        r["loss"] = loss.per_insiden(r, float(risk) if risk is not None else None)
+    return rows
+
+
+@router.get("/incidents/events")
+def incident_events(limit: int = Query(20, ge=1, le=200)) -> list[dict[str, Any]]:
+    """Audit trail lintas insiden (perubahan fase terbaru dulu)."""
+    with _conn() as c:
         return c.cursor(row_factory=dict_row).execute(
-            "SELECT i.*, t.label, tr.cargo_profile FROM incidents i JOIN trucks t ON t.id = i.truck_id "
-            f"LEFT JOIN trips tr ON tr.id = i.trip_id WHERE {' AND '.join(syarat)} "
-            "ORDER BY i.detected_at DESC LIMIT %s", (*p, limit)).fetchall()
+            "SELECT e.*, i.truck_id, i.jenis FROM incident_events e JOIN incidents i ON i.id = e.incident_id "
+            "ORDER BY e.at DESC, e.id DESC LIMIT %s", (limit,)).fetchall()
 
 
 @router.get("/incidents/{incident_id}")

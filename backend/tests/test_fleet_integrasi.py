@@ -205,6 +205,7 @@ def test_api_ringkasan_truk_peta_sensor_kerugian(db):
     assert len(truk) == s["n_truk"] and {"status", "trip", "kondisi", "sensor", "perangkat"} <= set(truk[0])
     detail = api.get(f"/api/v1/fleet/trucks/{KEY}").json()                    # kunci topik juga diterima
     assert detail["truck_id"] == TRUK and "perlu_diperbarui" in detail
+    assert {"drivers", "actions", "ambien_delta_10m", "pintu_terakhir_dibuka", "setpoint_c"} <= set(detail)
     assert api.get("/api/v1/fleet/trucks/TIDAK_ADA").status_code == 404
     h = api.get(f"/api/v1/fleet/trucks/{KEY}/history", params={"menit": 60}).json()
     assert {"aktual", "prediksi", "garis_prediksi", "profil"} <= set(h)
@@ -244,5 +245,10 @@ def test_patch_insiden_maju_saja_dan_audit(db, truk_uji):
     assert api.patch(f"/api/v1/incidents/{inc_id}", json={"note": "lagi"}).status_code == 409
     ev = [(e["actor"], e["from_phase"], e["to_phase"]) for e in api.get(f"/api/v1/incidents/{inc_id}").json()["events"]]
     assert ev == [("Sari", "TERDETEKSI", "DITUGASKAN"), ("Sari", "DITUGASKAN", "SELESAI")]
+    daftar = api.get("/api/v1/incidents", params={"truck_id": TRUK_IT, "jenis": "kondisi"}).json()
+    assert daftar[0]["id"] == inc_id and daftar[0]["loss"]["hasil"] == "diatasi"
+    assert daftar[0]["last_event"]["to_phase"] == "SELESAI"
+    audit = api.get("/api/v1/incidents/events", params={"limit": 50}).json()
+    assert any(e["incident_id"] == inc_id and e["truck_id"] == TRUK_IT for e in audit)
     t.join(15)
     assert any("event: incident" in b for b in terima), terima[:5]

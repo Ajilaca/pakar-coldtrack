@@ -187,3 +187,33 @@ def kerugian(c, now: datetime, jam: int = 24 * 7) -> dict[str, Any]:
         baris.append({"incident_id": r["id"], "truck_id": r["truck_id"], "phase": r["phase"],
                       "detected_at": r["detected_at"], "breach_at": r["breach_at"], **loss.per_insiden(r, risk)})
     return {"dari": now - timedelta(hours=jam), "sampai": now, "ringkasan": loss.ringkas(baris), "insiden": baris}
+
+
+def konteks_detail(c, truck_id: str, status: str, label: str | None, cargo_profile: str | None,
+                   now: datetime) -> dict[str, Any]:
+    """Pelengkap halaman detail truk dari 60 bacaan terakhir: faktor pendorong (heuristik, sama dengan
+    POST /analyze), tindakan (app/rules.py), perubahan suhu luar 10 menit, pintu terakhir dibuka."""
+    from app.explain import compute_feature_drivers
+    from app.preprocess import prepare_onnx_input_tensor
+    from app.rules import generate_recommended_actions
+    from app.schemas import TelemetryReading
+
+    rows = c.cursor(row_factory=dict_row).execute(
+        "SELECT ts, temp_c, humidity, ambient_c, door_open, reefer_on, speed_kmh, harsh_events, solar_radiation "
+        "FROM telemetry WHERE truck_id = %s AND ts <= %s ORDER BY ts DESC LIMIT 60",
+        (truck_id, now + timedelta(minutes=2))).fetchall()[::-1]
+    out: dict[str, Any] = {"drivers": [], "actions": [], "ambien_delta_10m": None, "pintu_terakhir_dibuka": None}
+    if rows:
+        out["drivers"] = [d.model_dump() for d in compute_feature_drivers(
+            prepare_onnx_input_tensor([TelemetryReading.model_validate(r) for r in rows])[1])]
+        lalu = [r for r in rows if r["ts"] <= rows[-1]["ts"] - timedelta(minutes=10)]
+        if lalu:
+            out["ambien_delta_10m"] = round(rows[-1]["ambient_c"] - lalu[-1]["ambient_c"], 1)
+        buka = [r["ts"] for r in rows if r["door_open"]]
+        out["pintu_terakhir_dibuka"] = buka[-1] if buka else None
+    if status in ("AMAN", "WASPADA", "KRITIS", "DATA_TIDAK_LENGKAP") and cargo_profile:
+        st = "AMAN" if status == "DATA_TIDAK_LENGKAP" else status
+        out["actions"] = [a.model_dump() for a in generate_recommended_actions(st, label or "", cargo_profile)]
+    p = settings.get("cargo_profiles", {}).get(cargo_profile or "", {})
+    out["setpoint_c"] = p.get("t_set_c")
+    return out
