@@ -1,0 +1,80 @@
+{
+  "tag": "d0-old",
+  "waktu_utc": "2026-10-11T14:21:35+00:00",
+  "git": {
+    "commit": "fd61a980e9a92fa81c32579fdf0d79f005fcf52a",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "data": {
+    "path": "data/processed/v4_seed1000_700trips.parquet",
+    "bytes": 10787082,
+    "sha256": "fe9a409f36c99086886320cb102eb5f68e5c25a829eada437fc847fe6698bc3e"
+  },
+  "os": {
+    "platform": "Linux-6.18.40.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "system": "Linux",
+    "release": "6.18.40.1-microsoft-standard-WSL2",
+    "wsl": true,
+    "distro": "Ubuntu 24.04.2 LTS",
+    "windows": "Microsoft Windows 11 Home Single Language build 26300",
+    "machine": "LENOVO 82UD",
+    "wslconfig": "[wsl2]\nmemory=12GB"
+  },
+  "cpu": {
+    "model": "AMD Ryzen 7 5700U with Radeon Graphics",
+    "logical_cores": 16,
+    "physical_cores": 8,
+    "freq_max_dilaporkan_os_mhz": null
+  },
+  "memori": {
+    "total_gb": 11.68,
+    "available_gb_saat_capture": 11.06,
+    "host_physical_gb": 13.84
+  },
+  "gpu": {
+    "nvidia_smi": false
+  },
+  "daya": {
+    "skema_daya_windows": "Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced)",
+    "charger_terpasang": true
+  },
+  "framework": {
+    "python": "3.11.17",
+    "numpy": "2.4.6",
+    "pandas": "3.0.6",
+    "sklearn": "1.9.1",
+    "torch": "2.11.0+cpu",
+    "xgboost": "3.2.0",
+    "onnxruntime": "1.31.0",
+    "onnx": "1.23.2",
+    "optuna": "5.0.0",
+    "torch_detail": {
+      "cuda_available": false,
+      "torch_cuda": null,
+      "cudnn": null,
+      "num_threads": 8,
+      "arch_list": []
+    },
+    "onnxruntime_providers": [
+      "AzureExecutionProvider",
+      "CPUExecutionProvider"
+    ],
+    "xgboost_use_cuda": true
+  },
+  "env_vars": {
+    "CUDA_VISIBLE_DEVICES": "",
+    "OMP_NUM_THREADS": null,
+    "MKL_NUM_THREADS": null,
+    "CUBLAS_WORKSPACE_CONFIG": null
+  },
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Lenovo Extreme Performance (Fn+Q) + Windows \"Best performance\"",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": "Run pertama (mode Lenovo otomatis/Intelligent Cooling) dibatalkan: suhu CPU mencapai ~100 C lalu di-clamp ke ~22% performa (~400 MHz) selama 4-8 menit, berulang tiap ~10 menit. Hasilnya tidak dipakai. Claude Code desktop tetap berjalan sebagai pengendali run (beban CPU ~1-2%), ditambah perekam suhu/performa Windows tiap ~12 detik."
+  },
+  "lingkungan_dipilih": "WSL2 Ubuntu 24.04"
+}

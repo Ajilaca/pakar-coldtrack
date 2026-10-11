@@ -1,0 +1,59 @@
+{
+  "workload": "W8",
+  "config_id": "truk500",
+  "konfigurasi": {
+    "truk": 500,
+    "inti_cpu": "semua",
+    "harness": "POST /api/v1/analyze via TestClient"
+  },
+  "tag": "d0-old",
+  "device": "cpu",
+  "run": 4,
+  "pemanasan": false,
+  "seed": 1003,
+  "waktu_utc": "2026-10-11T17:09:19+00:00",
+  "git": {
+    "commit": "fd61a980e9a92fa81c32579fdf0d79f005fcf52a",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "env": "bench/results/d0-old/env/env_20261011-212135.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Lenovo Extreme Performance (Fn+Q) + Windows \"Best performance\"",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": "Run pertama (mode Lenovo otomatis/Intelligent Cooling) dibatalkan: suhu CPU mencapai ~100 C lalu di-clamp ke ~22% performa (~400 MHz) selama 4-8 menit, berulang tiap ~10 menit. Hasilnya tidak dipakai. Claude Code desktop tetap berjalan sebagai pengendali run (beban CPU ~1-2%), ditambah perekam suhu/performa Windows tiap ~12 detik."
+  },
+  "protokol": {
+    "repeats": 5,
+    "warmup": 1,
+    "cooldown_s": 15
+  },
+  "waktu": {
+    "siklus_median_s": 40.32085009099683,
+    "ms_per_truk_median": 80.64170018199366,
+    "dinding_total_s": 161.30367658599425
+  },
+  "siklus": {
+    "trucks": 500,
+    "cores": 16,
+    "cycles": 3,
+    "siklus_s": [
+      40.30572934199881,
+      40.32085009099683,
+      40.437201420005294
+    ],
+    "siklus_median_s": 40.32085009099683,
+    "ms_per_truk_median": 80.64170018199366,
+    "status_siklus_terakhir": {
+      "AMAN": 100,
+      "KRITIS": 200,
+      "WASPADA": 200
+    }
+  },
+  "telemetri": {
+    "tersedia": false
+  }
+}

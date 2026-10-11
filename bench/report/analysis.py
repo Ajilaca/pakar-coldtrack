@@ -7,7 +7,7 @@ import json
 
 import numpy as np
 
-from bench.common import RESULTS_DIR, rel
+from bench.common import RESULTS_DIR, ROOT, rel  # noqa: F401  (ROOT dipakai bagian_b6)
 
 TAGS = ["g16-gpu", "g16-cpu", "d0-old"]
 
@@ -16,7 +16,14 @@ WAKTU_UTAMA = {
     "W1": ("latih_loop_s", lambda r: r["waktu"]["latih_loop_s"]),
     "W2": ("latih_s", lambda r: r["waktu"]["latih_s"]),
     "W7": ("latensi_p50_ms", lambda r: r["inferensi"]["latensi_ms"]["p50"]),
+    # B5: W3/W4 = satu run terukur berisi banyak pelatihan (tanpa CI); W6/W8 = 5 ulangan
+    "W3": ("sweep_s", lambda r: r["waktu"]["sweep_s"]),
+    "W4": ("ablation_total_s", lambda r: r["waktu"]["ablation_total_s"]),
+    "W6": ("dinding_total_s", lambda r: r["waktu"]["dinding_total_s"]),
+    "W8": ("siklus_median_s", lambda r: r["waktu"]["siklus_median_s"]),
 }
+B2 = ("W1", "W2", "W7")
+B5 = ("W3", "W4", "W6", "W8")
 
 # pasangan perbandingan (pembanding, yang dibandingkan): speedup = median pembanding / median lainnya
 PASANGAN = [
@@ -118,9 +125,52 @@ def acuan_cpu(workload, cid):
 
     if workload == "W1":
         return W1_ACUAN_CPU.get(cid, cid)
-    if workload == "W2":
+    if workload in ("W2", "W6"):
         return "cpu_hist" if cid == "cuda_hist" else cid
+    if workload == "W3":
+        return "xgb_cpu" if cid == "xgb_cuda" else cid
+    if workload in ("W4", "W8"):
+        return cid
     return re.sub(r"_cuda(_notf32)?_", "_cpu_", cid)
+
+
+def provenance(tag):
+    """Commit git per run di tag ini, dan apakah commit itu ada di repo lokal (bisa ditelusuri)."""
+    import subprocess
+    from collections import Counter
+
+    c = Counter()
+    for f in (RESULTS_DIR / tag).glob("*/*/run_*.json"):
+        g = json.loads(f.read_text(encoding="utf-8")).get("git") or {}
+        c[(g.get("commit", "?")[:7], bool(g.get("dirty")))] += 1
+    out = []
+    for (commit, dirty), n in sorted(c.items(), key=lambda kv: -kv[1]):
+        ada = subprocess.run(["git", "cat-file", "-e", f"{commit}^{{commit}}"], capture_output=True, check=False).returncode == 0
+        out.append({"commit": commit, "dirty": dirty, "n_run": n, "ada_di_repo": ada})
+    return out
+
+
+def env_tag(tag):
+    """Isi env capture terakhir yang dirujuk run di tag ini (None bila berkasnya tidak ada)."""
+    refs = set()
+    for f in (RESULTS_DIR / tag).glob("*/*/run_*.json"):
+        e = json.loads(f.read_text(encoding="utf-8")).get("env")
+        if isinstance(e, str):
+            refs.add(e)
+    for ref in sorted(refs, reverse=True):  # terbaru dulu; lewati rujukan yang berkasnya hilang
+        p = RESULTS_DIR.parent.parent / ref
+        if p.exists():
+            return json.loads(p.read_text(encoding="utf-8")), ref
+    top = RESULTS_DIR / tag / "env.json"
+    if top.exists():
+        return json.loads(top.read_text(encoding="utf-8")), rel(top)
+    return None, (max(refs) if refs else None)
+
+
+def kondisi_tag(tag):
+    """kondisi_manual dari run terakhir di tag ini."""
+    files = sorted((RESULTS_DIR / tag).glob("*/*/run_*.json"), key=lambda f: f.stat().st_mtime)
+    return json.loads(files[-1].read_text(encoding="utf-8")).get("kondisi_manual") if files else None
 
 
 def summary_rows():

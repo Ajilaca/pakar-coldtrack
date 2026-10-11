@@ -2,7 +2,8 @@
 
   python -m bench.report.build_report
 
-Saat ini memuat bagian gerbang (G1). Bagian workload, grafik, dan summary.csv ditambahkan di B6.
+Bagian: ringkasan, device + provenance, metodologi, G1, B2, B3, G3, G4, B5, keterbatasan (bench/report/bagian_b6.py),
+plus summary.csv dan grafik.
 """
 
 import json
@@ -451,6 +452,8 @@ def buat_grafik(g2):
 
 
 def main():
+    from bench.report import bagian_b6 as b6
+
     g2p = RESULTS_DIR / "G2.json"
     g2 = _load(g2p) if g2p.exists() else None
     gambar = buat_grafik(g2)
@@ -461,11 +464,17 @@ def main():
         f"> Dibangkitkan oleh `bench/report/build_report.py` pada {now_iso()}. Jangan diedit manual:",
         "> setiap angka berasal dari JSON di `bench/results/`. Tabel lengkap: `summary.csv`.",
         "",
+        *b6.bagian_ringkasan(g2),
+        *b6.bagian_device(),
+        *b6.bagian_metodologi(),
         *bagian_g1(),
         *bagian_b2(g2, gambar),
         *bagian_b3(),
         *bagian_g3(),
         *bagian_g4(),
+        *b6.bagian_b5(g2),
+        *b6.bagian_kesamaan_kode(),
+        *b6.bagian_keterbatasan(),
     ]
     OUT.write_text("\n".join(lines), encoding="utf-8")
     print(f"Tersimpan: {OUT.relative_to(ROOT).as_posix()} + summary.csv + {len(gambar)} grafik")
