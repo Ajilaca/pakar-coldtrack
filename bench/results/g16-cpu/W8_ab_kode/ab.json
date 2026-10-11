@@ -1,0 +1,53 @@
+{
+  "workload": "W8",
+  "uji": "A/B kode backend, mesin sama",
+  "tag": "g16-cpu",
+  "waktu_utc": "2026-10-11T22:46:34+00:00",
+  "git_runner": {
+    "commit": "7aceb85fe9b909b9b2703169f4c6f2969f0b77b7",
+    "branch": "feat/fleet-online",
+    "dirty": false
+  },
+  "cpu": {
+    "model": "AMD Ryzen 9 8940HX with Radeon Graphics",
+    "logical_cores": 32,
+    "physical_cores": 16,
+    "freq_max_dilaporkan_os_mhz": null
+  },
+  "truk": 100,
+  "siklus_per_run": 5,
+  "ulang": 3,
+  "urutan": "bergantian A,B per ulangan",
+  "commit_a": "fd61a98",
+  "commit_b": "5d13490",
+  "siklus_median_s": {
+    "fd61a98": [
+      3.191643758007558,
+      3.1841353369964054,
+      3.173730457012425
+    ],
+    "5d13490": [
+      3.307807983001112,
+      3.5813476019975496,
+      3.435006240993971
+    ]
+  },
+  "median": {
+    "fd61a98": 3.1841353369964054,
+    "5d13490": 3.435006240993971
+  },
+  "rasio_b_per_a": 1.0787877641640107,
+  "status_identik": true,
+  "status": {
+    "fd61a98": {
+      "AMAN": 20,
+      "KRITIS": 40,
+      "WASPADA": 40
+    },
+    "5d13490": {
+      "AMAN": 20,
+      "KRITIS": 40,
+      "WASPADA": 40
+    }
+  }
+}

@@ -418,11 +418,34 @@ def bagian_kesamaan_kode():
     out += [
         "",
         ("W8 mengirim jendela 60 bacaan ke `POST /api/v1/analyze`; di kedua versi backend model dijalankan untuk satu "
-         "jendela, tetapi kodenya tidak identik (versi armada menambah `predict_last` dan konversi zona waktu). "
-         "Perbandingan W8 antar-device dibaca dengan catatan ini."),
+         "jendela, tetapi kodenya tidak identik (versi armada menambah `predict_last` dan konversi zona waktu)."),
         "",
+        *_catatan_ab_w8(),
     ]
     return out
+
+
+def _catatan_ab_w8():
+    """Efek perbedaan kode backend W8, diukur A/B di mesin yang sama (bench/w8_ab_kode.py)."""
+    import json
+
+    p = an.RESULTS_DIR / "g16-cpu" / "W8_ab_kode" / "ab.json"
+    if not p.exists():
+        return ["Efek perbedaan kode W8 belum diukur; perbandingan W8 antar-device dibaca dengan catatan ini.", ""]
+    d = json.loads(p.read_text(encoding="utf-8"))
+    r = d["rasio_b_per_a"]
+    arah = ("lebih berat" if r > 1 else "lebih ringan")
+    return [
+        (f"**Uji A/B kode (mesin sama, {d['tag']}, {d['truk']} truk, {d['ulang']} ulangan bergantian):** median siklus "
+         f"`{d['commit_a']}` {d['median'][d['commit_a']]:.3f} s vs `{d['commit_b']}` {d['median'][d['commit_b']]:.3f} s; "
+         f"kode `{d['commit_b']}` {abs(r - 1):.1%} {arah}. Status keluaran {'identik' if d['status_identik'] else 'BERBEDA'}. "
+         + ("Karena G16 menjalankan kode yang lebih berat, speedup W8 laptop lama → G16 di atas cenderung lebih kecil "
+            "dari seharusnya (konservatif terhadap G16)." if r > 1 else
+            "Karena G16 menjalankan kode yang lebih ringan, speedup W8 laptop lama → G16 di atas cenderung terlalu besar.")),
+        "",
+        "Sumber: `bench/results/g16-cpu/W8_ab_kode/ab.json` (`python -m bench.w8_ab_kode`).",
+        "",
+    ]
 
 
 def _catatan_provenance():

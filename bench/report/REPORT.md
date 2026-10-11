@@ -1,6 +1,6 @@
 # Laporan latih ulang ColdTrack + benchmark device
 
-> Dibangkitkan oleh `bench/report/build_report.py` pada 2026-10-11T22:38:54+00:00. Jangan diedit manual:
+> Dibangkitkan oleh `bench/report/build_report.py` pada 2026-10-11T22:47:19+00:00. Jangan diedit manual:
 > setiap angka berasal dari JSON di `bench/results/`. Tabel lengkap: `summary.csv`.
 
 ## Ringkasan
@@ -489,7 +489,11 @@ Alasan throttle `0x4` = batas daya perangkat lunak (wajar di laptop), `0x0` = ti
 | W6 | cpu_hist | 5d13490 | fd61a98 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml`, `bench/workloads/w8_siklus.py`, `ml/preprocess/export_fleet.py` |
 | W8 | 4 config | 5d13490 | fd61a98 | **berbeda** | `backend/app/adapters/__init__.py`, `backend/app/clock.py`, `backend/app/db/__init__.py`, `backend/app/db/migrate.py`, `backend/app/db/seed.py`, `backend/app/fleet/__init__.py` … |
 
-W8 mengirim jendela 60 bacaan ke `POST /api/v1/analyze`; di kedua versi backend model dijalankan untuk satu jendela, tetapi kodenya tidak identik (versi armada menambah `predict_last` dan konversi zona waktu). Perbandingan W8 antar-device dibaca dengan catatan ini.
+W8 mengirim jendela 60 bacaan ke `POST /api/v1/analyze`; di kedua versi backend model dijalankan untuk satu jendela, tetapi kodenya tidak identik (versi armada menambah `predict_last` dan konversi zona waktu).
+
+**Uji A/B kode (mesin sama, g16-cpu, 100 truk, 3 ulangan bergantian):** median siklus `fd61a98` 3.184 s vs `5d13490` 3.435 s; kode `5d13490` 7.9% lebih berat. Status keluaran identik. Karena G16 menjalankan kode yang lebih berat, speedup W8 laptop lama → G16 di atas cenderung lebih kecil dari seharusnya (konservatif terhadap G16).
+
+Sumber: `bench/results/g16-cpu/W8_ab_kode/ab.json` (`python -m bench.w8_ab_kode`).
 
 ## Keterbatasan
 
