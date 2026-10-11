@@ -12,6 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.explain import compute_feature_drivers
 from app.inference import inference_engine
 from app.preprocess import prepare_onnx_input_tensor
+from app.routers import fleet as fleet_router
 from app.routers import ingest as ingest_router
 from app.rules import generate_recommended_actions
 from app.scenarios import scenario_manager
@@ -43,10 +44,10 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Enable CORS for Next.js frontend integration
+# CORS dipersempit lewat env CORS_ORIGINS (bawaan: frontend dev lokal), app/routers/fleet.cors_origins
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=fleet_router.cors_origins(),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -54,6 +55,7 @@ app.add_middleware(
 
 # Router armada (butuh TimescaleDB saat dipanggil; impor tidak membuka koneksi)
 app.include_router(ingest_router.router)
+app.include_router(fleet_router.router)
 
 
 @app.get("/health", summary="Docker healthcheck probe")

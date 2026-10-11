@@ -152,3 +152,34 @@ proposal §4.3.7).
 - Skema Pydantic: `backend/app/schemas.py`
 - Penegakan min 60 bacaan: `backend/app/main.py` (`analyze_telemetry`)
 - Kontrak fitur model: `docs/feature_schema.md`
+## 7. API Armada (Fase 4)
+
+Semua endpoint di bawah membaca TimescaleDB yang diisi `worker-ingest` dan `worker-infer`
+(`docker compose up`). "Sekarang" = jam bersama `app/clock.py`; di dev ini jam simulasi (`SIM_SPEED`).
+Implementasi ada di `backend/app/routers/fleet.py` dan `backend/app/fleet/queries.py`. Tes integrasinya
+di `backend/tests/test_fleet_integrasi.py`.
+
+| Metode | Path | Isi |
+|---|---|---|
+| GET | `/api/v1/fleet/summary` | Jumlah per status, kritis vs tidak, jumlah per diagnosis, grade sensor, insiden terbuka per fase, notifikasi belum dibaca, nilai muatan aktif, kerugian 24 jam |
+| GET | `/api/v1/fleet/trucks?status=` | Daftar truk diurutkan dari yang terburuk: status, trip (profil, nilai muatan), kondisi (risk, TTB, forecast, diagnosis, `data_lengkap`), bacaan terakhir, sensor, perangkat, insiden kondisi terbuka |
+| GET | `/api/v1/fleet/trucks/{id}` | Satu truk + `sensor_health` lengkap, `perlu_diperbarui`, 20 insiden dan 20 notifikasi terakhir. `id` boleh nomor polisi (`B 3036 WN`) atau kunci topik (`B3036WN`) |
+| GET | `/api/v1/fleet/trucks/{id}/history?menit=240` | `aktual` (telemetri trip aktif), `prediksi` (per menit), `garis_prediksi` (+15/+30/+60 dari prediksi terakhir, untuk grafik "Suhu kargo: aktual dan prediksi"), `profil` (batas suhu) |
+| GET | `/api/v1/fleet/map` | Depo (status = status terburuk truk aktif di depo itu) dan titik truk (lat/lon bacaan terakhir, `online`) |
+| GET | `/api/v1/fleet/sensors` | Perangkat + kesehatan sensor + daftar "Perlu diperbarui" (hardware/software) |
+| GET | `/api/v1/fleet/losses?jam=168` | Kerugian per insiden kondisi + ringkasan. Semua nilai adalah estimasi [ASUMSI], lihat `docs/fleet_assumptions.md` |
+| GET | `/api/v1/incidents?phase=&jenis=kondisi&truck_id=&terbuka=` | Daftar insiden (bawaan jenis `kondisi`) |
+| GET | `/api/v1/incidents/{id}` | Insiden + `events` (audit trail) |
+| PATCH | `/api/v1/incidents/{id}` | `{phase?, assignee?, note?, actor}`. Hanya `DITUGASKAN`, `DITANGANI`, `SELESAI`, dan hanya maju. 409 bila insiden sudah ditutup; 422 untuk fase milik Sistem (`TERDETEKSI`, `GAGAL`) atau bila tidak ada perubahan |
+| GET | `/api/v1/notifications?unread=&limit=` | `{belum_dibaca, items}` |
+| POST | `/api/v1/notifications/{id}/read`, `/api/v1/notifications/read-all` | Tandai dibaca |
+| GET | `/api/v1/models` | Kartu provider aktif (condition, sensor_health) |
+| GET | `/api/v1/stream` | SSE. Event: `hello`, `truck` (tiap truk dihitung ulang), `notification`, `incident` (PATCH), heartbeat tiap 15 detik |
+| POST | `/api/v1/ingest/vendor/{vendor}`, `/api/v1/trips`, PATCH `/api/v1/trips/{id}` | Ingest dan trip (Fase 2, `docs/device_contract.md`) |
+
+Status truk: `AMAN`, `WASPADA`, `KRITIS` (mesin fisika, sama dengan `/analyze`); `DATA_TIDAK_LENGKAP`
+(menggantikan AMAN bila 60 menit terakhir berlubang); `MENUNGGU_DATA` (< 60 menit data trip);
+`TIDAK_ADA_DATA` (≥ 10 menit tanpa bacaan, tidak pernah AMAN); `TANPA_TRIP`.
+
+CORS diatur lewat env `CORS_ORIGINS` (dipisah koma; bawaan `http://localhost:3000,http://127.0.0.1:3000`).
+`POST /api/v1/analyze` tidak berubah.

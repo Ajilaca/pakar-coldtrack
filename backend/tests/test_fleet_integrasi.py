@@ -188,3 +188,61 @@ def test_publish_lalu_prediksi_muncul(db, mq, truk_uji):
     st = db.execute("SELECT status, sensor_health->>'grade', trip_id FROM truck_state WHERE truck_id = %s",
                     (TRUK_IT,)).fetchone()
     assert st[0] == status and st[1] in ("Sehat", "Perlu cek", "Ganti", "Data kurang") and st[2] == trip_id
+
+
+# --- Fase 4: API armada, PATCH insiden (audit trail), SSE ---------------------------------------------------
+
+def _api():
+    httpx = pytest.importorskip("httpx")
+    return httpx.Client(base_url=os.environ.get("API_URL", "http://localhost:8000"), timeout=15)
+
+
+def test_api_ringkasan_truk_peta_sensor_kerugian(db):
+    api = _api()
+    s = api.get("/api/v1/fleet/summary").json()
+    assert s["n_truk"] == sum(s["per_status"].values()) and "kerugian_24j" in s
+    truk = api.get("/api/v1/fleet/trucks").json()
+    assert len(truk) == s["n_truk"] and {"status", "trip", "kondisi", "sensor", "perangkat"} <= set(truk[0])
+    detail = api.get(f"/api/v1/fleet/trucks/{KEY}").json()                    # kunci topik juga diterima
+    assert detail["truck_id"] == TRUK and "perlu_diperbarui" in detail
+    assert api.get("/api/v1/fleet/trucks/TIDAK_ADA").status_code == 404
+    h = api.get(f"/api/v1/fleet/trucks/{KEY}/history", params={"menit": 60}).json()
+    assert {"aktual", "prediksi", "garis_prediksi", "profil"} <= set(h)
+    peta = api.get("/api/v1/fleet/map").json()
+    assert len(peta["depo"]) >= 1 and all("status" in d for d in peta["depo"])
+    assert "perlu_diperbarui" in api.get("/api/v1/fleet/sensors").json()
+    assert "ringkasan" in api.get("/api/v1/fleet/losses", params={"jam": 24}).json()
+    assert {p["kind"] for p in api.get("/api/v1/models").json()["providers"]} == {"condition", "sensor_health"}
+
+
+def test_patch_insiden_maju_saja_dan_audit(db, truk_uji):
+    import threading
+
+    now, trip_id = truk_uji
+    inc_id = db.execute("INSERT INTO incidents (truck_id, trip_id, jenis, phase, status_puncak, detected_at) "
+                        "VALUES (%s, %s, 'kondisi', 'TERDETEKSI', 'WASPADA', %s) RETURNING id",
+                        (TRUK_IT, trip_id, now)).fetchone()[0]
+    api = _api()
+    terima: list[str] = []
+
+    def dengar():
+        with api.stream("GET", "/api/v1/stream", timeout=20) as r:
+            for baris in r.iter_lines():
+                terima.append(baris)
+                if f'"id": {inc_id}' in baris:
+                    return
+
+    t = threading.Thread(target=dengar, daemon=True)
+    t.start()
+    time.sleep(1.0)
+    r = api.patch(f"/api/v1/incidents/{inc_id}", json={"phase": "DITUGASKAN", "assignee": "Budi", "actor": "Sari"})
+    assert r.status_code == 200 and r.json()["phase"] == "DITUGASKAN"
+    assert api.patch(f"/api/v1/incidents/{inc_id}", json={"phase": "GAGAL"}).status_code == 422
+    assert api.patch(f"/api/v1/incidents/{inc_id}", json={"phase": "TERDETEKSI"}).status_code == 422
+    r = api.patch(f"/api/v1/incidents/{inc_id}", json={"phase": "SELESAI", "note": "Selesai", "actor": "Sari"})
+    assert r.json()["phase"] == "SELESAI" and r.json()["closed_at"]
+    assert api.patch(f"/api/v1/incidents/{inc_id}", json={"note": "lagi"}).status_code == 409
+    ev = [(e["actor"], e["from_phase"], e["to_phase"]) for e in api.get(f"/api/v1/incidents/{inc_id}").json()["events"]]
+    assert ev == [("Sari", "TERDETEKSI", "DITUGASKAN"), ("Sari", "DITUGASKAN", "SELESAI")]
+    t.join(15)
+    assert any("event: incident" in b for b in terima), terima[:5]
