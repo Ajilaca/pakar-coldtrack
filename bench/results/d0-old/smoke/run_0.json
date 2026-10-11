@@ -1,0 +1,89 @@
+{
+  "workload": "smoke",
+  "tag": "d0-old",
+  "device": "cpu",
+  "waktu_utc": "2026-10-10T18:22:48+00:00",
+  "git": {
+    "commit": "d0435ab6b73f85bcee88924388a2bc02eafc09a5",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "env": "bench/results/d0-old/env/env_20261011-012230.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Windows \"Best performance\"",
+    "pendingin": "tidak diverifikasi",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": "Claude Code desktop tetap berjalan sebagai pengendali run (beban CPU ~1-2%)"
+  },
+  "torch": {
+    "ok": true,
+    "n_param": 41443,
+    "ms_per_step_b256": 1444.121,
+    "loss_akhir": 2.7225770950317383,
+    "loss_finite": true
+  },
+  "xgboost": {
+    "ok": true,
+    "device": "cpu",
+    "detik_latih_50_pohon": 5.01,
+    "mae_latih": 0.1807626430616347
+  },
+  "onnxruntime": {
+    "onnxruntime": "1.31.0",
+    "available_providers": [
+      "AzureExecutionProvider",
+      "CPUExecutionProvider"
+    ],
+    "models": {
+      "gru": {
+        "diminta": [
+          "CPUExecutionProvider"
+        ],
+        "aktif": [
+          "CPUExecutionProvider"
+        ],
+        "cuda_ep_aktif": false,
+        "paritas_vs_cpu_ep": {
+          "forecast_c": {
+            "maxabs": 0.0,
+            "porsi_beda_gt_1e-3": 0.0
+          },
+          "failure_prob": {
+            "maxabs": 0.0,
+            "porsi_beda_gt_1e-3": 0.0
+          },
+          "time_to_breach_min": {
+            "maxabs": 0.0,
+            "porsi_beda_gt_1e-3": 0.0
+          }
+        },
+        "ok": true,
+        "path": "ml/reports/coldtrack.onnx"
+      },
+      "xgb_ttb": {
+        "diminta": [
+          "CPUExecutionProvider"
+        ],
+        "aktif": [
+          "CPUExecutionProvider"
+        ],
+        "cuda_ep_aktif": false,
+        "paritas_vs_cpu_ep": {
+          "time_to_breach_min": {
+            "maxabs": 0.0,
+            "porsi_beda_gt_1e-3": 0.0
+          }
+        },
+        "ok": true,
+        "path": "ml/reports/coldtrack_ttb.onnx"
+      }
+    },
+    "masukan": "acak N(0,1) 32x60x12",
+    "cuda_provider_options": {
+      "use_tf32": 0
+    },
+    "python": "/home/tsabita/.venvs/coldtrack/bin/python"
+  }
+}
