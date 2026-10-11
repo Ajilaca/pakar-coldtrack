@@ -1,0 +1,17 @@
+{
+  "gerbang": "G4",
+  "jenis": "adendum definisi operasional, ditulis SEBELUM kode evaluasi dan sebelum skor model apa pun dihitung",
+  "tanggal": "2026-10-11",
+  "melengkapi": "bench/results/keputusan/G4_kriteria.json (kriteria tidak berubah)",
+  "fakta_data_yang_sudah_dilihat": "Hanya eksplorasi label: 54 mote valid, semua mengalami kegagalan dalam periode data (51 bacaan ekstrem, 3 mati), umur 3-27 hari. Belum ada fitur, model, atau skor v0 yang dihitung.",
+  "definisi": {
+    "jendela": "60 menit data per menit (rata-rata bacaan), berakhir di menit t, langkah 10 menit; hanya jendela dengan t < waktu kegagalan mote (setelah gagal tidak dinilai)",
+    "label_positif": "kegagalan terjadi dalam (t, t + 24 jam]",
+    "recall": "tingkat jendela: porsi jendela positif yang ditandai alarm",
+    "alarm_palsu_per_mote_hari": "jumlah episode alarm palsu dibagi jumlah mote-hari yang diamati pada periode berlabel negatif; episode = awal rangkaian jendela beralarm yang berurutan (tepi naik), dihitung bila jendela tepi naik itu berlabel negatif",
+    "pr_auc": "average precision tingkat jendela atas semua jendela mote test",
+    "skor_v0": "status maksimum (0/1/2) aturan backend/app/core/sensor_rules.py di menit-menit jendela; alarm v0 = skor >= 1. Masukan v0: suhu per menit (menit tanpa bacaan dilewati), tegangan sebagai battery_v, tanpa pintu dan tanpa suhu ambien (tidak ada di data lab)",
+    "ambang_v1": "dipilih di mote VAL: ambang terkecil alarm palsu per mote-hari di antara ambang yang recall-nya >= recall v0 di mote val; ambang yang sama dipakai di mote test",
+    "sekunder": "recall tingkat kejadian (mote yang beralarm setidaknya sekali dalam 24 jam sebelum gagal) dan median lead time dilaporkan, tidak dipakai untuk keputusan"
+  }
+}
