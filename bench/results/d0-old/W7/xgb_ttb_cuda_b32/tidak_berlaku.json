@@ -1,0 +1,14 @@
+{
+  "workload": "W7",
+  "config_id": "xgb_ttb_cuda_b32",
+  "konfigurasi": {
+    "model": "ml/reports/coldtrack_ttb.onnx",
+    "ep": "cuda",
+    "tf32": null,
+    "batch": 32
+  },
+  "tag": "d0-old",
+  "status": "tidak berlaku",
+  "alasan": "CUDA EP butuh GPU NVIDIA",
+  "waktu_utc": "2026-10-11T11:29:55+00:00"
+}
