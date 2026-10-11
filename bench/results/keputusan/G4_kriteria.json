@@ -1,0 +1,28 @@
+{
+  "gerbang": "G4",
+  "jenis": "pra-registrasi kriteria (disepakati SEBELUM data diunduh dan sebelum hasil apa pun dilihat)",
+  "tanggal": "2026-10-11",
+  "disetujui_oleh": "user (Tsabita Khoirunnisa), lewat chat Claude Code",
+  "data": {
+    "sumber": "Intel Berkeley Research Lab, MIT CSAIL: http://db.csail.mit.edu/labdata/data.txt.gz + mote_locs.txt",
+    "lokasi_lokal": "data/berkeley/ (tidak dikomit)"
+  },
+  "tugas": {
+    "unit": "per mote, jendela 60 menit dengan langkah 10 menit",
+    "label": "kegagalan dalam H jam setelah akhir jendela; kegagalan = pembacaan 122,15 C pertama ATAU mote mati (berhenti mengirim sampai akhir data)",
+    "H_jam": 24,
+    "H_sensitivitas_sekunder": [1, 6],
+    "catatan_H": "H sekunder hanya dilaporkan, tidak dipakai untuk keputusan G4"
+  },
+  "split": {
+    "metode": "per mote 60/20/20 (latih/val/test), seed tetap; mote test tidak dilihat sampai evaluasi G4",
+    "keputusan_model": "hyperparameter dan ambang operasi dipilih di mote val saja"
+  },
+  "pembanding_v0": "aturan sensor v0 (backend/app/core/sensor_rules.py), skor jendela = status maksimum (0/1/2) di jendela",
+  "kriteria_lulus": {
+    "1_pr_auc": "PR-AUC berkeley_v1 >= PR-AUC v0 + 0,05 pada mote test",
+    "2_alarm_palsu": "alarm palsu per mote-hari berkeley_v1 <= v0 pada recall yang sama atau lebih tinggi (ambang v1 dipilih di mote val)",
+    "logika": "keduanya harus terpenuhi"
+  },
+  "konsekuensi": "aturan v0 tetap default sampai G4 lulus; berkeley_v1 baru boleh diaktifkan lewat config.yaml setelah lulus"
+}
