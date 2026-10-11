@@ -35,7 +35,11 @@ rencana armada):
   Ini batas atas: dalam praktik sebagian muatan mungkin masih dapat diselamatkan.
 - **Kerugian berhasil diatasi** = nilai muatan insiden yang SELESAI sebelum breach, atau kembali AMAN
   tanpa breach. Tidak membuktikan bahwa tindakan operator yang mencegahnya.
-- **Lead time** = `breach_at − detected_at`.
+- **Lead time** (definisi frame Figma Kerugian, 11 Oktober 2026):
+  - Insiden dengan breach: `breach_at − detected_at`. Nilai 0 berarti terdeteksi saat sudah melewati batas.
+  - Insiden tanpa breach: TTB mesin fisika saat terdeteksi (`incidents.ttb_terdeteksi_min`, yaitu perkiraan breach − deteksi).
+  - Insiden yang TTB-nya di atas batas tampil (tidak ada perkiraan breach) tidak punya lead time.
+  - Insiden sebelum migrasi 005 juga tidak punya lead time.
 
 ## Operasional
 
@@ -59,6 +63,8 @@ rencana armada):
 | Notifikasi insiden data | Hanya saat pertama terputus | [DESAIN] | Putus sinyal berulang menimbulkan banyak notifikasi tanpa informasi baru |
 | Kesehatan sensor v0 | Skor 0–100 dari penalti (`app/models/sensor_health_rules.py`); grade Sehat ≥ 80, Perlu cek ≥ 50, Ganti < 50 | [DESAIN] | Bobot belum dikalibrasi terhadap kerusakan nyata. Pada seed, ke-14 truk A0 bernilai Sehat (tes). Derau diukur dengan selisih orde-2 karena suhu seed terkuantisasi 0,1 °C (MAD = 0) |
 | Data terlambat | Prediksi dihitung ulang hanya untuk menit terakhir | [DESAIN] | Prediksi menit lampau tidak ditulis ulang |
+| Notifikasi sensor | Saat grade kesehatan sensor BARU turun ke "Ganti" (level waspada) | [DESAIN] | Frame "Ringkasan + notifikasi"; tidak diulang selama grade tetap Ganti |
+| Notifikasi pemulihan | Level `ok` (ikon hijau) saat insiden kondisi kembali AMAN tanpa breach | [DESAIN] | Frame "Ringkasan + notifikasi" |
 
 ### Temuan: alarm pada truk normal
 

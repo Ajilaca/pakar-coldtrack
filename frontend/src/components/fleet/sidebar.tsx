@@ -1,9 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  ChartLineUp, ListChecks, MapPin, Money, Play, SquaresFour, Thermometer, Truck,
+  ListChecks, MapPin, Money, Play, Pulse, SquaresFour, Thermometer,
 } from "@phosphor-icons/react/dist/ssr";
 import { useFleetCtx } from "@/lib/use-fleet";
 import { cn } from "@/lib/utils";
@@ -12,7 +13,7 @@ export const NAV = [
   { href: "/", label: "Ringkasan", Icon: SquaresFour },
   { href: "/kondisi", label: "Kondisi", Icon: Thermometer },
   { href: "/lokasi", label: "Lokasi", Icon: MapPin },
-  { href: "/sensor", label: "Sensor", Icon: ChartLineUp },
+  { href: "/sensor", label: "Sensor", Icon: Pulse },
   { href: "/kerugian", label: "Kerugian", Icon: Money },
   { href: "/tindakan", label: "Tindakan", Icon: ListChecks },
   { href: "/simulasi", label: "Simulasi", Icon: Play },
@@ -34,7 +35,7 @@ export function Sidebar() {
         style={{ background: "linear-gradient(180deg, var(--nav-from), var(--nav-to))" }}
       >
         <Link href="/" className="flex items-center gap-2.5 px-2">
-          <Truck size={26} weight="fill" aria-hidden />
+          <Image src="/logo-putih.png" alt="" width={52} height={28} className="h-7 w-auto" priority />
           <span className="text-[18px] font-bold tracking-[-0.02em]">ColdTrack AI</span>
         </Link>
         <nav aria-label="Navigasi utama" className="flex flex-col gap-1">
@@ -66,7 +67,7 @@ export function Sidebar() {
       >
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <Truck size={20} weight="fill" aria-hidden />
+            <Image src="/logo-putih.png" alt="" width={41} height={22} className="h-[22px] w-auto" />
             <span className="text-[16px] font-bold">ColdTrack AI</span>
           </Link>
           <span className={cn("size-2 rounded-full", live ? "bg-emerald-300" : "bg-amber-300")} aria-label={live ? "Terhubung langsung" : "Polling"} />

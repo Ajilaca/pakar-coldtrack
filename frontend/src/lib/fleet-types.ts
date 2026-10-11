@@ -94,7 +94,7 @@ export interface Notifikasi {
   created_at: string;
   truck_id: string | null;
   incident_id: number | null;
-  level: "info" | "waspada" | "kritis";
+  level: "info" | "ok" | "waspada" | "kritis";
   title: string;
   body: string | null;
   read_at: string | null;
@@ -171,6 +171,7 @@ export interface RingkasanKerugian {
   n_breach: number;
   n_diatasi: number;
   lead_time_median_min: number | null;
+  lead_time_rata_min: number | null;
   catatan: string;
 }
 
@@ -178,7 +179,7 @@ export interface DataKerugian {
   dari: string;
   sampai: string;
   ringkasan: RingkasanKerugian;
-  insiden: (LossInsiden & { incident_id: number; truck_id: string; phase: Phase; detected_at: string; breach_at: string | null })[];
+  insiden: (LossInsiden & { incident_id: number; truck_id: string; phase: Phase; failure_label: string | null; detected_at: string; breach_at: string | null })[];
 }
 
 export interface EventInsiden {

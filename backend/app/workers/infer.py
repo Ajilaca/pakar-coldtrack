@@ -99,8 +99,10 @@ def hitung(c: psycopg.Connection, truck_id: str) -> list[dict[str, Any]]:
     m = muat(c, truck_id, now)
     trip, device = m["trip"], m["device"]
     cur = c.cursor(row_factory=dict_row)
-    prev = cur.execute("SELECT status FROM truck_state WHERE truck_id = %s", (truck_id,)).fetchone()
+    prev = cur.execute("SELECT status, sensor_health->>'grade' AS grade FROM truck_state WHERE truck_id = %s",
+                       (truck_id,)).fetchone()
     prev_status = prev["status"] if prev else None
+    grade_lalu = prev["grade"] if prev else None
 
     if trip is None:
         jendela = bangun_jendela(pd.DataFrame(), now)
@@ -152,8 +154,12 @@ def hitung(c: psycopg.Connection, truck_id: str) -> list[dict[str, Any]]:
                               "AND jenis = %s AND trip_id = %s AND phase = ANY(%s) FOR UPDATE",
                               (truck_id, jenis, trip["id"], list(inc.FASE_TERBUKA))).fetchone()
         rencana = inc.langkah(jenis, truck_id, prev_status, status, terbuka, ts, breach, fm.get("label"),
-                              cond.get("reason"), trip["id"], trip["cargo_value_idr"])
+                              cond.get("reason"), trip["id"], trip["cargo_value_idr"],
+                              ttb=_bersih(cond.get("time_to_breach_min")))
         events += terapkan(cur, rencana, terbuka, truck_id, ts)
+    n_sensor = inc.notifikasi_sensor(truck_id, grade_lalu, sh)
+    if n_sensor:
+        events += terapkan(cur, inc.Rencana("sensor", notifikasi=[n_sensor]), None, truck_id, ts)
 
     cur.execute(
         "INSERT INTO truck_state (truck_id, status, last_ts, last_prediction, trip_id, sensor_health, perlu_diperbarui, "
@@ -187,7 +193,7 @@ def terapkan(cur, rencana: inc.Rencana, terbuka: dict[str, Any] | None, truck_id
                           "VALUES (%s, %s, %s, %s, %s, %s) RETURNING id",
                           (ts, truck_id, inc_id, n["level"], n["title"], n["body"])).fetchone()["id"]
         out.append({"type": "notification", "id": nid, "truck_id": truck_id, "incident_id": inc_id,
-                    "jenis": rencana.jenis, "level": n["level"], "title": n["title"]})
+                    "jenis": rencana.jenis, "level": n["level"], "title": n["title"], "body": n["body"]})
     return out
 
 

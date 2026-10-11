@@ -47,18 +47,22 @@ export function StatusBanner({ status, subjudul, ttb, label, confidence, dataLen
           <p className="mt-1 text-[18px] font-semibold">{adaModel ? diagnosisText(label) : "Belum tersedia"}</p>
           {adaModel && (
             <>
-              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/25" aria-hidden>
-                <div className="h-full rounded-full bg-white" style={{ width: `${pct}%` }} />
+              {/* data tidak lengkap (Figma): bar keyakinan diredupkan + catatan di dalam banner */}
+              <div className={cn("mt-2 h-1.5 overflow-hidden rounded-full", dataLengkap === false ? "bg-white" : "bg-white/25")} aria-hidden>
+                <div className={cn("h-full rounded-full", dataLengkap === false ? "bg-slate-500" : "bg-white")} style={{ width: `${pct}%` }} />
               </div>
-              <p className="mt-1 text-[12px] text-white/85">
-                Keyakinan model <span className="num">{pct}%</span>
-                {dataLengkap === false && " · dibatasi (data tidak lengkap)"}
-              </p>
+              <p className="mt-1 text-[12px] text-white/85">Keyakinan model <span className="num">{pct}%</span></p>
+              {dataLengkap === false && (
+                <p className="mt-1 flex items-center gap-1.5 text-[12px] text-white/90" title={catatan ?? undefined}>
+                  <span className="size-3 rounded-full border-[1.5px] border-white/90" aria-hidden />
+                  Diagnosis kurang andal · data tidak lengkap
+                </p>
+              )}
             </>
           )}
         </div>
       </div>
-      {catatan && (
+      {catatan && dataLengkap !== false && (
         <p className="mt-4 flex items-start gap-2 rounded-lg bg-black/15 px-3 py-2 text-[12px]">
           <WarningCircle size={16} className="mt-px shrink-0" aria-hidden />
           {catatan}

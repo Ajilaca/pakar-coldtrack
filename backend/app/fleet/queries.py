@@ -185,6 +185,7 @@ def kerugian(c, now: datetime, jam: int = 24 * 7) -> dict[str, Any]:
     for r in rows:
         risk = float(r["risk_now"]) if r["risk_now"] is not None else None
         baris.append({"incident_id": r["id"], "truck_id": r["truck_id"], "phase": r["phase"],
+                      "failure_label": r["failure_label"],
                       "detected_at": r["detected_at"], "breach_at": r["breach_at"], **loss.per_insiden(r, risk)})
     return {"dari": now - timedelta(hours=jam), "sampai": now, "ringkasan": loss.ringkas(baris), "insiden": baris}
 

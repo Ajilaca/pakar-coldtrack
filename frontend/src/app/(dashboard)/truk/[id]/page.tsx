@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, WarningCircle } from "@phosphor-icons/react/dist/ssr";
+import { ArrowLeft } from "@phosphor-icons/react/dist/ssr";
 import { FaktorCard, SuhuChart, TindakanCard } from "@/components/fleet/condition";
 import { PageHeader } from "@/components/fleet/notifications";
 import { Banner, useTruk } from "@/components/fleet/truck-panel";
@@ -16,8 +16,8 @@ export default function DetailTrukPage({ params }: { params: { id: string } }) {
   const { detail, riwayat } = useTruk(id);
   const t = detail.data;
   const kembali = (
-    <Link href="/kondisi" className="mb-1 inline-flex items-center gap-1 text-[12px] font-medium text-muted hover:text-ink">
-      <ArrowLeft size={14} aria-hidden /> Kondisi armada
+    <Link href="/kondisi" className="mb-3 inline-flex items-center gap-1.5 text-[14px] font-medium text-[var(--chart-actual)] hover:underline">
+      <ArrowLeft size={15} aria-hidden /> Semua truk
     </Link>
   );
   return (
@@ -32,17 +32,6 @@ export default function DetailTrukPage({ params }: { params: { id: string } }) {
         !detail.error && <Muat tinggi={600} />
       ) : (
         <>
-          {t.kondisi?.data_lengkap === false && t.status !== "TIDAK_ADA_DATA" && t.status !== "MENUNGGU_DATA" && (
-            <div role="status" className="flex items-start gap-3 rounded-2xl border border-l-[3px] border-l-warn bg-warn-soft p-4 text-[13px]">
-              <WarningCircle size={20} className="mt-0.5 shrink-0 text-warn" aria-hidden />
-              <div>
-                <p className="font-semibold">Data tidak lengkap</p>
-                <p className="text-muted">
-                  {t.kondisi.catatan_data ?? "Ada bacaan yang hilang dalam 60 menit terakhir."} Keyakinan diagnosis dibatasi 50%.
-                </p>
-              </div>
-            </div>
-          )}
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1fr_1.6fr]">
             <PosisiSensor t={t} />
             <KondisiLangsung t={t} />
@@ -103,7 +92,7 @@ function KondisiLangsung({ t }: { t: TrukDetail }) {
       ) : (
         <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
           {tile("Suhu kargo", suhu(b.temp_c), profil?.t_hi != null ? `Ambang ${suhu(profil.t_hi, 0)}` : "—")}
-          {tile("Suhu ambien", suhu(b.ambient_c), d == null ? "—" : `${d >= 0 ? "Naik" : "Turun"} ${angka(Math.abs(d), 1)} °C / 10 mnt`)}
+          {tile("Suhu ambien", suhu(b.ambient_c), d == null ? "—" : `${d >= 0 ? "Naik +" : "Turun −"}${angka(Math.abs(d), 1)} °C / 10 mnt`)}
           {tile("Kelembapan", `${angka(b.humidity)} %`, b.humidity > 90 ? "Tinggi" : "Normal")}
           {tile("Pintu kargo", b.door_open ? "Terbuka" : "Tertutup", dibuka == null ? "Tidak dibuka dalam 60 mnt" : b.door_open ? "Sedang terbuka" : `Terakhir dibuka ${dibuka} mnt lalu`)}
           {tile("Reefer", b.reefer_on ? "Menyala" : "Mati", t.setpoint_c != null ? `Setpoint ${suhu(t.setpoint_c, 0)}` : "Setpoint mengikuti profil")}

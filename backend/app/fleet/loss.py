@@ -4,7 +4,8 @@
   nilai berisiko      = nilai muatan x risk_index saat ini        (insiden terbuka tanpa breach)
   kerugian terjadi    = nilai muatan penuh bila breach            (asumsi muatan hilang seluruhnya [ASUMSI])
   berhasil diatasi    = nilai muatan bila tanpa breach DAN (SELESAI atau kembali AMAN)
-  lead time (menit)   = breach_at - detected_at
+  lead time (menit)   = breach_at - detected_at bila breach; selain itu TTB mesin fisika saat terdeteksi
+                        (perkiraan breach - deteksi, kolom incidents.ttb_terdeteksi_min; frame Figma Kerugian)
 """
 
 import statistics
@@ -20,6 +21,8 @@ def per_insiden(ins: dict[str, Any], risk_index: float | None = None) -> dict[st
     lead = None
     if breach and ins.get("detected_at") is not None:
         lead = round((ins["breach_at"] - ins["detected_at"]).total_seconds() / 60.0, 1)
+    elif ins.get("ttb_terdeteksi_min") is not None:
+        lead = round(float(ins["ttb_terdeteksi_min"]), 1)
     return {
         "nilai_muatan_idr": nilai,
         "nilai_berisiko_idr": int(nilai * risk_index) if nilai and terbuka and not breach and risk_index else 0,
@@ -40,5 +43,6 @@ def ringkas(baris: list[dict[str, Any]]) -> dict[str, Any]:
         "n_breach": sum(b["hasil"] == "breach" for b in baris),
         "n_diatasi": sum(b["hasil"] == "diatasi" for b in baris),
         "lead_time_median_min": statistics.median(leads) if leads else None,
+        "lead_time_rata_min": round(statistics.fmean(leads), 1) if leads else None,
         "catatan": "Estimasi dari harga per kg [ASUMSI]; bukan kerugian tercatat.",
     }

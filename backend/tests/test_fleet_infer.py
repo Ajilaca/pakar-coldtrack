@@ -198,10 +198,12 @@ def test_insiden_kondisi_dibuka_di_awal_episode_dan_eskalasi():
     r = inc.langkah("kondisi", "B 1 A", "AMAN", "WASPADA", None, T0, label="pintu_terbuka", trip_id=1,
                     cargo_value_idr=1000)
     assert r.buka["phase"] == "TERDETEKSI" and r.buka["status_puncak"] == "WASPADA" and r.buka["jenis"] == "kondisi"
-    assert r.buka["cargo_value_idr"] == 1000
+    assert r.buka["cargo_value_idr"] == 1000 and r.buka["ttb_terdeteksi_min"] is None
     assert r.notifikasi[0]["level"] == "waspada" and r.events[0]["actor"] == "Sistem"
-    r = inc.langkah("kondisi", "B 1 A", "WASPADA", "KRITIS", _terbuka(), T0)
-    assert r.buka is None and r.ubah == {"status_puncak": "KRITIS"} and r.notifikasi[0]["level"] == "kritis"
+    r = inc.langkah("kondisi", "B 1 A", "WASPADA", "KRITIS", _terbuka(), T0, label="degradasi_bertahap", ttb=11.4)
+    assert r.buka is None and r.ubah == {"status_puncak": "KRITIS", "failure_label": "degradasi_bertahap"}
+    n = r.notifikasi[0]                                  # teks mengikuti frame "Ringkasan + notifikasi"
+    assert (n["level"], n["title"], n["body"]) == ("kritis", "B 1 A memburuk ke KRITIS", "Degradasi pendinginan · TTB 11 menit")
 
 
 def test_insiden_tidak_dibuka_ulang_dalam_episode_yang_sama():
@@ -236,9 +238,26 @@ def test_breach_otomatis_gagal():
 
 def test_pulih_lalu_kambuh_dinotifikasi():
     r = inc.langkah("kondisi", "B 1 A", "WASPADA", "AMAN", _terbuka(), T0)
-    assert r.ubah == {"recovered_at": T0} and r.notifikasi[0]["title"].startswith("Kembali AMAN")
+    assert r.ubah == {"recovered_at": T0} and r.notifikasi[0]["title"] == "B 1 A kembali AMAN"
+    assert r.notifikasi[0]["level"] == "ok"
     r = inc.langkah("kondisi", "B 1 A", "AMAN", "WASPADA", _terbuka(recovered_at=T0), T0)
-    assert r.buka is None and r.ubah == {"recovered_at": None} and r.notifikasi[0]["title"].startswith("Kambuh")
+    assert r.buka is None and r.ubah == {"recovered_at": None} and r.notifikasi[0]["title"] == "B 1 A kembali WASPADA"
+
+
+def test_notifikasi_sensor_hanya_saat_turun_ke_ganti():
+    ganti = {"score": 38, "grade": "Ganti"}
+    n = inc.notifikasi_sensor("B 9234 FX", "Perlu cek", ganti)
+    assert (n["level"], n["title"], n["body"]) == ("waspada", "B 9234 FX: sensor perlu diganti", "Skor sensor 38 · grade Ganti")
+    assert inc.notifikasi_sensor("B 9234 FX", "Ganti", ganti) is None          # sudah Ganti: tidak diulang
+    assert inc.notifikasi_sensor("B 9234 FX", None, {"score": 90, "grade": "Sehat"}) is None
+
+
+def test_lead_time_tanpa_breach_dari_ttb_saat_deteksi():
+    r = inc.langkah("kondisi", "B 1 A", "AMAN", "KRITIS", None, T0, ttb=22.0, cargo_value_idr=1000)
+    assert r.buka["ttb_terdeteksi_min"] == 22.0
+    x = per_insiden({"cargo_value_idr": 1000, "phase": "SELESAI", "breach_at": None, "detected_at": T0,
+                     "recovered_at": None, "ttb_terdeteksi_min": 22.0})
+    assert x["lead_time_min"] == 22.0 and x["hasil"] == "diatasi"
 
 
 # --- kerugian dan perangkat ---------------------------------------------------------------------------

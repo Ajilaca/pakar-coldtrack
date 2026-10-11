@@ -16,6 +16,7 @@ export interface Toast {
   id: number;
   level: Notifikasi["level"];
   title: string;
+  body: string | null;
   truck_id: string | null;
 }
 
@@ -78,7 +79,7 @@ export function FleetProvider({ children }: { children: ReactNode }) {
         try {
           const d = JSON.parse((e as MessageEvent).data);
           if (d.level === "waspada" || d.level === "kritis") {
-            setToasts((ts) => [...ts.slice(-3), { id: d.id, level: d.level, title: d.title, truck_id: d.truck_id }]);
+            setToasts((ts) => [...ts.slice(-3), { id: d.id, level: d.level, title: d.title, body: d.body ?? null, truck_id: d.truck_id }]);
             setTimeout(() => setToasts((ts) => ts.filter((t) => t.id !== d.id)), TOAST_MS);
           }
         } catch {}
