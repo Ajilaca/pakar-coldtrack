@@ -1,19 +1,130 @@
 services:
+  # --- Armada (CONTEXT_FLEET_SCALEUP.md Fase 1). Nilai bawaan ${VAR:-...} HANYA untuk dev lokal;
+  #     produksi memakai .env (lihat .env.example) dan Fase 6 (TLS, ACL per perangkat).
+  db:
+    image: timescale/timescaledb:latest-pg16
+    container_name: coldtrack-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-coldtrack}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-coldtrack}
+      POSTGRES_DB: ${POSTGRES_DB:-coldtrack}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      retries: 20
+    restart: unless-stopped
+
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: coldtrack-mqtt
+    entrypoint: ["/bin/sh", "/etc/coldtrack/entrypoint.sh"]
+    environment:
+      MQTT_INGEST_PASSWORD: ${MQTT_INGEST_PASSWORD:-ingest-dev}
+      MQTT_SIMULATOR_PASSWORD: ${MQTT_SIMULATOR_PASSWORD:-simulator-dev}
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./docker/mosquitto:/etc/coldtrack:ro
+      - mqtt-data:/mosquitto/data
+    healthcheck:
+      test: ["CMD-SHELL", "mosquitto_sub -h localhost -u ingest -P \"$$MQTT_INGEST_PASSWORD\" -t '$$SYS/broker/uptime' -C 1 -W 5"]
+      interval: 10s
+      retries: 10
+    restart: unless-stopped
+
   api:
     build:
       context: ./backend
       dockerfile: Dockerfile
     container_name: coldtrack-backend
+    # migrasi + seed idempoten di setiap start, lalu layani HTTP
+    command: ["sh", "-c", "python -m app.db.migrate && python -m app.db.seed && uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 1"]
     ports:
       - "8000:8000"
     environment:
       - CONFIG_PATH=/app/config.yaml
       - ENABLE_LLM=false
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-coldtrack}:${POSTGRES_PASSWORD:-coldtrack}@db:5432/${POSTGRES_DB:-coldtrack}
+      # jam bersama (app/clock.py): HARUS sama dengan simulator dan worker-infer
+      - SIM_SPEED=${SIM_SPEED:-30}
+      - SIM_ANCHOR=${SIM_ANCHOR:-2026-10-11T00:00:00+00:00}
+      - INGEST_API_KEYS=${INGEST_API_KEYS:-}
+    depends_on:
+      db:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 10s
       retries: 5
       start_period: 30s
+    restart: unless-stopped
+
+  # --- Fase 2: ingest MQTT -> TimescaleDB, dan simulator truk virtual (hanya profil dev)
+  worker-ingest:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: coldtrack-worker-ingest
+    command: ["python", "-m", "app.workers.ingest"]
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-coldtrack}:${POSTGRES_PASSWORD:-coldtrack}@db:5432/${POSTGRES_DB:-coldtrack}
+      - MQTT_HOST=mosquitto
+      - MQTT_USER=ingest
+      - MQTT_PASSWORD=${MQTT_INGEST_PASSWORD:-ingest-dev}
+    depends_on:
+      api:
+        condition: service_healthy              # migrasi + seed sudah jalan
+      mosquitto:
+        condition: service_healthy
+    healthcheck:
+      # python:3.11-slim tidak punya procps (pgrep); proses worker adalah PID 1 (command bentuk exec)
+      test: ["CMD-SHELL", "grep -q app.workers.ingest /proc/1/cmdline"]
+      interval: 15s
+      retries: 3
+    restart: unless-stopped
+
+  # --- Fase 3: inferensi streaming (predictions, truck_state, insiden, notifikasi)
+  worker-infer:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: coldtrack-worker-infer
+    command: ["python", "-m", "app.workers.infer"]
+    environment:
+      - CONFIG_PATH=/app/config.yaml
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-coldtrack}:${POSTGRES_PASSWORD:-coldtrack}@db:5432/${POSTGRES_DB:-coldtrack}
+      - SIM_SPEED=${SIM_SPEED:-30}
+      - SIM_ANCHOR=${SIM_ANCHOR:-2026-10-11T00:00:00+00:00}
+    depends_on:
+      api:
+        condition: service_healthy              # migrasi + seed sudah jalan
+    healthcheck:
+      test: ["CMD-SHELL", "grep -q app.workers.infer /proc/1/cmdline"]
+      interval: 15s
+      retries: 3
+    restart: unless-stopped
+
+  virtual-trucks:
+    profiles: ["dev"]
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: coldtrack-virtual-trucks
+    command: ["python", "-m", "app.workers.virtual_trucks"]
+    environment:
+      - MQTT_HOST=mosquitto
+      - MQTT_USER=simulator
+      - MQTT_PASSWORD=${MQTT_SIMULATOR_PASSWORD:-simulator-dev}
+      - API_URL=http://api:8000
+      - SIM_SPEED=${SIM_SPEED:-30}
+      - SIM_ANCHOR=${SIM_ANCHOR:-2026-10-11T00:00:00+00:00}
+    depends_on:
+      worker-ingest:
+        condition: service_healthy
     restart: unless-stopped
 
   frontend:
@@ -36,3 +147,7 @@ services:
       api:
         condition: service_healthy
     restart: unless-stopped
+
+volumes:
+  db-data:
+  mqtt-data:

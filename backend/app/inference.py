@@ -97,6 +97,19 @@ def cargo_params(cargo_profile: str, mass_kg: float | None) -> dict[str, float]:
     }
 
 
+def ke_zona_armada(readings: list[TelemetryReading]) -> list[TelemetryReading]:
+    """Ubah ts ber-zona waktu ke zona armada (config fleet.zona_waktu, bawaan Asia/Jakarta).
+
+    hour_of_day dilatih dengan JAM LOKAL (ml/coldtrack_sim.py, skenario demo WIB). Tanpa ini, bacaan yang
+    sama yang dikirim dengan "Z" dan dengan "+07:00" menghasilkan fitur jam yang bergeser 7 jam.
+    ts tanpa zona waktu dianggap sudah jam lokal armada dan tidak diubah. Lewat pandas (bukan zoneinfo)
+    supaya tidak bergantung pada tzdata sistem di image slim.
+    """
+    zona = settings.get("fleet", {}).get("zona_waktu", "Asia/Jakarta")
+    return [r if r.ts.tzinfo is None else r.model_copy(update={"ts": pd.Timestamp(r.ts).tz_convert(zona).to_pydatetime()})
+            for r in readings]
+
+
 def readings_to_trip(readings: list[TelemetryReading], prod: dict[str, float]) -> pd.DataFrame:
     """One trip in the column layout the ml/ pipeline was trained on."""
     ts = pd.to_datetime([r.ts for r in readings])
@@ -179,6 +192,8 @@ class Checkpoint2Provider:
         x = x_feats[ends[:, None] - np.arange(WINDOW - 1, -1, -1)[None, :]]
         s = np.repeat(clean[prep_windows.STATIC].iloc[:1].to_numpy(np.float32), len(ends), axis=0)
         ev, temp = self.gru.run(None, {"x": x, "s": s})
+        n = len(out)                                   # predict_last: hanya baris terakhir yang dipakai
+        ev, temp, ends = ev[-n:], temp[-n:], ends[-n:]
         out[["ev_door", "ev_shock", "ev_sensor"]] = ev
         out[["t15", "t30", "t60"]] = temp.round(2)
 
@@ -201,7 +216,7 @@ class Checkpoint2Provider:
             f2, _ = observer.windows_extra(trip, [0], W=WINDOW, stride=1)
             f3, _ = observer.projection_features(trip, [0], W=WINDOW, stride=1)
             xgb = self.ttb.run(None, {"features": np.hstack([f1, f2, f3]).astype(np.float32)})[0]
-            out["ttb_model"] = np.clip(np.ravel(xgb), 0.0, TTB_MAX).round(1)
+            out["ttb_model"] = np.clip(np.ravel(xgb)[-n:], 0.0, TTB_MAX).round(1)
 
     def probabilities(self, row: pd.Series) -> dict[str, float] | None:
         return None
@@ -239,7 +254,7 @@ class V3Provider:
     def run(self, trip: pd.DataFrame, out: pd.DataFrame, feats: pd.DataFrame | None) -> None:
         if feats is None:
             raise ValueError("v3 provider needs the 12 per-minute features (preprocess.features_per_minute)")
-        ends = np.arange(WINDOW - 1, len(feats))
+        ends = np.arange(len(feats) - len(out), len(feats))   # len(out) = 1 untuk predict_last
         x = self.windows(feats, ends)
         fc, prob, _ = self.gru.run(None, {"window": x})
         out[["t15", "t30", "t60"]] = fc.round(2)
@@ -274,13 +289,21 @@ class HybridInferenceEngine:
     def is_ready(self) -> bool:
         return self.provider.is_ready
 
-    def analyze_trip(self, trip: pd.DataFrame, prod: dict[str, float], feats: pd.DataFrame | None = None) -> pd.DataFrame:
+    def analyze_trip(self, trip: pd.DataFrame, prod: dict[str, float], feats: pd.DataFrame | None = None,
+                     last_only: bool = False, engine_out: pd.DataFrame | None = None) -> pd.DataFrame:
         """Every minute of a trip, causally (row t only uses data up to t). Rows start at minute W-1.
 
         `feats` = preprocess.features_per_minute(readings), aligned with `trip` (both sorted by ts);
         required by the v3 provider. predict() serves the last row; the eval suite scores all rows.
+        last_only=True: the physics engine still runs over the whole history (the cargo observer needs
+        it), but the GRU/XGB only run for the last window (worker-infer, /analyze). Causal, so the last
+        row is identical to last_only=False (tests/test_fleet_infer.py).
         """
-        eng = engine.run(trip, prod, prod["mass_kg"]).iloc[WINDOW - 1:].reset_index(drop=True)
+        if engine_out is None:
+            engine_out = engine.run(trip, prod, prod["mass_kg"])
+        eng = engine_out.iloc[WINDOW - 1:].reset_index(drop=True)
+        if last_only:
+            eng = eng.iloc[-1:].reset_index(drop=True)
         out = pd.DataFrame({
             "minute": eng.minute,
             "status": eng.status_txt,
@@ -288,6 +311,7 @@ class HybridInferenceEngine:
             "ttb_show": eng.ttb_show.round(1),
             "ttb_phys": eng.ttb_phys,
             "sensor_status": eng.sensor_status.astype(int),
+            "t_cargo_est": eng.T_cargo_est.round(2),
         })
         out["risk_index"] = [
             _risk_index(st, float(tp), ss >= 1) for st, tp, ss in zip(out.status, out.ttb_phys, out.sensor_status)
@@ -300,8 +324,20 @@ class HybridInferenceEngine:
         self, readings: list[TelemetryReading], cargo_profile: str, mass_kg: float | None = None
     ) -> dict[str, Any]:
         """Needs >= 60 readings (validated in main.py). Uses the full history for the cargo observer."""
+        return self.predict_last(readings, cargo_profile, mass_kg)[0]
+
+    def predict_last(
+        self, readings: list[TelemetryReading], cargo_profile: str, mass_kg: float | None = None
+    ) -> tuple[dict[str, Any], pd.DataFrame]:
+        """predict() plus the per-minute engine series (ts, sensor_status, T_cargo_est, status) over the
+        whole history, used by worker-infer for sensor health and breach detection. Models run once."""
         prod = cargo_params(cargo_profile, mass_kg)
-        now = self.analyze_trip(readings_to_trip(readings, prod), prod, features_per_minute(readings)).iloc[-1]
+        readings = ke_zona_armada(readings)
+        trip = readings_to_trip(readings, prod)
+        eng = engine.run(trip, prod, prod["mass_kg"])
+        now = self.analyze_trip(trip, prod, features_per_minute(readings), last_only=True, engine_out=eng).iloc[-1]
+        series = pd.DataFrame({"ts": trip.ts, "sensor_status": eng.sensor_status.astype(int),
+                               "t_cargo_est": eng.T_cargo_est, "status": eng.status_txt})
         result: dict[str, Any] = {
             "status": now.status,
             "reason": now.reason,
@@ -311,6 +347,8 @@ class HybridInferenceEngine:
             "forecast": None,
             "failure_mode": None,
             "ttb_model_min": float(now.ttb_model) if "ttb_model" in now else None,
+            "t_cargo_est": float(now.t_cargo_est),
+            "t_hi": prod["t_hi"],
             **kelengkapan_data(readings),
         }
         if "label" in now:
@@ -320,7 +358,7 @@ class HybridInferenceEngine:
             result["forecast"] = {h: float(now[h]) for h in ("t15", "t30", "t60")}
             result["failure_mode"] = {"label": now.label, "confidence": conf,
                                       "probabilities": self.provider.probabilities(now)}
-        return result
+        return result, series
 
 
 inference_engine = HybridInferenceEngine()

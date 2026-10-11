@@ -1,0 +1,12 @@
+{
+  "workload": "W6",
+  "config_id": "cuda_hist",
+  "konfigurasi": {
+    "device": "cuda",
+    "params_dari": "val_kesehatan.json"
+  },
+  "tag": "g16-cpu",
+  "status": "tidak berlaku",
+  "alasan": "XGBoost device=cuda butuh GPU NVIDIA",
+  "waktu_utc": "2026-10-11T11:39:50+00:00"
+}

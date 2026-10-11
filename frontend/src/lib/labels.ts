@@ -1,18 +1,24 @@
-import { Door, Fan, Package, SunDim, Thermometer, WifiSlash } from "@phosphor-icons/react/dist/ssr";
-import { Driver, ShipmentStatus } from "./types";
+import { Driver } from "./types";
 
+// Nama tampilan mengikuti Figma (frame Ringkasan/Kondisi/Simulasi).
 const DIAGNOSIS_TEXT: Record<string, string> = {
-  normal_sehat: "Normal",
+  normal_sehat: "Normal / sehat",
   pintu_terbuka: "Pintu terbuka",
-  pintu_terbuka_lama: "Pintu terbuka terlalu lama",
-  kejutan_ambien_ekstrem: "Kejut suhu luar ekstrem",
-  masalah_sensor: "Sensor bermasalah",
+  pintu_terbuka_lama: "Pintu terbuka lama",
+  kejutan_ambien_ekstrem: "Kejut ambien",
+  masalah_sensor: "Masalah sensor",
   suhu_muatan_mendekati_batas: "Suhu muatan mendekati batas",
   // model v3 (7 kelas)
   reefer_mati_total: "Reefer mati total",
   prapendinginan_buruk: "Prapendinginan buruk",
-  degradasi_bertahap: "Pendingin menurun bertahap",
+  degradasi_bertahap: "Degradasi pendinginan",
 };
+
+/** Urutan 7 kelas v3 untuk grafik "Truk per diagnosis". */
+export const KELAS_V3 = [
+  "normal_sehat", "pintu_terbuka_lama", "degradasi_bertahap", "masalah_sensor", "kejutan_ambien_ekstrem",
+  "reefer_mati_total", "prapendinginan_buruk",
+];
 
 const DRIVER_TEXT: Record<string, string> = {
   laju_kenaikan_suhu: "Laju kenaikan suhu",
@@ -40,34 +46,4 @@ export function driverText(feature: string): string {
 // Reefer is out of scope for the UI; the backend may still rank it.
 export function visibleDrivers(drivers: Driver[]): Driver[] {
   return drivers.filter((d) => !d.feature.includes("reefer"));
-}
-
-export function isSensorFault(label: string | null | undefined): boolean {
-  return (label ?? "").includes("sensor");
-}
-
-export function truckImage(status: ShipmentStatus, rawLabel: string | null | undefined): string {
-  const label = rawLabel ?? "";
-  if (status === "AMAN") return "/images/truck/normal.webp";
-  const tone = status === "KRITIS" ? "red" : "yellow";
-  if (label.startsWith("pintu_terbuka")) return `/images/truck/door-open-${tone}.webp`;
-  if (label === "kejutan_ambien_ekstrem") return `/images/truck/ambient-shock-${tone}.webp`;
-  if (isSensorFault(label)) return "/images/truck/sensor-fault-yellow.webp";
-  return `/images/truck/near-limit-${tone}.webp`;
-}
-
-export const STATUS_META: Record<ShipmentStatus, { text: string; tone: "ok" | "warn" | "crit" }> = {
-  AMAN: { text: "Aman", tone: "ok" },
-  WASPADA: { text: "Waspada", tone: "warn" },
-  KRITIS: { text: "Kritis", tone: "crit" },
-};
-
-export function diagnosisIcon(rawLabel: string | null | undefined) {
-  const label = rawLabel ?? "";
-  if (label.startsWith("pintu")) return Door;
-  if (label.includes("ambien")) return SunDim;
-  if (label.includes("sensor")) return WifiSlash;
-  if (label.includes("reefer") || label.includes("degradasi")) return Fan;
-  if (label.includes("batas") || label.includes("prapendinginan")) return Thermometer;
-  return Package;
 }

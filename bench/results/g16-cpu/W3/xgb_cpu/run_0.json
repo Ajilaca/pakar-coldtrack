@@ -1,0 +1,167 @@
+{
+  "workload": "W3",
+  "config_id": "xgb_cpu",
+  "konfigurasi": {
+    "model": "xgb",
+    "trial": 20
+  },
+  "tag": "g16-cpu",
+  "device": "cpu",
+  "run": 0,
+  "pemanasan": false,
+  "seed": 1000,
+  "waktu_utc": "2026-10-11T10:51:19+00:00",
+  "git": {
+    "commit": "5d1349051fe0cb80c2a5e21a5963e64963a9afa3",
+    "branch": "feat/fleet-online",
+    "dirty": false
+  },
+  "env": "bench/results/g16-cpu/env/env_20261011-171810.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Turbo",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": null
+  },
+  "protokol": {
+    "repeats": 1,
+    "warmup": 0,
+    "cooldown_s": 60
+  },
+  "waktu": {
+    "sweep_s": 174.66386698200222,
+    "trial_per_jam": 412.2203478262568,
+    "dinding_total_s": 176.4230874649984
+  },
+  "n_trial": 20,
+  "skor_terbaik": 0.7248072843086611,
+  "per_trial": [
+    {
+      "trial": 0,
+      "detik": 14.215575240999897,
+      "skor": 0.7173927131783608
+    },
+    {
+      "trial": 1,
+      "detik": 16.669565077001607,
+      "skor": 0.7133760400016129
+    },
+    {
+      "trial": 2,
+      "detik": 3.664962368999113,
+      "skor": 0.7079180801540262
+    },
+    {
+      "trial": 3,
+      "detik": 5.156634088001738,
+      "skor": 0.6827772813609003
+    },
+    {
+      "trial": 4,
+      "detik": 10.624873806002142,
+      "skor": 0.7022646652356435
+    },
+    {
+      "trial": 5,
+      "detik": 7.340660146001028,
+      "skor": 0.7227466854516309
+    },
+    {
+      "trial": 6,
+      "detik": 4.708940800999699,
+      "skor": 0.718920370066116
+    },
+    {
+      "trial": 7,
+      "detik": 8.093262353999307,
+      "skor": 0.7229962032809244
+    },
+    {
+      "trial": 8,
+      "detik": 3.1701563150018046,
+      "skor": 0.7207637259540729
+    },
+    {
+      "trial": 9,
+      "detik": 13.586767794997286,
+      "skor": 0.7163653550544704
+    },
+    {
+      "trial": 10,
+      "detik": 4.948406013001659,
+      "skor": 0.7186078627735449
+    },
+    {
+      "trial": 11,
+      "detik": 7.879773911001394,
+      "skor": 0.7195998397226376
+    },
+    {
+      "trial": 12,
+      "detik": 6.873759792997589,
+      "skor": 0.7238083684688869
+    },
+    {
+      "trial": 13,
+      "detik": 9.044705297001201,
+      "skor": 0.7233800065973555
+    },
+    {
+      "trial": 14,
+      "detik": 8.647785531000409,
+      "skor": 0.7180244494099433
+    },
+    {
+      "trial": 15,
+      "detik": 7.292601782999554,
+      "skor": 0.7225791277133465
+    },
+    {
+      "trial": 16,
+      "detik": 9.206604486000288,
+      "skor": 0.7243432178444438
+    },
+    {
+      "trial": 17,
+      "detik": 12.613264835999871,
+      "skor": 0.7248072843086611
+    },
+    {
+      "trial": 18,
+      "detik": 11.948156795002433,
+      "skor": 0.7218408658756593
+    },
+    {
+      "trial": 19,
+      "detik": 8.935881490000611,
+      "skor": 0.7204744184709136
+    }
+  ],
+  "telemetri": {
+    "tersedia": true,
+    "n_sampel": 104,
+    "energi_wh": 20.362205555555562,
+    "daya_w": {
+      "median": 14.14,
+      "maks": 36779.98
+    },
+    "suhu_c": {
+      "median": 63.0,
+      "maks": 63.0
+    },
+    "clock_sm_mhz": {
+      "median": 1425.0,
+      "min": 1425.0,
+      "p5": 1425.0
+    },
+    "utilisasi_pct_median": 0.0,
+    "vram_terpakai_mb_maks": 0.0,
+    "throttle_reasons_hex": [
+      "0x0000000000000000",
+      "0x0000000000000004"
+    ],
+    "csv": "bench/results/telemetry/g16-cpu/W3_xgb_cpu_run0_20261011-174820.csv"
+  }
+}

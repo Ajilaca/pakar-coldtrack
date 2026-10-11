@@ -1,0 +1,13 @@
+{
+  "workload": "W8",
+  "config_id": "truk100_2inti",
+  "konfigurasi": {
+    "truk": 100,
+    "inti_cpu": 2,
+    "harness": "POST /api/v1/analyze via TestClient"
+  },
+  "tag": "g16-gpu",
+  "status": "tidak berlaku",
+  "alasan": "backend memakai ONNX Runtime CPU; diukur di tag *-cpu",
+  "waktu_utc": "2026-10-11T10:15:08+00:00"
+}

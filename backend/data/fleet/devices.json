@@ -1,0 +1,242 @@
+[
+  {
+    "id": "DEV-001",
+    "truck_id": "B 3036 WN",
+    "firmware": "1.5.0",
+    "gateway_version": "0.9.3",
+    "calibrated_at": "2026-06-27",
+    "calibration_offset_c": 0.17,
+    "battery_v": 2.39,
+    "sumber": "sintetik"
+  },
+  {
+    "id": "DEV-002",
+    "truck_id": "D 9831 KT",
+    "firmware": "1.5.0",
+    "gateway_version": "0.9.3",
+    "calibrated_at": "2026-07-13",
+    "calibration_offset_c": 0.12,
+    "battery_v": 2.8,
+    "sumber": "sintetik"
+  },
+  {
+    "id": "DEV-003",
+    "truck_id": "E 9993 HV",
+    "firmware": "1.5.0",
+    "gateway_version": "0.9.3",
+    "calibrated_at": "2026-03-28",
+    "calibration_offset_c": 0.04,
+    "battery_v": 2.56,
+    "sumber": "sintetik"
+  },
+  {
+    "id": "DEV-004",
+    "truck_id": "H 7253 VJ",
+    "firmware": "1.5.0",
+    "gateway_version": "0.8.7",
+    "calibrated_at": "2026-07-26",
+    "calibration_offset_c": -0.11,
+    "battery_v": 2.37,
+    "sumber": "sintetik"
+  },
+  {
+    "id": "DEV-005",
+    "truck_id": "AB 6093 ZM",
+    "firmware": "1.5.0",
+    "gateway_version": "0.9.3",
+    "calibrated_at": "2025-10-23",
+    "calibration_offset_c": 0.14,
+    "battery_v": 2.88,
+    "sumber": "sintetik"
+  },
+  {
+    "id": "DEV-006",
+    "truck_id": "L 2550 WF",
+    "firmware": "1.4.2",
+    "gateway_version": "0.9.3",
+    "calibrated_at": "2026-01-03",
+    "calibration_offset_c": -0.24,
+    "battery_v": 2.7,
+    "sumber": "sintetik"
+  },
+  {
+    "id": "DEV-007",
+    "truck_id": "B 8161 RB",
+    "firmware": "1.5.0",
+    "gateway_version": "0.9.3",
+    "calibrated_at": "2025-12-09",
+    "calibration_offset_c": 0.1,
+    "battery_v": 2.73,
+    "sumber": "sintetik"
+  },
+  {
+    "id": "DEV-008",
+    "truck_id": "D 2605 RV",
+    "firmware": "1.5.0",
+    "gateway_version": "0.9.3",
+    "calibrated_at": "2025-09-12",
+    "calibration_offset_c": 0.08,
+    "battery_v": 2.9,
+    "sumber": "sintetik"
+  },
+  {
+    "id": "DEV-009",
+    "truck_id": "E 4962 EG",
+    "firmware": "1.5.0",
+    "gateway_version": "0.9.3",
+    "calibrated_at": "2026-03-18",
+    "calibration_offset_c": 0.28,
+    "battery_v": 2.42,
+    "sumber": "sintetik"
+  },
+  {
+    "id": "DEV-010",
+    "truck_id": "H 2652 TB",
+    "firmware": "1.5.0",
+    "gateway_version": "0.9.3",
+    "calibrated_at": "2026-06-28",
+    "calibration_offset_c": 0.17,
+    "battery_v": 2.47,
+    "sumber": "sintetik"
+  },
+  {
+    "id": "DEV-011",
+    "truck_id": "AB 1943 LW",
+    "firmware": "1.5.0",
+    "gateway_version": "0.9.3",
+    "calibrated_at": "2025-09-29",
+    "calibration_offset_c": 0.12,
+    "battery_v": 2.38,
+    "sumber": "sintetik"
+  },
+  {
+    "id": "DEV-012",
+    "truck_id": "L 1556 TA",
+    "firmware": "1.5.0",
+    "gateway_version": "0.9.3",
+    "calibrated_at": "2026-06-20",
+    "calibration_offset_c": 0.21,
+    "battery_v": 2.46,
+    "sumber": "sintetik"
+  },
+  {
+    "id": "DEV-013",
+    "truck_id": "B 6778 AD",
+    "firmware": "1.4.2",
+    "gateway_version": "0.9.3",
+    "calibrated_at": "2026-01-07",
+    "calibration_offset_c": 0.2,
+    "battery_v": 2.41,
+    "sumber": "sintetik"
+  },
+  {
+    "id": "DEV-014",
+    "truck_id": "D 2283 DU",
+    "firmware": "1.5.0",
+    "gateway_version": "0.9.3",
+    "calibrated_at": "2026-07-23",
+    "calibration_offset_c": -0.11,
+    "battery_v": 3.0,
+    "sumber": "sintetik"
+  },
+  {
+    "id": "DEV-015",
+    "truck_id": "E 8659 FR",
+    "firmware": "1.5.0",
+    "gateway_version": "0.9.3",
+    "calibrated_at": "2026-04-11",
+    "calibration_offset_c": 0.52,
+    "battery_v": 2.6,
+    "sumber": "sintetik"
+  },
+  {
+    "id": "DEV-016",
+    "truck_id": "H 7557 LM",
+    "firmware": "1.5.0",
+    "gateway_version": "0.9.3",
+    "calibrated_at": "2025-09-02",
+    "calibration_offset_c": 0.26,
+    "battery_v": 2.9,
+    "sumber": "sintetik"
+  },
+  {
+    "id": "DEV-017",
+    "truck_id": "AB 9136 AZ",
+    "firmware": "1.4.2",
+    "gateway_version": "0.9.3",
+    "calibrated_at": "2025-11-04",
+    "calibration_offset_c": 0.21,
+    "battery_v": 2.93,
+    "sumber": "sintetik"
+  },
+  {
+    "id": "DEV-018",
+    "truck_id": "L 4121 DH",
+    "firmware": "1.5.0",
+    "gateway_version": "0.9.3",
+    "calibrated_at": "2026-02-11",
+    "calibration_offset_c": 0.18,
+    "battery_v": 2.94,
+    "sumber": "sintetik"
+  },
+  {
+    "id": "DEV-019",
+    "truck_id": "B 8641 TZ",
+    "firmware": "1.5.0",
+    "gateway_version": "0.9.3",
+    "calibrated_at": "2025-11-02",
+    "calibration_offset_c": 0.02,
+    "battery_v": 2.48,
+    "sumber": "sintetik"
+  },
+  {
+    "id": "DEV-020",
+    "truck_id": "D 8839 XT",
+    "firmware": "1.5.0",
+    "gateway_version": "0.9.3",
+    "calibrated_at": "2026-01-18",
+    "calibration_offset_c": 0.07,
+    "battery_v": 2.81,
+    "sumber": "sintetik"
+  },
+  {
+    "id": "DEV-021",
+    "truck_id": "E 3502 EY",
+    "firmware": "1.5.0",
+    "gateway_version": "0.9.3",
+    "calibrated_at": "2026-01-10",
+    "calibration_offset_c": 0.08,
+    "battery_v": 2.49,
+    "sumber": "sintetik"
+  },
+  {
+    "id": "DEV-022",
+    "truck_id": "H 3072 XS",
+    "firmware": "1.5.0",
+    "gateway_version": "0.9.3",
+    "calibrated_at": "2026-03-16",
+    "calibration_offset_c": -0.19,
+    "battery_v": 2.76,
+    "sumber": "sintetik"
+  },
+  {
+    "id": "DEV-023",
+    "truck_id": "AB 1448 NN",
+    "firmware": "1.5.0",
+    "gateway_version": "0.9.3",
+    "calibrated_at": "2026-06-12",
+    "calibration_offset_c": -0.0,
+    "battery_v": 3.03,
+    "sumber": "sintetik"
+  },
+  {
+    "id": "DEV-024",
+    "truck_id": "L 1685 GN",
+    "firmware": "1.5.0",
+    "gateway_version": "0.8.7",
+    "calibrated_at": "2026-08-03",
+    "calibration_offset_c": 0.17,
+    "battery_v": 2.58,
+    "sumber": "sintetik"
+  }
+]

@@ -26,6 +26,16 @@
     --warn-soft: #fdf3e2;
     --crit: #b91c1c;
     --crit-soft: #fcebeb;
+    --offline: #64748b;
+    --offline-soft: #eef1f5;
+
+    /* armada (Figma): latar halaman, sidebar biru bergradasi, garis grafik */
+    --page: #f4f6fa;
+    --nav-from: #233f8f;
+    --nav-to: #4f72d1;
+    --nav-active: rgb(255 255 255 / 0.16);
+    --chart-actual: #2b3f87;
+    --chart-forecast: #b42318;
   }
 
   :root[data-theme="dark"] {
@@ -46,6 +56,9 @@
     --warn-soft: #3a2a0a;
     --crit: #f87171;
     --crit-soft: #3b1414;
+    --offline: #94a3b8;
+    --offline-soft: #1e293b;
+    --page: #0a1128;
   }
 
   * {

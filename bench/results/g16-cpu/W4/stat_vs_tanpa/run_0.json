@@ -1,0 +1,162 @@
+{
+  "workload": "W4",
+  "config_id": "stat_vs_tanpa",
+  "konfigurasi": {
+    "varian": [
+      "dengan_stat",
+      "tanpa_stat"
+    ],
+    "seed": [
+      1000,
+      1001,
+      1002,
+      1003,
+      1004
+    ],
+    "epoch": 10,
+    "basis": "ml/finetune.py (asli)"
+  },
+  "tag": "g16-cpu",
+  "device": "cpu",
+  "run": 0,
+  "pemanasan": false,
+  "seed": 1000,
+  "waktu_utc": "2026-10-11T11:32:24+00:00",
+  "git": {
+    "commit": "5d1349051fe0cb80c2a5e21a5963e64963a9afa3",
+    "branch": "feat/fleet-online",
+    "dirty": false
+  },
+  "env": "bench/results/g16-cpu/env/env_20261011-175223.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Turbo",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": null
+  },
+  "protokol": {
+    "repeats": 1,
+    "warmup": 0,
+    "cooldown_s": 60
+  },
+  "waktu": {
+    "ablation_total_s": 2427.745768066001,
+    "dinding_total_s": 2429.7711478579986
+  },
+  "n_pelatihan": 10,
+  "varian": {
+    "dengan_stat": {
+      "runs": [
+        {
+          "seed": 1000,
+          "detik": 267.72353353499784,
+          "macro_f1": 0.5329259887288559,
+          "anomali_pr_auc": 0.6347252206390281,
+          "forecast_t30_mae_c": 0.2101108431816101
+        },
+        {
+          "seed": 1001,
+          "detik": 241.23776619099954,
+          "macro_f1": 0.49513258590529236,
+          "anomali_pr_auc": 0.6246503497126265,
+          "forecast_t30_mae_c": 0.21209019422531128
+        },
+        {
+          "seed": 1002,
+          "detik": 236.39554906799458,
+          "macro_f1": 0.5022235615671337,
+          "anomali_pr_auc": 0.6207406612388284,
+          "forecast_t30_mae_c": 0.21153394877910614
+        },
+        {
+          "seed": 1003,
+          "detik": 243.0342428340009,
+          "macro_f1": 0.49234187607865654,
+          "anomali_pr_auc": 0.6278939004743618,
+          "forecast_t30_mae_c": 0.20991522073745728
+        },
+        {
+          "seed": 1004,
+          "detik": 240.8153096110036,
+          "macro_f1": 0.531882657878127,
+          "anomali_pr_auc": 0.6264940423550829,
+          "forecast_t30_mae_c": 0.2103377878665924
+        }
+      ],
+      "macro_f1_mean": 0.5109013340316131,
+      "anomali_pr_auc_mean": 0.6269008348839856,
+      "forecast_t30_mae_c_mean": 0.21079759895801545,
+      "detik_mean": 245.8412802477993
+    },
+    "tanpa_stat": {
+      "runs": [
+        {
+          "seed": 1000,
+          "detik": 235.80927377400076,
+          "macro_f1": 0.363595471774739,
+          "anomali_pr_auc": 0.5123833150405398,
+          "forecast_t30_mae_c": 0.24246597290039062
+        },
+        {
+          "seed": 1001,
+          "detik": 237.30341148500156,
+          "macro_f1": 0.35087138040325944,
+          "anomali_pr_auc": 0.515263752900391,
+          "forecast_t30_mae_c": 0.2518722116947174
+        },
+        {
+          "seed": 1002,
+          "detik": 238.39986218099511,
+          "macro_f1": 0.3600535896435799,
+          "anomali_pr_auc": 0.5438850283867038,
+          "forecast_t30_mae_c": 0.2653856575489044
+        },
+        {
+          "seed": 1003,
+          "detik": 241.07602569199662,
+          "macro_f1": 0.3603050113731654,
+          "anomali_pr_auc": 0.5271257663661632,
+          "forecast_t30_mae_c": 0.25719064474105835
+        },
+        {
+          "seed": 1004,
+          "detik": 245.95044048399723,
+          "macro_f1": 0.3440372367580057,
+          "anomali_pr_auc": 0.5160661549751905,
+          "forecast_t30_mae_c": 0.26437029242515564
+        }
+      ],
+      "macro_f1_mean": 0.35577253799054986,
+      "anomali_pr_auc_mean": 0.5229448035337976,
+      "forecast_t30_mae_c_mean": 0.2562569558620453,
+      "detik_mean": 239.70780272319826
+    }
+  },
+  "telemetri": {
+    "tersedia": true,
+    "n_sampel": 1409,
+    "energi_wh": 935.2178444444446,
+    "daya_w": {
+      "median": 13.95,
+      "maks": 1411079.0
+    },
+    "suhu_c": {
+      "median": 52.0,
+      "maks": 52.0
+    },
+    "clock_sm_mhz": {
+      "median": 1425.0,
+      "min": 180.0,
+      "p5": 1425.0
+    },
+    "utilisasi_pct_median": 0.0,
+    "vram_terpakai_mb_maks": 0.0,
+    "throttle_reasons_hex": [
+      "0x0000000000000000",
+      "0x0000000000000004"
+    ],
+    "csv": "bench/results/telemetry/g16-cpu/W4_stat_vs_tanpa_run0_20261011-175233.csv"
+  }
+}

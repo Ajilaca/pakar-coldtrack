@@ -1,0 +1,122 @@
+[
+  {
+    "id": "B 3036 WN",
+    "depot_id": "JKT",
+    "label": "Truk 01"
+  },
+  {
+    "id": "D 9831 KT",
+    "depot_id": "BDG",
+    "label": "Truk 02"
+  },
+  {
+    "id": "E 9993 HV",
+    "depot_id": "CRB",
+    "label": "Truk 03"
+  },
+  {
+    "id": "H 7253 VJ",
+    "depot_id": "SMG",
+    "label": "Truk 04"
+  },
+  {
+    "id": "AB 6093 ZM",
+    "depot_id": "YGY",
+    "label": "Truk 05"
+  },
+  {
+    "id": "L 2550 WF",
+    "depot_id": "SBY",
+    "label": "Truk 06"
+  },
+  {
+    "id": "B 8161 RB",
+    "depot_id": "JKT",
+    "label": "Truk 07"
+  },
+  {
+    "id": "D 2605 RV",
+    "depot_id": "BDG",
+    "label": "Truk 08"
+  },
+  {
+    "id": "E 4962 EG",
+    "depot_id": "CRB",
+    "label": "Truk 09"
+  },
+  {
+    "id": "H 2652 TB",
+    "depot_id": "SMG",
+    "label": "Truk 10"
+  },
+  {
+    "id": "AB 1943 LW",
+    "depot_id": "YGY",
+    "label": "Truk 11"
+  },
+  {
+    "id": "L 1556 TA",
+    "depot_id": "SBY",
+    "label": "Truk 12"
+  },
+  {
+    "id": "B 6778 AD",
+    "depot_id": "JKT",
+    "label": "Truk 13"
+  },
+  {
+    "id": "D 2283 DU",
+    "depot_id": "BDG",
+    "label": "Truk 14"
+  },
+  {
+    "id": "E 8659 FR",
+    "depot_id": "CRB",
+    "label": "Truk 15"
+  },
+  {
+    "id": "H 7557 LM",
+    "depot_id": "SMG",
+    "label": "Truk 16"
+  },
+  {
+    "id": "AB 9136 AZ",
+    "depot_id": "YGY",
+    "label": "Truk 17"
+  },
+  {
+    "id": "L 4121 DH",
+    "depot_id": "SBY",
+    "label": "Truk 18"
+  },
+  {
+    "id": "B 8641 TZ",
+    "depot_id": "JKT",
+    "label": "Truk 19"
+  },
+  {
+    "id": "D 8839 XT",
+    "depot_id": "BDG",
+    "label": "Truk 20"
+  },
+  {
+    "id": "E 3502 EY",
+    "depot_id": "CRB",
+    "label": "Truk 21"
+  },
+  {
+    "id": "H 3072 XS",
+    "depot_id": "SMG",
+    "label": "Truk 22"
+  },
+  {
+    "id": "AB 1448 NN",
+    "depot_id": "YGY",
+    "label": "Truk 23"
+  },
+  {
+    "id": "L 1685 GN",
+    "depot_id": "SBY",
+    "label": "Truk 24"
+  }
+]

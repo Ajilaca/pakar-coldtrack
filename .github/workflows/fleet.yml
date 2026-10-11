@@ -1,0 +1,64 @@
+name: Fleet CI
+
+# Dasbor armada (frontend) dan integrasi stack armada (TimescaleDB + Mosquitto + api + worker) via docker compose.
+# Tes integrasi = backend/tests/test_fleet_integrasi.py (dilewati di job pytest biasa tanpa COLDTRACK_FLEET_IT=1).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "frontend/**"
+      - "backend/**"
+      - "docker/**"
+      - "docker-compose.yml"
+      - ".github/workflows/fleet.yml"
+  pull_request:
+    paths:
+      - "frontend/**"
+      - "backend/**"
+      - "docker/**"
+      - "docker-compose.yml"
+      - ".github/workflows/fleet.yml"
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+
+  integrasi:
+    runs-on: ubuntu-latest
+    env:
+      INGEST_API_KEYS: generic_json=ci-test-key
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Nyalakan stack armada (migrasi + seed jalan di container api)
+        run: docker compose up -d --build --wait --wait-timeout 300 db mosquitto api worker-ingest worker-infer
+
+      - name: Tes integrasi (MQTT -> DB, dedupe, data terlambat, webhook, prediksi, API, PATCH + audit, SSE)
+        run: |
+          docker compose run --rm --no-deps -v ./backend/tests:/app/tests \
+            -e COLDTRACK_FLEET_IT=1 -e INGEST_TEST_KEY=ci-test-key -e API_URL=http://api:8000 \
+            -e MQTT_HOST=mosquitto -e SIM_SPEED=30 -e SIM_ANCHOR=2026-10-11T00:00:00+00:00 \
+            -e DATABASE_URL=postgresql://coldtrack:coldtrack@db:5432/coldtrack \
+            --entrypoint "" api python -m pytest tests/test_fleet_integrasi.py -v
+
+      - name: Log container bila gagal
+        if: failure()
+        run: docker compose logs --tail 200 api worker-ingest worker-infer mosquitto db
+
+      - name: Matikan stack
+        if: always()
+        run: docker compose down -v
