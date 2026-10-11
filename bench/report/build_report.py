@@ -306,17 +306,25 @@ def bagian_b3():
 def bagian_g3():
     tdir = RESULTS_DIR / "test"
     files = {p.stem: _load(p) for p in sorted(tdir.glob("*.json"))} if tdir.exists() else {}
+    files = {k: v for k, v in files.items() if "metrik_test" in v}  # B4 punya format sendiri (bagian_g4)
     if not files:
         return []
     log = _load(RESULTS_DIR / "test_access_log.json")
     kunci = list(next(iter(files.values()))["metrik_test"])
-    out = ["## Gerbang G3: split test (dipakai sekali per model)", "",
-           "| metrik (test) | " + " | ".join(files) + " |", "|---" * (len(files) + 1) + "|"]
+    out = [
+        "## Gerbang G3: split test (dipakai sekali per model)",
+        "",
+        "| metrik (test) | " + " | ".join(files) + " |",
+        "|---" * (len(files) + 1) + "|",
+    ]
     for k in kunci:
         out.append(f"| {k} | " + " | ".join(_fmt(f["metrik_test"].get(k)) for f in files.values()) + " |")
     out += ["", "Log akses split test (dicatat sebelum evaluasi; run kedua untuk id yang sama ditolak):", ""]
-    out += [f"- `{e['id']}`: {e['model']} (sha256 {e['sha256_model'][:12]}…), {e['waktu_utc']}, commit "
-            f"{(e['git']['commit'] or '')[:7]}" for e in log]
+    out += [
+        f"- `{e['id']}`: {e['model']} (sha256 {e['sha256_model'][:12]}…), {e['waktu_utc']}, commit "
+        f"{(e['git']['commit'] or '')[:7]}"
+        for e in log
+    ]
     kep = RESULTS_DIR / "keputusan" / "G3.json"
     if kep.exists():
         k = _load(kep)
@@ -324,6 +332,44 @@ def bagian_g3():
     else:
         out += ["", "**Keputusan G3: menunggu keputusan user** (model mana yang diganti, trade-off latensi)."]
     return out + ["", "Sumber: `bench/results/test/*.json`, `bench/results/test_access_log.json`", ""]
+
+
+def bagian_g4():
+    kep_p = RESULTS_DIR / "keputusan" / "G4.json"
+    tes_p = RESULTS_DIR / "test" / "b4_berkeley_v1_kesehatan.json"
+    if not (kep_p.exists() and tes_p.exists()):
+        return []
+    kep, t = _load(kep_p), _load(tes_p)
+    out = [
+        "## Gerbang G4: sensor-health Berkeley (mote test, sekali)",
+        "",
+        (
+            f"**{kep['status']}** ({kep['tanggal']}). H = 24 jam, kriteria dipra-registrasi sebelum data diunduh "
+            "(`bench/results/keputusan/G4_kriteria.json`, `G4_definisi.json`)."
+        ),
+        "",
+        "| metrik (mote test) | v0 aturan | berkeley_v1 (kesehatan) |",
+        "|---|---|---|",
+    ]
+    for k, nama in [
+        ("pr_auc", "PR-AUC"),
+        ("recall_jendela", "recall jendela"),
+        ("alarm_palsu_per_mote_hari", "alarm palsu / mote-hari"),
+        ("recall_kejadian", "recall kejadian"),
+        ("lead_time_median_menit", "lead time median (menit)"),
+    ]:
+        out.append(f"| {nama} | {_fmt(t['v0'][k], 3)} | {_fmt(t['v1'][k], 3)} |")
+    out += [
+        "",
+        "Kriteria: " + ", ".join(f"{k} = {'ya' if v else 'tidak'}" for k, v in t["kriteria"].items()) + ".",
+        "",
+    ]
+    out += [f"- {x}" for x in kep["alasan"] + kep["keterbatasan"]]
+    return out + [
+        "",
+        "Sumber: `bench/results/test/b4_berkeley_v1_kesehatan.json`, `bench/results/keputusan/G4.json`",
+        "",
+    ]
 
 
 def tulis_summary_csv():
@@ -379,6 +425,7 @@ def main():
         *bagian_b2(g2, gambar),
         *bagian_b3(),
         *bagian_g3(),
+        *bagian_g4(),
     ]
     OUT.write_text("\n".join(lines), encoding="utf-8")
     print(f"Tersimpan: {OUT.relative_to(ROOT).as_posix()} + summary.csv + {len(gambar)} grafik")

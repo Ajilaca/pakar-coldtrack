@@ -1,6 +1,6 @@
 # Laporan latih ulang ColdTrack + benchmark device
 
-> Dibangkitkan oleh `bench/report/build_report.py` pada 2026-10-11T01:27:17+00:00. Jangan diedit manual:
+> Dibangkitkan oleh `bench/report/build_report.py` pada 2026-10-11T01:51:12+00:00. Jangan diedit manual:
 > setiap angka berasal dari JSON di `bench/results/`. Tabel lengkap: `summary.csv`.
 
 ## Gerbang G1 (reproduksi)
@@ -262,7 +262,31 @@ Log akses split test (dicatat sebelum evaluasi; run kedua untuk id yang sama dit
 
 - `baseline_proposal`: ml/reports/coldtrack.onnx (sha256 3948c4476313…), 2026-10-10T22:53:08+00:00, commit 1e668e1
 - `kandidat_b3`: backend/models/candidates/coldtrack_gru_b3.onnx (sha256 fab911760e87…), 2026-10-10T22:53:13+00:00, commit 1e668e1
+- `b4_berkeley_v1_kesehatan`: ml/sensor_health/artifacts/berkeley_v1_kesehatan.json (sha256 19fbf3cd0220…), 2026-10-11T01:49:41+00:00, commit 073756a
 
 **Keputusan G3: lulus: kandidat B3 diadopsi sebagai model acuan v3** (2026-10-11). Kandidat lebih baik dari baseline di split val (5 seed, aturan adopsi yang didaftarkan sebelum sweep) dan di split test yang dipakai sekali. Forecast tidak memburuk berarti; TTB produksi tetap XGBoost sehingga penurunan head TTB GRU tidak berdampak. Trade-off latensi diterima user: tetap jauh di bawah batas PRD 300 ms per panggilan. Target Macro F1 dan PR-AUC PRD belum tercapai; batasnya dilaporkan (label implisit).
 
 Sumber: `bench/results/test/*.json`, `bench/results/test_access_log.json`
+
+## Gerbang G4: sensor-health Berkeley (mote test, sekali)
+
+**tidak lulus: aturan v0 tetap default, berkeley_v1 tidak diaktifkan** (2026-10-11). H = 24 jam, kriteria dipra-registrasi sebelum data diunduh (`bench/results/keputusan/G4_kriteria.json`, `G4_definisi.json`).
+
+| metrik (mote test) | v0 aturan | berkeley_v1 (kesehatan) |
+|---|---|---|
+| PR-AUC | 0.422 | 0.876 |
+| recall jendela | 0.739 | 1.000 |
+| alarm palsu / mote-hari | 0.239 | 0.665 |
+| recall kejadian | 1.000 | 1.000 |
+| lead time median (menit) | 1434.000 | 1435.000 |
+
+Kriteria: 1_pr_auc_v1_ge_v0_plus_0.05 = ya, 2_alarm_palsu_le_v0_pada_recall_ge_v0 = tidak, G4_lulus = tidak.
+
+- Kriteria 1 terpenuhi: PR-AUC v1 jauh di atas v0 + 0,05 di mote test.
+- Kriteria 2 tidak terpenuhi: alarm palsu per mote-hari v1 lebih tinggi dari v0, meski recall v1 lebih tinggi.
+- Aturan baterai v0 (< 2,4 V) hampir berimpit dengan definisi kegagalan di data lab (nilai ekstrem hanya muncul saat tegangan < 2,4 V), sehingga v0 adalah pembanding yang sangat kuat di domain ini.
+- Hanya 54 kejadian kegagalan (11 di mote test): kekuatan statistik rendah.
+- Domain lab (Mica2, bangunan) berbeda dari truk; skema fitur truk tidak memuat tegangan baterai, padahal tegangan adalah sinyal terkuat bagi v0 dan v1.
+- Varian dengan level suhu absolut (val PR-AUC lebih tinggi) tidak dipilih karena level suhu lab dapat menjadi penanda kalender.
+
+Sumber: `bench/results/test/b4_berkeley_v1_kesehatan.json`, `bench/results/keputusan/G4.json`

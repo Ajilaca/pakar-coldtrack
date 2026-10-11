@@ -20,5 +20,17 @@
       "branch": "feat/model-retrain-g16",
       "dirty": false
     }
+  },
+  {
+    "id": "b4_berkeley_v1_kesehatan",
+    "model": "ml/sensor_health/artifacts/berkeley_v1_kesehatan.json",
+    "sha256_model": "19fbf3cd0220ae4cae53c7570e43753b79fa7e50596bd8fe0cc09977320b2863",
+    "waktu_utc": "2026-10-11T01:49:41+00:00",
+    "git": {
+      "commit": "073756a4850b5884a4ca9a66e18a8df6b336eaa9",
+      "branch": "feat/model-retrain-g16",
+      "dirty": false
+    },
+    "split": "mote test (B4)"
   }
 ]
