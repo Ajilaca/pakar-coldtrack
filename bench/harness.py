@@ -19,7 +19,8 @@ def header(ctx, workload, config_id, config, n, seed, pemanasan):
         "tag": ctx.tag, "device": ctx.device, "run": n, "pemanasan": pemanasan, "seed": seed,
         "waktu_utc": now_iso(), "git": git_info(), "env": ctx.env_path,
         "kondisi_manual": ctx.profile.get("kondisi"),
-        "protokol": {"repeats": ctx.repeats, "warmup": ctx.warmup, "cooldown_s": ctx.cooldown_eff},
+        "protokol": {"repeats": getattr(ctx, "rep_eff", ctx.repeats), "warmup": getattr(ctx, "wu_eff", ctx.warmup),
+                     "cooldown_s": ctx.cooldown_eff},
     }
 
 
@@ -32,22 +33,29 @@ def tidak_berlaku(ctx, workload, config_id, config, alasan):
     return [path]
 
 
-def run_config(ctx, workload, config_id, config, fn, cooldown=None):
-    """fn(seed, pemanasan) -> dict hasil (waktu, metrik, ...). Kembalikan daftar berkas JSON."""
+def run_config(ctx, workload, config_id, config, fn, cooldown=None, repeats=None, warmup=None):
+    """fn(seed, pemanasan) -> dict hasil (waktu, metrik, ...). Kembalikan daftar berkas JSON.
+
+    repeats/warmup menimpa protokol bawaan untuk workload yang satu run-nya sudah berisi banyak
+    pelatihan (W3 sweep, W4 ablation): variasinya tercatat di dalam run (per trial / per seed).
+    """
     ctx.cooldown_eff = ctx.cooldown if cooldown is None else cooldown
     d = ctx.out_root / workload / config_id
-    n_total = ctx.warmup + ctx.repeats
+    rep = ctx.repeats if repeats is None else repeats
+    wu = ctx.warmup if warmup is None else warmup
+    ctx.rep_eff, ctx.wu_eff = rep, wu
+    n_total = wu + rep
     if not getattr(ctx, "overwrite", False) and all((d / f"run_{n}.json").exists() for n in range(n_total)):
         print(f"  {config_id}: sudah lengkap, dilewati (pakai --overwrite untuk mengulang)")
         return []
 
     files = []
     for n in range(n_total):
-        pemanasan = n < ctx.warmup
-        seed = ctx.seeds[0] if pemanasan else ctx.seeds[(n - ctx.warmup) % len(ctx.seeds)]
+        pemanasan = n < wu
+        seed = ctx.seeds[0] if pemanasan else ctx.seeds[(n - wu) % len(ctx.seeds)]
         if n > 0 and ctx.cooldown_eff:
             time.sleep(ctx.cooldown_eff)
-        label = "pemanasan" if pemanasan else f"ulangan {n - ctx.warmup + 1}/{ctx.repeats}"
+        label = "pemanasan" if pemanasan else f"ulangan {n - wu + 1}/{rep}"
         print(f"  {config_id} [{label}, seed {seed}]", flush=True)
         with Telemetri(ctx.tag, f"{workload}_{config_id}_run{n}") as tel:
             t0 = time.perf_counter()
