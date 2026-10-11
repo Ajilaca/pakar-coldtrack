@@ -24,6 +24,19 @@ model:
       version: coldtrack-hybrid-v3
 # Ambang status dan batas tampil TTB ada di app/core/engine.py :: CFG.
 
+fleet:
+  # [ASUMSI] harga muatan per kg (IDR) untuk estimasi kerugian; BUKAN harga pasar resmi.
+  # Alasan dan sumber: docs/fleet_assumptions.md. Ganti dengan nilai dari mitra saat pilot.
+  harga_per_kg_idr:
+    vaksin_2_8C: 2500000
+    daging_beku_-18C: 140000
+    buah_segar_2_4C: 30000
+    ikan_segar_0_5C: 60000
+    produk_susu_2_4C: 25000
+  history_cap_min: 240          # riwayat maksimum per truk untuk engine (menit)
+  ffill_maks_menit: 5           # celah <= ini diisi nilai terakhir; lebih besar -> DATA_TIDAK_LENGKAP
+  offline_setelah_menit: 10     # tanpa bacaan selama ini -> TIDAK_ADA_DATA (tidak pernah AMAN)
+
 # c_kj_kgc dan mass_kg_default = [ASUMSI] sampai diganti nilai dari `data kalor.pdf`
 # (segar ~3,6-3,9 kJ/kg.C, beku ~1,8). mass_kg_default dipakai bila request tidak
 # mengirim mass_kg; muatan kecil -> alarm lebih sensitif.

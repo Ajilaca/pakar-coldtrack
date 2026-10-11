@@ -1,2 +1,5 @@
 # Skrip shell dijalankan di WSL/Linux: CRLF membuat bash gagal
 *.sh text eol=lf
+
+# Atribut eksekusi skrip entrypoint di container
+docker/**/*.sh text eol=lf

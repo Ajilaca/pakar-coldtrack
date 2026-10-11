@@ -1,0 +1,8 @@
+# Dev: satu akun simulator (publish) dan satu akun ingest (subscribe).
+# Fase 6: akun per perangkat, mis. "pattern write coldtrack/v1/%u/#" dengan username = id topik truk.
+user ingest
+topic read coldtrack/v1/#
+topic read $SYS/#
+
+user simulator
+topic write coldtrack/v1/#

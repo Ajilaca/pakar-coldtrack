@@ -1,0 +1,44 @@
+[
+  {
+    "id": "JKT",
+    "name": "Depo Jakarta",
+    "city": "Jakarta",
+    "lat": -6.2088,
+    "lon": 106.8456
+  },
+  {
+    "id": "BDG",
+    "name": "Depo Bandung",
+    "city": "Bandung",
+    "lat": -6.9175,
+    "lon": 107.6191
+  },
+  {
+    "id": "CRB",
+    "name": "Depo Cirebon",
+    "city": "Cirebon",
+    "lat": -6.732,
+    "lon": 108.5523
+  },
+  {
+    "id": "SMG",
+    "name": "Depo Semarang",
+    "city": "Semarang",
+    "lat": -6.9667,
+    "lon": 110.4167
+  },
+  {
+    "id": "YGY",
+    "name": "Depo Yogyakarta",
+    "city": "Yogyakarta",
+    "lat": -7.7956,
+    "lon": 110.3695
+  },
+  {
+    "id": "SBY",
+    "name": "Depo Surabaya",
+    "city": "Surabaya",
+    "lat": -7.2575,
+    "lon": 112.7521
+  }
+]
