@@ -12,6 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.explain import compute_feature_drivers
 from app.inference import inference_engine
 from app.preprocess import prepare_onnx_input_tensor
+from app.routers import ingest as ingest_router
 from app.rules import generate_recommended_actions
 from app.scenarios import scenario_manager
 from app.schemas import (
@@ -50,6 +51,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Router armada (butuh TimescaleDB saat dipanggil; impor tidak membuka koneksi)
+app.include_router(ingest_router.router)
 
 
 @app.get("/health", summary="Docker healthcheck probe")
