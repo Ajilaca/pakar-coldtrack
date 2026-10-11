@@ -1,0 +1,276 @@
+{
+  "gru": {
+    "sumber": [
+      "bench/results/g16-gpu/B1/gru_seed1000.json",
+      "bench/results/g16-gpu/B1/gru_seed1001.json",
+      "bench/results/g16-gpu/B1/gru_seed1002.json",
+      "bench/results/g16-gpu/B1/gru_seed1003.json",
+      "bench/results/g16-gpu/B1/gru_seed1004.json"
+    ],
+    "metrik": {
+      "forecast_t15_mae_c": {
+        "nilai_per_seed": [
+          0.15830208361148834,
+          0.16038380563259125,
+          0.16062408685684204,
+          0.15619878470897675,
+          0.1609453707933426
+        ],
+        "mean": 0.1592908263206482,
+        "sd": 0.0020154427751151558,
+        "rentang_2sd": [
+          0.15525994077041788,
+          0.16332171187087852
+        ],
+        "acuan": 0.1595,
+        "sumber_acuan": "ml/reports/metrics.json:metrik_val_pembanding",
+        "lulus": true
+      },
+      "forecast_t30_mae_c": {
+        "nilai_per_seed": [
+          0.2092554271221161,
+          0.21445511281490326,
+          0.20778848230838776,
+          0.20571766793727875,
+          0.21053194999694824
+        ],
+        "mean": 0.2095497280359268,
+        "sd": 0.0032749367914061186,
+        "rentang_2sd": [
+          0.20299985445311458,
+          0.21609960161873903
+        ],
+        "acuan": 0.211,
+        "sumber_acuan": "ml/reports/metrics.json:metrik_val_pembanding",
+        "lulus": true
+      },
+      "forecast_t60_mae_c": {
+        "nilai_per_seed": [
+          0.2555817663669586,
+          0.26861074566841125,
+          0.2531149983406067,
+          0.25350210070610046,
+          0.25969117879867554
+        ],
+        "mean": 0.2581001579761505,
+        "sd": 0.006429230989048668,
+        "rentang_2sd": [
+          0.24524169599805315,
+          0.2709586199542478
+        ],
+        "acuan": 0.2554,
+        "sumber_acuan": "ml/reports/metrics.json:metrik_val_pembanding",
+        "lulus": true
+      },
+      "macro_f1": {
+        "nilai_per_seed": [
+          0.5918880828452063,
+          0.5890235243700447,
+          0.5833398100661843,
+          0.587582811685712,
+          0.5795456854851765
+        ],
+        "mean": 0.5862759828904649,
+        "sd": 0.004864937450825632,
+        "rentang_2sd": [
+          0.5765461079888137,
+          0.5960058577921161
+        ],
+        "acuan": 0.58,
+        "sumber_acuan": "ml/reports/metrics.json:metrik_val_pembanding",
+        "lulus": true
+      },
+      "akurasi": {
+        "nilai_per_seed": [
+          0.796880711587669,
+          0.7979773364201291,
+          0.7951748507371755,
+          0.7974899476057025,
+          0.7948702327281589
+        ],
+        "mean": 0.7964786158157671,
+        "sd": 0.0013890046783320653,
+        "rentang_2sd": [
+          0.7937006064591029,
+          0.7992566251724312
+        ],
+        "acuan": 0.7857,
+        "sumber_acuan": "ml/reports/metrics.json:metrik_val_pembanding",
+        "lulus": false
+      },
+      "ttb_mae_menit": {
+        "nilai_per_seed": [
+          21.609355926513672,
+          21.143081665039062,
+          21.922422409057617,
+          22.38214874267578,
+          22.6082763671875
+        ],
+        "mean": 21.933057022094726,
+        "sd": 0.5887616445795391,
+        "rentang_2sd": [
+          20.755533732935646,
+          23.110580311253806
+        ],
+        "acuan": 21.2361,
+        "sumber_acuan": "ml/reports/metrics.json:metrik_val_pembanding",
+        "lulus": true
+      },
+      "anomali_pr_auc": {
+        "nilai_per_seed": [
+          0.6885381849359159,
+          0.6927998224580283,
+          0.6829241446136294,
+          0.6915735304439656,
+          0.6862369887389027
+        ],
+        "mean": 0.6884145342380884,
+        "sd": 0.0040034791720812875,
+        "rentang_2sd": [
+          0.6804075758939259,
+          0.696421492582251
+        ],
+        "acuan": 0.6874,
+        "sumber_acuan": "ml/reports/metrics.json:metrik_val_pembanding",
+        "lulus": true
+      }
+    }
+  },
+  "xgb_ttb": {
+    "sumber": [
+      "bench/results/g16-gpu/B1/xgb_ttb_seed1000.json",
+      "bench/results/g16-gpu/B1/xgb_ttb_seed1001.json",
+      "bench/results/g16-gpu/B1/xgb_ttb_seed1002.json",
+      "bench/results/g16-gpu/B1/xgb_ttb_seed1003.json",
+      "bench/results/g16-gpu/B1/xgb_ttb_seed1004.json"
+    ],
+    "metrik": {
+      "ttb_mae_semua_menit": {
+        "nilai_per_seed": [
+          24.014829635620117,
+          24.014829635620117,
+          24.014829635620117,
+          24.014829635620117,
+          24.014829635620117
+        ],
+        "mean": 24.014829635620117,
+        "sd": 0.0,
+        "rentang_2sd": [
+          24.014829635620117,
+          24.014829635620117
+        ],
+        "acuan": 25.217384338378906,
+        "sumber_acuan": "ml/reports/baseline_metrics.json",
+        "lulus": false
+      },
+      "ttb_mae_le30_menit": {
+        "nilai_per_seed": [
+          5.1418304443359375,
+          5.1418304443359375,
+          5.1418304443359375,
+          5.1418304443359375,
+          5.1418304443359375
+        ],
+        "mean": 5.1418304443359375,
+        "sd": 0.0,
+        "rentang_2sd": [
+          5.1418304443359375,
+          5.1418304443359375
+        ],
+        "acuan": null,
+        "sumber_acuan": "tidak ada acuan val (7,08 hanya di split test)",
+        "lulus": null
+      },
+      "ttb_mae_le10_menit": {
+        "nilai_per_seed": [
+          3.2388389110565186,
+          3.2388389110565186,
+          3.2388389110565186,
+          3.2388389110565186,
+          3.2388389110565186
+        ],
+        "mean": 3.2388389110565186,
+        "sd": 0.0,
+        "rentang_2sd": [
+          3.2388389110565186,
+          3.2388389110565186
+        ],
+        "acuan": null,
+        "sumber_acuan": "tidak ada acuan val",
+        "lulus": null
+      }
+    }
+  },
+  "xgb_clf": {
+    "sumber": [
+      "bench/results/g16-gpu/B1/xgb_clf_seed1000.json",
+      "bench/results/g16-gpu/B1/xgb_clf_seed1001.json",
+      "bench/results/g16-gpu/B1/xgb_clf_seed1002.json",
+      "bench/results/g16-gpu/B1/xgb_clf_seed1003.json",
+      "bench/results/g16-gpu/B1/xgb_clf_seed1004.json"
+    ],
+    "metrik": {
+      "macro_f1": {
+        "nilai_per_seed": [
+          0.68645141007144,
+          0.68645141007144,
+          0.68645141007144,
+          0.68645141007144,
+          0.68645141007144
+        ],
+        "mean": 0.68645141007144,
+        "sd": 0.0,
+        "rentang_2sd": [
+          0.68645141007144,
+          0.68645141007144
+        ],
+        "acuan": 0.6915577642314622,
+        "sumber_acuan": "ml/reports/baseline_metrics.json",
+        "lulus": false
+      },
+      "akurasi": {
+        "nilai_per_seed": [
+          0.858048007798221,
+          0.858048007798221,
+          0.858048007798221,
+          0.858048007798221,
+          0.858048007798221
+        ],
+        "mean": 0.8580480077982211,
+        "sd": 1.2412670766236366e-16,
+        "rentang_2sd": [
+          0.8580480077982209,
+          0.8580480077982213
+        ],
+        "acuan": 0.8600584866577312,
+        "sumber_acuan": "ml/reports/baseline_metrics.json",
+        "lulus": false
+      },
+      "anomali_pr_auc": {
+        "nilai_per_seed": [
+          0.7566349950060229,
+          0.7566349950060229,
+          0.7566349950060229,
+          0.7566349950060229,
+          0.7566349950060229
+        ],
+        "mean": 0.7566349950060229,
+        "sd": 0.0,
+        "rentang_2sd": [
+          0.7566349950060229,
+          0.7566349950060229
+        ],
+        "acuan": 0.7546079915246015,
+        "sumber_acuan": "ml/reports/baseline_metrics.json",
+        "lulus": false
+      }
+    }
+  },
+  "_ringkas": {
+    "tag": "g16-gpu",
+    "waktu_utc": "2026-10-10T10:20:00+00:00",
+    "n_dicek": 11,
+    "n_lulus": 6,
+    "G1_lulus": false
+  }
+}

@@ -1,0 +1,378 @@
+{
+  "workload": "W1",
+  "config_id": "b1024_fp32",
+  "konfigurasi": {
+    "batch_size": 1024,
+    "n_epochs": 30,
+    "lr": [
+      0.0005,
+      0.002
+    ],
+    "loss_weights": {
+      "forecast": 30.0,
+      "failure": 1.0,
+      "ttb": 8.0
+    }
+  },
+  "tag": "g16-cpu",
+  "device": "cpu",
+  "run": 2,
+  "pemanasan": false,
+  "seed": 1001,
+  "waktu_utc": "2026-10-10T14:59:48+00:00",
+  "git": {
+    "commit": "009ed574ba582fcabcd8ad0c93d283c541543bd6",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "env": "bench/results/g16-cpu/env/env_20261010-201459.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Turbo",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": null
+  },
+  "protokol": {
+    "repeats": 5,
+    "warmup": 1,
+    "cooldown_s": 60
+  },
+  "waktu": {
+    "muat_s": 0.6721410690006451,
+    "praproses_s": 1.5397112509999715,
+    "transfer_ke_device_s": null,
+    "latih_loop_s": 809.4953392320003,
+    "eval_s": 1.456287192999298,
+    "detik_latih_per_epoch_median": 26.08555073650041,
+    "sampel_per_detik_median": 2978.775607917452,
+    "dinding_total_s": 813.1881746619983
+  },
+  "time_to_target": {
+    "target_val_loss": 2.534773635864258,
+    "sumber_target": [
+      "bench/results/g16-cpu/B1/gru_seed1000.json",
+      "bench/results/g16-cpu/B1/gru_seed1001.json",
+      "bench/results/g16-cpu/B1/gru_seed1002.json",
+      "bench/results/g16-cpu/B1/gru_seed1003.json",
+      "bench/results/g16-cpu/B1/gru_seed1004.json"
+    ],
+    "tercapai": false,
+    "epoch": null,
+    "detik": null
+  },
+  "ringkas_latih": {
+    "detik_total_loop": 809.4953392320003,
+    "transfer_ke_device_s": null,
+    "epoch_terbaik": 15,
+    "val_loss_terbaik": 3.663757801055908,
+    "vram_puncak_mb": null
+  },
+  "metrik_val": {
+    "forecast_t15_mae_c": 0.16927582025527954,
+    "forecast_t30_mae_c": 0.2197829633951187,
+    "forecast_t60_mae_c": 0.26846227049827576,
+    "macro_f1": 0.4703704567926264,
+    "akurasi": 0.7823808943584745,
+    "ttb_mae_menit": 22.380279541015625,
+    "anomali_pr_auc": 0.6089090772149823
+  },
+  "riwayat": [
+    {
+      "epoch": 1,
+      "train_loss": 21.01836395263672,
+      "val_loss": 8.653114318847656,
+      "detik_latih": 16.302623407000283,
+      "detik_val": 1.6153735919997416,
+      "sampel_per_detik": 4766.288103461596,
+      "detik_kumulatif": 17.9181029650008
+    },
+    {
+      "epoch": 2,
+      "train_loss": 9.493409156799316,
+      "val_loss": 7.636241436004639,
+      "detik_latih": 16.52551242899972,
+      "detik_val": 1.5802288229988335,
+      "sampel_per_detik": 4702.002454316833,
+      "detik_kumulatif": 36.024047453000094
+    },
+    {
+      "epoch": 3,
+      "train_loss": 8.150884628295898,
+      "val_loss": 7.361837863922119,
+      "detik_latih": 16.755446014998597,
+      "detik_val": 1.6644889340004738,
+      "sampel_per_detik": 4637.477267417671,
+      "detik_kumulatif": 54.44418067799961
+    },
+    {
+      "epoch": 4,
+      "train_loss": 7.385262489318848,
+      "val_loss": 6.799025058746338,
+      "detik_latih": 27.67738380300034,
+      "detik_val": 1.8768531570003688,
+      "sampel_per_detik": 2807.4546551461517,
+      "detik_kumulatif": 83.99865074099944
+    },
+    {
+      "epoch": 5,
+      "train_loss": 6.8591156005859375,
+      "val_loss": 5.833782196044922,
+      "detik_latih": 25.69741883200004,
+      "detik_val": 1.780689289998918,
+      "sampel_per_detik": 3023.7667256774967,
+      "detik_kumulatif": 111.4769707609994
+    },
+    {
+      "epoch": 6,
+      "train_loss": 6.49997615814209,
+      "val_loss": 5.781237602233887,
+      "detik_latih": 25.991972366000482,
+      "detik_val": 1.835414158000276,
+      "sampel_per_detik": 2989.499946592801,
+      "detik_kumulatif": 139.30456222800058
+    },
+    {
+      "epoch": 7,
+      "train_loss": 6.304996967315674,
+      "val_loss": 5.606791019439697,
+      "detik_latih": 26.11357071599923,
+      "detik_val": 1.835232965000614,
+      "sampel_per_detik": 2975.579281939908,
+      "detik_kumulatif": 167.25357899899973
+    },
+    {
+      "epoch": 8,
+      "train_loss": 6.198807716369629,
+      "val_loss": 5.3480634689331055,
+      "detik_latih": 26.042572226999255,
+      "detik_val": 1.774451159999444,
+      "sampel_per_detik": 2983.691446555443,
+      "detik_kumulatif": 195.07077498500075
+    },
+    {
+      "epoch": 9,
+      "train_loss": 6.010037422180176,
+      "val_loss": 5.0014166831970215,
+      "detik_latih": 25.99239696800032,
+      "detik_val": 1.8463413839999703,
+      "sampel_per_detik": 2989.451111248473,
+      "detik_kumulatif": 222.90967294199982
+    },
+    {
+      "epoch": 10,
+      "train_loss": 5.976320266723633,
+      "val_loss": 4.649662017822266,
+      "detik_latih": 25.93650234100096,
+      "detik_val": 1.7959751729995332,
+      "sampel_per_detik": 2995.893547186796,
+      "detik_kumulatif": 250.64232500599974
+    },
+    {
+      "epoch": 11,
+      "train_loss": 5.772796154022217,
+      "val_loss": 4.541750907897949,
+      "detik_latih": 25.86797606000073,
+      "detik_val": 1.7547155659995042,
+      "sampel_per_detik": 3003.8299022609276,
+      "detik_kumulatif": 278.26516392600024
+    },
+    {
+      "epoch": 12,
+      "train_loss": 5.620914459228516,
+      "val_loss": 4.139828205108643,
+      "detik_latih": 25.60746530399956,
+      "detik_val": 1.8173499460008316,
+      "sampel_per_detik": 3034.38856901873,
+      "detik_kumulatif": 305.69011818299987
+    },
+    {
+      "epoch": 13,
+      "train_loss": 5.417300701141357,
+      "val_loss": 4.681657314300537,
+      "detik_latih": 25.92786430200067,
+      "detik_val": 1.948309743000209,
+      "sampel_per_detik": 2996.891648881555,
+      "detik_kumulatif": 333.5663354949993
+    },
+    {
+      "epoch": 14,
+      "train_loss": 5.284068584442139,
+      "val_loss": 3.817570924758911,
+      "detik_latih": 26.004135990999202,
+      "detik_val": 1.8351188560009177,
+      "sampel_per_detik": 2988.1015861051987,
+      "detik_kumulatif": 361.40583932700065
+    },
+    {
+      "epoch": 15,
+      "train_loss": 5.241099834442139,
+      "val_loss": 3.663757801055908,
+      "detik_latih": 26.12482459900093,
+      "detik_val": 1.7736281649995362,
+      "sampel_per_detik": 2974.2974811387453,
+      "detik_kumulatif": 389.30451312600053
+    },
+    {
+      "epoch": 16,
+      "train_loss": 5.14405632019043,
+      "val_loss": 4.089478969573975,
+      "detik_latih": 25.94919074200152,
+      "detik_val": 1.9143219750003482,
+      "sampel_per_detik": 2994.4286422092327,
+      "detik_kumulatif": 417.1680760220006
+    },
+    {
+      "epoch": 17,
+      "train_loss": 5.050033092498779,
+      "val_loss": 3.9570960998535156,
+      "detik_latih": 26.081108928001413,
+      "detik_val": 1.8126584750007169,
+      "sampel_per_detik": 2979.2828293652756,
+      "detik_kumulatif": 445.06189485899995
+    },
+    {
+      "epoch": 18,
+      "train_loss": 4.967618465423584,
+      "val_loss": 4.053029537200928,
+      "detik_latih": 26.1650398820002,
+      "detik_val": 1.8837878800004546,
+      "sampel_per_detik": 2969.7260294815937,
+      "detik_kumulatif": 473.1107859240001
+    },
+    {
+      "epoch": 19,
+      "train_loss": 4.97838020324707,
+      "val_loss": 3.7634668350219727,
+      "detik_latih": 26.151025764000224,
+      "detik_val": 1.8121235500002513,
+      "sampel_per_detik": 2971.3174810514224,
+      "detik_kumulatif": 501.0739920399992
+    },
+    {
+      "epoch": 20,
+      "train_loss": 4.971609592437744,
+      "val_loss": 3.7302820682525635,
+      "detik_latih": 26.303431233000083,
+      "detik_val": 1.872390792999795,
+      "sampel_per_detik": 2954.1012847979473,
+      "detik_kumulatif": 529.2498766419994
+    },
+    {
+      "epoch": 21,
+      "train_loss": 4.883131980895996,
+      "val_loss": 3.7812492847442627,
+      "detik_latih": 26.2879222699994,
+      "detik_val": 1.7875805420007964,
+      "sampel_per_detik": 2955.844102166914,
+      "detik_kumulatif": 557.3254316260009
+    },
+    {
+      "epoch": 22,
+      "train_loss": 4.857656478881836,
+      "val_loss": 3.8894927501678467,
+      "detik_latih": 26.298567109000942,
+      "detik_val": 1.8920618039992405,
+      "sampel_per_detik": 2954.647668747146,
+      "detik_kumulatif": 585.5161125700015
+    },
+    {
+      "epoch": 23,
+      "train_loss": 4.8381147384643555,
+      "val_loss": 3.8203847408294678,
+      "detik_latih": 26.098998254001344,
+      "detik_val": 1.7614434999995865,
+      "sampel_per_detik": 2977.240706473745,
+      "detik_kumulatif": 613.3766031139985
+    },
+    {
+      "epoch": 24,
+      "train_loss": 4.820343971252441,
+      "val_loss": 3.8023953437805176,
+      "detik_latih": 26.126307361999352,
+      "detik_val": 1.949176265999995,
+      "sampel_per_detik": 2974.1286789352716,
+      "detik_kumulatif": 641.4521410649995
+    },
+    {
+      "epoch": 25,
+      "train_loss": 4.788719654083252,
+      "val_loss": 3.7525885105133057,
+      "detik_latih": 26.138433252999675,
+      "detik_val": 1.7914987479998672,
+      "sampel_per_detik": 2972.7489497130714,
+      "detik_kumulatif": 669.3821301650005
+    },
+    {
+      "epoch": 26,
+      "train_loss": 4.750074863433838,
+      "val_loss": 3.8061482906341553,
+      "detik_latih": 26.2101904379997,
+      "detik_val": 1.882185385999037,
+      "sampel_per_detik": 2964.61027949441,
+      "detik_kumulatif": 697.4745587890011
+    },
+    {
+      "epoch": 27,
+      "train_loss": 4.782611846923828,
+      "val_loss": 3.874541997909546,
+      "detik_latih": 26.18560926599821,
+      "detik_val": 1.7974965430003067,
+      "sampel_per_detik": 2967.3932430091168,
+      "detik_kumulatif": 725.4577213989996
+    },
+    {
+      "epoch": 28,
+      "train_loss": 4.740105152130127,
+      "val_loss": 3.7372941970825195,
+      "detik_latih": 25.99942337599714,
+      "detik_val": 1.8584801549986878,
+      "sampel_per_detik": 2988.6432047464555,
+      "detik_kumulatif": 753.3156841450018
+    },
+    {
+      "epoch": 29,
+      "train_loss": 4.722710609436035,
+      "val_loss": 3.764281749725342,
+      "detik_latih": 26.39698822399805,
+      "detik_val": 1.8072330140021222,
+      "sampel_per_detik": 2943.631271137159,
+      "detik_kumulatif": 781.5199679259986
+    },
+    {
+      "epoch": 30,
+      "train_loss": 4.7438554763793945,
+      "val_loss": 3.757277011871338,
+      "detik_latih": 26.089992544999404,
+      "detik_val": 1.8850515820013243,
+      "sampel_per_detik": 2978.2683864696282,
+      "detik_kumulatif": 809.4950639520011
+    }
+  ],
+  "telemetri": {
+    "tersedia": true,
+    "n_sampel": 424,
+    "energi_wh": 24.380716666666668,
+    "daya_w": {
+      "median": 13.69,
+      "maks": 52880.73
+    },
+    "suhu_c": {
+      "median": 50.0,
+      "maks": 50.0
+    },
+    "clock_sm_mhz": {
+      "median": 1425.0,
+      "min": 225.0,
+      "p5": 1425.0
+    },
+    "utilisasi_pct_median": 0.0,
+    "vram_terpakai_mb_maks": 0.0,
+    "throttle_reasons_hex": [
+      "0x0000000000000000",
+      "0x0000000000000004"
+    ],
+    "csv": "bench/results/telemetry/g16-cpu/W1_b1024_fp32_run2_20261010-214727.csv"
+  }
+}

@@ -39,10 +39,20 @@ class AnalyzeRequest(BaseModel):
 
 
 class FailureMode(BaseModel):
-    """Predicted failure mode and confidence level."""
+    """Predicted failure mode and confidence level.
 
-    label: str = Field(..., json_schema_extra={"example": "degradasi_kompresor"})
+    Labels depend on the diagnosis provider (config.yaml: model.diagnosis_provider):
+    v3 (default) -> normal_sehat, pintu_terbuka_lama, reefer_mati_total, kejutan_ambien_ekstrem,
+    prapendinginan_buruk, degradasi_bertahap, masalah_sensor; checkpoint2 -> normal_sehat,
+    pintu_terbuka_lama, kejutan_ambien_ekstrem, masalah_sensor. Both may also return the rule-derived
+    pintu_terbuka and suhu_muatan_mendekati_batas. Clients must tolerate unknown labels.
+    """
+
+    label: str = Field(..., json_schema_extra={"example": "degradasi_bertahap"})
     confidence: float = Field(..., ge=0.0, le=1.0, json_schema_extra={"example": 0.91})
+    probabilities: dict[str, float] | None = Field(
+        None, description="Model probability per class label (v3 only; null for checkpoint2 and fallback)"
+    )
 
 
 class Forecast(BaseModel):
@@ -82,7 +92,15 @@ class AnalyzeResponse(BaseModel):
     forecast: Forecast
     drivers: list[FeatureDriver]
     actions: list[RecommendedAction]
-    model_version: str = Field("coldtrack-hybrid-v3", json_schema_extra={"example": "coldtrack-hybrid-v3"})
+    model_version: str = Field("coldtrack-hybrid-v3", json_schema_extra={"example": "coldtrack-hybrid-v3-gru-b3"})
+    diagnosis_provider: str = Field(
+        "v3", description="Model behind forecast + failure_mode: v3 | checkpoint2 | engine-only (fallback)"
+    )
+    data_lengkap: bool = Field(
+        True, description="False if the last 60 readings have a time gap > 90 s; the model diagnosis is then "
+        "less reliable and its confidence is capped at 0.5. Status (physics engine) is unaffected."
+    )
+    catatan_data: str | None = Field(None, description="Why the data is incomplete, for display")
     inference_ms: int = Field(..., json_schema_extra={"example": 3})
 
 

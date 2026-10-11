@@ -1,0 +1,36 @@
+[
+  {
+    "id": "baseline_proposal",
+    "model": "ml/reports/coldtrack.onnx",
+    "sha256_model": "3948c447631301bf3ea5c7cd78d8e68be1e870513a48157a15073da9da6428ab",
+    "waktu_utc": "2026-10-10T22:53:08+00:00",
+    "git": {
+      "commit": "1e668e1d81c01de17cadcb576790447409a9c4f1",
+      "branch": "feat/model-retrain-g16",
+      "dirty": false
+    }
+  },
+  {
+    "id": "kandidat_b3",
+    "model": "backend/models/candidates/coldtrack_gru_b3.onnx",
+    "sha256_model": "fab911760e87dd1a9b44e3ea56cb4e8cc089da0aad7bca09481cf05e014da60c",
+    "waktu_utc": "2026-10-10T22:53:13+00:00",
+    "git": {
+      "commit": "1e668e1d81c01de17cadcb576790447409a9c4f1",
+      "branch": "feat/model-retrain-g16",
+      "dirty": false
+    }
+  },
+  {
+    "id": "b4_berkeley_v1_kesehatan",
+    "model": "ml/sensor_health/artifacts/berkeley_v1_kesehatan.json",
+    "sha256_model": "19fbf3cd0220ae4cae53c7570e43753b79fa7e50596bd8fe0cc09977320b2863",
+    "waktu_utc": "2026-10-11T01:49:41+00:00",
+    "git": {
+      "commit": "073756a4850b5884a4ca9a66e18a8df6b336eaa9",
+      "branch": "feat/model-retrain-g16",
+      "dirty": false
+    },
+    "split": "mote test (B4)"
+  }
+]

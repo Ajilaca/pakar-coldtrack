@@ -1,0 +1,41 @@
+{
+  "waktu_utc": "2026-10-11T01:30:01+00:00",
+  "git": {
+    "commit": "d3f1e7bd9afdebe0be96a84c9b2242a76bb8e5e3",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "split": "val",
+  "jenis": "analisis tambahan, bukan metrik resmi",
+  "n_jendela_tanpa_jejak_dibuang": 622,
+  "model": {
+    "v2_proposal": {
+      "semua_jendela": {
+        "n": 16414,
+        "macro_f1": 0.58003351795918,
+        "akurasi": 0.7857316924576581,
+        "anomali_pr_auc": 0.6873746527679526
+      },
+      "tanpa_jendela_tak_berjejak": {
+        "n": 15792,
+        "macro_f1": 0.6652518260824517,
+        "akurasi": 0.8162993920972644,
+        "anomali_pr_auc": 0.6832585081583847
+      }
+    },
+    "v3_b3": {
+      "semua_jendela": {
+        "n": 16414,
+        "macro_f1": 0.6951503430628979,
+        "akurasi": 0.8605458754721579,
+        "anomali_pr_auc": 0.8131902369753065
+      },
+      "tanpa_jendela_tak_berjejak": {
+        "n": 15792,
+        "macro_f1": 0.8037906650333706,
+        "akurasi": 0.8933637284701115,
+        "anomali_pr_auc": 0.8195183481536578
+      }
+    }
+  }
+}

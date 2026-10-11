@@ -1,0 +1,48 @@
+{
+  "id": "b4_berkeley_v1_kesehatan",
+  "model": "ml/sensor_health/artifacts/berkeley_v1_kesehatan.json",
+  "sha256_model": "19fbf3cd0220ae4cae53c7570e43753b79fa7e50596bd8fe0cc09977320b2863",
+  "waktu_utc": "2026-10-11T01:49:41+00:00",
+  "git": {
+    "commit": "073756a4850b5884a4ca9a66e18a8df6b336eaa9",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "split": "mote test (B4)",
+  "label": "y_24j",
+  "ambang_dari_val": 0.04698770741621653,
+  "penghalusan_dari_val": "mean6",
+  "v0": {
+    "pr_auc": 0.4224987039985452,
+    "ambang": 1.0,
+    "recall_jendela": 0.7392676767676768,
+    "presisi_jendela": 0.29459119496855346,
+    "alarm_palsu_per_mote_hari": 0.23893027946774245,
+    "n_episode_alarm_palsu": 51,
+    "mote_hari_negatif": 213.45138888888889,
+    "recall_kejadian": 1.0,
+    "lead_time_median_menit": 1434.0,
+    "n_jendela": 32321,
+    "n_positif": 1584,
+    "n_mote": 11
+  },
+  "v1": {
+    "pr_auc": 0.8762711927194096,
+    "ambang": 0.04698770741621653,
+    "recall_jendela": 1.0,
+    "presisi_jendela": 0.14001591089896578,
+    "alarm_palsu_per_mote_hari": 0.6652568565572438,
+    "n_episode_alarm_palsu": 142,
+    "mote_hari_negatif": 213.45138888888889,
+    "recall_kejadian": 1.0,
+    "lead_time_median_menit": 1435.0,
+    "n_jendela": 32321,
+    "n_positif": 1584,
+    "n_mote": 11
+  },
+  "kriteria": {
+    "1_pr_auc_v1_ge_v0_plus_0.05": true,
+    "2_alarm_palsu_le_v0_pada_recall_ge_v0": false,
+    "G4_lulus": false
+  }
+}

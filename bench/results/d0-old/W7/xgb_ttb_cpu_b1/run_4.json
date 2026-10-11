@@ -1,0 +1,68 @@
+{
+  "workload": "W7",
+  "config_id": "xgb_ttb_cpu_b1",
+  "konfigurasi": {
+    "model": "ml/reports/coldtrack_ttb.onnx",
+    "ep": "cpu",
+    "tf32": null,
+    "batch": 1
+  },
+  "tag": "d0-old",
+  "device": "cpu",
+  "run": 4,
+  "pemanasan": false,
+  "seed": 1003,
+  "waktu_utc": "2026-10-11T11:24:05+00:00",
+  "git": {
+    "commit": "fcd0fb03bd2cab3f2baea50800685653bd183cd5",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "env": "bench/results/d0-old/env/env_20261011-090314.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Lenovo Extreme Performance (Fn+Q) + Windows \"Best performance\"",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": "Run pertama (mode Lenovo otomatis/Intelligent Cooling) dibatalkan: suhu CPU mencapai ~100 C lalu di-clamp ke ~22% performa (~400 MHz) selama 4-8 menit, berulang tiap ~10 menit. Hasilnya tidak dipakai. Claude Code desktop tetap berjalan sebagai pengendali run (beban CPU ~1-2%), ditambah perekam suhu/performa Windows tiap ~12 detik."
+  },
+  "protokol": {
+    "repeats": 5,
+    "warmup": 1,
+    "cooldown_s": 15
+  },
+  "python": "/home/tsabita/.venvs/coldtrack/bin/python",
+  "waktu": {
+    "session_init_s": 0.09036328700312879,
+    "latensi_p50_ms": 0.064799,
+    "dinding_total_s": 4.219755002995953
+  },
+  "inferensi": {
+    "onnxruntime": "1.31.0",
+    "ep_diminta": "cpu",
+    "tf32": null,
+    "providers_aktif": [
+      "CPUExecutionProvider"
+    ],
+    "cuda_ep_aktif": false,
+    "batch": 1,
+    "n_iter": 39382,
+    "session_init_s": 0.09036328700312879,
+    "latensi_ms": {
+      "p50": 0.064799,
+      "p95": 0.11138249999999997,
+      "p99": 0.17222218000000028,
+      "mean": 0.0748694156975268,
+      "min": 0.036439
+    },
+    "throughput_jendela_per_s": 15432.33691877961,
+    "kualitas_val": {
+      "ttb_mae_semua_menit": 23.666744232177734,
+      "ttb_mae_le30_menit": 5.048276901245117
+    }
+  },
+  "telemetri": {
+    "tersedia": false
+  }
+}

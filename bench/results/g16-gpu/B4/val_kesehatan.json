@@ -1,0 +1,153 @@
+{
+  "tahap": "B4",
+  "split": "val",
+  "tag": "g16-gpu",
+  "varian_fitur": "kesehatan",
+  "fitur": [
+    "t_std",
+    "t_tren",
+    "lompat_maks",
+    "n_lompat_5c",
+    "datar_maks",
+    "missing",
+    "bacaan_per_menit",
+    "v_mean",
+    "v_min",
+    "v_akhir",
+    "v_tren",
+    "v_turun_6j",
+    "v_turun_24j",
+    "h_std",
+    "beda_tetangga_mean",
+    "beda_tetangga_abs"
+  ],
+  "waktu_utc": "2026-10-11T01:36:40+00:00",
+  "git": {
+    "commit": "fabaecc778a44da671ab9d4526e856a3962910e4",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "n_mote": {
+    "train": 32,
+    "val": 11,
+    "test": 11
+  },
+  "v0": {
+    "pr_auc": 0.42781676885168046,
+    "ambang": 1.0,
+    "recall_jendela": 0.9425505050505051,
+    "presisi_jendela": 0.2910898810684344,
+    "alarm_palsu_per_mote_hari": 0.2374973398595446,
+    "n_episode_alarm_palsu": 62,
+    "mote_hari_negatif": 261.05555555555554,
+    "recall_kejadian": 1.0,
+    "lead_time_median_menit": 1434.0,
+    "n_jendela": 39176,
+    "n_positif": 1584,
+    "n_mote": 11
+  },
+  "v1": {
+    "pr_auc": 0.8780716869066819,
+    "ambang": 0.04698770741621653,
+    "recall_jendela": 0.9861111111111112,
+    "presisi_jendela": 0.11161926539945691,
+    "alarm_palsu_per_mote_hari": 0.4979782932538838,
+    "n_episode_alarm_palsu": 130,
+    "mote_hari_negatif": 261.05555555555554,
+    "recall_kejadian": 1.0,
+    "lead_time_median_menit": 1434.0,
+    "n_jendela": 39176,
+    "n_positif": 1584,
+    "n_mote": 11
+  },
+  "penghalusan_dipilih": "mean6",
+  "penghalusan_kandidat": {
+    "tanpa": {
+      "ambang": 0.04720005393028259,
+      "alarm_palsu_per_mote_hari": 0.8082570759736114,
+      "recall": 0.9873737373737373
+    },
+    "mean3": {
+      "ambang": 0.04717684089390556,
+      "alarm_palsu_per_mote_hari": 0.5899127473930624,
+      "recall": 0.9867424242424242
+    },
+    "mean6": {
+      "ambang": 0.04698770741621653,
+      "alarm_palsu_per_mote_hari": 0.4979782932538838,
+      "recall": 0.9861111111111112
+    },
+    "max3": {
+      "ambang": 0.047109968656660034,
+      "alarm_palsu_per_mote_hari": 0.6626941902532454,
+      "recall": 0.9873737373737373
+    },
+    "max6": {
+      "ambang": 0.06183796748518944,
+      "alarm_palsu_per_mote_hari": 0.5094701000212811,
+      "recall": 0.9848484848484849
+    }
+  },
+  "sekunder_pr_auc": {
+    "y_1j": {
+      "v0_pr_auc": 0.15001511333188194,
+      "v1_pr_auc": 0.07682167321724737
+    },
+    "y_6j": {
+      "v0_pr_auc": 0.6164086547192559,
+      "v1_pr_auc": 0.44367422648293214
+    }
+  },
+  "sweep": {
+    "n_trial": 40,
+    "detik": 25.915081646000004,
+    "pr_auc_val_terbaik": 0.8725314486788002,
+    "params": {
+      "n_estimators": 100,
+      "max_depth": 3,
+      "learning_rate": 0.02644116368743495,
+      "subsample": 0.8954706434589167,
+      "colsample_bytree": 0.6748983002872326,
+      "min_child_weight": 10.95895781874074,
+      "scale_pos_weight": 6.8130889992799055
+    }
+  },
+  "waktu": {
+    "latih_final_s": 0.2071220530000062
+  },
+  "fitur_terpenting": [
+    [
+      "v_akhir",
+      0.29778698086738586
+    ],
+    [
+      "beda_tetangga_abs",
+      0.1870342493057251
+    ],
+    [
+      "lompat_maks",
+      0.10943970084190369
+    ],
+    [
+      "beda_tetangga_mean",
+      0.08163779228925705
+    ],
+    [
+      "v_mean",
+      0.06796064227819443
+    ],
+    [
+      "t_std",
+      0.06585588306188583
+    ],
+    [
+      "datar_maks",
+      0.04290280491113663
+    ],
+    [
+      "v_turun_24j",
+      0.030040953308343887
+    ]
+  ],
+  "model": "ml/sensor_health/artifacts/berkeley_v1_kesehatan.json"
+}

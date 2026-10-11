@@ -3,6 +3,7 @@ door_budget: fisika murni. Saat pintu terbuka: berapa menit muatan masih aman, d
 Semua konstanta truk mengikuti coldtrack_sim.TRUCK (bertag SUMBER/ASUMSI di sana).
 """
 import numpy as np
+
 from . import coldtrack_sim as cs
 
 HORIZON = 240.0

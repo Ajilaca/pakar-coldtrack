@@ -1,0 +1,116 @@
+{
+  "workload": "W1",
+  "config_id": "b4096_fp32",
+  "konfigurasi": {
+    "batch_size": 4096,
+    "n_epochs": 30,
+    "lr": [
+      0.0005,
+      0.002
+    ],
+    "loss_weights": {
+      "forecast": 30.0,
+      "failure": 1.0,
+      "ttb": 8.0
+    }
+  },
+  "tag": "g16-gpu",
+  "device": "cuda",
+  "run": 0,
+  "pemanasan": true,
+  "seed": 1000,
+  "waktu_utc": "2026-10-10T11:19:37+00:00",
+  "git": {
+    "commit": "009ed574ba582fcabcd8ad0c93d283c541543bd6",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "env": "bench/results/g16-gpu/env/env_20261010-180138.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Turbo",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": null
+  },
+  "protokol": {
+    "repeats": 5,
+    "warmup": 1,
+    "cooldown_s": 60
+  },
+  "waktu": {
+    "muat_s": 0.6300539680000838,
+    "praproses_s": 1.381300323999767,
+    "transfer_ke_device_s": null,
+    "latih_loop_s": 1.7140454260002116,
+    "eval_s": 0.25842573400041147,
+    "detik_latih_per_epoch_median": 1.3393847950001145,
+    "sampel_per_detik_median": 58013.94811264328,
+    "dinding_total_s": 4.0051269030000185
+  },
+  "time_to_target": {
+    "target_val_loss": 2.534773635864258,
+    "sumber_target": [
+      "bench/results/g16-cpu/B1/gru_seed1000.json",
+      "bench/results/g16-cpu/B1/gru_seed1001.json",
+      "bench/results/g16-cpu/B1/gru_seed1002.json",
+      "bench/results/g16-cpu/B1/gru_seed1003.json",
+      "bench/results/g16-cpu/B1/gru_seed1004.json"
+    ],
+    "tercapai": false,
+    "epoch": null,
+    "detik": null
+  },
+  "ringkas_latih": {
+    "detik_total_loop": 1.7140454260002116,
+    "transfer_ke_device_s": null,
+    "epoch_terbaik": 1,
+    "val_loss_terbaik": 23.657670974731445,
+    "vram_puncak_mb": 2211.3
+  },
+  "metrik_val": {
+    "forecast_t15_mae_c": 4.268665790557861,
+    "forecast_t30_mae_c": 3.0523200035095215,
+    "forecast_t60_mae_c": 3.3593831062316895,
+    "macro_f1": 0.3010632900818245,
+    "akurasi": 0.7881686365297916,
+    "ttb_mae_menit": 48.84012985229492,
+    "anomali_pr_auc": 0.45900427766029184
+  },
+  "riwayat": [
+    {
+      "epoch": 1,
+      "train_loss": 34.492530822753906,
+      "val_loss": 23.657670974731445,
+      "detik_latih": 1.3393847950001145,
+      "detik_val": 0.37403427099980036,
+      "sampel_per_detik": 58013.94811264328,
+      "detik_kumulatif": 1.7137493830000494
+    }
+  ],
+  "telemetri": {
+    "tersedia": true,
+    "n_sampel": 5,
+    "energi_wh": 0.033086111111111115,
+    "daya_w": {
+      "median": 14.71,
+      "maks": 45.76
+    },
+    "suhu_c": {
+      "median": 53.0,
+      "maks": 58.0
+    },
+    "clock_sm_mhz": {
+      "median": 225.0,
+      "min": 225.0,
+      "p5": 225.0
+    },
+    "utilisasi_pct_median": 0.0,
+    "vram_terpakai_mb_maks": 2616.0,
+    "throttle_reasons_hex": [
+      "0x0000000000000000"
+    ],
+    "csv": "bench/results/telemetry/g16-gpu/W1_b4096_fp32_run0_20261010-181931.csv"
+  }
+}

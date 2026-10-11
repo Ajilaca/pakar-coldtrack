@@ -67,10 +67,13 @@ The architecture strictly adheres to a **zero-side-effect, zero-database design*
 ### 2.1 Backend (`backend/`)
 * **Framework**: FastAPI (Python 3.11), Uvicorn single-worker runner.
 * **Validation**: Pydantic v2 schemas (`AnalyzeRequest`, `AnalyzeResponse`, `TelemetryReading`).
-* **Inference Engine**: Dual ONNXRuntime CPU sessions (`coldtrack.onnx` and `coldtrack_ttb.onnx`).
+* **Inference Engine** (`app/inference.py`): physics/rule engine (`app/core/engine.py`) for status and
+  displayed TTB, plus one **diagnosis provider** (two ONNX Runtime CPU sessions) for forecast,
+  failure mode and an informational ML TTB. See §2.4.
 * **Configuration**: Centralized `config.yaml` loaded via `pydantic-settings` / PyYAML.
 * **Logging**: Structured JSON log stdout via `structlog`.
-* **Testing**: `pytest` + `httpx.TestClient` with 23 automated integration and unit tests.
+* **Testing**: `pytest` + `httpx.TestClient`, 33 tests including ONNX v3 vs PyTorch parity, loading of
+  both diagnosis providers and `/analyze` end-to-end with each (`tests/test_providers.py`).
 
 ### 2.2 Frontend (`frontend/`)
 * **Framework**: Next.js 14 App Router, TypeScript.
@@ -79,9 +82,43 @@ The architecture strictly adheres to a **zero-side-effect, zero-database design*
 * **State Management**: Local React state, zero Redux/Zustand overhead.
 
 ### 2.3 Machine Learning Artifacts (`ml/` & `backend/models/`)
-* **`coldtrack.onnx`**: 2-layer GRU backbone (~55k parameters) trained multi-task for temperature forecast and 7-class failure mode classification.
-* **`coldtrack_ttb.onnx`**: XGBoost regressor (300 trees) trained specifically for high-accuracy short-horizon Time-to-Breach estimation (MAE 3.46 min at $\le 10$ min horizon).
-* **`labels.json`**: Metadata defining model feature inputs, failure mode class labels, and scaling params.
+| File (`backend/models/`) | Provider | What it is |
+|---|---|---|
+| `coldtrack_v3.onnx` (= `ml/reports/coldtrack_b3.onnx`) | **v3, default** | GRU 3 layers x hidden 128 + window summary stats; input `window [n, 60, 12]` raw; outputs forecast t+15/30/60, 7-class `failure_prob`, GRU TTB head (unused) |
+| `coldtrack_v3.labels.json` | v3 | class order, configuration, metrics, limitations |
+| `coldtrack_ttb_window.onnx` (= `ml/reports/coldtrack_ttb.onnx`) | v3 | XGBoost Time-to-Breach (300 trees), same window input; informational `ttb_model_min` |
+| `coldtrack_gru.onnx` | checkpoint2 | previous GRU (inputs `x`, `s`): 3 events + cargo-temperature forecast |
+| `coldtrack_ttb.onnx` | checkpoint2 | previous XGBoost TTB (input `features`) |
+
+`ml/reports/coldtrack.onnx` (v2, proposal) is kept for traceability and benchmarks, not served.
+Metrics, selection and limitations: `docs/model_card.md`; reproduction: `bench/README.md`.
+
+### 2.4 Diagnosis provider and rollback
+`config.yaml` → `model.diagnosis_provider` selects the source of `forecast` and `failure_mode`:
+
+* `v3` (default since 2026-10-11, gate G3 approved with notes): 7 failure classes, API labels
+  `normal_sehat`, `pintu_terbuka_lama`, `reefer_mati_total`, `kejutan_ambien_ekstrem`,
+  `prapendinginan_buruk`, `degradasi_bertahap`, `masalah_sensor`, plus `probabilities` per class.
+* `checkpoint2`: the previous model (3 events: `pintu_terbuka_lama`, `kejutan_ambien_ekstrem`,
+  `masalah_sensor`), `probabilities: null`.
+
+**Rollback to checkpoint-2:** set `diagnosis_provider: checkpoint2` in `backend/config.yaml` and restart
+the backend. No code change; both providers are tested in CI. `diagnosis_provider` and
+`model_version` in every response show which one answered.
+
+Sensor faults come only from the rule layer: v3's own `masalah_sensor` class is never used as the
+label (checkpoint-2's rule applies instead: another fault class only if p >= 0.5, else
+`normal_sehat`). `probabilities` is sent only when the label equals the model's top class.
+
+Rules shared by both providers: a sensor fault from the rule layer overrides the model label; the
+label is never `normal_sehat` while status is WASPADA/KRITIS (rule-derived `pintu_terbuka` /
+`suhu_muatan_mendekati_batas` instead). Status AMAN/WASPADA/KRITIS and displayed TTB always come from
+the physics engine, whichever provider is active.
+
+**Incomplete data.** The window models were trained only on 60-minute windows without missing
+readings. If the last 60 readings contain a time gap > 90 s, the response sets
+`data_lengkap: false` with `catatan_data`, and the failure-mode confidence is capped at 0.5 (a
+conservative display choice, not a calibrated value). Status is unaffected.
 
 ---
 
@@ -90,12 +127,14 @@ The architecture strictly adheres to a **zero-side-effect, zero-database design*
 1. **Payload Receipt**: Next.js POSTs telemetry payload with 60 minute readings to `/api/v1/analyze`.
 2. **Validation**: Pydantic checks payload schema and ensures sequence length $\ge 60$. Payloads $< 60$ return HTTP 400.
 3. **Preprocessing**: Telemetry is converted to Pandas DataFrame. Derived features ($\Delta \text{temp}$, $\Delta \text{ambient}$, $\text{reefer\_duration\_min}$, $\text{hour\_of\_day}$) are computed. Forbidden columns (`is_anomaly`, `failure_mode`, `time_to_breach`) are strictly guarded.
-4. **Tensor Assembly**: Data is formatted as a `[1, 60, 12]` float32 tensor.
-5. **Dual ONNX Inference**:
-   * `coldtrack.onnx` returns temperature forecasts $(T_{15}, T_{30}, T_{60})$ and failure mode probabilities.
-   * `coldtrack_ttb.onnx` returns raw Time-to-Breach minutes.
-6. **TTB Gating**: If failure mode is healthy (`normal_sehat` / `A0`) or TTB exceeds 30 minutes display cap, TTB is set to `null`.
-7. **Risk & Action Engine**: Evaluates Cargo Risk Index ($0.0 - 1.0$), classifies status (`AMAN`, `WASPADA`, `KRITIS`), and generates 3 priority recommendations.
+4. **Physics engine** (`app/core/engine.py`): cargo-temperature observer, physics TTB, sensor rules ->
+   status `AMAN`/`WASPADA`/`KRITIS`, displayed TTB and reason. Independent of the ONNX models.
+5. **Diagnosis provider** (§2.4): v3 slices `[n, 60, 12]` windows from the per-minute features
+   (`preprocess.features_per_minute`, `reefer_duration_min` recounted per window as in training) and
+   returns forecast + 7-class probabilities; the window XGBoost returns an informational TTB.
+   checkpoint2 runs its own cleaning and inputs.
+6. **Guards**: shared label rules (§2.4) and the incomplete-data flag.
+7. **Action Engine**: 3 priority recommendations from status + failure label (`app/rules.py`).
 8. **Response Return**: Single JSON object is returned to UI in $< 5\text{ ms}$.
 
 ---

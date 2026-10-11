@@ -1,0 +1,18 @@
+# Dependensi harness benchmark. PyTorch dan ONNX Runtime SENGAJA tidak dicantumkan karena
+# paketnya berbeda per jalur -- lihat bench/README.md:
+#   G16 (cuda): torch dari https://download.pytorch.org/whl/cu128 + onnxruntime-gpu
+#   CPU saja  : torch dari https://download.pytorch.org/whl/cpu   + onnxruntime
+# Versi persis yang dipakai di G16 dikunci di bench/requirements.lock.txt.
+numpy
+pandas
+pyarrow
+scikit-learn
+xgboost
+onnx
+onnxmltools
+psutil
+PyYAML
+matplotlib
+optuna
+pytest
+ruff

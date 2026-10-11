@@ -1,0 +1,318 @@
+{
+  "waktu_utc": "2026-10-10T21:05:18+00:00",
+  "git": {
+    "commit": "5b64886f2a28bcc72a21b8d8d3cb0f7a35207265",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "tag": "g16-gpu",
+  "split": "val",
+  "gru": {
+    "baseline": {
+      "skor_mean": 0.6342192365543378,
+      "skor_min": 0.6201637483873894,
+      "skor_maks": 0.6420560816175533,
+      "rentang": 0.02189233323016393,
+      "macro_f1_mean": 0.5838840031019263,
+      "anomali_pr_auc_mean": 0.6845544700067491,
+      "akurasi_mean": 0.7942244425490435,
+      "forecast_t30_mae_c_mean": 0.20928414463996886,
+      "ttb_mae_menit_mean": 21.72083969116211,
+      "params": {
+        "hidden_size": 64,
+        "num_layers": 2,
+        "dropout": 0.2,
+        "lr_backbone": 0.0005,
+        "lr_heads": 0.002,
+        "w_forecast": 30.0,
+        "w_failure": 1.0,
+        "w_ttb": 8.0,
+        "class_weight_power": 0.5,
+        "freeze_epochs": 3,
+        "n_epochs": 30,
+        "batch_size": 256,
+        "weight_decay": 0.01,
+        "label_smoothing": 0.0,
+        "pakai_statistik": true
+      }
+    },
+    "baseline_tanpa_stat": {
+      "skor_mean": 0.29966611643755403,
+      "skor_min": -0.516574088951788,
+      "skor_maks": 0.5136079348676966,
+      "rentang": 1.0301820238194845,
+      "macro_f1_mean": 0.41458049635719296,
+      "anomali_pr_auc_mean": 0.5847517365179151,
+      "akurasi_mean": 0.797246253198489,
+      "forecast_t30_mae_c_mean": 0.2347912073135376,
+      "ttb_mae_menit_mean": 22.51429977416992,
+      "params": {
+        "hidden_size": 64,
+        "num_layers": 2,
+        "dropout": 0.2,
+        "lr_backbone": 0.0005,
+        "lr_heads": 0.002,
+        "w_forecast": 30.0,
+        "w_failure": 1.0,
+        "w_ttb": 8.0,
+        "class_weight_power": 0.5,
+        "freeze_epochs": 3,
+        "n_epochs": 30,
+        "batch_size": 256,
+        "weight_decay": 0.01,
+        "label_smoothing": 0.0,
+        "pakai_statistik": false
+      }
+    },
+    "sweep_top1": {
+      "skor_mean": 0.7292301499220891,
+      "skor_min": 0.7147545214936577,
+      "skor_maks": 0.7540349915900146,
+      "rentang": 0.039280470096356934,
+      "macro_f1_mean": 0.6755672048285102,
+      "anomali_pr_auc_mean": 0.782893095015668,
+      "akurasi_mean": 0.8479590593395882,
+      "forecast_t30_mae_c_mean": 0.20880852341651918,
+      "ttb_mae_menit_mean": 21.240961837768555,
+      "params": {
+        "hidden_size": 128,
+        "num_layers": 3,
+        "dropout": 0.06207278144394572,
+        "lr_backbone": 0.0009047397390909649,
+        "lr_heads": 0.0009773288137341434,
+        "w_forecast": 24.729262075408155,
+        "w_failure": 1.0,
+        "w_ttb": 1.2234075804271196,
+        "class_weight_power": 0.25974218643437624,
+        "freeze_epochs": 0,
+        "n_epochs": 30,
+        "batch_size": 256,
+        "weight_decay": 0.01,
+        "label_smoothing": 0.08307957729490462,
+        "pakai_statistik": true
+      }
+    },
+    "sweep_top2": {
+      "skor_mean": 0.7184410965996253,
+      "skor_min": 0.7050104293905225,
+      "skor_maks": 0.7500863445130799,
+      "rentang": 0.045075915122557375,
+      "macro_f1_mean": 0.6737309829365739,
+      "anomali_pr_auc_mean": 0.7631512102626766,
+      "akurasi_mean": 0.8491166077738516,
+      "forecast_t30_mae_c_mean": 0.2087504893541336,
+      "ttb_mae_menit_mean": 21.979507064819337,
+      "params": {
+        "hidden_size": 128,
+        "num_layers": 3,
+        "dropout": 0.0674018793347017,
+        "lr_backbone": 0.001100922589554247,
+        "lr_heads": 0.001130278892655522,
+        "w_forecast": 18.412323889569993,
+        "w_failure": 1.0,
+        "w_ttb": 0.9319733645951015,
+        "class_weight_power": 0.2821208058601919,
+        "freeze_epochs": 0,
+        "n_epochs": 30,
+        "batch_size": 256,
+        "weight_decay": 0.01,
+        "label_smoothing": 0.08010846498144836,
+        "pakai_statistik": true
+      }
+    },
+    "sweep_top3": {
+      "skor_mean": 0.7075943038458494,
+      "skor_min": 0.6529760119502692,
+      "skor_maks": 0.7438540982052548,
+      "rentang": 0.09087808625498561,
+      "macro_f1_mean": 0.658205363016428,
+      "anomali_pr_auc_mean": 0.7569832446752706,
+      "akurasi_mean": 0.8527232850006093,
+      "forecast_t30_mae_c_mean": 0.20753034353256225,
+      "ttb_mae_menit_mean": 22.96999282836914,
+      "params": {
+        "hidden_size": 128,
+        "num_layers": 3,
+        "dropout": 0.041172205904382156,
+        "lr_backbone": 0.0007746105365798534,
+        "lr_heads": 0.000883301260756301,
+        "w_forecast": 21.893755683499247,
+        "w_failure": 1.0,
+        "w_ttb": 0.38154918682260786,
+        "class_weight_power": 0.10131387126017644,
+        "freeze_epochs": 0,
+        "n_epochs": 30,
+        "batch_size": 256,
+        "weight_decay": 0.01,
+        "label_smoothing": 0.08296515209260881,
+        "pakai_statistik": true
+      }
+    },
+    "top1_tanpa_stat": {
+      "skor_mean": 0.7202944786885395,
+      "skor_min": 0.7069523799666226,
+      "skor_maks": 0.7329342592066308,
+      "rentang": 0.025981879240008166,
+      "macro_f1_mean": 0.6814515461166522,
+      "anomali_pr_auc_mean": 0.7591374112604271,
+      "akurasi_mean": 0.8376507859144633,
+      "forecast_t30_mae_c_mean": 0.21208563446998596,
+      "ttb_mae_menit_mean": 21.88337516784668,
+      "params": {
+        "hidden_size": 128,
+        "num_layers": 3,
+        "dropout": 0.06207278144394572,
+        "lr_backbone": 0.0009047397390909649,
+        "lr_heads": 0.0009773288137341434,
+        "w_forecast": 24.729262075408155,
+        "w_failure": 1.0,
+        "w_ttb": 1.2234075804271196,
+        "class_weight_power": 0.25974218643437624,
+        "freeze_epochs": 0,
+        "n_epochs": 30,
+        "batch_size": 256,
+        "weight_decay": 0.01,
+        "label_smoothing": 0.08307957729490462,
+        "pakai_statistik": false
+      }
+    },
+    "top1_bobot_asli": {
+      "skor_mean": 0.6404534013639613,
+      "skor_min": 0.5671723871741557,
+      "skor_maks": 0.6879726688359196,
+      "rentang": 0.12080028166176382,
+      "macro_f1_mean": 0.5774061339494241,
+      "anomali_pr_auc_mean": 0.7035006687784984,
+      "akurasi_mean": 0.8282076276349457,
+      "forecast_t30_mae_c_mean": 0.2179544061422348,
+      "ttb_mae_menit_mean": 22.3789924621582,
+      "params": {
+        "hidden_size": 128,
+        "num_layers": 3,
+        "dropout": 0.06207278144394572,
+        "lr_backbone": 0.0009047397390909649,
+        "lr_heads": 0.0009773288137341434,
+        "w_forecast": 30.0,
+        "w_failure": 1.0,
+        "w_ttb": 8.0,
+        "class_weight_power": 0.25974218643437624,
+        "freeze_epochs": 0,
+        "n_epochs": 30,
+        "batch_size": 256,
+        "weight_decay": 0.01,
+        "label_smoothing": 0.08307957729490462,
+        "pakai_statistik": true
+      }
+    }
+  },
+  "xgb": {
+    "baseline": {
+      "skor_mean": 0.7215432025387314,
+      "skor_min": 0.7215432025387314,
+      "skor_maks": 0.7215432025387314,
+      "rentang": 0.0,
+      "macro_f1_mean": 0.68645141007144,
+      "anomali_pr_auc_mean": 0.7566349950060229,
+      "akurasi_mean": 0.8580480077982211,
+      "params": {
+        "n_estimators": 300,
+        "max_depth": 6,
+        "learning_rate": 0.1,
+        "class_weight_power": 0.0
+      }
+    },
+    "sweep_top1": {
+      "skor_mean": 0.7246532008677924,
+      "skor_min": 0.7200691742713967,
+      "skor_maks": 0.7294208444079433,
+      "rentang": 0.009351670136546586,
+      "macro_f1_mean": 0.6948065071597445,
+      "anomali_pr_auc_mean": 0.7544998945758403,
+      "akurasi_mean": 0.8593030339953698,
+      "params": {
+        "n_estimators": 550,
+        "max_depth": 5,
+        "learning_rate": 0.07860779680826342,
+        "subsample": 0.8114708858753967,
+        "colsample_bytree": 0.6077386497425317,
+        "min_child_weight": 1.542776857298446,
+        "reg_lambda": 2.3251780800841657,
+        "class_weight_power": 0.23369288882664185
+      }
+    },
+    "sweep_top2": {
+      "skor_mean": 0.7259692156243978,
+      "skor_min": 0.7240647424925268,
+      "skor_maks": 0.7281446687685922,
+      "rentang": 0.004079926276065349,
+      "macro_f1_mean": 0.6942665624271449,
+      "anomali_pr_auc_mean": 0.7576718688216508,
+      "akurasi_mean": 0.8605215060314366,
+      "params": {
+        "n_estimators": 450,
+        "max_depth": 6,
+        "learning_rate": 0.07411538908042366,
+        "subsample": 0.741403592745267,
+        "colsample_bytree": 0.7290627156570781,
+        "min_child_weight": 1.115038766894476,
+        "reg_lambda": 1.1791089196269913,
+        "class_weight_power": 0.09873034356936403
+      }
+    },
+    "sweep_top3": {
+      "skor_mean": 0.7231124841587974,
+      "skor_min": 0.7207275400242152,
+      "skor_maks": 0.7276124973786839,
+      "rentang": 0.0068849573544687015,
+      "macro_f1_mean": 0.6887174127261588,
+      "anomali_pr_auc_mean": 0.7575075555914359,
+      "akurasi_mean": 0.8566345802363836,
+      "params": {
+        "n_estimators": 450,
+        "max_depth": 5,
+        "learning_rate": 0.07939442512402446,
+        "subsample": 0.7914917174051728,
+        "colsample_bytree": 0.6583772741089985,
+        "min_child_weight": 2.0166830755616005,
+        "reg_lambda": 3.1883178478474528,
+        "class_weight_power": 0.28041628742159147
+      }
+    }
+  },
+  "keputusan": {
+    "gru/sweep_top1": {
+      "lolos": true,
+      "skor_mean": 0.7292301499220891,
+      "ambang": 0.6561115697845017
+    },
+    "gru/sweep_top2": {
+      "lolos": true,
+      "skor_mean": 0.7184410965996253,
+      "ambang": 0.6561115697845017
+    },
+    "gru/sweep_top3": {
+      "lolos": true,
+      "skor_mean": 0.7075943038458494,
+      "ambang": 0.6561115697845017
+    },
+    "xgb/sweep_top1": {
+      "lolos": true,
+      "skor_mean": 0.7246532008677924,
+      "ambang": 0.7215432025387314
+    },
+    "xgb/sweep_top2": {
+      "lolos": true,
+      "skor_mean": 0.7259692156243978,
+      "ambang": 0.7215432025387314
+    },
+    "xgb/sweep_top3": {
+      "lolos": true,
+      "skor_mean": 0.7231124841587974,
+      "ambang": 0.7215432025387314
+    }
+  },
+  "kandidat_terbaik": {
+    "gru": "gru/sweep_top1",
+    "xgb": "xgb/sweep_top2"
+  }
+}

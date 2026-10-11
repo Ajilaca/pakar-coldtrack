@@ -1,0 +1,72 @@
+{
+  "model": "gru",
+  "tag": "g16-gpu",
+  "n_trial": 60,
+  "detik_total": 4239.347328708995,
+  "trial_per_jam": 50.95119489746752,
+  "terbaik": [
+    {
+      "trial": 21,
+      "skor": 0.7540349915900146,
+      "params": {
+        "hidden_size": 128,
+        "num_layers": 3,
+        "dropout": 0.06207278144394572,
+        "lr_backbone": 0.0009047397390909649,
+        "lr_heads": 0.0009773288137341434,
+        "w_forecast": 24.729262075408155,
+        "w_ttb": 1.2234075804271196,
+        "class_weight_power": 0.25974218643437624,
+        "freeze_epochs": 0,
+        "label_smoothing": 0.08307957729490462,
+        "batch_size": 256
+      }
+    },
+    {
+      "trial": 59,
+      "skor": 0.7500863445130799,
+      "params": {
+        "hidden_size": 128,
+        "num_layers": 3,
+        "dropout": 0.0674018793347017,
+        "lr_backbone": 0.001100922589554247,
+        "lr_heads": 0.001130278892655522,
+        "w_forecast": 18.412323889569993,
+        "w_ttb": 0.9319733645951015,
+        "class_weight_power": 0.2821208058601919,
+        "freeze_epochs": 0,
+        "label_smoothing": 0.08010846498144836,
+        "batch_size": 256
+      }
+    },
+    {
+      "trial": 53,
+      "skor": 0.7438540982052548,
+      "params": {
+        "hidden_size": 128,
+        "num_layers": 3,
+        "dropout": 0.041172205904382156,
+        "lr_backbone": 0.0007746105365798534,
+        "lr_heads": 0.000883301260756301,
+        "w_forecast": 21.893755683499247,
+        "w_ttb": 0.38154918682260786,
+        "class_weight_power": 0.10131387126017644,
+        "freeze_epochs": 0,
+        "label_smoothing": 0.08296515209260881,
+        "batch_size": 256
+      }
+    }
+  ],
+  "aturan": {
+    "skor": "(macro_f1 + anomali_pr_auc) / 2",
+    "batas_forecast_t30": 0.25,
+    "seed_trial": 1000,
+    "sampler": "TPE seed 0"
+  },
+  "waktu_utc": "2026-10-10T20:55:04+00:00",
+  "git": {
+    "commit": "5b64886f2a28bcc72a21b8d8d3cb0f7a35207265",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  }
+}

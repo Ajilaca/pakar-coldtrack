@@ -1,0 +1,1488 @@
+{
+  "waktu_utc": "2026-10-10T19:46:34+00:00",
+  "cpu_tag": "g16-cpu",
+  "gpu_tag": "g16-gpu",
+  "kriteria": {
+    "W1": "|mean_gpu - mean_cpu| <= max(rentang antar-seed)",
+    "W2_W7_rel": 0.02,
+    "W7_akurasi_abs": 0.005
+  },
+  "W1": {
+    "b1024_bf16": {
+      "acuan_cpu": "g16-cpu/W1/b1024_fp32",
+      "n_seed": [
+        5,
+        5
+      ],
+      "setara": true,
+      "metrik": {
+        "forecast_t15_mae_c": {
+          "mean_gpu": 0.16162703633308412,
+          "mean_cpu": 0.16318699419498445,
+          "selisih": -0.0015599578619003296,
+          "batas_rentang_antar_seed": 0.009608924388885498,
+          "setara": true
+        },
+        "forecast_t30_mae_c": {
+          "mean_gpu": 0.21307760179042817,
+          "mean_cpu": 0.21286171674728394,
+          "selisih": 0.00021588504314423718,
+          "batas_rentang_antar_seed": 0.01104496419429779,
+          "setara": true
+        },
+        "forecast_t60_mae_c": {
+          "mean_gpu": 0.25935875773429873,
+          "mean_cpu": 0.26009886860847475,
+          "selisih": -0.0007401108741760254,
+          "batas_rentang_antar_seed": 0.013187259435653687,
+          "setara": true
+        },
+        "macro_f1": {
+          "mean_gpu": 0.4759037082292495,
+          "mean_cpu": 0.4757441161353529,
+          "selisih": 0.0001595920938965989,
+          "batas_rentang_antar_seed": 0.012183662519485994,
+          "setara": true
+        },
+        "akurasi": {
+          "mean_gpu": 0.7886072864627757,
+          "mean_cpu": 0.788083343487267,
+          "selisih": 0.0005239429755086178,
+          "batas_rentang_antar_seed": 0.010235165102960964,
+          "setara": true
+        },
+        "ttb_mae_menit": {
+          "mean_gpu": 23.61863555908203,
+          "mean_cpu": 23.5288444519043,
+          "selisih": 0.08979110717773153,
+          "batas_rentang_antar_seed": 2.5452651977539062,
+          "setara": true
+        },
+        "anomali_pr_auc": {
+          "mean_gpu": 0.6220596608081571,
+          "mean_cpu": 0.6214541309987354,
+          "selisih": 0.0006055298094217454,
+          "batas_rentang_antar_seed": 0.024405913894470554,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W1/b1024_bf16/run_0.json",
+        "bench/results/g16-gpu/W1/b1024_bf16/run_1.json",
+        "bench/results/g16-gpu/W1/b1024_bf16/run_2.json",
+        "bench/results/g16-gpu/W1/b1024_bf16/run_3.json",
+        "bench/results/g16-gpu/W1/b1024_bf16/run_4.json",
+        "bench/results/g16-gpu/W1/b1024_bf16/run_5.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_0.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_1.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_2.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_3.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_4.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_5.json"
+      ]
+    },
+    "b1024_fp16": {
+      "acuan_cpu": "g16-cpu/W1/b1024_fp32",
+      "n_seed": [
+        5,
+        5
+      ],
+      "setara": true,
+      "metrik": {
+        "forecast_t15_mae_c": {
+          "mean_gpu": 0.1618909001350403,
+          "mean_cpu": 0.16318699419498445,
+          "selisih": -0.0012960940599441584,
+          "batas_rentang_antar_seed": 0.009608924388885498,
+          "setara": true
+        },
+        "forecast_t30_mae_c": {
+          "mean_gpu": 0.21151545345783235,
+          "mean_cpu": 0.21286171674728394,
+          "selisih": -0.001346263289451588,
+          "batas_rentang_antar_seed": 0.01069629192352295,
+          "setara": true
+        },
+        "forecast_t60_mae_c": {
+          "mean_gpu": 0.2581714570522308,
+          "mean_cpu": 0.26009886860847475,
+          "selisih": -0.0019274115562439298,
+          "batas_rentang_antar_seed": 0.013187259435653687,
+          "setara": true
+        },
+        "macro_f1": {
+          "mean_gpu": 0.4779767061181827,
+          "mean_cpu": 0.4757441161353529,
+          "selisih": 0.0022325899828298246,
+          "batas_rentang_antar_seed": 0.012183662519485994,
+          "setara": true
+        },
+        "akurasi": {
+          "mean_gpu": 0.7903253320336299,
+          "mean_cpu": 0.788083343487267,
+          "selisih": 0.0022419885463628164,
+          "batas_rentang_antar_seed": 0.010113317899354213,
+          "setara": true
+        },
+        "ttb_mae_menit": {
+          "mean_gpu": 23.837195587158202,
+          "mean_cpu": 23.5288444519043,
+          "selisih": 0.3083511352539041,
+          "batas_rentang_antar_seed": 2.553781509399414,
+          "setara": true
+        },
+        "anomali_pr_auc": {
+          "mean_gpu": 0.6245905165105158,
+          "mean_cpu": 0.6214541309987354,
+          "selisih": 0.003136385511780415,
+          "batas_rentang_antar_seed": 0.022193354213555616,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W1/b1024_fp16/run_0.json",
+        "bench/results/g16-gpu/W1/b1024_fp16/run_1.json",
+        "bench/results/g16-gpu/W1/b1024_fp16/run_2.json",
+        "bench/results/g16-gpu/W1/b1024_fp16/run_3.json",
+        "bench/results/g16-gpu/W1/b1024_fp16/run_4.json",
+        "bench/results/g16-gpu/W1/b1024_fp16/run_5.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_0.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_1.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_2.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_3.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_4.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_5.json"
+      ]
+    },
+    "b1024_fp32": {
+      "acuan_cpu": "g16-cpu/W1/b1024_fp32",
+      "n_seed": [
+        5,
+        5
+      ],
+      "setara": true,
+      "metrik": {
+        "forecast_t15_mae_c": {
+          "mean_gpu": 0.1617549777030945,
+          "mean_cpu": 0.16318699419498445,
+          "selisih": -0.0014320164918899536,
+          "batas_rentang_antar_seed": 0.009608924388885498,
+          "setara": true
+        },
+        "forecast_t30_mae_c": {
+          "mean_gpu": 0.2111807107925415,
+          "mean_cpu": 0.21286171674728394,
+          "selisih": -0.0016810059547424372,
+          "batas_rentang_antar_seed": 0.01069629192352295,
+          "setara": true
+        },
+        "forecast_t60_mae_c": {
+          "mean_gpu": 0.25774264335632324,
+          "mean_cpu": 0.26009886860847475,
+          "selisih": -0.0023562252521515115,
+          "batas_rentang_antar_seed": 0.013187259435653687,
+          "setara": true
+        },
+        "macro_f1": {
+          "mean_gpu": 0.47511042977611007,
+          "mean_cpu": 0.4757441161353529,
+          "selisih": -0.0006336863592428243,
+          "batas_rentang_antar_seed": 0.013929401616383508,
+          "setara": true
+        },
+        "akurasi": {
+          "mean_gpu": 0.7904715486779578,
+          "mean_cpu": 0.788083343487267,
+          "selisih": 0.0023882051906907176,
+          "batas_rentang_antar_seed": 0.010113317899354213,
+          "setara": true
+        },
+        "ttb_mae_menit": {
+          "mean_gpu": 23.632369232177734,
+          "mean_cpu": 23.5288444519043,
+          "selisih": 0.10352478027343537,
+          "batas_rentang_antar_seed": 2.5452651977539062,
+          "setara": true
+        },
+        "anomali_pr_auc": {
+          "mean_gpu": 0.6221594355854161,
+          "mean_cpu": 0.6214541309987354,
+          "selisih": 0.0007053045866807217,
+          "batas_rentang_antar_seed": 0.022193354213555616,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W1/b1024_fp32/run_0.json",
+        "bench/results/g16-gpu/W1/b1024_fp32/run_1.json",
+        "bench/results/g16-gpu/W1/b1024_fp32/run_2.json",
+        "bench/results/g16-gpu/W1/b1024_fp32/run_3.json",
+        "bench/results/g16-gpu/W1/b1024_fp32/run_4.json",
+        "bench/results/g16-gpu/W1/b1024_fp32/run_5.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_0.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_1.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_2.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_3.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_4.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_5.json"
+      ]
+    },
+    "b1024_fp32_pin": {
+      "acuan_cpu": "g16-cpu/W1/b1024_fp32",
+      "n_seed": [
+        5,
+        5
+      ],
+      "setara": true,
+      "metrik": {
+        "forecast_t15_mae_c": {
+          "mean_gpu": 0.1617549777030945,
+          "mean_cpu": 0.16318699419498445,
+          "selisih": -0.0014320164918899536,
+          "batas_rentang_antar_seed": 0.009608924388885498,
+          "setara": true
+        },
+        "forecast_t30_mae_c": {
+          "mean_gpu": 0.2111807107925415,
+          "mean_cpu": 0.21286171674728394,
+          "selisih": -0.0016810059547424372,
+          "batas_rentang_antar_seed": 0.01069629192352295,
+          "setara": true
+        },
+        "forecast_t60_mae_c": {
+          "mean_gpu": 0.25774264335632324,
+          "mean_cpu": 0.26009886860847475,
+          "selisih": -0.0023562252521515115,
+          "batas_rentang_antar_seed": 0.013187259435653687,
+          "setara": true
+        },
+        "macro_f1": {
+          "mean_gpu": 0.47511042977611007,
+          "mean_cpu": 0.4757441161353529,
+          "selisih": -0.0006336863592428243,
+          "batas_rentang_antar_seed": 0.013929401616383508,
+          "setara": true
+        },
+        "akurasi": {
+          "mean_gpu": 0.7904715486779578,
+          "mean_cpu": 0.788083343487267,
+          "selisih": 0.0023882051906907176,
+          "batas_rentang_antar_seed": 0.010113317899354213,
+          "setara": true
+        },
+        "ttb_mae_menit": {
+          "mean_gpu": 23.632369232177734,
+          "mean_cpu": 23.5288444519043,
+          "selisih": 0.10352478027343537,
+          "batas_rentang_antar_seed": 2.5452651977539062,
+          "setara": true
+        },
+        "anomali_pr_auc": {
+          "mean_gpu": 0.6221594355854161,
+          "mean_cpu": 0.6214541309987354,
+          "selisih": 0.0007053045866807217,
+          "batas_rentang_antar_seed": 0.022193354213555616,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W1/b1024_fp32_pin/run_0.json",
+        "bench/results/g16-gpu/W1/b1024_fp32_pin/run_1.json",
+        "bench/results/g16-gpu/W1/b1024_fp32_pin/run_2.json",
+        "bench/results/g16-gpu/W1/b1024_fp32_pin/run_3.json",
+        "bench/results/g16-gpu/W1/b1024_fp32_pin/run_4.json",
+        "bench/results/g16-gpu/W1/b1024_fp32_pin/run_5.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_0.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_1.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_2.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_3.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_4.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_5.json"
+      ]
+    },
+    "b1024_fp32_resident": {
+      "acuan_cpu": "g16-cpu/W1/b1024_fp32_resident",
+      "n_seed": [
+        5,
+        5
+      ],
+      "setara": true,
+      "metrik": {
+        "forecast_t15_mae_c": {
+          "mean_gpu": 0.16209899485111237,
+          "mean_cpu": 0.16141691505908967,
+          "selisih": 0.0006820797920226995,
+          "batas_rentang_antar_seed": 0.009604126214981079,
+          "setara": true
+        },
+        "forecast_t30_mae_c": {
+          "mean_gpu": 0.21132683753967285,
+          "mean_cpu": 0.2110997259616852,
+          "selisih": 0.0002271115779876598,
+          "batas_rentang_antar_seed": 0.005968943238258362,
+          "setara": true
+        },
+        "forecast_t60_mae_c": {
+          "mean_gpu": 0.2579587459564209,
+          "mean_cpu": 0.2579296112060547,
+          "selisih": 2.9134750366199835e-05,
+          "batas_rentang_antar_seed": 0.0074394941329956055,
+          "setara": true
+        },
+        "macro_f1": {
+          "mean_gpu": 0.47418119175881823,
+          "mean_cpu": 0.4755546240012838,
+          "selisih": -0.0013734322424655554,
+          "batas_rentang_antar_seed": 0.022726156866398395,
+          "setara": true
+        },
+        "akurasi": {
+          "mean_gpu": 0.7892165224808092,
+          "mean_cpu": 0.7892774460826124,
+          "selisih": -6.092360180320888e-05,
+          "batas_rentang_antar_seed": 0.013281345193127847,
+          "setara": true
+        },
+        "ttb_mae_menit": {
+          "mean_gpu": 23.787961959838867,
+          "mean_cpu": 23.56261863708496,
+          "selisih": 0.22534332275390767,
+          "batas_rentang_antar_seed": 2.1923789978027344,
+          "setara": true
+        },
+        "anomali_pr_auc": {
+          "mean_gpu": 0.6229823069375844,
+          "mean_cpu": 0.6250380898794734,
+          "selisih": -0.0020557829418890172,
+          "batas_rentang_antar_seed": 0.03567517707018897,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W1/b1024_fp32_resident/run_0.json",
+        "bench/results/g16-gpu/W1/b1024_fp32_resident/run_1.json",
+        "bench/results/g16-gpu/W1/b1024_fp32_resident/run_2.json",
+        "bench/results/g16-gpu/W1/b1024_fp32_resident/run_3.json",
+        "bench/results/g16-gpu/W1/b1024_fp32_resident/run_4.json",
+        "bench/results/g16-gpu/W1/b1024_fp32_resident/run_5.json",
+        "bench/results/g16-cpu/W1/b1024_fp32_resident/run_0.json",
+        "bench/results/g16-cpu/W1/b1024_fp32_resident/run_1.json",
+        "bench/results/g16-cpu/W1/b1024_fp32_resident/run_2.json",
+        "bench/results/g16-cpu/W1/b1024_fp32_resident/run_3.json",
+        "bench/results/g16-cpu/W1/b1024_fp32_resident/run_4.json",
+        "bench/results/g16-cpu/W1/b1024_fp32_resident/run_5.json"
+      ]
+    },
+    "b1024_fp32_w2pin": {
+      "acuan_cpu": "g16-cpu/W1/b1024_fp32",
+      "n_seed": [
+        5,
+        5
+      ],
+      "setara": true,
+      "metrik": {
+        "forecast_t15_mae_c": {
+          "mean_gpu": 0.1617549777030945,
+          "mean_cpu": 0.16318699419498445,
+          "selisih": -0.0014320164918899536,
+          "batas_rentang_antar_seed": 0.009608924388885498,
+          "setara": true
+        },
+        "forecast_t30_mae_c": {
+          "mean_gpu": 0.2111807107925415,
+          "mean_cpu": 0.21286171674728394,
+          "selisih": -0.0016810059547424372,
+          "batas_rentang_antar_seed": 0.01069629192352295,
+          "setara": true
+        },
+        "forecast_t60_mae_c": {
+          "mean_gpu": 0.25774264335632324,
+          "mean_cpu": 0.26009886860847475,
+          "selisih": -0.0023562252521515115,
+          "batas_rentang_antar_seed": 0.013187259435653687,
+          "setara": true
+        },
+        "macro_f1": {
+          "mean_gpu": 0.47511042977611007,
+          "mean_cpu": 0.4757441161353529,
+          "selisih": -0.0006336863592428243,
+          "batas_rentang_antar_seed": 0.013929401616383508,
+          "setara": true
+        },
+        "akurasi": {
+          "mean_gpu": 0.7904715486779578,
+          "mean_cpu": 0.788083343487267,
+          "selisih": 0.0023882051906907176,
+          "batas_rentang_antar_seed": 0.010113317899354213,
+          "setara": true
+        },
+        "ttb_mae_menit": {
+          "mean_gpu": 23.632369232177734,
+          "mean_cpu": 23.5288444519043,
+          "selisih": 0.10352478027343537,
+          "batas_rentang_antar_seed": 2.5452651977539062,
+          "setara": true
+        },
+        "anomali_pr_auc": {
+          "mean_gpu": 0.6221594355854161,
+          "mean_cpu": 0.6214541309987354,
+          "selisih": 0.0007053045866807217,
+          "batas_rentang_antar_seed": 0.022193354213555616,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W1/b1024_fp32_w2pin/run_0.json",
+        "bench/results/g16-gpu/W1/b1024_fp32_w2pin/run_1.json",
+        "bench/results/g16-gpu/W1/b1024_fp32_w2pin/run_2.json",
+        "bench/results/g16-gpu/W1/b1024_fp32_w2pin/run_3.json",
+        "bench/results/g16-gpu/W1/b1024_fp32_w2pin/run_4.json",
+        "bench/results/g16-gpu/W1/b1024_fp32_w2pin/run_5.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_0.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_1.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_2.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_3.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_4.json",
+        "bench/results/g16-cpu/W1/b1024_fp32/run_5.json"
+      ]
+    },
+    "b256_bf16": {
+      "acuan_cpu": "g16-cpu/W1/b256_fp32",
+      "n_seed": [
+        5,
+        5
+      ],
+      "setara": true,
+      "metrik": {
+        "forecast_t15_mae_c": {
+          "mean_gpu": 0.1592752754688263,
+          "mean_cpu": 0.1580437570810318,
+          "selisih": 0.0012315183877945057,
+          "batas_rentang_antar_seed": 0.006882116198539734,
+          "setara": true
+        },
+        "forecast_t30_mae_c": {
+          "mean_gpu": 0.20781009495258332,
+          "mean_cpu": 0.20852993726730346,
+          "selisih": -0.0007198423147201372,
+          "batas_rentang_antar_seed": 0.006488636136054993,
+          "setara": true
+        },
+        "forecast_t60_mae_c": {
+          "mean_gpu": 0.25531285405159,
+          "mean_cpu": 0.25563004016876223,
+          "selisih": -0.0003171861171722412,
+          "batas_rentang_antar_seed": 0.008173882961273193,
+          "setara": true
+        },
+        "macro_f1": {
+          "mean_gpu": 0.5927016428437979,
+          "mean_cpu": 0.5895251920926714,
+          "selisih": 0.0031764507511264917,
+          "batas_rentang_antar_seed": 0.026113880719493388,
+          "setara": true
+        },
+        "akurasi": {
+          "mean_gpu": 0.7973071768002924,
+          "mean_cpu": 0.7990495918118679,
+          "selisih": -0.00174241501157546,
+          "batas_rentang_antar_seed": 0.01687583769952472,
+          "setara": true
+        },
+        "ttb_mae_menit": {
+          "mean_gpu": 22.005730819702148,
+          "mean_cpu": 22.33464660644531,
+          "selisih": -0.32891578674316335,
+          "batas_rentang_antar_seed": 1.4084434509277344,
+          "setara": true
+        },
+        "anomali_pr_auc": {
+          "mean_gpu": 0.6910839251068813,
+          "mean_cpu": 0.6924383418442458,
+          "selisih": -0.0013544167373644722,
+          "batas_rentang_antar_seed": 0.014851210715155494,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W1/b256_bf16/run_0.json",
+        "bench/results/g16-gpu/W1/b256_bf16/run_1.json",
+        "bench/results/g16-gpu/W1/b256_bf16/run_2.json",
+        "bench/results/g16-gpu/W1/b256_bf16/run_3.json",
+        "bench/results/g16-gpu/W1/b256_bf16/run_4.json",
+        "bench/results/g16-gpu/W1/b256_bf16/run_5.json",
+        "bench/results/g16-cpu/W1/b256_fp32/run_0.json",
+        "bench/results/g16-cpu/W1/b256_fp32/run_1.json",
+        "bench/results/g16-cpu/W1/b256_fp32/run_2.json",
+        "bench/results/g16-cpu/W1/b256_fp32/run_3.json",
+        "bench/results/g16-cpu/W1/b256_fp32/run_4.json",
+        "bench/results/g16-cpu/W1/b256_fp32/run_5.json"
+      ]
+    },
+    "b256_fp16": {
+      "acuan_cpu": "g16-cpu/W1/b256_fp32",
+      "n_seed": [
+        5,
+        5
+      ],
+      "setara": true,
+      "metrik": {
+        "forecast_t15_mae_c": {
+          "mean_gpu": 0.15747527182102203,
+          "mean_cpu": 0.1580437570810318,
+          "selisih": -0.0005684852600097712,
+          "batas_rentang_antar_seed": 0.00515197217464447,
+          "setara": true
+        },
+        "forecast_t30_mae_c": {
+          "mean_gpu": 0.20777110159397125,
+          "mean_cpu": 0.20852993726730346,
+          "selisih": -0.0007588356733322088,
+          "batas_rentang_antar_seed": 0.006488636136054993,
+          "setara": true
+        },
+        "forecast_t60_mae_c": {
+          "mean_gpu": 0.2545317471027374,
+          "mean_cpu": 0.25563004016876223,
+          "selisih": -0.0010982930660248247,
+          "batas_rentang_antar_seed": 0.008173882961273193,
+          "setara": true
+        },
+        "macro_f1": {
+          "mean_gpu": 0.5871010262652557,
+          "mean_cpu": 0.5895251920926714,
+          "selisih": -0.0024241658274156697,
+          "batas_rentang_antar_seed": 0.02243607695879335,
+          "setara": true
+        },
+        "akurasi": {
+          "mean_gpu": 0.7951139271353722,
+          "mean_cpu": 0.7990495918118679,
+          "selisih": -0.003935664676495643,
+          "batas_rentang_antar_seed": 0.01687583769952472,
+          "setara": true
+        },
+        "ttb_mae_menit": {
+          "mean_gpu": 22.011655807495117,
+          "mean_cpu": 22.33464660644531,
+          "selisih": -0.3229907989501939,
+          "batas_rentang_antar_seed": 1.4906463623046875,
+          "setara": true
+        },
+        "anomali_pr_auc": {
+          "mean_gpu": 0.6913928451929355,
+          "mean_cpu": 0.6924383418442458,
+          "selisih": -0.0010454966513102626,
+          "batas_rentang_antar_seed": 0.024067423230032414,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W1/b256_fp16/run_0.json",
+        "bench/results/g16-gpu/W1/b256_fp16/run_1.json",
+        "bench/results/g16-gpu/W1/b256_fp16/run_2.json",
+        "bench/results/g16-gpu/W1/b256_fp16/run_3.json",
+        "bench/results/g16-gpu/W1/b256_fp16/run_4.json",
+        "bench/results/g16-gpu/W1/b256_fp16/run_5.json",
+        "bench/results/g16-cpu/W1/b256_fp32/run_0.json",
+        "bench/results/g16-cpu/W1/b256_fp32/run_1.json",
+        "bench/results/g16-cpu/W1/b256_fp32/run_2.json",
+        "bench/results/g16-cpu/W1/b256_fp32/run_3.json",
+        "bench/results/g16-cpu/W1/b256_fp32/run_4.json",
+        "bench/results/g16-cpu/W1/b256_fp32/run_5.json"
+      ]
+    },
+    "b256_fp32": {
+      "acuan_cpu": "g16-cpu/W1/b256_fp32",
+      "n_seed": [
+        5,
+        5
+      ],
+      "setara": true,
+      "metrik": {
+        "forecast_t15_mae_c": {
+          "mean_gpu": 0.1592908263206482,
+          "mean_cpu": 0.1580437570810318,
+          "selisih": 0.0012470692396163996,
+          "batas_rentang_antar_seed": 0.00515197217464447,
+          "setara": true
+        },
+        "forecast_t30_mae_c": {
+          "mean_gpu": 0.2095497280359268,
+          "mean_cpu": 0.20852993726730346,
+          "selisih": 0.001019790768623352,
+          "batas_rentang_antar_seed": 0.008737444877624512,
+          "setara": true
+        },
+        "forecast_t60_mae_c": {
+          "mean_gpu": 0.2581001579761505,
+          "mean_cpu": 0.25563004016876223,
+          "selisih": 0.0024701178073882613,
+          "batas_rentang_antar_seed": 0.015495747327804565,
+          "setara": true
+        },
+        "macro_f1": {
+          "mean_gpu": 0.5862759828904649,
+          "mean_cpu": 0.5895251920926714,
+          "selisih": -0.0032492092022065044,
+          "batas_rentang_antar_seed": 0.02243607695879335,
+          "setara": true
+        },
+        "akurasi": {
+          "mean_gpu": 0.7964786158157671,
+          "mean_cpu": 0.7990495918118679,
+          "selisih": -0.0025709759961007883,
+          "batas_rentang_antar_seed": 0.01687583769952472,
+          "setara": true
+        },
+        "ttb_mae_menit": {
+          "mean_gpu": 21.933057022094726,
+          "mean_cpu": 22.33464660644531,
+          "selisih": -0.4015895843505852,
+          "batas_rentang_antar_seed": 1.4651947021484375,
+          "setara": true
+        },
+        "anomali_pr_auc": {
+          "mean_gpu": 0.6884145342380884,
+          "mean_cpu": 0.6924383418442458,
+          "selisih": -0.004023807606157392,
+          "batas_rentang_antar_seed": 0.014851210715155494,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W1/b256_fp32/run_0.json",
+        "bench/results/g16-gpu/W1/b256_fp32/run_1.json",
+        "bench/results/g16-gpu/W1/b256_fp32/run_2.json",
+        "bench/results/g16-gpu/W1/b256_fp32/run_3.json",
+        "bench/results/g16-gpu/W1/b256_fp32/run_4.json",
+        "bench/results/g16-gpu/W1/b256_fp32/run_5.json",
+        "bench/results/g16-cpu/W1/b256_fp32/run_0.json",
+        "bench/results/g16-cpu/W1/b256_fp32/run_1.json",
+        "bench/results/g16-cpu/W1/b256_fp32/run_2.json",
+        "bench/results/g16-cpu/W1/b256_fp32/run_3.json",
+        "bench/results/g16-cpu/W1/b256_fp32/run_4.json",
+        "bench/results/g16-cpu/W1/b256_fp32/run_5.json"
+      ]
+    },
+    "b256_fp32_resident": {
+      "acuan_cpu": "g16-cpu/W1/b256_fp32_resident",
+      "n_seed": [
+        5,
+        5
+      ],
+      "setara": true,
+      "metrik": {
+        "forecast_t15_mae_c": {
+          "mean_gpu": 0.1596112072467804,
+          "mean_cpu": 0.15899913609027863,
+          "selisih": 0.0006120711565017756,
+          "batas_rentang_antar_seed": 0.01012200117111206,
+          "setara": true
+        },
+        "forecast_t30_mae_c": {
+          "mean_gpu": 0.20928414463996886,
+          "mean_cpu": 0.20986961722373962,
+          "selisih": -0.0005854725837707575,
+          "batas_rentang_antar_seed": 0.00783124566078186,
+          "setara": true
+        },
+        "forecast_t60_mae_c": {
+          "mean_gpu": 0.25542786717414856,
+          "mean_cpu": 0.25627635717391967,
+          "selisih": -0.0008484899997711071,
+          "batas_rentang_antar_seed": 0.012413382530212402,
+          "setara": true
+        },
+        "macro_f1": {
+          "mean_gpu": 0.5838840031019263,
+          "mean_cpu": 0.5891195815160626,
+          "selisih": -0.005235578414136244,
+          "batas_rentang_antar_seed": 0.02412965648431098,
+          "setara": true
+        },
+        "akurasi": {
+          "mean_gpu": 0.7942244425490435,
+          "mean_cpu": 0.7971487754356037,
+          "selisih": -0.0029243328865602436,
+          "batas_rentang_antar_seed": 0.013525039600341127,
+          "setara": true
+        },
+        "ttb_mae_menit": {
+          "mean_gpu": 21.72083969116211,
+          "mean_cpu": 22.15026435852051,
+          "selisih": -0.42942466735840057,
+          "batas_rentang_antar_seed": 3.0228710174560547,
+          "setara": true
+        },
+        "anomali_pr_auc": {
+          "mean_gpu": 0.6845544700067491,
+          "mean_cpu": 0.6874470153458364,
+          "selisih": -0.002892545339087338,
+          "batas_rentang_antar_seed": 0.020734740580637956,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W1/b256_fp32_resident/run_0.json",
+        "bench/results/g16-gpu/W1/b256_fp32_resident/run_1.json",
+        "bench/results/g16-gpu/W1/b256_fp32_resident/run_2.json",
+        "bench/results/g16-gpu/W1/b256_fp32_resident/run_3.json",
+        "bench/results/g16-gpu/W1/b256_fp32_resident/run_4.json",
+        "bench/results/g16-gpu/W1/b256_fp32_resident/run_5.json",
+        "bench/results/g16-cpu/W1/b256_fp32_resident/run_0.json",
+        "bench/results/g16-cpu/W1/b256_fp32_resident/run_1.json",
+        "bench/results/g16-cpu/W1/b256_fp32_resident/run_2.json",
+        "bench/results/g16-cpu/W1/b256_fp32_resident/run_3.json",
+        "bench/results/g16-cpu/W1/b256_fp32_resident/run_4.json",
+        "bench/results/g16-cpu/W1/b256_fp32_resident/run_5.json"
+      ]
+    },
+    "b4096_bf16": {
+      "acuan_cpu": "g16-cpu/W1/b4096_fp32",
+      "n_seed": [
+        5,
+        5
+      ],
+      "setara": true,
+      "metrik": {
+        "forecast_t15_mae_c": {
+          "mean_gpu": 0.1662793517112732,
+          "mean_cpu": 0.1662002444267273,
+          "selisih": 7.910728454590954e-05,
+          "batas_rentang_antar_seed": 0.0072433799505233765,
+          "setara": true
+        },
+        "forecast_t30_mae_c": {
+          "mean_gpu": 0.21490613222122193,
+          "mean_cpu": 0.21456265747547149,
+          "selisih": 0.0003434747457504439,
+          "batas_rentang_antar_seed": 0.006706684827804565,
+          "setara": true
+        },
+        "forecast_t60_mae_c": {
+          "mean_gpu": 0.2598972022533417,
+          "mean_cpu": 0.25972611308097837,
+          "selisih": 0.00017108917236330345,
+          "batas_rentang_antar_seed": 0.007957428693771362,
+          "setara": true
+        },
+        "macro_f1": {
+          "mean_gpu": 0.47148638606243853,
+          "mean_cpu": 0.4716978935064439,
+          "selisih": -0.00021150744400538768,
+          "batas_rentang_antar_seed": 0.02769098145639287,
+          "setara": true
+        },
+        "akurasi": {
+          "mean_gpu": 0.8043499451687584,
+          "mean_cpu": 0.8042890215669549,
+          "selisih": 6.092360180343093e-05,
+          "batas_rentang_antar_seed": 0.01626660168149141,
+          "setara": true
+        },
+        "ttb_mae_menit": {
+          "mean_gpu": 25.29956817626953,
+          "mean_cpu": 25.213097381591798,
+          "selisih": 0.08647079467773366,
+          "batas_rentang_antar_seed": 0.7913284301757812,
+          "setara": true
+        },
+        "anomali_pr_auc": {
+          "mean_gpu": 0.5799964641303351,
+          "mean_cpu": 0.5798932637499286,
+          "selisih": 0.0001032003804065651,
+          "batas_rentang_antar_seed": 0.014538400258668482,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W1/b4096_bf16/run_0.json",
+        "bench/results/g16-gpu/W1/b4096_bf16/run_1.json",
+        "bench/results/g16-gpu/W1/b4096_bf16/run_2.json",
+        "bench/results/g16-gpu/W1/b4096_bf16/run_3.json",
+        "bench/results/g16-gpu/W1/b4096_bf16/run_4.json",
+        "bench/results/g16-gpu/W1/b4096_bf16/run_5.json",
+        "bench/results/g16-cpu/W1/b4096_fp32/run_0.json",
+        "bench/results/g16-cpu/W1/b4096_fp32/run_1.json",
+        "bench/results/g16-cpu/W1/b4096_fp32/run_2.json",
+        "bench/results/g16-cpu/W1/b4096_fp32/run_3.json",
+        "bench/results/g16-cpu/W1/b4096_fp32/run_4.json",
+        "bench/results/g16-cpu/W1/b4096_fp32/run_5.json"
+      ]
+    },
+    "b4096_fp16": {
+      "acuan_cpu": "g16-cpu/W1/b4096_fp32",
+      "n_seed": [
+        5,
+        5
+      ],
+      "setara": true,
+      "metrik": {
+        "forecast_t15_mae_c": {
+          "mean_gpu": 0.16659632623195647,
+          "mean_cpu": 0.1662002444267273,
+          "selisih": 0.00039608180522918146,
+          "batas_rentang_antar_seed": 0.007856667041778564,
+          "setara": true
+        },
+        "forecast_t30_mae_c": {
+          "mean_gpu": 0.2149188369512558,
+          "mean_cpu": 0.21456265747547149,
+          "selisih": 0.00035617947578431286,
+          "batas_rentang_antar_seed": 0.005801588296890259,
+          "setara": true
+        },
+        "forecast_t60_mae_c": {
+          "mean_gpu": 0.2600551903247833,
+          "mean_cpu": 0.25972611308097837,
+          "selisih": 0.00032907724380493164,
+          "batas_rentang_antar_seed": 0.00798448920249939,
+          "setara": true
+        },
+        "macro_f1": {
+          "mean_gpu": 0.47227533398553334,
+          "mean_cpu": 0.4716978935064439,
+          "selisih": 0.0005774404790894194,
+          "batas_rentang_antar_seed": 0.026410743309402296,
+          "setara": true
+        },
+        "akurasi": {
+          "mean_gpu": 0.8050444742293165,
+          "mean_cpu": 0.8042890215669549,
+          "selisih": 0.0007554526623615443,
+          "batas_rentang_antar_seed": 0.01584013646886806,
+          "setara": true
+        },
+        "ttb_mae_menit": {
+          "mean_gpu": 25.326346969604494,
+          "mean_cpu": 25.213097381591798,
+          "selisih": 0.11324958801269602,
+          "batas_rentang_antar_seed": 1.0566673278808594,
+          "setara": true
+        },
+        "anomali_pr_auc": {
+          "mean_gpu": 0.5804101369693778,
+          "mean_cpu": 0.5798932637499286,
+          "selisih": 0.0005168732194492653,
+          "batas_rentang_antar_seed": 0.015008789124032584,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W1/b4096_fp16/run_0.json",
+        "bench/results/g16-gpu/W1/b4096_fp16/run_1.json",
+        "bench/results/g16-gpu/W1/b4096_fp16/run_2.json",
+        "bench/results/g16-gpu/W1/b4096_fp16/run_3.json",
+        "bench/results/g16-gpu/W1/b4096_fp16/run_4.json",
+        "bench/results/g16-gpu/W1/b4096_fp16/run_5.json",
+        "bench/results/g16-cpu/W1/b4096_fp32/run_0.json",
+        "bench/results/g16-cpu/W1/b4096_fp32/run_1.json",
+        "bench/results/g16-cpu/W1/b4096_fp32/run_2.json",
+        "bench/results/g16-cpu/W1/b4096_fp32/run_3.json",
+        "bench/results/g16-cpu/W1/b4096_fp32/run_4.json",
+        "bench/results/g16-cpu/W1/b4096_fp32/run_5.json"
+      ]
+    },
+    "b4096_fp32": {
+      "acuan_cpu": "g16-cpu/W1/b4096_fp32",
+      "n_seed": [
+        5,
+        5
+      ],
+      "setara": true,
+      "metrik": {
+        "forecast_t15_mae_c": {
+          "mean_gpu": 0.1661970555782318,
+          "mean_cpu": 0.1662002444267273,
+          "selisih": -3.1888484954833984e-06,
+          "batas_rentang_antar_seed": 0.006770342588424683,
+          "setara": true
+        },
+        "forecast_t30_mae_c": {
+          "mean_gpu": 0.21491873264312744,
+          "mean_cpu": 0.21456265747547149,
+          "selisih": 0.0003560751676559559,
+          "batas_rentang_antar_seed": 0.005945101380348206,
+          "setara": true
+        },
+        "forecast_t60_mae_c": {
+          "mean_gpu": 0.2599112570285797,
+          "mean_cpu": 0.25972611308097837,
+          "selisih": 0.00018514394760132946,
+          "batas_rentang_antar_seed": 0.008105307817459106,
+          "setara": true
+        },
+        "macro_f1": {
+          "mean_gpu": 0.4710226462631237,
+          "mean_cpu": 0.4716978935064439,
+          "selisih": -0.0006752472433202428,
+          "batas_rentang_antar_seed": 0.02881214412221922,
+          "setara": true
+        },
+        "akurasi": {
+          "mean_gpu": 0.8042402826855124,
+          "mean_cpu": 0.8042890215669549,
+          "selisih": -4.87388814425227e-05,
+          "batas_rentang_antar_seed": 0.017058608504934902,
+          "setara": true
+        },
+        "ttb_mae_menit": {
+          "mean_gpu": 25.285588455200195,
+          "mean_cpu": 25.213097381591798,
+          "selisih": 0.07249107360839702,
+          "batas_rentang_antar_seed": 0.8062686920166016,
+          "setara": true
+        },
+        "anomali_pr_auc": {
+          "mean_gpu": 0.5799333965268655,
+          "mean_cpu": 0.5798932637499286,
+          "selisih": 4.013277693692974e-05,
+          "batas_rentang_antar_seed": 0.014831745610214941,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W1/b4096_fp32/run_0.json",
+        "bench/results/g16-gpu/W1/b4096_fp32/run_1.json",
+        "bench/results/g16-gpu/W1/b4096_fp32/run_2.json",
+        "bench/results/g16-gpu/W1/b4096_fp32/run_3.json",
+        "bench/results/g16-gpu/W1/b4096_fp32/run_4.json",
+        "bench/results/g16-gpu/W1/b4096_fp32/run_5.json",
+        "bench/results/g16-cpu/W1/b4096_fp32/run_0.json",
+        "bench/results/g16-cpu/W1/b4096_fp32/run_1.json",
+        "bench/results/g16-cpu/W1/b4096_fp32/run_2.json",
+        "bench/results/g16-cpu/W1/b4096_fp32/run_3.json",
+        "bench/results/g16-cpu/W1/b4096_fp32/run_4.json",
+        "bench/results/g16-cpu/W1/b4096_fp32/run_5.json"
+      ]
+    }
+  },
+  "W2": {
+    "cuda_hist": {
+      "acuan_cpu": "g16-cpu/W2/cpu_hist",
+      "setara": true,
+      "metrik": {
+        "ttb_mae_le10_menit": {
+          "gpu": 3.2388389110565186,
+          "cpu": 3.2388389110565186,
+          "selisih_rel": 0.0,
+          "setara": true
+        },
+        "ttb_mae_le30_menit": {
+          "gpu": 5.1418304443359375,
+          "cpu": 5.141827583312988,
+          "selisih_rel": 5.564214090927048e-07,
+          "setara": true
+        },
+        "ttb_mae_semua_menit": {
+          "gpu": 24.014829635620117,
+          "cpu": 24.014829635620117,
+          "selisih_rel": 0.0,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W2/cuda_hist/run_0.json",
+        "bench/results/g16-gpu/W2/cuda_hist/run_1.json",
+        "bench/results/g16-gpu/W2/cuda_hist/run_2.json",
+        "bench/results/g16-gpu/W2/cuda_hist/run_3.json",
+        "bench/results/g16-gpu/W2/cuda_hist/run_4.json",
+        "bench/results/g16-gpu/W2/cuda_hist/run_5.json",
+        "bench/results/g16-cpu/W2/cpu_hist/run_0.json",
+        "bench/results/g16-cpu/W2/cpu_hist/run_1.json",
+        "bench/results/g16-cpu/W2/cpu_hist/run_2.json",
+        "bench/results/g16-cpu/W2/cpu_hist/run_3.json",
+        "bench/results/g16-cpu/W2/cpu_hist/run_4.json",
+        "bench/results/g16-cpu/W2/cpu_hist/run_5.json"
+      ]
+    }
+  },
+  "W7": {
+    "gru_cuda_b1": {
+      "acuan_cpu": "g16-cpu/W7/gru_cpu_b1",
+      "setara": true,
+      "metrik": {
+        "ttb_mae_semua_menit": {
+          "gpu": 21.215314865112305,
+          "cpu": 21.21879005432129,
+          "selisih_rel": 0.0001637788582707919,
+          "setara": true
+        },
+        "ttb_mae_le30_menit": {
+          "gpu": 4.204308986663818,
+          "cpu": 4.19782018661499,
+          "selisih_rel": 0.0015457546441646228,
+          "setara": true
+        },
+        "forecast_t30_mae_c": {
+          "gpu": 0.2109435647726059,
+          "cpu": 0.2109597772359848,
+          "selisih_rel": 7.685096937114505e-05,
+          "setara": true
+        },
+        "akurasi_mode": {
+          "gpu": 0.7856707688558547,
+          "cpu": 0.7857316924576581,
+          "selisih_abs": -6.0923601803319904e-05,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W7/gru_cuda_b1/run_0.json",
+        "bench/results/g16-gpu/W7/gru_cuda_b1/run_1.json",
+        "bench/results/g16-gpu/W7/gru_cuda_b1/run_2.json",
+        "bench/results/g16-gpu/W7/gru_cuda_b1/run_3.json",
+        "bench/results/g16-gpu/W7/gru_cuda_b1/run_4.json",
+        "bench/results/g16-gpu/W7/gru_cuda_b1/run_5.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b1/run_0.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b1/run_1.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b1/run_2.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b1/run_3.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b1/run_4.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b1/run_5.json"
+      ]
+    },
+    "gru_cuda_b32": {
+      "acuan_cpu": "g16-cpu/W7/gru_cpu_b32",
+      "setara": true,
+      "metrik": {
+        "ttb_mae_semua_menit": {
+          "gpu": 21.215314865112305,
+          "cpu": 21.21879005432129,
+          "selisih_rel": 0.0001637788582707919,
+          "setara": true
+        },
+        "ttb_mae_le30_menit": {
+          "gpu": 4.204308986663818,
+          "cpu": 4.19782018661499,
+          "selisih_rel": 0.0015457546441646228,
+          "setara": true
+        },
+        "forecast_t30_mae_c": {
+          "gpu": 0.2109435647726059,
+          "cpu": 0.2109597772359848,
+          "selisih_rel": 7.685096937114505e-05,
+          "setara": true
+        },
+        "akurasi_mode": {
+          "gpu": 0.7856707688558547,
+          "cpu": 0.7857316924576581,
+          "selisih_abs": -6.0923601803319904e-05,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W7/gru_cuda_b32/run_0.json",
+        "bench/results/g16-gpu/W7/gru_cuda_b32/run_1.json",
+        "bench/results/g16-gpu/W7/gru_cuda_b32/run_2.json",
+        "bench/results/g16-gpu/W7/gru_cuda_b32/run_3.json",
+        "bench/results/g16-gpu/W7/gru_cuda_b32/run_4.json",
+        "bench/results/g16-gpu/W7/gru_cuda_b32/run_5.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b32/run_0.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b32/run_1.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b32/run_2.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b32/run_3.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b32/run_4.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b32/run_5.json"
+      ]
+    },
+    "gru_cuda_b256": {
+      "acuan_cpu": "g16-cpu/W7/gru_cpu_b256",
+      "setara": true,
+      "metrik": {
+        "ttb_mae_semua_menit": {
+          "gpu": 21.215314865112305,
+          "cpu": 21.21879005432129,
+          "selisih_rel": 0.0001637788582707919,
+          "setara": true
+        },
+        "ttb_mae_le30_menit": {
+          "gpu": 4.204308986663818,
+          "cpu": 4.19782018661499,
+          "selisih_rel": 0.0015457546441646228,
+          "setara": true
+        },
+        "forecast_t30_mae_c": {
+          "gpu": 0.2109435647726059,
+          "cpu": 0.2109597772359848,
+          "selisih_rel": 7.685096937114505e-05,
+          "setara": true
+        },
+        "akurasi_mode": {
+          "gpu": 0.7856707688558547,
+          "cpu": 0.7857316924576581,
+          "selisih_abs": -6.0923601803319904e-05,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W7/gru_cuda_b256/run_0.json",
+        "bench/results/g16-gpu/W7/gru_cuda_b256/run_1.json",
+        "bench/results/g16-gpu/W7/gru_cuda_b256/run_2.json",
+        "bench/results/g16-gpu/W7/gru_cuda_b256/run_3.json",
+        "bench/results/g16-gpu/W7/gru_cuda_b256/run_4.json",
+        "bench/results/g16-gpu/W7/gru_cuda_b256/run_5.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b256/run_0.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b256/run_1.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b256/run_2.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b256/run_3.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b256/run_4.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b256/run_5.json"
+      ]
+    },
+    "gru_cuda_b1024": {
+      "acuan_cpu": "g16-cpu/W7/gru_cpu_b1024",
+      "setara": true,
+      "metrik": {
+        "ttb_mae_semua_menit": {
+          "gpu": 21.215314865112305,
+          "cpu": 21.21879005432129,
+          "selisih_rel": 0.0001637788582707919,
+          "setara": true
+        },
+        "ttb_mae_le30_menit": {
+          "gpu": 4.204308986663818,
+          "cpu": 4.19782018661499,
+          "selisih_rel": 0.0015457546441646228,
+          "setara": true
+        },
+        "forecast_t30_mae_c": {
+          "gpu": 0.2109435647726059,
+          "cpu": 0.2109597772359848,
+          "selisih_rel": 7.685096937114505e-05,
+          "setara": true
+        },
+        "akurasi_mode": {
+          "gpu": 0.7856707688558547,
+          "cpu": 0.7857316924576581,
+          "selisih_abs": -6.0923601803319904e-05,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W7/gru_cuda_b1024/run_0.json",
+        "bench/results/g16-gpu/W7/gru_cuda_b1024/run_1.json",
+        "bench/results/g16-gpu/W7/gru_cuda_b1024/run_2.json",
+        "bench/results/g16-gpu/W7/gru_cuda_b1024/run_3.json",
+        "bench/results/g16-gpu/W7/gru_cuda_b1024/run_4.json",
+        "bench/results/g16-gpu/W7/gru_cuda_b1024/run_5.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b1024/run_0.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b1024/run_1.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b1024/run_2.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b1024/run_3.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b1024/run_4.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b1024/run_5.json"
+      ]
+    },
+    "gru_cuda_notf32_b1": {
+      "acuan_cpu": "g16-cpu/W7/gru_cpu_b1",
+      "setara": true,
+      "metrik": {
+        "ttb_mae_semua_menit": {
+          "gpu": 21.218795776367188,
+          "cpu": 21.21879005432129,
+          "selisih_rel": 2.696688116423577e-07,
+          "setara": true
+        },
+        "ttb_mae_le30_menit": {
+          "gpu": 4.197823524475098,
+          "cpu": 4.19782018661499,
+          "selisih_rel": 7.951412778624603e-07,
+          "setara": true
+        },
+        "forecast_t30_mae_c": {
+          "gpu": 0.21095983684062958,
+          "cpu": 0.2109597772359848,
+          "selisih_rel": 2.825403285703862e-07,
+          "setara": true
+        },
+        "akurasi_mode": {
+          "gpu": 0.7857316924576581,
+          "cpu": 0.7857316924576581,
+          "selisih_abs": 0.0,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W7/gru_cuda_notf32_b1/run_0.json",
+        "bench/results/g16-gpu/W7/gru_cuda_notf32_b1/run_1.json",
+        "bench/results/g16-gpu/W7/gru_cuda_notf32_b1/run_2.json",
+        "bench/results/g16-gpu/W7/gru_cuda_notf32_b1/run_3.json",
+        "bench/results/g16-gpu/W7/gru_cuda_notf32_b1/run_4.json",
+        "bench/results/g16-gpu/W7/gru_cuda_notf32_b1/run_5.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b1/run_0.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b1/run_1.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b1/run_2.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b1/run_3.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b1/run_4.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b1/run_5.json"
+      ]
+    },
+    "gru_cuda_notf32_b32": {
+      "acuan_cpu": "g16-cpu/W7/gru_cpu_b32",
+      "setara": true,
+      "metrik": {
+        "ttb_mae_semua_menit": {
+          "gpu": 21.218795776367188,
+          "cpu": 21.21879005432129,
+          "selisih_rel": 2.696688116423577e-07,
+          "setara": true
+        },
+        "ttb_mae_le30_menit": {
+          "gpu": 4.197823524475098,
+          "cpu": 4.19782018661499,
+          "selisih_rel": 7.951412778624603e-07,
+          "setara": true
+        },
+        "forecast_t30_mae_c": {
+          "gpu": 0.21095983684062958,
+          "cpu": 0.2109597772359848,
+          "selisih_rel": 2.825403285703862e-07,
+          "setara": true
+        },
+        "akurasi_mode": {
+          "gpu": 0.7857316924576581,
+          "cpu": 0.7857316924576581,
+          "selisih_abs": 0.0,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W7/gru_cuda_notf32_b32/run_0.json",
+        "bench/results/g16-gpu/W7/gru_cuda_notf32_b32/run_1.json",
+        "bench/results/g16-gpu/W7/gru_cuda_notf32_b32/run_2.json",
+        "bench/results/g16-gpu/W7/gru_cuda_notf32_b32/run_3.json",
+        "bench/results/g16-gpu/W7/gru_cuda_notf32_b32/run_4.json",
+        "bench/results/g16-gpu/W7/gru_cuda_notf32_b32/run_5.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b32/run_0.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b32/run_1.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b32/run_2.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b32/run_3.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b32/run_4.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b32/run_5.json"
+      ]
+    },
+    "gru_cuda_notf32_b256": {
+      "acuan_cpu": "g16-cpu/W7/gru_cpu_b256",
+      "setara": true,
+      "metrik": {
+        "ttb_mae_semua_menit": {
+          "gpu": 21.218795776367188,
+          "cpu": 21.21879005432129,
+          "selisih_rel": 2.696688116423577e-07,
+          "setara": true
+        },
+        "ttb_mae_le30_menit": {
+          "gpu": 4.197823524475098,
+          "cpu": 4.19782018661499,
+          "selisih_rel": 7.951412778624603e-07,
+          "setara": true
+        },
+        "forecast_t30_mae_c": {
+          "gpu": 0.21095983684062958,
+          "cpu": 0.2109597772359848,
+          "selisih_rel": 2.825403285703862e-07,
+          "setara": true
+        },
+        "akurasi_mode": {
+          "gpu": 0.7857316924576581,
+          "cpu": 0.7857316924576581,
+          "selisih_abs": 0.0,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W7/gru_cuda_notf32_b256/run_0.json",
+        "bench/results/g16-gpu/W7/gru_cuda_notf32_b256/run_1.json",
+        "bench/results/g16-gpu/W7/gru_cuda_notf32_b256/run_2.json",
+        "bench/results/g16-gpu/W7/gru_cuda_notf32_b256/run_3.json",
+        "bench/results/g16-gpu/W7/gru_cuda_notf32_b256/run_4.json",
+        "bench/results/g16-gpu/W7/gru_cuda_notf32_b256/run_5.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b256/run_0.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b256/run_1.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b256/run_2.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b256/run_3.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b256/run_4.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b256/run_5.json"
+      ]
+    },
+    "gru_cuda_notf32_b1024": {
+      "acuan_cpu": "g16-cpu/W7/gru_cpu_b1024",
+      "setara": true,
+      "metrik": {
+        "ttb_mae_semua_menit": {
+          "gpu": 21.218795776367188,
+          "cpu": 21.21879005432129,
+          "selisih_rel": 2.696688116423577e-07,
+          "setara": true
+        },
+        "ttb_mae_le30_menit": {
+          "gpu": 4.197823524475098,
+          "cpu": 4.19782018661499,
+          "selisih_rel": 7.951412778624603e-07,
+          "setara": true
+        },
+        "forecast_t30_mae_c": {
+          "gpu": 0.21095983684062958,
+          "cpu": 0.2109597772359848,
+          "selisih_rel": 2.825403285703862e-07,
+          "setara": true
+        },
+        "akurasi_mode": {
+          "gpu": 0.7857316924576581,
+          "cpu": 0.7857316924576581,
+          "selisih_abs": 0.0,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W7/gru_cuda_notf32_b1024/run_0.json",
+        "bench/results/g16-gpu/W7/gru_cuda_notf32_b1024/run_1.json",
+        "bench/results/g16-gpu/W7/gru_cuda_notf32_b1024/run_2.json",
+        "bench/results/g16-gpu/W7/gru_cuda_notf32_b1024/run_3.json",
+        "bench/results/g16-gpu/W7/gru_cuda_notf32_b1024/run_4.json",
+        "bench/results/g16-gpu/W7/gru_cuda_notf32_b1024/run_5.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b1024/run_0.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b1024/run_1.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b1024/run_2.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b1024/run_3.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b1024/run_4.json",
+        "bench/results/g16-cpu/W7/gru_cpu_b1024/run_5.json"
+      ]
+    },
+    "xgb_ttb_cuda_b1": {
+      "acuan_cpu": "g16-cpu/W7/xgb_ttb_cpu_b1",
+      "setara": true,
+      "metrik": {
+        "ttb_mae_semua_menit": {
+          "gpu": 23.647384643554688,
+          "cpu": 23.6667423248291,
+          "selisih_rel": 0.0008179275799232265,
+          "setara": true
+        },
+        "ttb_mae_le30_menit": {
+          "gpu": 5.0623459815979,
+          "cpu": 5.048277378082275,
+          "selisih_rel": 0.002786812701042457,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W7/xgb_ttb_cuda_b1/run_0.json",
+        "bench/results/g16-gpu/W7/xgb_ttb_cuda_b1/run_1.json",
+        "bench/results/g16-gpu/W7/xgb_ttb_cuda_b1/run_2.json",
+        "bench/results/g16-gpu/W7/xgb_ttb_cuda_b1/run_3.json",
+        "bench/results/g16-gpu/W7/xgb_ttb_cuda_b1/run_4.json",
+        "bench/results/g16-gpu/W7/xgb_ttb_cuda_b1/run_5.json",
+        "bench/results/g16-cpu/W7/xgb_ttb_cpu_b1/run_0.json",
+        "bench/results/g16-cpu/W7/xgb_ttb_cpu_b1/run_1.json",
+        "bench/results/g16-cpu/W7/xgb_ttb_cpu_b1/run_2.json",
+        "bench/results/g16-cpu/W7/xgb_ttb_cpu_b1/run_3.json",
+        "bench/results/g16-cpu/W7/xgb_ttb_cpu_b1/run_4.json",
+        "bench/results/g16-cpu/W7/xgb_ttb_cpu_b1/run_5.json"
+      ]
+    },
+    "xgb_ttb_cuda_b32": {
+      "acuan_cpu": "g16-cpu/W7/xgb_ttb_cpu_b32",
+      "setara": true,
+      "metrik": {
+        "ttb_mae_semua_menit": {
+          "gpu": 23.647384643554688,
+          "cpu": 23.6667423248291,
+          "selisih_rel": 0.0008179275799232265,
+          "setara": true
+        },
+        "ttb_mae_le30_menit": {
+          "gpu": 5.0623459815979,
+          "cpu": 5.048277378082275,
+          "selisih_rel": 0.002786812701042457,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W7/xgb_ttb_cuda_b32/run_0.json",
+        "bench/results/g16-gpu/W7/xgb_ttb_cuda_b32/run_1.json",
+        "bench/results/g16-gpu/W7/xgb_ttb_cuda_b32/run_2.json",
+        "bench/results/g16-gpu/W7/xgb_ttb_cuda_b32/run_3.json",
+        "bench/results/g16-gpu/W7/xgb_ttb_cuda_b32/run_4.json",
+        "bench/results/g16-gpu/W7/xgb_ttb_cuda_b32/run_5.json",
+        "bench/results/g16-cpu/W7/xgb_ttb_cpu_b32/run_0.json",
+        "bench/results/g16-cpu/W7/xgb_ttb_cpu_b32/run_1.json",
+        "bench/results/g16-cpu/W7/xgb_ttb_cpu_b32/run_2.json",
+        "bench/results/g16-cpu/W7/xgb_ttb_cpu_b32/run_3.json",
+        "bench/results/g16-cpu/W7/xgb_ttb_cpu_b32/run_4.json",
+        "bench/results/g16-cpu/W7/xgb_ttb_cpu_b32/run_5.json"
+      ]
+    },
+    "xgb_ttb_cuda_b256": {
+      "acuan_cpu": "g16-cpu/W7/xgb_ttb_cpu_b256",
+      "setara": true,
+      "metrik": {
+        "ttb_mae_semua_menit": {
+          "gpu": 23.647384643554688,
+          "cpu": 23.6667423248291,
+          "selisih_rel": 0.0008179275799232265,
+          "setara": true
+        },
+        "ttb_mae_le30_menit": {
+          "gpu": 5.0623459815979,
+          "cpu": 5.048277378082275,
+          "selisih_rel": 0.002786812701042457,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W7/xgb_ttb_cuda_b256/run_0.json",
+        "bench/results/g16-gpu/W7/xgb_ttb_cuda_b256/run_1.json",
+        "bench/results/g16-gpu/W7/xgb_ttb_cuda_b256/run_2.json",
+        "bench/results/g16-gpu/W7/xgb_ttb_cuda_b256/run_3.json",
+        "bench/results/g16-gpu/W7/xgb_ttb_cuda_b256/run_4.json",
+        "bench/results/g16-gpu/W7/xgb_ttb_cuda_b256/run_5.json",
+        "bench/results/g16-cpu/W7/xgb_ttb_cpu_b256/run_0.json",
+        "bench/results/g16-cpu/W7/xgb_ttb_cpu_b256/run_1.json",
+        "bench/results/g16-cpu/W7/xgb_ttb_cpu_b256/run_2.json",
+        "bench/results/g16-cpu/W7/xgb_ttb_cpu_b256/run_3.json",
+        "bench/results/g16-cpu/W7/xgb_ttb_cpu_b256/run_4.json",
+        "bench/results/g16-cpu/W7/xgb_ttb_cpu_b256/run_5.json"
+      ]
+    },
+    "xgb_ttb_cuda_b1024": {
+      "acuan_cpu": "g16-cpu/W7/xgb_ttb_cpu_b1024",
+      "setara": true,
+      "metrik": {
+        "ttb_mae_semua_menit": {
+          "gpu": 23.647384643554688,
+          "cpu": 23.6667423248291,
+          "selisih_rel": 0.0008179275799232265,
+          "setara": true
+        },
+        "ttb_mae_le30_menit": {
+          "gpu": 5.0623459815979,
+          "cpu": 5.048277378082275,
+          "selisih_rel": 0.002786812701042457,
+          "setara": true
+        }
+      },
+      "sumber": [
+        "bench/results/g16-gpu/W7/xgb_ttb_cuda_b1024/run_0.json",
+        "bench/results/g16-gpu/W7/xgb_ttb_cuda_b1024/run_1.json",
+        "bench/results/g16-gpu/W7/xgb_ttb_cuda_b1024/run_2.json",
+        "bench/results/g16-gpu/W7/xgb_ttb_cuda_b1024/run_3.json",
+        "bench/results/g16-gpu/W7/xgb_ttb_cuda_b1024/run_4.json",
+        "bench/results/g16-gpu/W7/xgb_ttb_cuda_b1024/run_5.json",
+        "bench/results/g16-cpu/W7/xgb_ttb_cpu_b1024/run_0.json",
+        "bench/results/g16-cpu/W7/xgb_ttb_cpu_b1024/run_1.json",
+        "bench/results/g16-cpu/W7/xgb_ttb_cpu_b1024/run_2.json",
+        "bench/results/g16-cpu/W7/xgb_ttb_cpu_b1024/run_3.json",
+        "bench/results/g16-cpu/W7/xgb_ttb_cpu_b1024/run_4.json",
+        "bench/results/g16-cpu/W7/xgb_ttb_cpu_b1024/run_5.json"
+      ]
+    }
+  },
+  "_ringkas": {
+    "n_config": 26,
+    "n_setara": 26,
+    "tidak_setara": []
+  }
+}

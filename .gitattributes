@@ -1,0 +1,2 @@
+# Skrip shell dijalankan di WSL/Linux: CRLF membuat bash gagal
+*.sh text eol=lf

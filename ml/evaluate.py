@@ -26,6 +26,12 @@ def compute_metrics(model, npz_path, mean, std):
     with torch.no_grad():
         forecast, logits, ttb_log = model(X)
 
+    return metrics_from_outputs(forecast, logits, ttb_log, d, mean, std)
+
+
+def metrics_from_outputs(forecast, logits, ttb_log, d, mean, std):
+    """Sama dengan compute_metrics, tetapi menerima keluaran model (tensor CPU) yang sudah
+    dihitung -- dipakai harness benchmark yang menjalankan inferensi di GPU per batch."""
     forecast_c = forecast.numpy() * std[TEMP_IDX] + mean[TEMP_IDX]
     pred = logits.argmax(dim=1).numpy()
     prob_anomali = 1 - torch.softmax(logits, dim=1).numpy()[:, 0]

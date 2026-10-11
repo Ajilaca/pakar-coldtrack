@@ -44,7 +44,13 @@ Thumbs.db
 !ml/reports/coldtrack.onnx
 !backend/models/coldtrack.onnx
 !backend/models/coldtrack_ttb.onnx
+# Provider diagnosis v3 (default) + TTB kontrak jendela
+!backend/models/coldtrack_v3.onnx
+!backend/models/coldtrack_ttb_window.onnx
 !ml/reports/coldtrack_ttb.onnx
+!ml/reports/coldtrack_b3.onnx
+# Kandidat B3 (menunggu G3), tidak menimpa model produksi
+!backend/models/candidates/*.onnx
 
 # --- Data hasil generate (bisa dibuat ulang lewat skrip) ---
 data/raw/
@@ -52,6 +58,16 @@ data/processed/windows/
 # dataset simulator baru (~80 MB/berkas), dibuat lewat coldtrack_sim.generate_dataset (ml/CHECKPOINT2_CONTEXT.md)
 ml/dataset_v*.parquet
 
+# --- Benchmark (bench/) ---
+# JSON hasil per run DIKOMIT (sumber angka laporan); telemetri CSV besar dan run uji tidak.
+bench/results/telemetry/
+bench/results/_quick/
+# Data Kaggle Intel Berkeley (~144 MB) -- lokal saja
+data/berkeley/
+
 # --- Editors ---
 .vscode/
 .idea/
+
+# Artefak model sensor-health (dibangkitkan ulang lewat python -m ml.sensor_health.train)
+ml/sensor_health/artifacts/

@@ -1,0 +1,89 @@
+{
+  "workload": "W7",
+  "config_id": "xgb_ttb_cpu_b32",
+  "konfigurasi": {
+    "model": "ml/reports/coldtrack_ttb.onnx",
+    "ep": "cpu",
+    "tf32": null,
+    "batch": 32
+  },
+  "tag": "g16-cpu",
+  "device": "cpu",
+  "run": 4,
+  "pemanasan": false,
+  "seed": 1003,
+  "waktu_utc": "2026-10-10T18:15:18+00:00",
+  "git": {
+    "commit": "009ed574ba582fcabcd8ad0c93d283c541543bd6",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "env": "bench/results/g16-cpu/env/env_20261010-201459.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Turbo",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": null
+  },
+  "protokol": {
+    "repeats": 5,
+    "warmup": 1,
+    "cooldown_s": 15
+  },
+  "python": "/home/tsabita/.venvs/coldtrack/bin/python",
+  "waktu": {
+    "session_init_s": 0.054062376999354456,
+    "latensi_p50_ms": 0.163072,
+    "dinding_total_s": 3.5679931990016485
+  },
+  "inferensi": {
+    "onnxruntime": "1.31.0",
+    "ep_diminta": "cpu",
+    "tf32": null,
+    "providers_aktif": [
+      "CPUExecutionProvider"
+    ],
+    "cuda_ep_aktif": false,
+    "batch": 32,
+    "n_iter": 16781,
+    "session_init_s": 0.054062376999354456,
+    "latensi_ms": {
+      "p50": 0.163072,
+      "p95": 0.241956,
+      "p99": 0.2713722000000001,
+      "mean": 0.17812383117811814,
+      "min": 0.127301
+    },
+    "throughput_jendela_per_s": 196232.33908948195,
+    "kualitas_val": {
+      "ttb_mae_semua_menit": 23.6667423248291,
+      "ttb_mae_le30_menit": 5.048277378082275
+    }
+  },
+  "telemetri": {
+    "tersedia": true,
+    "n_sampel": 4,
+    "energi_wh": 0.014283333333333334,
+    "daya_w": {
+      "median": 12.975,
+      "maks": 13.06
+    },
+    "suhu_c": {
+      "median": 50.0,
+      "maks": 50.0
+    },
+    "clock_sm_mhz": {
+      "median": 1425.0,
+      "min": 1425.0,
+      "p5": 1425.0
+    },
+    "utilisasi_pct_median": 0.0,
+    "vram_terpakai_mb_maks": 0.0,
+    "throttle_reasons_hex": [
+      "0x0000000000000000"
+    ],
+    "csv": "bench/results/telemetry/g16-cpu/W7_xgb_ttb_cpu_b32_run4_20261011-011515.csv"
+  }
+}

@@ -24,7 +24,8 @@ def generate_recommended_actions(
 ) -> list[RecommendedAction]:
     """Generate 3 prioritized actionable recommendations."""
     if status == "KRITIS":
-        if "kompresor" in failure_label or "reefer" in failure_label:
+        # degradasi_bertahap (v3) = degradasi kompresor (A2) + kebocoran refrigeran (A4): masalah pendingin
+        if "kompresor" in failure_label or "reefer" in failure_label or "degradasi" in failure_label:
             return [
                 RecommendedAction(
                     priority=1,

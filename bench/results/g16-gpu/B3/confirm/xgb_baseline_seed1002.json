@@ -1,0 +1,20 @@
+{
+  "varian": "baseline",
+  "seed": 1002,
+  "params": {
+    "n_estimators": 300,
+    "max_depth": 6,
+    "learning_rate": 0.1,
+    "class_weight_power": 0.0
+  },
+  "skor": 0.7215432025387314,
+  "metrik_val": {
+    "macro_f1": 0.68645141007144,
+    "akurasi": 0.858048007798221,
+    "anomali_pr_auc": 0.7566349950060229
+  },
+  "latih": {
+    "detik_latih": 6.352799351996509
+  },
+  "waktu_utc": "2026-10-10T21:39:36+00:00"
+}

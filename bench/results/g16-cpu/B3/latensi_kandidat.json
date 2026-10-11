@@ -1,0 +1,121 @@
+{
+  "waktu_utc": "2026-10-10T21:45:22+00:00",
+  "git": {
+    "commit": "5b64886f2a28bcc72a21b8d8d3cb0f7a35207265",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "ep": "cpu",
+  "model": {
+    "proposal": {
+      "path": "ml/reports/coldtrack.onnx",
+      "b1": {
+        "onnxruntime": "1.31.0",
+        "ep_diminta": "cpu",
+        "tf32": null,
+        "providers_aktif": [
+          "CPUExecutionProvider"
+        ],
+        "cuda_ep_aktif": false,
+        "batch": 1,
+        "n_iter": 16711,
+        "session_init_s": 0.02110610700037796,
+        "latensi_ms": {
+          "p50": 0.169729,
+          "p95": 0.2530005,
+          "p99": 0.2972881000000002,
+          "mean": 0.17890275082281132,
+          "min": 0.12077
+        },
+        "throughput_jendela_per_s": 5891.745075974053,
+        "kualitas_val": {
+          "ttb_mae_semua_menit": 21.21879005432129,
+          "ttb_mae_le30_menit": 4.19782018661499,
+          "forecast_t30_mae_c": 0.2109597772359848,
+          "akurasi_mode": 0.7857316924576581
+        }
+      },
+      "b1024": {
+        "onnxruntime": "1.31.0",
+        "ep_diminta": "cpu",
+        "tf32": null,
+        "providers_aktif": [
+          "CPUExecutionProvider"
+        ],
+        "cuda_ep_aktif": false,
+        "batch": 1024,
+        "n_iter": 139,
+        "session_init_s": 0.028198398002132308,
+        "latensi_ms": {
+          "p50": 150.744112,
+          "p95": 169.7399124,
+          "p99": 171.14360718,
+          "mean": 144.544755647482,
+          "min": 110.42633
+        },
+        "throughput_jendela_per_s": 6792.968470967542,
+        "kualitas_val": {
+          "ttb_mae_semua_menit": 21.21879005432129,
+          "ttb_mae_le30_menit": 4.19782018661499,
+          "forecast_t30_mae_c": 0.2109597772359848,
+          "akurasi_mode": 0.7857316924576581
+        }
+      }
+    },
+    "kandidat_b3": {
+      "path": "backend/models/candidates/coldtrack_gru_b3.onnx",
+      "b1": {
+        "onnxruntime": "1.31.0",
+        "ep_diminta": "cpu",
+        "tf32": null,
+        "providers_aktif": [
+          "CPUExecutionProvider"
+        ],
+        "cuda_ep_aktif": false,
+        "batch": 1,
+        "n_iter": 2105,
+        "session_init_s": 0.04508611599885626,
+        "latensi_ms": {
+          "p50": 1.473626,
+          "p95": 1.8775753999999998,
+          "p99": 2.261834480000001,
+          "mean": 1.4224042679334918,
+          "min": 0.623547
+        },
+        "throughput_jendela_per_s": 678.59823320164,
+        "kualitas_val": {
+          "ttb_mae_semua_menit": 21.098745346069336,
+          "ttb_mae_le30_menit": 4.426603317260742,
+          "forecast_t30_mae_c": 0.2074493020772934,
+          "akurasi_mode": 0.8605458754721579
+        }
+      },
+      "b1024": {
+        "onnxruntime": "1.31.0",
+        "ep_diminta": "cpu",
+        "tf32": null,
+        "providers_aktif": [
+          "CPUExecutionProvider"
+        ],
+        "cuda_ep_aktif": false,
+        "batch": 1024,
+        "n_iter": 45,
+        "session_init_s": 0.02993879499990726,
+        "latensi_ms": {
+          "p50": 464.659975,
+          "p95": 545.7818014,
+          "p99": 550.6700508399999,
+          "mean": 449.16866113333333,
+          "min": 338.245787
+        },
+        "throughput_jendela_per_s": 2203.7620089830207,
+        "kualitas_val": {
+          "ttb_mae_semua_menit": 21.098745346069336,
+          "ttb_mae_le30_menit": 4.426603317260742,
+          "forecast_t30_mae_c": 0.2074493020772934,
+          "akurasi_mode": 0.8605458754721579
+        }
+      }
+    }
+  }
+}

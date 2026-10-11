@@ -1,0 +1,95 @@
+{
+  "workload": "W1",
+  "config_id": "b256_fp32",
+  "konfigurasi": {
+    "batch_size": 256,
+    "n_epochs": 30,
+    "lr": [
+      0.0005,
+      0.002
+    ],
+    "loss_weights": {
+      "forecast": 30.0,
+      "failure": 1.0,
+      "ttb": 8.0
+    }
+  },
+  "tag": "d0-old",
+  "device": "cpu",
+  "run": 0,
+  "pemanasan": true,
+  "seed": 1000,
+  "waktu_utc": "2026-10-11T02:07:51+00:00",
+  "git": {
+    "commit": "fcd0fb03bd2cab3f2baea50800685653bd183cd5",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "env": "bench/results/d0-old/env/env_20261011-090314.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Lenovo Extreme Performance (Fn+Q) + Windows \"Best performance\"",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": "Run pertama (mode Lenovo otomatis/Intelligent Cooling) dibatalkan: suhu CPU mencapai ~100 C lalu di-clamp ke ~22% performa (~400 MHz) selama 4-8 menit, berulang tiap ~10 menit. Hasilnya tidak dipakai. Claude Code desktop tetap berjalan sebagai pengendali run (beban CPU ~1-2%), ditambah perekam suhu/performa Windows tiap ~12 detik."
+  },
+  "protokol": {
+    "repeats": 5,
+    "warmup": 1,
+    "cooldown_s": 60
+  },
+  "waktu": {
+    "muat_s": 15.665589554999997,
+    "praproses_s": 35.36495169700001,
+    "transfer_ke_device_s": null,
+    "latih_loop_s": 72.76225968099999,
+    "eval_s": 2.5305016050000404,
+    "detik_latih_per_epoch_median": 69.974783627,
+    "sampel_per_detik_median": 1110.4428763109179,
+    "dinding_total_s": 150.223571494
+  },
+  "time_to_target": {
+    "target_val_loss": 2.534773635864258,
+    "sumber_target": [
+      "bench/results/g16-cpu/B1/gru_seed1000.json",
+      "bench/results/g16-cpu/B1/gru_seed1001.json",
+      "bench/results/g16-cpu/B1/gru_seed1002.json",
+      "bench/results/g16-cpu/B1/gru_seed1003.json",
+      "bench/results/g16-cpu/B1/gru_seed1004.json"
+    ],
+    "tercapai": false,
+    "epoch": null,
+    "detik": null
+  },
+  "ringkas_latih": {
+    "detik_total_loop": 72.76225968099999,
+    "transfer_ke_device_s": null,
+    "epoch_terbaik": 1,
+    "val_loss_terbaik": 5.088327407836914,
+    "vram_puncak_mb": null
+  },
+  "metrik_val": {
+    "forecast_t15_mae_c": 0.1832662671804428,
+    "forecast_t30_mae_c": 0.23669491708278656,
+    "forecast_t60_mae_c": 0.2860528826713562,
+    "macro_f1": 0.4700652091818152,
+    "akurasi": 0.8115023760204704,
+    "ttb_mae_menit": 29.905080795288086,
+    "anomali_pr_auc": 0.5829113214838652
+  },
+  "riwayat": [
+    {
+      "epoch": 1,
+      "train_loss": 11.31596565246582,
+      "val_loss": 5.088327407836914,
+      "detik_latih": 69.974783627,
+      "detik_val": 2.7862275299999624,
+      "sampel_per_detik": 1110.4428763109179,
+      "detik_kumulatif": 72.76175289600002
+    }
+  ],
+  "telemetri": {
+    "tersedia": false
+  }
+}

@@ -1,0 +1,32 @@
+# Profil device ASUS ROG Strix G16 (RTX 5070 Laptop).
+#
+# Spesifikasi perangkat keras (seri CPU, VRAM, driver, CUDA) SENGAJA tidak ditulis di sini:
+# bench/env_capture.py mengambilnya dari mesin (nvidia-smi, /proc/cpuinfo) ke
+# bench/results/<tag>/env.json. Berkas ini hanya memuat hal yang tidak bisa dibaca program.
+
+device: g16
+deskripsi: ASUS ROG Strix G16, RTX 5070 Laptop GPU
+
+# Info dari user (2026-10-10), bukan hasil ukur
+dari_user:
+  gpu: NVIDIA RTX 5070
+  ram: 16 GB
+
+# Satu mesin, dua jalur. g16-cpu = kontrol internal (CUDA_VISIBLE_DEVICES=""),
+# memisahkan kontribusi GPU dari CPU/RAM laptop baru.
+tags:
+  g16-gpu: {device: cuda}
+  g16-cpu: {device: cpu}
+
+# Keputusan user 2026-10-10: seluruh benchmark G16 di WSL2 Ubuntu.
+lingkungan: WSL2 Ubuntu
+
+# Isi/periksa SEBELUM setiap sesi benchmark; disalin apa adanya ke setiap JSON hasil.
+# Kondisi harus sama untuk semua run yang dibandingkan.
+kondisi:
+  charger: true            # true / false (juga dicek otomatis di env.json)
+  mode_daya: Turbo         # Armoury Crate: Silent / Performance / Turbo / Manual
+  pendingin: meja keras tanpa cooling pad
+  aplikasi_berat_ditutup: true
+  wslconfig_memory: 12GB   # juga dicatat otomatis dari .wslconfig
+  catatan: null

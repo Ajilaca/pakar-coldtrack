@@ -20,9 +20,14 @@ export interface AnalyzeRequest {
   readings: TelemetryReading[];
 }
 
+// label: v3 (default) can return normal_sehat, pintu_terbuka_lama, reefer_mati_total,
+// kejutan_ambien_ekstrem, prapendinginan_buruk, degradasi_bertahap, masalah_sensor, plus the
+// rule-derived pintu_terbuka / suhu_muatan_mendekati_batas. Unknown labels must still render
+// (lib/labels.ts falls back to a readable text).
 export interface FailureMode {
   label: string;
   confidence: number;
+  probabilities?: Record<string, number> | null; // v3 only
 }
 
 export interface Forecast {
@@ -54,6 +59,9 @@ export interface AnalyzeResponse {
   actions: ActionStep[];
   model_version: string;
   inference_ms: number;
+  diagnosis_provider?: string; // v3 | checkpoint2 | engine-only
+  data_lengkap?: boolean; // false: readings missing in the last 60 -> diagnosis less reliable
+  catatan_data?: string | null;
 }
 
 export interface CargoProfile {

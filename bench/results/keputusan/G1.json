@@ -1,0 +1,35 @@
+{
+  "gerbang": "G1",
+  "status": "lulus dengan catatan",
+  "tanggal": "2026-10-10",
+  "diputuskan_oleh": "user (Tsabita Khoirunnisa), lewat chat Claude Code",
+  "hasil_aturan_ketat": {
+    "aturan": "acuan val berada dalam mean +/- 2 SD dari lima seed",
+    "sumber": ["bench/results/g16-cpu/B1/G1.json", "bench/results/g16-gpu/B1/G1.json"],
+    "lulus_ketat": false
+  },
+  "alasan": [
+    {
+      "model": "gru",
+      "ringkas": "GRU tereproduksi: 6 dari 7 metrik lulus per tag, meleset tipis pada metrik yang berbeda di tiap device.",
+      "detail": "Acuan (ml/reports/metrics.json: metrik_val_pembanding) adalah satu run tunggal dari ml/finetune.py yang tidak menyetel seed, sehingga acuan itu sendiri satu sampel acak. Dengan 14 perbandingan (7 metrik x 2 device), 1-2 metrik di luar +/- 2 SD adalah wajar secara kebetulan. Tidak ada metrik yang gagal di kedua device.",
+      "sumber": ["bench/results/g16-cpu/B1/G1.json", "bench/results/g16-gpu/B1/G1.json"]
+    },
+    {
+      "model": "xgb_ttb, xgb_clf",
+      "ringkas": "Aturan +/- 2 SD tidak bermakna untuk XGBoost: deterministik (SD 0), dan acuannya basi.",
+      "detail": "XGB_PARAMS tanpa subsample/colsample sehingga seed tidak berpengaruh dan kelima seed identik; aturan +/- 2 SD berubah menjadi 'harus identik'. Acuan ml/reports/baseline_metrics.json terakhir diubah 2026-08-06, sebelum commit 55a30fe (2026-08-13) yang mengubah cara jendela menghitung reefer_duration_min. Builder lama + data v4 mendekati acuan klasifikasi; sisa selisih TTB tidak terjelaskan oleh versi XGBoost 2.1.4-3.2.0 dan versi asli tidak tercatat.",
+      "sumber": ["bench/results/g16-cpu/B1/G1_investigasi.json"]
+    }
+  ],
+  "baseline_baru": {
+    "keputusan": "Nilai B1 dari pipeline sekarang menjadi baseline pembanding untuk B3 dan G3 (split val).",
+    "sumber": {
+      "g16-cpu": "bench/results/g16-cpu/B1/",
+      "g16-gpu": "bench/results/g16-gpu/B1/"
+    }
+  },
+  "catatan_terbuka": [
+    "Selisih XGBoost CPU vs GPU pada seed yang sama (classifier) diperiksa di gerbang G2."
+  ]
+}

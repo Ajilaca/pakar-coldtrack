@@ -1,0 +1,33 @@
+{
+  "trial": 8,
+  "model": "xgb",
+  "tag": "g16-gpu",
+  "seed": 1000,
+  "split": "val",
+  "waktu_utc": "2026-10-10T20:56:36+00:00",
+  "git": {
+    "commit": "5b64886f2a28bcc72a21b8d8d3cb0f7a35207265",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "env": "bench/results/g16-gpu/B3/sweep_xgb/env_20261011-035508.json",
+  "params": {
+    "n_estimators": 200,
+    "max_depth": 5,
+    "learning_rate": 0.18475362019674155,
+    "subsample": 0.6388405103172244,
+    "colsample_bytree": 0.918972453749402,
+    "min_child_weight": 1.2476661940792175,
+    "reg_lambda": 8.972612866432513,
+    "class_weight_power": 0.4686512016477016
+  },
+  "skor": 0.7192512592632742,
+  "metrik_val": {
+    "macro_f1": 0.6851442794009159,
+    "akurasi": 0.8494577799439503,
+    "anomali_pr_auc": 0.7533582391256324
+  },
+  "latih": {
+    "detik_latih": 3.9663865379989147
+  }
+}

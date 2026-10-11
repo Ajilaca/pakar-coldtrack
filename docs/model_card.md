@@ -1,6 +1,90 @@
 # Model Card — ColdTrack AI
 
-**Versi:** v2 (hibrida) · **Tanggal:** 7 Agustus 2026 · **Penanggung jawab:** R2 (AI Model Engineer)
+**Versi aktif:** v3 (11 Oktober 2026, lihat bagian berikut) · **Versi sebelumnya:** v2 (hibrida),
+7 Agustus 2026 · **Penanggung jawab:** R2 (AI Model Engineer)
+
+## Pembaruan v3 — GRU hasil latih ulang B3 (11 Oktober 2026)
+
+Model klasifikasi + forecast diganti dengan `ml/reports/coldtrack_b3.onnx` (kontrak:
+`ml/reports/labels_b3.json`), setelah lulus gerbang G3 (`bench/results/keputusan/G3.json`).
+`coldtrack_ttb.onnx` (XGBoost TTB) **tidak berubah**. Kontrak masukan/keluaran identik dengan
+`coldtrack.onnx`; berkas v2 tetap disimpan untuk keterlacakan dan benchmark.
+
+| | v2 `coldtrack.onnx` | v3 `coldtrack_b3.onnx` |
+|---|---|---|
+| Arsitektur | GRU 2 lapis, hidden 64 + statistik ringkasan | GRU 3 lapis, hidden 128 + statistik ringkasan |
+| Pelatihan | bobot loss 30/1/8, class weight sqrt | hasil sweep Optuna 60 trial: bobot loss forecast/TTB lebih rendah, label smoothing, class weight lebih lunak (`labels_b3.json: konfigurasi`) |
+| Macro F1 (test) | 0,581 | **0,668** |
+| PR-AUC anomali (test) | 0,711 | **0,786** |
+| Forecast MAE t+30 (test) | 0,198 °C | **0,192 °C** |
+| Latensi CPU batch 1 (p50, G16) | 0,21 ms | 1,38 ms |
+
+Sumber angka: `bench/results/test/{baseline_proposal,kandidat_b3}.json` (split test, dipakai sekali
+per model, akses tercatat di `bench/results/test_access_log.json`) dan
+`bench/results/g16-cpu/B3/latensi_kandidat.json`. Angka val 5 seed dan seluruh proses seleksi ada di
+`bench/report/REPORT.md` bagian B3.
+
+**Yang belum berubah dan tetap diakui:**
+- Target Macro F1 > 0,80 dan PR-AUC > 0,85 **belum tercapai**.
+- Penyebab utama yang terukur: label `failure_mode` bertahan dari onset sampai akhir trip, padahal
+  A1 (pintu) dan A7 (kejut ambien) adalah peristiwa sementara. Sebagian besar jendela A1/A7 jauh
+  setelah onset tidak memuat jejak peristiwanya sama sekali (`bench/results/g16-gpu/B3/label_check.json`),
+  sehingga tidak dapat dibedakan dari kondisi sehat oleh model berbasis jendela apa pun. Definisi
+  metrik dan target tidak diubah; peninjauan definisi label direkomendasikan ke tim data.
+- Head `time_to_breach_min` milik GRU v3 lebih buruk dari v2 untuk TTB ≤ 30 menit; TTB produksi
+  tetap dari XGBoost.
+- **Target PRD belum tercapai, dinyatakan apa adanya:** Macro F1 test 0,668 (target > 0,80) dan
+  PR-AUC test 0,786 (target > 0,85). Penyebab terukur: label bertahan sampai akhir trip, sehingga
+  **58 % jendela A1 dan 51 % jendela A7 (split val) tidak memuat jejak kejadiannya** (100 % setelah
+  120 menit; `bench/results/g16-gpu/B3/label_check.json`).
+
+### v3 di backend (diagnosis provider bawaan sejak 11 Oktober 2026)
+
+Backend memakai v3 sebagai sumber `forecast` + `failure_mode` (`backend/config.yaml:
+model.diagnosis_provider: v3`); status AMAN/WASPADA/KRITIS dan TTB yang ditampilkan tetap dari mesin
+fisika. **Kembali ke checkpoint-2:** ubah nilai itu menjadi `checkpoint2` lalu restart backend (tanpa
+perubahan kode; kedua provider diuji di CI). Rincian: `docs/architecture.md` §2.4.
+
+**Perbandingan dengan checkpoint-2 (model backend sebelumnya)** pada 16.500 jendela val v4 yang sama,
+seleksi jendela suite `eval/` (`bench/results/g16-cpu/B7/banding_model_val.json`): v3 lebih baik di
+forecast (MAE t+30 0,208 vs 1,398 °C), deteksi pintu/kejut ambien/sensor (AUROC 0,837/0,894/0,975 vs
+0,613/0,483/0,341) dan jendela sehat yang dilabel gangguan (3,6 % vs 23,8 %). **Keterbatasan
+perbandingan:**
+1. Diuji di data v4, yang **asing bagi checkpoint-2** (dilatih di simulator garis checkpoint-2).
+2. v3 **dituning di split val yang sama** (sweep B3), sehingga angka v3 di sini sedikit optimistis.
+3. Definisi label pintu berbeda: checkpoint-2 dilatih untuk pintu terbuka **>= 20 menit**.
+4. Uji sebaliknya di data simulator checkpoint-2 (`ml/dataset_v3.parquet`) **belum dapat dijalankan**:
+   berkas itu tidak ada di repo.
+5. Split test tidak dipakai lagi untuk perbandingan ini (jatah satu kali v3 sudah dipakai di G3).
+
+**Kebijakan label sensor (keputusan 2026-10-11):** kelas `masalah_sensor` dari v3 tidak dipakai
+sebagai label; kerusakan sensor hanya datang dari lapisan aturan (sama dengan checkpoint-2). Alasan:
+masukan yang terlalu mulus, misalnya jendela sintetis dari form isian manual dasbor, menyerupai sensor
+macet bagi v3 (78 % `masalah_sensor` pada isian bawaan) padahal sensornya sehat. Bila v3 memilih
+`masalah_sensor` dan aturan tidak menandai sensor, dipakai aturan checkpoint-2 persis: kelas gangguan
+lain hanya dipakai bila peluangnya >= 0,5, selain itu `normal_sehat` dengan keyakinan
+1 - maks(peluang kelas gangguan lain); status bukan AMAN tetap diberi label aturan. `probabilities`
+hanya dikirim bila label = kelas teratas model, supaya tampilan tidak bertentangan dengan dirinya.
+
+**Keterbatasan pada skenario demo:** skenario 3 (degradasi kompresor, A2) tidak dikenali v3
+(`normal_sehat` 0,58, `degradasi_bertahap` 0,12; v2 mengenalinya dengan 0,35). Status KRITIS tetap
+benar dan labelnya menjadi `suhu_muatan_mendekati_batas` dari aturan. Jendela demo itu dulu dipilih
+karena dikenali benar oleh v2; skenario dibiarkan apa adanya (tidak diganti agar v3 tampak benar).
+Kelas `degradasi_bertahap` tetap salah satu kelas terlemah v3.
+
+**Latensi:** v3 lebih lambat dari v2: p50 0,21 → 1,38 ms per panggilan (CPU, batch 1, G16;
+`bench/results/g16-cpu/B3/latensi_kandidat.json`), masih jauh di bawah anggaran PRD 300 ms.
+
+**Data tidak lengkap:** v3 (dan model jendela lain) hanya dilatih pada jendela 60 menit tanpa bacaan
+hilang. Di val v4, 32 % jendela memuat bacaan hilang; pada jendela itu keluaran v3 lewat jalur backend
+berbeda dari jalur latih (selisih probabilitas median 0,021, maks 0,56), sedangkan pada jendela lengkap
+keduanya identik. Mitigasi: bila ada jeda > 90 detik di 60 bacaan terakhir, respons memuat
+`data_lengkap: false` + `catatan_data` dan keyakinan diagnosis dibatasi 0,5 (pilihan tampilan
+konservatif, bukan nilai terkalibrasi). **Metrik di atas hanya berlaku untuk jendela lengkap.**
+
+Bagian di bawah ini mendeskripsikan **v2** dan dipertahankan sebagai riwayat.
+
+---
 
 Dokumen ini menjelaskan model yang dipakai ColdTrack AI, cara pengujiannya, dan — sama
 pentingnya — **di mana model ini tidak bisa diandalkan**. Seluruh angka di sini berasal dari

@@ -1,0 +1,107 @@
+{
+  "workload": "smoke",
+  "tag": "g16-gpu",
+  "device": "cuda",
+  "waktu_utc": "2026-10-10T08:53:48+00:00",
+  "git": {
+    "commit": "4aabb2e487ab9ae3250682e50def27f30dd273f7",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "env": "bench/results/g16-gpu/env.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Turbo",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": null
+  },
+  "torch": {
+    "ok": true,
+    "device_name": "NVIDIA GeForce RTX 5070 Laptop GPU",
+    "capability": "sm_120",
+    "arch_list": [
+      "sm_75",
+      "sm_80",
+      "sm_86",
+      "sm_90",
+      "sm_100",
+      "sm_120"
+    ],
+    "arch_cocok": true,
+    "n_param": 41443,
+    "ms_per_step_b256": 2.927,
+    "loss_akhir": 2.724269151687622,
+    "loss_finite": true,
+    "paritas_forward_maxabs_vs_cpu": 5.613267421722412e-05,
+    "vram_puncak_mb": 171.6
+  },
+  "xgboost": {
+    "ok": true,
+    "device": "cuda",
+    "detik_latih_50_pohon": 0.448,
+    "mae_latih": 0.1807626412706752
+  },
+  "onnxruntime": {
+    "onnxruntime": "1.31.0",
+    "available_providers": [
+      "TensorrtExecutionProvider",
+      "CUDAExecutionProvider",
+      "CPUExecutionProvider"
+    ],
+    "models": {
+      "gru": {
+        "diminta": [
+          "CUDAExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "aktif": [
+          "CUDAExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "cuda_ep_aktif": true,
+        "paritas_vs_cpu_ep": {
+          "forecast_c": {
+            "maxabs": 1.1444091796875e-05,
+            "porsi_beda_gt_1e-3": 0.0
+          },
+          "failure_prob": {
+            "maxabs": 2.682209014892578e-07,
+            "porsi_beda_gt_1e-3": 0.0
+          },
+          "time_to_breach_min": {
+            "maxabs": 0.000579833984375,
+            "porsi_beda_gt_1e-3": 0.0
+          }
+        },
+        "ok": true,
+        "path": "ml/reports/coldtrack.onnx"
+      },
+      "xgb_ttb": {
+        "diminta": [
+          "CUDAExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "aktif": [
+          "CUDAExecutionProvider",
+          "CPUExecutionProvider"
+        ],
+        "cuda_ep_aktif": true,
+        "paritas_vs_cpu_ep": {
+          "time_to_breach_min": {
+            "maxabs": 30.085845947265625,
+            "porsi_beda_gt_1e-3": 0.38623046875
+          }
+        },
+        "ok": true,
+        "path": "ml/reports/coldtrack_ttb.onnx"
+      }
+    },
+    "masukan": "/mnt/c/Users/G614PP/pakar-coldtrack/data/processed/windows/windows_val.npz[:4096]",
+    "cuda_provider_options": {
+      "use_tf32": 0
+    },
+    "python": "/home/tsabita/.venvs/coldtrack-ort/bin/python"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "waktu_utc": "2026-10-10T10:26:36+00:00",
+  "git": {
+    "commit": "6a1a3e0076925fda19d98e7e75f32922e6400323",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "xgboost": "3.2.0",
+  "acuan": {
+    "ttb_mae_menit": 25.217384338378906,
+    "macro_f1": 0.6915577642314622,
+    "akurasi": 0.8600584866577312,
+    "anomali_pr_auc": 0.7546079915246015
+  },
+  "kombinasi": {
+    "builder_lama_350cb41+v3": {
+      "n_val": 16414,
+      "ttb_mae_menit": 24.58830451965332,
+      "macro_f1": 0.4936700465077912,
+      "akurasi": 0.6940416717436335,
+      "anomali_pr_auc": 0.6785044281021954,
+      "selisih_vs_acuan": {
+        "ttb_mae_menit": -0.6290798187255859,
+        "macro_f1": -0.19788771772367098,
+        "akurasi": -0.1660168149140977,
+        "anomali_pr_auc": -0.0761035634224061
+      }
+    },
+    "builder_lama_350cb41+v4": {
+      "n_val": 16414,
+      "ttb_mae_menit": 24.58830451965332,
+      "macro_f1": 0.6856112418945047,
+      "akurasi": 0.8590837090288778,
+      "anomali_pr_auc": 0.7564164689123275,
+      "selisih_vs_acuan": {
+        "ttb_mae_menit": -0.6290798187255859,
+        "macro_f1": -0.0059465223369574716,
+        "akurasi": -0.0009747776288534515,
+        "anomali_pr_auc": 0.0018084773877260485
+      }
+    },
+    "builder_sekarang+v3": {
+      "n_val": 16414,
+      "ttb_mae_menit": 24.02090072631836,
+      "macro_f1": 0.49388333103705623,
+      "akurasi": 0.6924576580967466,
+      "anomali_pr_auc": 0.6796652279309303,
+      "selisih_vs_acuan": {
+        "ttb_mae_menit": -1.1964836120605469,
+        "macro_f1": -0.19767443319440597,
+        "akurasi": -0.16760082856098457,
+        "anomali_pr_auc": -0.07494276359367114
+      }
+    },
+    "builder_sekarang+v4": {
+      "n_val": 16414,
+      "ttb_mae_menit": 24.02090072631836,
+      "macro_f1": 0.6900060517558982,
+      "akurasi": 0.8588400146216645,
+      "anomali_pr_auc": 0.7580121651322714,
+      "selisih_vs_acuan": {
+        "ttb_mae_menit": -1.1964836120605469,
+        "macro_f1": -0.00155171247556396,
+        "akurasi": -0.0012184720360667312,
+        "anomali_pr_auc": 0.0034041736076699802
+      }
+    }
+  }
+}

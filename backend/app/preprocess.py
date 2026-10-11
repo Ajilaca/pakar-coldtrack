@@ -138,3 +138,13 @@ def prepare_onnx_input_tensor(
     # Reshape to [1, sequence_length, 12]
     tensor_3d = np.expand_dims(feature_matrix, axis=0)
     return tensor_3d, df_features
+
+
+def features_per_minute(readings: list[TelemetryReading]) -> pd.DataFrame:
+    """The 12 model features for EVERY reading (full history, sorted by ts), without padding or
+    truncation. The v3 provider slices 60-minute windows from it and recounts reefer_duration_min
+    from each window's start (app/inference.V3Provider.windows)."""
+    df = readings_to_dataframe(readings)
+    numeric_cols = ["temp_c", "humidity", "ambient_c", "speed_kmh", "solar_radiation"]
+    df[numeric_cols] = df[numeric_cols].interpolate(method="linear").bfill().ffill()
+    return compute_derived_features(df)

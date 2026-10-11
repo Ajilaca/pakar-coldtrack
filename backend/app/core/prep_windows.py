@@ -3,7 +3,8 @@ Langkah latihan 1: bagi trip -> bersihkan sensor (aturan) -> susun jendela 60 me
 Masukan model HANYA telemetri yang ada di truk. Kolom kebenaran fisika (T_cargo, T_air, ev_*,
 sensor_ok, reefer_duty) tidak pernah jadi masukan.
 """
-import numpy as np, pandas as pd
+import numpy as np
+import pandas as pd
 
 W = 60                # panjang jendela (menit)
 STRIDE = 10           # geser jendela (menit)

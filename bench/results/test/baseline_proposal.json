@@ -1,0 +1,23 @@
+{
+  "id": "baseline_proposal",
+  "model": "ml/reports/coldtrack.onnx",
+  "sha256_model": "3948c447631301bf3ea5c7cd78d8e68be1e870513a48157a15073da9da6428ab",
+  "waktu_utc": "2026-10-10T22:53:08+00:00",
+  "git": {
+    "commit": "1e668e1d81c01de17cadcb576790447409a9c4f1",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "split": "test",
+  "metrik_test": {
+    "forecast_t15_mae_c": 0.15207628905773163,
+    "forecast_t30_mae_c": 0.19757770001888275,
+    "forecast_t60_mae_c": 0.23718582093715668,
+    "macro_f1": 0.5807264495347145,
+    "akurasi": 0.8134080275794139,
+    "anomali_pr_auc": 0.7105046564759214,
+    "ttb_mae_semua_menit": 52.40627670288086,
+    "ttb_mae_le10_menit": 3.4301323890686035,
+    "ttb_mae_le30_menit": 10.801590919494629
+  }
+}

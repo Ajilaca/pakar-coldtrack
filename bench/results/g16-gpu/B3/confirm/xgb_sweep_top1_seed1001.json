@@ -1,0 +1,24 @@
+{
+  "varian": "sweep_top1",
+  "seed": 1001,
+  "params": {
+    "n_estimators": 550,
+    "max_depth": 5,
+    "learning_rate": 0.07860779680826342,
+    "subsample": 0.8114708858753967,
+    "colsample_bytree": 0.6077386497425317,
+    "min_child_weight": 1.542776857298446,
+    "reg_lambda": 2.3251780800841657,
+    "class_weight_power": 0.23369288882664185
+  },
+  "skor": 0.7253277924704518,
+  "metrik_val": {
+    "macro_f1": 0.6972647998757451,
+    "akurasi": 0.8604849518703546,
+    "anomali_pr_auc": 0.7533907850651586
+  },
+  "latih": {
+    "detik_latih": 8.941160321002826
+  },
+  "waktu_utc": "2026-10-10T21:40:04+00:00"
+}

@@ -1,0 +1,21 @@
+{
+  "gerbang": "G4",
+  "status": "tidak lulus: aturan v0 tetap default, berkeley_v1 tidak diaktifkan",
+  "tanggal": "2026-10-11",
+  "diputuskan_oleh": "kriteria pra-registrasi (G4_kriteria.json, G4_definisi.json); evaluasi mote test sekali disetujui user (opsi A)",
+  "model_dievaluasi": "berkeley_v1_kesehatan (tanpa level lingkungan absolut; ambang + penghalusan mean6 dipilih di mote val)",
+  "alasan": [
+    "Kriteria 1 terpenuhi: PR-AUC v1 jauh di atas v0 + 0,05 di mote test.",
+    "Kriteria 2 tidak terpenuhi: alarm palsu per mote-hari v1 lebih tinggi dari v0, meski recall v1 lebih tinggi.",
+    "Aturan baterai v0 (< 2,4 V) hampir berimpit dengan definisi kegagalan di data lab (nilai ekstrem hanya muncul saat tegangan < 2,4 V), sehingga v0 adalah pembanding yang sangat kuat di domain ini."
+  ],
+  "keterbatasan": [
+    "Hanya 54 kejadian kegagalan (11 di mote test): kekuatan statistik rendah.",
+    "Domain lab (Mica2, bangunan) berbeda dari truk; skema fitur truk tidak memuat tegangan baterai, padahal tegangan adalah sinyal terkuat bagi v0 dan v1.",
+    "Varian dengan level suhu absolut (val PR-AUC lebih tinggi) tidak dipilih karena level suhu lab dapat menjadi penanda kalender."
+  ],
+  "sumber": {"test": "bench/results/test/b4_berkeley_v1_kesehatan.json",
+             "val": ["bench/results/g16-gpu/B4/val_kesehatan.json", "bench/results/g16-gpu/B4/val_semua.json"],
+             "log_akses_test": "bench/results/test_access_log.json"},
+  "tindak_lanjut": "Tidak ada perubahan config.yaml. Upaya berikutnya (model berbeda) mendapat evaluasi test sendiri; data sensor truk nyata dibutuhkan untuk penilaian yang bermakna."
+}

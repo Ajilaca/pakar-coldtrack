@@ -1,0 +1,84 @@
+{
+  "waktu_utc": "2026-10-11T03:56:40+00:00",
+  "git": {
+    "commit": "8d3f72eec59838cb5d95d7e67c984e79e85fa0b1",
+    "branch": "feat/model-retrain-g16",
+    "dirty": true
+  },
+  "url": "http://localhost:8000",
+  "kasus": [
+    {
+      "kasus": "scenario_1_normal",
+      "status_http": 200,
+      "status_harapan": "AMAN",
+      "status": "AMAN",
+      "label": "normal_sehat",
+      "keyakinan": 0.758,
+      "data_lengkap": true,
+      "model_version": "coldtrack-hybrid-v3-gru-b3",
+      "inference_ms": 127,
+      "masalah": []
+    },
+    {
+      "kasus": "scenario_1_normal_bacaan_hilang",
+      "status_http": 200,
+      "status_harapan": "AMAN",
+      "status": "AMAN",
+      "label": "normal_sehat",
+      "keyakinan": 0.5,
+      "data_lengkap": false,
+      "model_version": "coldtrack-hybrid-v3-gru-b3",
+      "inference_ms": 105,
+      "masalah": []
+    },
+    {
+      "kasus": "scenario_2_door_open",
+      "status_http": 200,
+      "status_harapan": "KRITIS",
+      "status": "KRITIS",
+      "label": "pintu_terbuka_lama",
+      "keyakinan": 0.957,
+      "data_lengkap": true,
+      "model_version": "coldtrack-hybrid-v3-gru-b3",
+      "inference_ms": 114,
+      "masalah": []
+    },
+    {
+      "kasus": "scenario_3_compressor_degradation",
+      "status_http": 200,
+      "status_harapan": "KRITIS",
+      "status": "KRITIS",
+      "label": "suhu_muatan_mendekati_batas",
+      "keyakinan": 1.0,
+      "data_lengkap": true,
+      "model_version": "coldtrack-hybrid-v3-gru-b3",
+      "inference_ms": 104,
+      "masalah": []
+    },
+    {
+      "kasus": "scenario_4_sensor_stuck",
+      "status_http": 200,
+      "status_harapan": "WASPADA",
+      "status": "WASPADA",
+      "label": "masalah_sensor",
+      "keyakinan": 1.0,
+      "data_lengkap": true,
+      "model_version": "coldtrack-hybrid-v3-gru-b3",
+      "inference_ms": 101,
+      "masalah": []
+    },
+    {
+      "kasus": "scenario_5_extreme_ambient",
+      "status_http": 200,
+      "status_harapan": "WASPADA",
+      "status": "WASPADA",
+      "label": "kejutan_ambien_ekstrem",
+      "keyakinan": 0.97,
+      "data_lengkap": true,
+      "model_version": "coldtrack-hybrid-v3-gru-b3",
+      "inference_ms": 112,
+      "masalah": []
+    }
+  ],
+  "semua_ok": true
+}

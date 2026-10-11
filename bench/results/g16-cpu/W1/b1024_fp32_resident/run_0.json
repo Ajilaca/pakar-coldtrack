@@ -1,0 +1,117 @@
+{
+  "workload": "W1",
+  "config_id": "b1024_fp32_resident",
+  "konfigurasi": {
+    "batch_size": 1024,
+    "resident": true,
+    "n_epochs": 30,
+    "lr": [
+      0.0005,
+      0.002
+    ],
+    "loss_weights": {
+      "forecast": 30.0,
+      "failure": 1.0,
+      "ttb": 8.0
+    }
+  },
+  "tag": "g16-cpu",
+  "device": "cpu",
+  "run": 0,
+  "pemanasan": true,
+  "seed": 1000,
+  "waktu_utc": "2026-10-10T16:55:34+00:00",
+  "git": {
+    "commit": "009ed574ba582fcabcd8ad0c93d283c541543bd6",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "env": "bench/results/g16-cpu/env/env_20261010-201459.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Turbo",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": null
+  },
+  "protokol": {
+    "repeats": 5,
+    "warmup": 1,
+    "cooldown_s": 60
+  },
+  "waktu": {
+    "muat_s": 0.6065494570029841,
+    "praproses_s": 1.234072309001931,
+    "transfer_ke_device_s": 1.4762001228518784e-05,
+    "latih_loop_s": 15.906283395001083,
+    "eval_s": 1.310561312999198,
+    "detik_latih_per_epoch_median": 14.662686505998863,
+    "sampel_per_detik_median": 5299.369932529745,
+    "dinding_total_s": 19.068379390999326
+  },
+  "time_to_target": {
+    "target_val_loss": 2.534773635864258,
+    "sumber_target": [
+      "bench/results/g16-cpu/B1/gru_seed1000.json",
+      "bench/results/g16-cpu/B1/gru_seed1001.json",
+      "bench/results/g16-cpu/B1/gru_seed1002.json",
+      "bench/results/g16-cpu/B1/gru_seed1003.json",
+      "bench/results/g16-cpu/B1/gru_seed1004.json"
+    ],
+    "tercapai": false,
+    "epoch": null,
+    "detik": null
+  },
+  "ringkas_latih": {
+    "detik_total_loop": 15.906283395001083,
+    "transfer_ke_device_s": 1.4762001228518784e-05,
+    "epoch_terbaik": 1,
+    "val_loss_terbaik": 8.533917427062988,
+    "vram_puncak_mb": null
+  },
+  "metrik_val": {
+    "forecast_t15_mae_c": 0.3647143244743347,
+    "forecast_t30_mae_c": 0.33522194623947144,
+    "forecast_t60_mae_c": 0.3873453140258789,
+    "macro_f1": 0.47635119136903337,
+    "akurasi": 0.8183867430242476,
+    "ttb_mae_menit": 32.60234832763672,
+    "anomali_pr_auc": 0.5673290700986441
+  },
+  "riwayat": [
+    {
+      "epoch": 1,
+      "train_loss": 19.056499481201172,
+      "val_loss": 8.533917427062988,
+      "detik_latih": 14.662686505998863,
+      "detik_val": 1.2432059739985561,
+      "sampel_per_detik": 5299.369932529745,
+      "detik_kumulatif": 15.9060325069986
+    }
+  ],
+  "telemetri": {
+    "tersedia": true,
+    "n_sampel": 12,
+    "energi_wh": 0.044336111111111104,
+    "daya_w": {
+      "median": 13.375,
+      "maks": 13.46
+    },
+    "suhu_c": {
+      "median": 57.0,
+      "maks": 57.0
+    },
+    "clock_sm_mhz": {
+      "median": 1425.0,
+      "min": 1425.0,
+      "p5": 1425.0
+    },
+    "utilisasi_pct_median": 0.0,
+    "vram_terpakai_mb_maks": 0.0,
+    "throttle_reasons_hex": [
+      "0x0000000000000000"
+    ],
+    "csv": "bench/results/telemetry/g16-cpu/W1_b1024_fp32_resident_run0_20261010-235515.csv"
+  }
+}
