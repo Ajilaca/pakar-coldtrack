@@ -1,6 +1,6 @@
 # Laporan latih ulang ColdTrack + benchmark device
 
-> Dibangkitkan oleh `bench/report/build_report.py` pada 2026-10-11T22:12:07+00:00. Jangan diedit manual:
+> Dibangkitkan oleh `bench/report/build_report.py` pada 2026-10-11T22:38:54+00:00. Jangan diedit manual:
 > setiap angka berasal dari JSON di `bench/results/`. Tabel lengkap: `summary.csv`.
 
 ## Ringkasan
@@ -35,7 +35,7 @@ Cara membaca: speedup = waktu median pembanding / waktu median yang dibandingkan
 |---|---|---|---|---|---|---|---|
 | g16-gpu | AMD Ryzen 9 8940HX with Radeon Graphics | 16/32 | 11.68 | NVIDIA GeForce RTX 5070 Laptop GPU | WSL2 Ubuntu | Turbo | `bench/results/g16-gpu/env/env_20261011-170742.json` |
 | g16-cpu | AMD Ryzen 9 8940HX with Radeon Graphics | 16/32 | 11.68 | dimatikan (CUDA_VISIBLE_DEVICES="") | WSL2 Ubuntu | Turbo | `bench/results/g16-cpu/env/env_20261011-184051.json` |
-| d0-old | AMD Ryzen 7 5700U (dari user) | - | 12GB | Radeon terintegrasi, tidak dipakai | WSL2 Ubuntu 24.04 (bench/devices/d0-old.yaml) | Lenovo Extreme Performance (Fn+Q) + Windows "Best performance" | **tidak ada** (`bench/results/d0-old/env/env_20261011-212135.json` dirujuk tetapi tidak ikut dikirim) |
+| d0-old | AMD Ryzen 7 5700U with Radeon Graphics | 8/16 | 11.68 | - | WSL2 Ubuntu 24.04 | Lenovo Extreme Performance (Fn+Q) + Windows "Best performance" | `bench/results/d0-old/env/env_20261011-212135.json` |
 
 ### Provenance (commit tiap run)
 
@@ -47,11 +47,9 @@ Cara membaca: speedup = waktu median pembanding / waktu median yang dibandingkan
 | g16-cpu | `009ed57` | False | 78 | ya |
 | g16-cpu | `5d13490` | False | 33 | ya |
 | g16-cpu | `5b64886` | False | 6 | ya |
-| d0-old | `fcd0fb0` | False | 78 | **tidak** |
+| d0-old | `fcd0fb0` | False | 78 | ya |
 | d0-old | `fd61a98` | False | 33 | ya |
 | d0-old | `9d97fe9` | False | 6 | ya |
-
-**Terbuka:** commit d0-old `fcd0fb0` (78 run) tidak ada di repo. Kemungkinan commit lokal di device itu yang hash-nya berubah saat di-rebase/amend sebelum push. Kesamaan kodenya dengan commit di repo belum dapat diverifikasi dari sini; data tetap dipakai dengan catatan ini.
 
 Catatan kondisi d0-old: Run pertama (mode Lenovo otomatis/Intelligent Cooling) dibatalkan: suhu CPU mencapai ~100 C lalu di-clamp ke ~22% performa (~400 MHz) selama 4-8 menit, berulang tiap ~10 menit. Hasilnya tidak dipakai. Claude Code desktop tetap berjalan sebagai pengendali run (beban CPU ~1-2%), ditambah perekam suhu/performa Windows tiap ~12 detik.
 
@@ -478,14 +476,18 @@ Alasan throttle `0x4` = batas daya perangkat lunak (wajar di laptop), `0x0` = ti
 - **W8** mengukur komputasi siklus inferensi (`POST /api/v1/analyze`, sama dengan `predict_last` worker armada) tanpa database dan broker. Varian 2 inti adalah G16 yang dibatasi 2 inti, **bukan** VPS 2 vCPU; tidak ada klaim target PRD (< 30 s / 100 truk di VPS 2 vCPU) terpenuhi.
 - **W3/W4** satu run terukur per tag (banyak pelatihan di dalamnya), jadi speedup-nya tanpa CI.
 
-### Kesamaan kode antar-device (B5)
+### Kesamaan kode antar-device (B2 + B5)
 
-| workload | commit g16-cpu | commit d0-old | kode workload | berkas berbeda |
-|---|---|---|---|---|
-| W3 | 5d13490 | fd61a98 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml`, `bench/workloads/w8_siklus.py`, `ml/preprocess/export_fleet.py` |
-| W4 | 5d13490 | fd61a98 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml`, `bench/workloads/w8_siklus.py`, `ml/preprocess/export_fleet.py` |
-| W6 | 5d13490 | fd61a98 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml`, `bench/workloads/w8_siklus.py`, `ml/preprocess/export_fleet.py` |
-| W8 | 5d13490 | fd61a98 | **berbeda** | `backend/app/adapters/__init__.py`, `backend/app/clock.py`, `backend/app/db/__init__.py`, `backend/app/db/migrate.py`, `backend/app/db/seed.py`, `backend/app/fleet/__init__.py` … |
+| workload | config | commit g16-cpu | commit d0-old | kode workload | berkas berbeda |
+|---|---|---|---|---|---|
+| W1 | 4 config | 009ed57 | fcd0fb0 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml` |
+| W1 | b256_fp32_resident | 5b64886 | 9d97fe9 | **berbeda** (tinjauan manual: tidak memengaruhi W1. `bench/harness.py` hanya menambah parameter opsional repeats/warmup (bawaan sama) untuk W3/W4; berkas lain yang berbeda tidak di-import W1; bukti: `git diff 5b64886 9d97fe9 -- bench/harness.py`) | `bench/chain_b2b3.sh`, `bench/fe.sh`, `bench/harness.py`, `ml/reports/coldtrack_b3.onnx`, `ml/reports/labels_b3.json`, `ml/sensor_health/data.py` … |
+| W2 | cpu_hist | 009ed57 | fcd0fb0 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml` |
+| W7 | 8 config | 009ed57 | fcd0fb0 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml` |
+| W3 | gru, xgb_cpu | 5d13490 | fd61a98 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml`, `bench/workloads/w8_siklus.py`, `ml/preprocess/export_fleet.py` |
+| W4 | stat_vs_tanpa | 5d13490 | fd61a98 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml`, `bench/workloads/w8_siklus.py`, `ml/preprocess/export_fleet.py` |
+| W6 | cpu_hist | 5d13490 | fd61a98 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml`, `bench/workloads/w8_siklus.py`, `ml/preprocess/export_fleet.py` |
+| W8 | 4 config | 5d13490 | fd61a98 | **berbeda** | `backend/app/adapters/__init__.py`, `backend/app/clock.py`, `backend/app/db/__init__.py`, `backend/app/db/migrate.py`, `backend/app/db/seed.py`, `backend/app/fleet/__init__.py` … |
 
 W8 mengirim jendela 60 bacaan ke `POST /api/v1/analyze`; di kedua versi backend model dijalankan untuk satu jendela, tetapi kodenya tidak identik (versi armada menambah `predict_last` dan konversi zona waktu). Perbandingan W8 antar-device dibaca dengan catatan ini.
 
@@ -496,4 +498,3 @@ W8 mengirim jendela 60 bacaan ke `POST /api/v1/analyze`; di kedua versi backend 
 - Data simulasi (dataset v4), bukan logger truk nyata.
 - WSL2 dengan batas memori 12 GB di kedua laptop; Windows native tidak diukur.
 - Laptop lama mengalami throttling termal pada run pertama; run itu dibatalkan dan diulang dalam mode Extreme Performance. Menurut pesan commit `4c193ca`, CPU-nya tetap di-throttle termal secara berkala selama paket B5 (±100 °C → ±22 % performa); data suhunya tidak ada di repo. Angka laptop lama, terutama B5, bisa lebih lambat daripada kemampuan CPU itu dengan pendinginan baik, sehingga speedup laptop lama → G16 cenderung dilebih-lebihkan.
-- Commit run laptop lama dan berkas env capture-nya belum dapat diverifikasi dari repo (lihat Provenance).

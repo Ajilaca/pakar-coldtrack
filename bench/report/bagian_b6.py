@@ -306,6 +306,9 @@ def bagian_b5(g2):
 
 # jalur kode yang menentukan hasil tiap workload (untuk cek kesamaan kode antar-device)
 JALUR_KODE = {
+    "W1": ["bench", "ml"],
+    "W2": ["bench", "ml"],
+    "W7": ["bench", "ml", "backend/models"],
     "W3": ["bench", "ml"],
     "W4": ["bench", "ml"],
     "W6": ["bench", "ml"],
@@ -313,11 +316,21 @@ JALUR_KODE = {
 }
 
 
-def _commit_workload(tag, w):
+# Tinjauan manual atas perbedaan kode yang ditandai otomatis (dapat diperiksa ulang dengan perintah di kolom bukti).
+TINJAUAN = {
+    ("W1", "5b64886", "9d97fe9"): (
+        ("tinjauan manual: tidak memengaruhi W1. `bench/harness.py` hanya menambah parameter opsional "
+        "repeats/warmup (bawaan sama) untuk W3/W4; berkas lain yang berbeda tidak di-import W1"),
+        "git diff 5b64886 9d97fe9 -- bench/harness.py",
+    ),
+}
+
+
+def _commit_config(tag, w, cid):
     import json
 
     return {json.loads(f.read_text(encoding="utf-8"))["git"]["commit"][:7]
-            for f in (an.RESULTS_DIR / tag / w).glob("*/run_*.json")}
+            for f in (an.RESULTS_DIR / tag / w / cid).glob("run_*.json")}
 
 
 def _kode_sama(c1, c2, jalur):
@@ -360,26 +373,48 @@ def _dipakai(path, w):
 
 def bagian_kesamaan_kode():
     out = [
-        "### Kesamaan kode antar-device (B5)",
+        "### Kesamaan kode antar-device (B2 + B5)",
         "",
-        "| workload | commit g16-cpu | commit d0-old | kode workload | berkas berbeda |",
-        "|---|---|---|---|---|",
+        "| workload | config | commit g16-cpu | commit d0-old | kode workload | berkas berbeda |",
+        "|---|---|---|---|---|---|",
     ]
     for w, jalur in JALUR_KODE.items():
-        cg, cd = sorted(_commit_workload("g16-cpu", w)), sorted(_commit_workload("d0-old", w))
-        if not cg or not cd:
-            out.append(f"| {w} | {', '.join(cg) or '-'} | {', '.join(cd) or '-'} | belum dapat dibandingkan | - |")
+        # per config: commit run g16-cpu vs commit run d0-old untuk config yang SAMA; config dengan pasangan
+        # commit yang sama digabung dalam satu baris
+        grup: dict[tuple[str, str], list[str]] = {}
+        for cid in an.configs(w):
+            cg, cd = _commit_config("g16-cpu", w, cid), _commit_config("d0-old", w, cid)
+            if cg and cd:
+                grup.setdefault((", ".join(sorted(cg)), ", ".join(sorted(cd))), []).append(cid)
+        if not grup:
+            out.append(f"| {w} | - | - | - | belum dapat dibandingkan | - |")
             continue
-        sama, beda = _kode_sama(cg[0], cd[0], jalur)
-        relevan = [b for b in beda if _dipakai(b, w)]
-        if sama is None:
-            status = "tidak dapat dicek"
-        elif not relevan:
-            status = "identik" if sama else "identik (berkas berbeda tidak dipakai workload ini)"
-        else:
-            status = "**berbeda**"
-        daftar = ", ".join(f"`{b}`" for b in (relevan or beda)[:6]) + (" …" if len(relevan or beda) > 6 else "")
-        out.append(f"| {w} | {', '.join(cg)} | {', '.join(cd)} | {status} | {daftar or '-'} |")
+        for (cg, cd), cids in grup.items():
+            sama, beda = True, set()
+            for c1 in cg.split(", "):
+                for c2 in cd.split(", "):
+                    s1, b1 = _kode_sama(c1, c2, jalur)
+                    if s1 is None:
+                        sama = None
+                        break
+                    sama = sama and s1
+                    beda |= set(b1)
+                if sama is None:
+                    break
+            beda = sorted(beda)
+            relevan = [b for b in beda if _dipakai(b, w)]
+            if sama is None:
+                status = "tidak dapat dicek"
+            elif not relevan:
+                status = "identik" if sama else "identik (berkas berbeda tidak dipakai workload ini)"
+            else:
+                status = "**berbeda**"
+                tinjau = TINJAUAN.get((w, cg, cd))
+                if tinjau:
+                    status += f" ({tinjau[0]}; bukti: `{tinjau[1]}`)"
+            daftar = ", ".join(f"`{b}`" for b in (relevan or beda)[:6]) + (" …" if len(relevan or beda) > 6 else "")
+            konfig = ", ".join(cids) if len(cids) <= 3 else f"{len(cids)} config"
+            out.append(f"| {w} | {konfig} | {cg} | {cd} | {status} | {daftar or '-'} |")
     out += [
         "",
         ("W8 mengirim jendela 60 bacaan ke `POST /api/v1/analyze`; di kedua versi backend model dijalankan untuk satu "
@@ -387,6 +422,18 @@ def bagian_kesamaan_kode():
          "Perbandingan W8 antar-device dibaca dengan catatan ini."),
         "",
     ]
+    return out
+
+
+def _catatan_provenance():
+    """Kalimat keterbatasan provenance, hanya bila memang ada commit/env yang tidak dapat ditelusuri."""
+    hilang = [f"{t} `{p['commit']}`" for t in ("g16-gpu", "g16-cpu", "d0-old") for p in an.provenance(t) if not p["ada_di_repo"]]
+    tanpa_env = [t for t in ("g16-gpu", "g16-cpu", "d0-old") if an.env_tag(t)[0] is None]
+    out = []
+    if hilang:
+        out.append("- Commit run " + ", ".join(hilang) + " tidak ada di repo (lihat Provenance).")
+    if tanpa_env:
+        out.append("- Berkas env capture " + ", ".join(tanpa_env) + " tidak ada di repo.")
     return out
 
 
@@ -404,6 +451,6 @@ def bagian_keterbatasan():
          "paket B5 (±100 °C → ±22 % performa); data suhunya tidak ada di repo. Angka laptop lama, terutama B5, bisa "
          "lebih lambat daripada kemampuan CPU itu dengan pendinginan baik, sehingga speedup laptop lama → G16 "
          "cenderung dilebih-lebihkan."),
-        "- Commit run laptop lama dan berkas env capture-nya belum dapat diverifikasi dari repo (lihat Provenance).",
+        *_catatan_provenance(),
         "",
     ]
