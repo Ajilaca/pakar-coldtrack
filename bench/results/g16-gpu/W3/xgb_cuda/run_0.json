@@ -1,0 +1,166 @@
+{
+  "workload": "W3",
+  "config_id": "xgb_cuda",
+  "konfigurasi": {
+    "model": "xgb",
+    "trial": 20
+  },
+  "tag": "g16-gpu",
+  "device": "cuda",
+  "run": 0,
+  "pemanasan": false,
+  "seed": 1000,
+  "waktu_utc": "2026-10-11T10:03:37+00:00",
+  "git": {
+    "commit": "5d1349051fe0cb80c2a5e21a5963e64963a9afa3",
+    "branch": "feat/fleet-online",
+    "dirty": false
+  },
+  "env": "bench/results/g16-gpu/env/env_20261011-165929.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Turbo",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": null
+  },
+  "protokol": {
+    "repeats": 1,
+    "warmup": 0,
+    "cooldown_s": 60
+  },
+  "waktu": {
+    "sweep_s": 158.845617777999,
+    "trial_per_jam": 453.27029481308364,
+    "dinding_total_s": 160.37171864399716
+  },
+  "n_trial": 20,
+  "skor_terbaik": 0.7252204659505537,
+  "per_trial": [
+    {
+      "trial": 0,
+      "detik": 11.93193074699957,
+      "skor": 0.7164354490610922
+    },
+    {
+      "trial": 1,
+      "detik": 12.791475918002106,
+      "skor": 0.7121429506420157
+    },
+    {
+      "trial": 2,
+      "detik": 3.133929485000408,
+      "skor": 0.7004638357026696
+    },
+    {
+      "trial": 3,
+      "detik": 4.327826142998674,
+      "skor": 0.6840761636459962
+    },
+    {
+      "trial": 4,
+      "detik": 8.817716020999796,
+      "skor": 0.7029105408358693
+    },
+    {
+      "trial": 5,
+      "detik": 6.455908765001368,
+      "skor": 0.7219744207754246
+    },
+    {
+      "trial": 6,
+      "detik": 4.899358445996768,
+      "skor": 0.7248720730729186
+    },
+    {
+      "trial": 7,
+      "detik": 8.366974853001011,
+      "skor": 0.7248203750673188
+    },
+    {
+      "trial": 8,
+      "detik": 3.2090890879990184,
+      "skor": 0.7192512592632742
+    },
+    {
+      "trial": 9,
+      "detik": 15.06985110000096,
+      "skor": 0.7134438529415849
+    },
+    {
+      "trial": 10,
+      "detik": 12.811976698998478,
+      "skor": 0.7252204659505537
+    },
+    {
+      "trial": 11,
+      "detik": 11.193815484999504,
+      "skor": 0.7220675150563374
+    },
+    {
+      "trial": 12,
+      "detik": 5.5646272909980325,
+      "skor": 0.7245265046756029
+    },
+    {
+      "trial": 13,
+      "detik": 6.777338274001522,
+      "skor": 0.7192243666210654
+    },
+    {
+      "trial": 14,
+      "detik": 9.639279446000728,
+      "skor": 0.7226715479238752
+    },
+    {
+      "trial": 15,
+      "detik": 1.8917206270016322,
+      "skor": 0.7147465891348488
+    },
+    {
+      "trial": 16,
+      "detik": 4.092735084999731,
+      "skor": 0.7178131622839258
+    },
+    {
+      "trial": 17,
+      "detik": 16.16135583600044,
+      "skor": 0.7231617204741259
+    },
+    {
+      "trial": 18,
+      "detik": 7.310046782997233,
+      "skor": 0.7219432840176997
+    },
+    {
+      "trial": 19,
+      "detik": 3.8749817550014996,
+      "skor": 0.7225995466142314
+    }
+  ],
+  "telemetri": {
+    "tersedia": true,
+    "n_sampel": 161,
+    "energi_wh": 1.6499138888888887,
+    "daya_w": {
+      "median": 37.8,
+      "maks": 40.77
+    },
+    "suhu_c": {
+      "median": 57.0,
+      "maks": 60.0
+    },
+    "clock_sm_mhz": {
+      "median": 270.0,
+      "min": 225.0,
+      "p5": 270.0
+    },
+    "utilisasi_pct_median": 37.0,
+    "vram_terpakai_mb_maks": 4568.0,
+    "throttle_reasons_hex": [
+      "0x0000000000000000"
+    ],
+    "csv": "bench/results/telemetry/g16-gpu/W3_xgb_cuda_run0_20261011-170054.csv"
+  }
+}

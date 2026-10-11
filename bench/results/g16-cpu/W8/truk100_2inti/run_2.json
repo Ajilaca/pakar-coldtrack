@@ -1,0 +1,80 @@
+{
+  "workload": "W8",
+  "config_id": "truk100_2inti",
+  "konfigurasi": {
+    "truk": 100,
+    "inti_cpu": 2,
+    "harness": "POST /api/v1/analyze via TestClient"
+  },
+  "tag": "g16-cpu",
+  "device": "cpu",
+  "run": 2,
+  "pemanasan": false,
+  "seed": 1001,
+  "waktu_utc": "2026-10-11T11:56:14+00:00",
+  "git": {
+    "commit": "5d1349051fe0cb80c2a5e21a5963e64963a9afa3",
+    "branch": "feat/fleet-online",
+    "dirty": false
+  },
+  "env": "bench/results/g16-cpu/env/env_20261011-184051.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Turbo",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": null
+  },
+  "protokol": {
+    "repeats": 5,
+    "warmup": 1,
+    "cooldown_s": 15
+  },
+  "waktu": {
+    "siklus_median_s": 2.591666501997679,
+    "ms_per_truk_median": 25.91666501997679,
+    "dinding_total_s": 11.890058201999636
+  },
+  "siklus": {
+    "trucks": 100,
+    "cores": 2,
+    "cycles": 3,
+    "siklus_s": [
+      2.5428946250031004,
+      2.591666501997679,
+      2.721348131999548
+    ],
+    "siklus_median_s": 2.591666501997679,
+    "ms_per_truk_median": 25.91666501997679,
+    "status_siklus_terakhir": {
+      "AMAN": 20,
+      "KRITIS": 40,
+      "WASPADA": 40
+    }
+  },
+  "telemetri": {
+    "tersedia": true,
+    "n_sampel": 9,
+    "energi_wh": 0.03285833333333334,
+    "daya_w": {
+      "median": 13.22,
+      "maks": 13.3
+    },
+    "suhu_c": {
+      "median": 53.0,
+      "maks": 53.0
+    },
+    "clock_sm_mhz": {
+      "median": 1425.0,
+      "min": 1425.0,
+      "p5": 1425.0
+    },
+    "utilisasi_pct_median": 0.0,
+    "vram_terpakai_mb_maks": 0.0,
+    "throttle_reasons_hex": [
+      "0x0000000000000000"
+    ],
+    "csv": "bench/results/telemetry/g16-cpu/W8_truk100_2inti_run2_20261011-185601.csv"
+  }
+}

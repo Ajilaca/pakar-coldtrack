@@ -1,0 +1,69 @@
+{
+  "workload": "W6",
+  "config_id": "cuda_hist",
+  "konfigurasi": {
+    "device": "cuda",
+    "params_dari": "val_kesehatan.json"
+  },
+  "tag": "g16-gpu",
+  "device": "cuda",
+  "run": 0,
+  "pemanasan": true,
+  "seed": 1000,
+  "waktu_utc": "2026-10-11T10:07:59+00:00",
+  "git": {
+    "commit": "5d1349051fe0cb80c2a5e21a5963e64963a9afa3",
+    "branch": "feat/fleet-online",
+    "dirty": false
+  },
+  "env": "bench/results/g16-gpu/env/env_20261011-170742.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Turbo",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": null
+  },
+  "protokol": {
+    "repeats": 5,
+    "warmup": 1,
+    "cooldown_s": 60
+  },
+  "waktu": {
+    "muat_s": 4.405432395997195,
+    "fitur_s": 3.769103033002466,
+    "bangun_total_s": 8.175896592001664,
+    "latih_s": 0.8366033349993813,
+    "prediksi_s": 0.013827738002873957,
+    "dinding_total_s": 9.062696942000912
+  },
+  "n_jendela": 173765,
+  "metrik_val": {
+    "pr_auc": 0.8725314486788002
+  },
+  "telemetri": {
+    "tersedia": true,
+    "n_sampel": 8,
+    "energi_wh": 0.026991666666666667,
+    "daya_w": {
+      "median": 12.77,
+      "maks": 12.81
+    },
+    "suhu_c": {
+      "median": 49.0,
+      "maks": 51.0
+    },
+    "clock_sm_mhz": {
+      "median": 1425.0,
+      "min": 1425.0,
+      "p5": 1425.0
+    },
+    "utilisasi_pct_median": 0.0,
+    "vram_terpakai_mb_maks": 158.0,
+    "throttle_reasons_hex": [
+      "0x0000000000000000"
+    ],
+    "csv": "bench/results/telemetry/g16-gpu/W6_cuda_hist_run0_20261011-170748.csv"
+  }
+}

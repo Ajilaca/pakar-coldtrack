@@ -1,0 +1,108 @@
+{
+  "workload": "W3",
+  "config_id": "gru",
+  "konfigurasi": {
+    "model": "gru",
+    "trial": 8,
+    "epoch": 5
+  },
+  "tag": "g16-gpu",
+  "device": "cuda",
+  "run": 0,
+  "pemanasan": false,
+  "seed": 1000,
+  "waktu_utc": "2026-10-11T10:00:54+00:00",
+  "git": {
+    "commit": "5d1349051fe0cb80c2a5e21a5963e64963a9afa3",
+    "branch": "feat/fleet-online",
+    "dirty": false
+  },
+  "env": "bench/results/g16-gpu/env/env_20261011-165929.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Turbo",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": null
+  },
+  "protokol": {
+    "repeats": 1,
+    "warmup": 0,
+    "cooldown_s": 60
+  },
+  "waktu": {
+    "sweep_s": 69.01785960599955,
+    "trial_per_jam": 417.2832968801091,
+    "dinding_total_s": 71.34604160900199
+  },
+  "n_trial": 8,
+  "skor_terbaik": 0.6249072542373212,
+  "per_trial": [
+    {
+      "trial": 0,
+      "detik": 9.702881133001938,
+      "skor": 0.5802488363766984
+    },
+    {
+      "trial": 1,
+      "detik": 15.436547816996608,
+      "skor": 0.6249072542373212
+    },
+    {
+      "trial": 2,
+      "detik": 5.076816038999823,
+      "skor": 0.5146280873835883
+    },
+    {
+      "trial": 3,
+      "detik": 5.861635199002194,
+      "skor": 0.5409041625380852
+    },
+    {
+      "trial": 4,
+      "detik": 9.597055446000013,
+      "skor": 0.5436549806359738
+    },
+    {
+      "trial": 5,
+      "detik": 11.67034977199728,
+      "skor": 0.5525611288068197
+    },
+    {
+      "trial": 6,
+      "detik": 4.01613482600078,
+      "skor": 0.5653591708426888
+    },
+    {
+      "trial": 7,
+      "detik": 7.654502991001209,
+      "skor": -0.47334103221395574
+    }
+  ],
+  "telemetri": {
+    "tersedia": true,
+    "n_sampel": 72,
+    "energi_wh": 1.2100888888888888,
+    "daya_w": {
+      "median": 64.97999999999999,
+      "maks": 88.17
+    },
+    "suhu_c": {
+      "median": 62.0,
+      "maks": 70.0
+    },
+    "clock_sm_mhz": {
+      "median": 922.0,
+      "min": 180.0,
+      "p5": 249.75
+    },
+    "utilisasi_pct_median": 57.0,
+    "vram_terpakai_mb_maks": 3676.0,
+    "throttle_reasons_hex": [
+      "0x0000000000000000",
+      "0x0000000000000004"
+    ],
+    "csv": "bench/results/telemetry/g16-gpu/W3_gru_run0_20261011-165940.csv"
+  }
+}

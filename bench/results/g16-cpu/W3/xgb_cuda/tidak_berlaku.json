@@ -1,0 +1,12 @@
+{
+  "workload": "W3",
+  "config_id": "xgb_cuda",
+  "konfigurasi": {
+    "model": "xgb",
+    "trial": 20
+  },
+  "tag": "g16-cpu",
+  "status": "tidak berlaku",
+  "alasan": "XGBoost device=cuda butuh GPU NVIDIA",
+  "waktu_utc": "2026-10-11T10:51:22+00:00"
+}

@@ -70,3 +70,49 @@ Pilih salah satu:
 - **Tanpa git**: kompres folder `bench/results/d0-old/`, lalu salin ke folder yang sama di repo G16.
 
 Telemetri tidak dihasilkan di `d0-old` karena tidak ada GPU NVIDIA; itu wajar.
+
+## 6. Paket B5 (W3, W4, W6, W8), setelah langkah 1–5 selesai
+
+Rencana B5 meminta paket yang sama dengan G16 (jalur CPU). Perkiraan: ±4–7 jam termasuk persiapan, atau
+±2–3,5 jam tanpa W4. Kondisinya sama dengan bagian 0. Faktor kecepatan Yoga terhadap G16 belum terukur, jadi
+angka ini perkiraan.
+
+**a. Data Berkeley untuk W6.** Salin dari G16 `data/berkeley/data.txt.gz` (34 MB) dan
+`data/berkeley/mote_locs.txt` ke folder yang sama di repo ini, lalu:
+
+```bash
+gunzip -k data/berkeley/data.txt.gz
+```
+
+**Jangan** salin `windows.parquet`: itu cache fitur, dan W6 ikut mengukur waktu membangun fitur.
+Tanpa `data.txt`, W6 tercatat "tidak berlaku".
+
+**b. Pindah ke commit yang sama dengan run B5 G16**, karena W8 mengukur backend versi armada:
+
+```bash
+git fetch && git checkout feat/fleet-online && git pull
+```
+
+```bash
+bash bench/setup_wsl.sh cpu
+```
+
+Setup diulang karena backend di branch ini butuh paket tambahan (psycopg, paho-mqtt).
+Hasil W1/W2/W7 dari branch lama tetap sah: kode workload itu tidak berubah.
+
+**c. Cek cepat** (harus tanpa `GAGAL` / `Traceback`):
+
+```bash
+bash bench/wsl_run.sh python -m bench.run --tag d0-old --workloads W3,W4,W6,W8 --quick
+```
+
+**d. Run penuh** (semalaman):
+
+```bash
+bash bench/wsl_run.sh python -m bench.run --tag d0-old --workloads W3,W4,W6,W8 2>&1 | tee ~/d0old_b5.log
+```
+
+Bila waktunya tidak cukup, jalankan `--workloads W3,W6,W8` dulu. W4 akan ditandai "belum dijalankan"
+di laporan, bukan dikosongkan diam-diam.
+
+**e. Kirim hasil** seperti bagian 5. Folder `bench/results/d0-old/` bertambah W3, W4, W6, dan W8.

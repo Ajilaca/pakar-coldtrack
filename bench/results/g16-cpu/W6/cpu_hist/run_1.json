@@ -1,0 +1,70 @@
+{
+  "workload": "W6",
+  "config_id": "cpu_hist",
+  "konfigurasi": {
+    "device": "cpu",
+    "params_dari": "val_kesehatan.json"
+  },
+  "tag": "g16-cpu",
+  "device": "cpu",
+  "run": 1,
+  "pemanasan": false,
+  "seed": 1000,
+  "waktu_utc": "2026-10-11T11:34:57+00:00",
+  "git": {
+    "commit": "5d1349051fe0cb80c2a5e21a5963e64963a9afa3",
+    "branch": "feat/fleet-online",
+    "dirty": false
+  },
+  "env": "bench/results/g16-cpu/env/env_20261011-183325.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Turbo",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": null
+  },
+  "protokol": {
+    "repeats": 5,
+    "warmup": 1,
+    "cooldown_s": 60
+  },
+  "waktu": {
+    "muat_s": 4.228101331995276,
+    "fitur_s": 3.923461483005667,
+    "bangun_total_s": 8.152812991000246,
+    "latih_s": 0.15652029099874198,
+    "prediksi_s": 0.006275949999690056,
+    "dinding_total_s": 8.33759071699751
+  },
+  "n_jendela": 173765,
+  "metrik_val": {
+    "pr_auc": 0.8737919790503409
+  },
+  "telemetri": {
+    "tersedia": true,
+    "n_sampel": 7,
+    "energi_wh": 0.023338888888888888,
+    "daya_w": {
+      "median": 12.41,
+      "maks": 12.52
+    },
+    "suhu_c": {
+      "median": 49.0,
+      "maks": 49.0
+    },
+    "clock_sm_mhz": {
+      "median": 1425.0,
+      "min": 225.0,
+      "p5": 585.0
+    },
+    "utilisasi_pct_median": 0.0,
+    "vram_terpakai_mb_maks": 0.0,
+    "throttle_reasons_hex": [
+      "0x0000000000000000",
+      "0x0000000000000004"
+    ],
+    "csv": "bench/results/telemetry/g16-cpu/W6_cpu_hist_run1_20261011-183448.csv"
+  }
+}
