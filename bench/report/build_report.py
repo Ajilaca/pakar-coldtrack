@@ -303,6 +303,35 @@ def bagian_b3():
     return out
 
 
+def bagian_banding_model():
+    p = RESULTS_DIR / "g16-cpu" / "B7" / "banding_model_val.json"
+    if not p.exists():
+        return []
+    b = _load(p)
+    out = [
+        f"### Banding checkpoint-2 vs v2 vs v3 (split {b['split']}, {b['n_jendela']} jendela, {b['n_trip']} trip)",
+        "",
+        ("| model | MAE t+30 | AUROC pintu | AUROC kejut | AUROC sensor | recall pintu | recall sensor "
+        "| sehat dilabel gangguan |"),
+        "|---|---|---|---|---|---|---|---|",
+    ]
+    for nama, r in b["model"].items():
+        e = r["event"]
+        out.append(
+            f"| {nama} | {_fmt(r['forecast']['mae_t30'], 3)} | {_fmt(e['door']['auroc_vs_sehat'], 3)} | "
+            f"{_fmt(e['shock']['auroc_vs_sehat'], 3)} | {_fmt(e['sensor']['auroc_vs_sehat'], 3)} | "
+            f"{_fmt(e['door']['recall_label'], 2)} | {_fmt(e['sensor']['recall_label'], 2)} | "
+            f"{r['sehat_dilabel_gangguan']:.1%} |"
+        )
+    out += [
+        "",
+        "Bias: " + "; ".join(b["bias"]) + ".",
+        "Sumber: `bench/results/g16-cpu/B7/banding_model_val.json`",
+        "",
+    ]
+    return out
+
+
 def bagian_g3():
     tdir = RESULTS_DIR / "test"
     files = {p.stem: _load(p) for p in sorted(tdir.glob("*.json"))} if tdir.exists() else {}
@@ -329,6 +358,17 @@ def bagian_g3():
     if kep.exists():
         k = _load(kep)
         out += ["", f"**Keputusan G3: {k['status']}** ({k['tanggal']}). " + " ".join(k.get("alasan", []))]
+        if k.get("pembaruan"):
+            out += [
+                "",
+                (
+                    f"Pembaruan {k['pembaruan']['tanggal']}: {k['pembaruan']['keputusan']} "
+                    f"Mitigasi data tidak lengkap: {k['pembaruan']['mitigasi_data_tidak_lengkap']}."
+                ),
+            ]
+        if k.get("catatan"):
+            out += ["", "Catatan:", ""] + [f"- {c}" for c in k["catatan"]]
+        out += [""] + bagian_banding_model()
     else:
         out += ["", "**Keputusan G3: menunggu keputusan user** (model mana yang diganti, trade-off latensi)."]
     return out + ["", "Sumber: `bench/results/test/*.json`, `bench/results/test_access_log.json`", ""]

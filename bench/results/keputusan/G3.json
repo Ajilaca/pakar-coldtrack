@@ -1,6 +1,6 @@
 {
   "gerbang": "G3",
-  "status": "lulus: kandidat B3 diadopsi sebagai model acuan v3",
+  "status": "disetujui dengan catatan: v3 menjadi model acuan dan diagnosis provider bawaan backend",
   "tanggal": "2026-10-11",
   "diputuskan_oleh": "user (Tsabita Khoirunnisa), lewat chat Claude Code",
   "alasan": [
@@ -13,15 +13,32 @@
     "model_acuan_baru": "ml/reports/coldtrack_b3.onnx",
     "kontrak": "ml/reports/labels_b3.json",
     "model_proposal_dipertahankan": "ml/reports/coldtrack.onnx tidak ditimpa: dipakai benchmark W7/smoke dan export_demo_scenarios, sehingga d0-old harus mengukur berkas yang sama dengan G16",
-    "backend": "backend/models/coldtrack_gru.onnx (garis checkpoint-2, kontrak keluaran berbeda) TIDAK diganti sekarang; peralihan backend di B7 lewat registry/provider"
+    "backend": "SUDAH beralih (pembaruan 2026-10-11): backend/models/coldtrack_v3.onnx sebagai provider bawaan; checkpoint-2 (backend/models/coldtrack_gru.onnx) tetap ada untuk rollback"
   },
   "sumber": {
     "val": "bench/results/g16-gpu/B3/keputusan_kandidat.json",
-    "test": ["bench/results/test/baseline_proposal.json", "bench/results/test/kandidat_b3.json"],
+    "test": [
+      "bench/results/test/baseline_proposal.json",
+      "bench/results/test/kandidat_b3.json"
+    ],
     "log_akses_test": "bench/results/test_access_log.json",
     "latensi": "bench/results/g16-cpu/B3/latensi_kandidat.json"
   },
   "rekomendasi_terbuka": [
     "Tim data/PRD: tinjau definisi label failure_mode menjadi 'peristiwa masih aktif atau masih berdampak di dalam jendela' agar target klasifikasi dapat dicapai."
+  ],
+  "pembaruan": {
+    "tanggal": "2026-10-11",
+    "diputuskan_oleh": "user (Tsabita Khoirunnisa), lewat chat Claude Code",
+    "keputusan": "Diagnosis provider bawaan backend dipindah dari checkpoint-2 ke v3 (opsi 2), dengan flag rollback model.diagnosis_provider di backend/config.yaml; checkpoint-2 dipertahankan.",
+    "dasar": "bench/results/g16-cpu/B7/banding_model_val.json (perbandingan pada jendela val v4 yang sama)",
+    "mitigasi_data_tidak_lengkap": "opsi 2: data_lengkap=false + catatan_data + keyakinan dibatasi 0,5 bila ada jeda > 90 detik di 60 bacaan terakhir; status mesin fisika tidak berubah"
+  },
+  "catatan": [
+    "Target PRD belum tercapai: Macro F1 test 0,668 (> 0,80) dan PR-AUC test 0,786 (> 0,85); batas utama definisi label (58 % jendela A1 dan 51 % A7 di val tanpa jejak kejadian).",
+    "Perbandingan v3 vs checkpoint-2 dilakukan di data v4 (asing bagi checkpoint-2), v3 dituning di split val yang sama, definisi label pintu checkpoint-2 berbeda (>= 20 menit), uji di ml/dataset_v3.parquet belum dapat dijalankan (berkas tidak ada).",
+    "Latensi v3 0,21 -> 1,38 ms per panggilan (CPU, batch 1), jauh di bawah anggaran 300 ms.",
+    "Metrik hanya berlaku untuk jendela 60 menit tanpa bacaan hilang (32 % jendela val memuat bacaan hilang).",
+    "Split test tidak disentuh lagi; jatah satu kali v3 sudah dipakai."
   ]
 }

@@ -1,6 +1,6 @@
 # Laporan latih ulang ColdTrack + benchmark device
 
-> Dibangkitkan oleh `bench/report/build_report.py` pada 2026-10-11T01:51:12+00:00. Jangan diedit manual:
+> Dibangkitkan oleh `bench/report/build_report.py` pada 2026-10-11T02:33:43+00:00. Jangan diedit manual:
 > setiap angka berasal dari JSON di `bench/results/`. Tabel lengkap: `summary.csv`.
 
 ## Gerbang G1 (reproduksi)
@@ -264,7 +264,29 @@ Log akses split test (dicatat sebelum evaluasi; run kedua untuk id yang sama dit
 - `kandidat_b3`: backend/models/candidates/coldtrack_gru_b3.onnx (sha256 fab911760e87…), 2026-10-10T22:53:13+00:00, commit 1e668e1
 - `b4_berkeley_v1_kesehatan`: ml/sensor_health/artifacts/berkeley_v1_kesehatan.json (sha256 19fbf3cd0220…), 2026-10-11T01:49:41+00:00, commit 073756a
 
-**Keputusan G3: lulus: kandidat B3 diadopsi sebagai model acuan v3** (2026-10-11). Kandidat lebih baik dari baseline di split val (5 seed, aturan adopsi yang didaftarkan sebelum sweep) dan di split test yang dipakai sekali. Forecast tidak memburuk berarti; TTB produksi tetap XGBoost sehingga penurunan head TTB GRU tidak berdampak. Trade-off latensi diterima user: tetap jauh di bawah batas PRD 300 ms per panggilan. Target Macro F1 dan PR-AUC PRD belum tercapai; batasnya dilaporkan (label implisit).
+**Keputusan G3: disetujui dengan catatan: v3 menjadi model acuan dan diagnosis provider bawaan backend** (2026-10-11). Kandidat lebih baik dari baseline di split val (5 seed, aturan adopsi yang didaftarkan sebelum sweep) dan di split test yang dipakai sekali. Forecast tidak memburuk berarti; TTB produksi tetap XGBoost sehingga penurunan head TTB GRU tidak berdampak. Trade-off latensi diterima user: tetap jauh di bawah batas PRD 300 ms per panggilan. Target Macro F1 dan PR-AUC PRD belum tercapai; batasnya dilaporkan (label implisit).
+
+Pembaruan 2026-10-11: Diagnosis provider bawaan backend dipindah dari checkpoint-2 ke v3 (opsi 2), dengan flag rollback model.diagnosis_provider di backend/config.yaml; checkpoint-2 dipertahankan. Mitigasi data tidak lengkap: opsi 2: data_lengkap=false + catatan_data + keyakinan dibatasi 0,5 bila ada jeda > 90 detik di 60 bacaan terakhir; status mesin fisika tidak berubah.
+
+Catatan:
+
+- Target PRD belum tercapai: Macro F1 test 0,668 (> 0,80) dan PR-AUC test 0,786 (> 0,85); batas utama definisi label (58 % jendela A1 dan 51 % A7 di val tanpa jejak kejadian).
+- Perbandingan v3 vs checkpoint-2 dilakukan di data v4 (asing bagi checkpoint-2), v3 dituning di split val yang sama, definisi label pintu checkpoint-2 berbeda (>= 20 menit), uji di ml/dataset_v3.parquet belum dapat dijalankan (berkas tidak ada).
+- Latensi v3 0,21 -> 1,38 ms per panggilan (CPU, batch 1), jauh di bawah anggaran 300 ms.
+- Metrik hanya berlaku untuk jendela 60 menit tanpa bacaan hilang (32 % jendela val memuat bacaan hilang).
+- Split test tidak disentuh lagi; jatah satu kali v3 sudah dipakai.
+
+### Banding checkpoint-2 vs v2 vs v3 (split val, 16500 jendela, 105 trip)
+
+| model | MAE t+30 | AUROC pintu | AUROC kejut | AUROC sensor | recall pintu | recall sensor | sehat dilabel gangguan |
+|---|---|---|---|---|---|---|---|
+| checkpoint2_backend | 1.398 | 0.613 | 0.483 | 0.341 | 0.00 | 0.58 | 23.8% |
+| v2_proposal | 0.211 | 0.728 | 0.860 | 0.978 | 0.42 | 0.68 | 10.2% |
+| v3_b3 | 0.208 | 0.837 | 0.894 | 0.975 | 0.44 | 0.89 | 3.6% |
+
+Bias: v3 dipilih di split val (sedikit optimistis); v4 out-of-distribution untuk checkpoint-2 (dilatih di simulator garis checkpoint-2).
+Sumber: `bench/results/g16-cpu/B7/banding_model_val.json`
+
 
 Sumber: `bench/results/test/*.json`, `bench/results/test_access_log.json`
 

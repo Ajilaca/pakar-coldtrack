@@ -106,7 +106,28 @@ Penggantian model mengikuti gerbang yang dapat diaudit (`bench/README.md`, `benc
    dan peralihan backend dikerjakan terpisah dengan tes paritas ONNX.
 
 Penggantian v2 → v3 (11 Oktober 2026) melalui seluruh langkah di atas
-(`bench/results/keputusan/G1.json`, `G3.json`, `bench/results/G2.json`).
+(`bench/results/keputusan/G1.json`, `G3.json`, `bench/results/G2.json`). G3 **disetujui dengan
+catatan**; v3 menjadi diagnosis provider bawaan backend, menggantikan checkpoint-2.
+
+**Pernyataan jujur tentang target.** v3 **tidak** mencapai target PRD klasifikasi: Macro F1 test
+0,668 (target > 0,80), PR-AUC test 0,786 (target > 0,85). Batas utamanya terukur pada definisi label:
+58 % jendela A1 dan 51 % jendela A7 tidak memuat jejak kejadiannya. Definisi metrik dan target tidak
+diubah; peninjauan definisi label diserahkan ke tim data/PRD.
+
+**Rollback.** Satu flag `model.diagnosis_provider` di `backend/config.yaml` (`v3` | `checkpoint2`);
+checkpoint-2 tidak dihapus dan tetap diuji di CI. Setiap respons memuat `diagnosis_provider` dan
+`model_version` sehingga perilaku dapat dilacak dari log.
+
+**Keterbatasan perbandingan v3 vs checkpoint-2.** Diuji di data v4 yang asing bagi checkpoint-2; v3
+dituning di split val yang sama; definisi label pintu checkpoint-2 berbeda (>= 20 menit); uji di
+`ml/dataset_v3.parquet` belum dapat dijalankan karena berkas tidak ada di repo
+(`docs/model_card.md`, bagian v3 di backend).
+
+**Latensi.** v3 0,21 → 1,38 ms per panggilan (CPU, batch 1), jauh di bawah anggaran 300 ms.
+
+**Data tidak lengkap.** Diagnosis model pada jendela dengan bacaan hilang berada di luar distribusi
+latih. Sistem menandainya (`data_lengkap: false`, keyakinan dibatasi 0,5) dan antarmuka menampilkan
+"Diagnosis kurang andal (data tidak lengkap)"; status dari mesin fisika tidak terpengaruh.
 
 ## Monitoring
 
