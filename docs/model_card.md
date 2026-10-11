@@ -82,6 +82,19 @@ keduanya identik. Mitigasi: bila ada jeda > 90 detik di 60 bacaan terakhir, resp
 `data_lengkap: false` + `catatan_data` dan keyakinan diagnosis dibatasi 0,5 (pilihan tampilan
 konservatif, bukan nilai terkalibrasi). **Metrik di atas hanya berlaku untuk jendela lengkap.**
 
+**Zona waktu fitur `hour_of_day` (perbaikan 11 Oktober 2026):** model dilatih dengan **jam lokal**
+(simulator latih dan skenario demo memakai WIB). Sebelumnya `POST /analyze` mengambil jam dari offset
+yang dikirim klien. Akibatnya bacaan identik yang dikirim sebagai UTC (`Z`) dan sebagai `+07:00`
+memberi forecast berbeda: selisih maksimum 0,15 °C (v3) dan 0,61 °C (checkpoint-2) pada tiga jendela
+uji. Status tidak berubah, karena mesin fisika tidak memakai jam (sesuai `G4_robustness/
+hour_shift_utc_vs_wib_+7h` di `eval/results/iter2_results.json`), dan label pada jendela uji itu juga
+tidak berubah. Sekarang ts ber-zona waktu dikonversi ke `fleet.zona_waktu` (bawaan `Asia/Jakarta`)
+sebelum fitur dihitung (`backend/app/inference.ke_zona_armada`), sama dengan worker armada.
+- ts tanpa zona waktu dianggap jam lokal armada.
+- Keterbatasan: armada di luar WIB (WITA/WIT) butuh `zona_waktu` per truk/depo; belum ada.
+- Angka evaluasi di atas tidak terpengaruh, karena dihitung langsung dari jendela latih, bukan lewat
+  `/analyze`.
+
 Bagian di bawah ini mendeskripsikan **v2** dan dipertahankan sebagai riwayat.
 
 ---

@@ -138,7 +138,10 @@ proposal §4.3.7).
 
 - Antarmuka boleh memakai penomoran menit relatif untuk sumbu-x grafik, tetapi
   yang dikirim ke backend harus `ts` absolut — fitur `hour_of_day` diturunkan
-  dari situ.
+  dari situ. Offset apa pun boleh (`Z`, `+07:00`): backend mengonversi ke
+  `fleet.zona_waktu` (bawaan `Asia/Jakarta`) sebelum menghitung fitur, karena model
+  dilatih dengan jam lokal. Hasilnya sama untuk bacaan yang sama. `ts` tanpa zona
+  waktu dianggap sudah jam lokal armada.
 - `lat`/`lon` hanya dipakai untuk peta di antarmuka; keduanya tidak pernah masuk
   ke matriks fitur model.
 - Antarmuka memanggil backend sungguhan bila `NEXT_PUBLIC_USE_MOCK=false`. Nilai

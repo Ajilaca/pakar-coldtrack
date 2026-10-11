@@ -97,6 +97,19 @@ def cargo_params(cargo_profile: str, mass_kg: float | None) -> dict[str, float]:
     }
 
 
+def ke_zona_armada(readings: list[TelemetryReading]) -> list[TelemetryReading]:
+    """Ubah ts ber-zona waktu ke zona armada (config fleet.zona_waktu, bawaan Asia/Jakarta).
+
+    hour_of_day dilatih dengan JAM LOKAL (ml/coldtrack_sim.py, skenario demo WIB). Tanpa ini, bacaan yang
+    sama yang dikirim dengan "Z" dan dengan "+07:00" menghasilkan fitur jam yang bergeser 7 jam.
+    ts tanpa zona waktu dianggap sudah jam lokal armada dan tidak diubah. Lewat pandas (bukan zoneinfo)
+    supaya tidak bergantung pada tzdata sistem di image slim.
+    """
+    zona = settings.get("fleet", {}).get("zona_waktu", "Asia/Jakarta")
+    return [r if r.ts.tzinfo is None else r.model_copy(update={"ts": pd.Timestamp(r.ts).tz_convert(zona).to_pydatetime()})
+            for r in readings]
+
+
 def readings_to_trip(readings: list[TelemetryReading], prod: dict[str, float]) -> pd.DataFrame:
     """One trip in the column layout the ml/ pipeline was trained on."""
     ts = pd.to_datetime([r.ts for r in readings])
@@ -319,6 +332,7 @@ class HybridInferenceEngine:
         """predict() plus the per-minute engine series (ts, sensor_status, T_cargo_est, status) over the
         whole history, used by worker-infer for sensor health and breach detection. Models run once."""
         prod = cargo_params(cargo_profile, mass_kg)
+        readings = ke_zona_armada(readings)
         trip = readings_to_trip(readings, prod)
         eng = engine.run(trip, prod, prod["mass_kg"])
         now = self.analyze_trip(trip, prod, features_per_minute(readings), last_only=True, engine_out=eng).iloc[-1]

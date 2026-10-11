@@ -8,7 +8,7 @@ the G3-tested ONNX before writing the fixture. No torch is needed to run these t
 """
 
 import json
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta, timezone
 from pathlib import Path
 
 import numpy as np
@@ -17,8 +17,9 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app import main
-from app.inference import BACKEND_DIR, PROVIDERS, HybridInferenceEngine
-from app.schemas import AnalyzeRequest
+from app.inference import BACKEND_DIR, PROVIDERS, HybridInferenceEngine, ke_zona_armada
+from app.preprocess import features_per_minute
+from app.schemas import AnalyzeRequest, TelemetryReading
 
 FIXTURE = Path(__file__).parent / "fixtures" / "v3_parity.npz"
 RULE_LABELS = {"pintu_terbuka", "suhu_muatan_mendekati_batas"}
@@ -88,6 +89,34 @@ def test_analyze_end_to_end_both_providers(name, monkeypatch):
         assert body["failure_mode"]["label"] in LABELS[name]
         assert (body["failure_mode"]["label"] == "normal_sehat") <= (body["status"] == "AMAN")
         assert len(body["actions"]) == 3
+
+
+@pytest.mark.parametrize("name", PROVIDERS)
+def test_analyze_sama_untuk_utc_dan_wib(name, monkeypatch):
+    """hour_of_day dilatih dengan jam lokal WIB. Bacaan yang sama dikirim sebagai UTC ("Z") atau +07:00
+    harus memberi keluaran identik (ts dikonversi ke fleet.zona_waktu di inference.ke_zona_armada)."""
+    monkeypatch.setattr(main, "inference_engine", HybridInferenceEngine(provider=name))
+    client = TestClient(main.app)
+    for wib in (readings(), readings(slope=0.08), readings(door_at=50)):
+        utc = [{**r, "ts": datetime.fromisoformat(r["ts"]).astimezone(UTC).isoformat().replace("+00:00", "Z")}
+               for r in wib]
+        # tanpa konversi, fitur jam memang berbeda 7 jam (tes ini bisa gagal bila konversinya hilang)
+        mentah = features_per_minute([TelemetryReading.model_validate(r) for r in utc])
+        assert mentah["hour_of_day"].iloc[0] == 1
+        a = client.post("/api/v1/analyze", json={"shipment_id": "T", "readings": wib}).json()
+        b = client.post("/api/v1/analyze", json={"shipment_id": "T", "readings": utc}).json()
+        a.pop("inference_ms")
+        b.pop("inference_ms")
+        assert a == b
+
+
+def test_ke_zona_armada_dan_ts_tanpa_zona():
+    r = TelemetryReading.model_validate(readings(n=1)[0])
+    utc = r.model_copy(update={"ts": r.ts.astimezone(UTC)})
+    naif = r.model_copy(update={"ts": r.ts.replace(tzinfo=None)})
+    hasil = ke_zona_armada([utc, naif])
+    assert hasil[0].ts.hour == 8 and hasil[0].ts.utcoffset() == timedelta(hours=7)
+    assert hasil[1].ts == naif.ts                       # tanpa zona: dianggap jam lokal, tidak diubah
 
 
 @pytest.mark.parametrize("name", PROVIDERS)
