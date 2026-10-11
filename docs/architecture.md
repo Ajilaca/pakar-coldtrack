@@ -120,6 +120,33 @@ readings. If the last 60 readings contain a time gap > 90 s, the response sets
 `data_lengkap: false` with `catatan_data`, and the failure-mode confidence is capped at 0.5 (a
 conservative display choice, not a calibrated value). Status is unaffected.
 
+### 2.5 Fleet monitoring (local demo, Oct 2026)
+
+```
+virtual-trucks / logger ─MQTT QoS1─► mosquitto ─► worker-ingest ─► TimescaleDB (telemetry hypertable)
+                                                        │ NOTIFY telemetry_arrived
+                                                        ▼
+            worker-infer (1-min window, predict_last) → orchestrator: condition (engine + v3) · sensor_health (rules v0)
+                                                        │ predictions, truck_state, incidents, notifications; NOTIFY fleet_events
+                                                        ▼
+                                  api (REST /api/v1/fleet/*, /incidents, SSE /stream) ─► Next.js dashboard
+```
+
+One backend image runs every role (`api`, `worker-ingest`, `worker-infer`, `virtual-trucks`). Contracts and
+choices are documented elsewhere:
+- `docs/device_contract.md`: MQTT topics, batch payloads, UTC timestamps.
+- `docs/api_contract.md` §7: fleet API and SSE.
+- `docs/fleet_assumptions.md`: `[ASUMSI]` / `[DESAIN]` choices, including the healthy-trip alarm finding.
+- `docs/demo.md`: how to run, reset, and present.
+
+Model features use local fleet time (`fleet.zona_waktu`, Asia/Jakarta) in both `/analyze` and the worker.
+
+The deployment is **local only** (decision of 11 Oct 2026, demo use). The following are out of scope until it
+goes online:
+- public hosting: the frontend could go on Vercel; the workers, database, MQTT, and SSE need a container host;
+- TLS, MQTT 8883, and per-device ACLs;
+- backups.
+
 ---
 
 ## 3. Data Flow & Processing Lifecycle
