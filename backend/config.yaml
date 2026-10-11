@@ -36,6 +36,22 @@ fleet:
   history_cap_min: 240          # riwayat maksimum per truk untuk engine (menit)
   ffill_maks_menit: 5           # celah <= ini diisi nilai terakhir; lebih besar -> DATA_TIDAK_LENGKAP
   offline_setelah_menit: 10     # tanpa bacaan selama ini -> TIDAK_ADA_DATA (tidak pernah AMAN)
+  zona_waktu: Asia/Jakarta      # fitur hour_of_day dilatih dengan jam lokal (WIB); ts tetap disimpan UTC
+  infer_debounce_detik: 2      # worker-infer: tunggu sekian detik dinding setelah NOTIFY sebelum menghitung
+  # Panel "Perlu diperbarui" (app/fleet/devices.py). [ASUMSI] sampai ada data mitra.
+  perangkat:
+    firmware_terbaru: "1.5.0"
+    gateway_terbaru: "0.9.3"
+    kalibrasi_maks_hari: 180    # [ASUMSI] interval kalibrasi logger suhu
+    offline_lama_jam: 24
+    skor_sensor_min: 50         # skor kesehatan sensor di bawah ini -> perlu cek/ganti
+
+# Registry model armada (app/models/orchestrator.py). Satu provider per jenis; ganti nilainya untuk memakai
+# provider lain (mis. sensor_health: berkeley_v1 setelah Fase 8). Diagnosis kondisi tetap memakai
+# model.diagnosis_provider di atas.
+models:
+  condition: hybrid
+  sensor_health: rules_v0
 
 # c_kj_kgc dan mass_kg_default = [ASUMSI] sampai diganti nilai dari `data kalor.pdf`
 # (segar ~3,6-3,9 kJ/kg.C, beku ~1,8). mass_kg_default dipakai bila request tidak

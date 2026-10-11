@@ -46,3 +46,34 @@ rencana armada):
 | Truk dianggap tanpa data | ≥ 10 menit tanpa bacaan (`fleet.offline_setelah_menit`) | Status `TIDAK_ADA_DATA`, tidak pernah AMAN |
 | Kompresi / retensi TimescaleDB | kompresi > 7 hari, retensi 180 hari | Belum ada kebijakan retensi dari mitra |
 | Agregat riwayat | 15 menit, disegarkan tiap 15 menit untuk 1 hari terakhir | Cukup untuk grafik riwayat |
+| Zona waktu fitur model | `Asia/Jakarta` (`fleet.zona_waktu`) | ts disimpan UTC, tetapi `hour_of_day` dilatih dengan jam lokal (simulator latih, skenario demo WIB). Worker mengonversi sebelum fitur dihitung |
+| Debounce worker-infer | 2 detik dinding (`fleet.infer_debounce_detik`) | Batch dari buffer perangkat cukup dihitung sekali |
+
+## Inferensi streaming (Fase 3) — pilihan desain
+
+| Hal | Pilihan | Tag | Alasan |
+|---|---|---|---|
+| `DATA_TIDAK_LENGKAP` | Hanya menggantikan AMAN; WASPADA/KRITIS tetap tampil | [DESAIN] | Data berlubang tidak boleh tampil AMAN, tetapi peringatan tidak boleh tertutup catatan kualitas data |
+| Jenis insiden | `kondisi` (WASPADA/KRITIS, punya nilai kerugian) dan `data` (TIDAK_ADA_DATA, tanpa nilai), satu terbuka per (truk, jenis, trip) | [DESAIN] | Tanpa pemisahan, putus data "tereskalasi" jadi insiden kondisi dengan `detected_at`/lead time yang salah, dan insiden trip lama menelan episode trip baru (terlihat saat uji Docker 2026-10-11) |
+| Pembuka insiden | Awal episode saja; `MENUNGGU_DATA` dan `DATA_TIDAK_LENGKAP` tidak membuka insiden | [DESAIN] | Putus sinyal pendek tidak membanjiri kotak masuk |
+| Notifikasi insiden data | Hanya saat pertama terputus | [DESAIN] | Putus sinyal berulang menimbulkan banyak notifikasi tanpa informasi baru |
+| Kesehatan sensor v0 | Skor 0–100 dari penalti (`app/models/sensor_health_rules.py`); grade Sehat ≥ 80, Perlu cek ≥ 50, Ganti < 50 | [DESAIN] | Bobot belum dikalibrasi terhadap kerusakan nyata. Pada seed, ke-14 truk A0 bernilai Sehat (tes). Derau diukur dengan selisih orde-2 karena suhu seed terkuantisasi 0,1 °C (MAD = 0) |
+| Data terlambat | Prediksi dihitung ulang hanya untuk menit terakhir | [DESAIN] | Prediksi menit lampau tidak ditulis ulang |
+
+### Temuan: alarm pada truk normal
+
+Pada uji Docker (3 jam waktu simulasi, 24 truk), 8 dari 14 truk yang trip asalnya A0 (normal) membuka
+insiden kondisi. Penyebabnya mesin fisika, bukan worker:
+- Mesin yang sama dijalankan offline pada data seed memberi status non-AMAN yang panjang pada trip A0.
+  Contoh: D 2605 RV, `produk_susu_2_4C`, 350 menit WASPADA dan 44 menit KRITIS. Truk ini berjalan di
+  3,0–3,7 °C, dekat batas atas profil 2–4 °C.
+- Ini konsisten dengan angka eval: `healthy_alert_rate` = 0,199 per menit pada trip A0
+  (`eval/results/iter2_results.json`; sapuan margin 0,131–0,331 di `margin_sweep_iter2.json`).
+- Di dasbor armada, angka itu terlihat sebagai insiden pada hampir setiap trip normal berprofil sempit.
+- Ambang mesin tidak diubah di Fase 3. Perubahannya harus diputuskan dan divalidasi ulang di split val
+  (lihat `docs/model_card.md` §6: ambang condong ke sisi waspada).
+
+### Catatan simulator
+
+Simulator memutar ulang trip seed dengan ts = jam bersama. Jam asli trip v4 tidak dipertahankan, sehingga
+pola harian di data (mis. suhu luar) tidak selalu cocok dengan `hour_of_day` yang dilihat model.

@@ -112,11 +112,16 @@ def test_status_perangkat_offline_lalu_online(db, mq):
     def online():
         return db.execute("SELECT online FROM devices WHERE id = %s", (DEV,)).fetchone()[0]
 
+    def baterai():
+        return db.execute("SELECT battery_v FROM devices WHERE id = %s", (DEV,)).fetchone()[0]
+
+    # Keadaan awal harus BEDA dari yang diharapkan; tanpa ini tunggu() bisa lolos sebelum pesan diproses
+    # (online bawaan seed = false, dan LWT simulator yang dimatikan juga menulis false).
+    db.execute("UPDATE devices SET online = true, battery_v = 3.0 WHERE id = %s", (DEV,))
     st = {"schema": "coldtrack.status.v1", "device_id": DEV, "online": False, "firmware": "1.5.0",
           "battery_v": 2.31, "ts": T0.isoformat()}
     kirim(mq, [], 0, jenis="status", body=st)                 # tanpa retain: tidak mengotori broker
-    assert tunggu(lambda: online() is False)
-    assert db.execute("SELECT battery_v FROM devices WHERE id = %s", (DEV,)).fetchone()[0] == pytest.approx(2.31)
+    assert tunggu(lambda: online() is False and baterai() == pytest.approx(2.31))
     kirim(mq, [], 0, jenis="status", body={**st, "online": True})
     assert tunggu(lambda: online() is True)
 
@@ -137,3 +142,49 @@ def test_webhook_vendor(db):
     r = api.post("/api/v1/ingest/vendor/generic_json", json=body, headers={"X-API-Key": kunci})
     assert r.json()["baru"] == 0                                # kirim ulang: dedupe
     assert jumlah(db, 300, 301) == 2
+
+
+# --- Fase 3: publish -> prediksi muncul (butuh worker-infer berjalan dengan SIM_SPEED/SIM_ANCHOR yang sama) ---
+
+TRUK_IT, KEY_IT = "IT 0001 ZZ", "IT0001ZZ"
+
+
+@pytest.fixture
+def truk_uji(db):
+    from app import clock
+
+    now = clock.now().replace(second=0, microsecond=0)
+    db.execute("INSERT INTO trucks (id, depot_id, label) SELECT %s, id, 'Truk uji integrasi' FROM depots LIMIT 1",
+               (TRUK_IT,))
+    trip_id = db.execute("INSERT INTO trips (truck_id, cargo_profile, mass_kg, cargo_value_idr, started_at) "
+                         "VALUES (%s, 'vaksin_2_8C', 800, 1000, %s) RETURNING id",
+                         (TRUK_IT, now - timedelta(minutes=80))).fetchone()[0]
+    yield now, trip_id
+    for tabel in ("notifications", "incident_events", "incidents", "predictions", "truck_state", "telemetry", "trips"):
+        if tabel == "incident_events":
+            db.execute("DELETE FROM incident_events WHERE incident_id IN (SELECT id FROM incidents WHERE truck_id = %s)",
+                       (TRUK_IT,))
+        else:
+            db.execute(f"DELETE FROM {tabel} WHERE truck_id = %s", (TRUK_IT,))
+    db.execute("DELETE FROM trucks WHERE id = %s", (TRUK_IT,))
+
+
+def test_publish_lalu_prediksi_muncul(db, mq, truk_uji):
+    now, trip_id = truk_uji
+    rd = [{**bacaan(0), "ts": (now - timedelta(minutes=70 - m)).isoformat(), "temp_c": 5.0}
+          for m in range(70)]
+    mq.publish(f"coldtrack/v1/{KEY_IT}/telemetry", json.dumps(
+        {"schema": "coldtrack.telemetry.v1", "device_id": None, "seq": 1, "readings": rd}), qos=1).wait_for_publish(5)
+
+    def prediksi():
+        return db.execute("SELECT status, forecast, failure_label, model_version FROM predictions "
+                          "WHERE truck_id = %s AND trip_id = %s ORDER BY ts DESC LIMIT 1",
+                          (TRUK_IT, trip_id)).fetchone()
+
+    assert tunggu(lambda: prediksi() is not None, 30), "worker-infer tidak menulis prediksi"
+    status, forecast, label, versi = prediksi()
+    assert status in ("AMAN", "WASPADA", "KRITIS", "DATA_TIDAK_LENGKAP")
+    assert set(forecast) == {"t15", "t30", "t60"} and label and versi
+    st = db.execute("SELECT status, sensor_health->>'grade', trip_id FROM truck_state WHERE truck_id = %s",
+                    (TRUK_IT,)).fetchone()
+    assert st[0] == status and st[1] in ("Sehat", "Perlu cek", "Ganti", "Data kurang") and st[2] == trip_id

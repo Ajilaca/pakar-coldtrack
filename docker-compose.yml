@@ -87,6 +87,27 @@ services:
       retries: 3
     restart: unless-stopped
 
+  # --- Fase 3: inferensi streaming (predictions, truck_state, insiden, notifikasi)
+  worker-infer:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: coldtrack-worker-infer
+    command: ["python", "-m", "app.workers.infer"]
+    environment:
+      - CONFIG_PATH=/app/config.yaml
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-coldtrack}:${POSTGRES_PASSWORD:-coldtrack}@db:5432/${POSTGRES_DB:-coldtrack}
+      - SIM_SPEED=${SIM_SPEED:-30}
+      - SIM_ANCHOR=${SIM_ANCHOR:-2026-10-11T00:00:00+00:00}
+    depends_on:
+      api:
+        condition: service_healthy              # migrasi + seed sudah jalan
+    healthcheck:
+      test: ["CMD-SHELL", "grep -q app.workers.infer /proc/1/cmdline"]
+      interval: 15s
+      retries: 3
+    restart: unless-stopped
+
   virtual-trucks:
     profiles: ["dev"]
     build:
