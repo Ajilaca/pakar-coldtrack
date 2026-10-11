@@ -30,9 +30,13 @@ export default function FleetMap({ peta, mini = false }: { peta: Peta; mini?: bo
       center={JAWA} zoom={mini ? 6 : 7} scrollWheelZoom={!mini} zoomControl={!mini} attributionControl
       className="size-full rounded-xl" style={{ minHeight: mini ? 220 : 420 }}
     >
+      {/* Tile OpenStreetMap standar: tanpa API key (CARTO basemaps kini meminta key). Diabu-abukan lewat CSS
+          (.peta-abu di globals.css) agar mirip peta Figma. Kebijakan tile OSM: pemakaian ringan + atribusi. */}
       <TileLayer
-        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+        maxZoom={19}
+        className="peta-abu"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
       {peta.depo.map((d) => (
         <Marker key={d.id} position={[d.lat, d.lon]} icon={ikon(d.status ? tone(d.status).dot : "#94a3b8", "kotak", mini ? 12 : 16)}>

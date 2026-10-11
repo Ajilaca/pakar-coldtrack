@@ -115,6 +115,11 @@
   }
 }
 
+/* Peta armada: tile OSM berwarna diabu-abukan (desain Figma memakai peta abu-abu terang). */
+.peta-abu {
+  filter: grayscale(1) brightness(1.06) contrast(0.92);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
