@@ -1,0 +1,140 @@
+{
+  "workload": "W4",
+  "config_id": "stat_vs_tanpa",
+  "konfigurasi": {
+    "varian": [
+      "dengan_stat",
+      "tanpa_stat"
+    ],
+    "seed": [
+      1000,
+      1001,
+      1002,
+      1003,
+      1004
+    ],
+    "epoch": 10,
+    "basis": "ml/finetune.py (asli)"
+  },
+  "tag": "d0-old",
+  "device": "cpu",
+  "run": 0,
+  "pemanasan": false,
+  "seed": 1000,
+  "waktu_utc": "2026-10-11T16:41:09+00:00",
+  "git": {
+    "commit": "fd61a980e9a92fa81c32579fdf0d79f005fcf52a",
+    "branch": "feat/model-retrain-g16",
+    "dirty": false
+  },
+  "env": "bench/results/d0-old/env/env_20261011-212135.json",
+  "kondisi_manual": {
+    "charger": true,
+    "mode_daya": "Lenovo Extreme Performance (Fn+Q) + Windows \"Best performance\"",
+    "pendingin": "meja keras tanpa cooling pad",
+    "aplikasi_berat_ditutup": true,
+    "wslconfig_memory": "12GB",
+    "catatan": "Run pertama (mode Lenovo otomatis/Intelligent Cooling) dibatalkan: suhu CPU mencapai ~100 C lalu di-clamp ke ~22% performa (~400 MHz) selama 4-8 menit, berulang tiap ~10 menit. Hasilnya tidak dipakai. Claude Code desktop tetap berjalan sebagai pengendali run (beban CPU ~1-2%), ditambah perekam suhu/performa Windows tiap ~12 detik."
+  },
+  "protokol": {
+    "repeats": 1,
+    "warmup": 0,
+    "cooldown_s": 60
+  },
+  "waktu": {
+    "ablation_total_s": 4591.847343114998,
+    "dinding_total_s": 4596.351943242
+  },
+  "n_pelatihan": 10,
+  "varian": {
+    "dengan_stat": {
+      "runs": [
+        {
+          "seed": 1000,
+          "detik": 459.42047860700404,
+          "macro_f1": 0.5327678120423303,
+          "anomali_pr_auc": 0.6349309655380847,
+          "forecast_t30_mae_c": 0.21010816097259521
+        },
+        {
+          "seed": 1001,
+          "detik": 459.06982809700276,
+          "macro_f1": 0.49683061491025166,
+          "anomali_pr_auc": 0.6244728358643987,
+          "forecast_t30_mae_c": 0.21145273745059967
+        },
+        {
+          "seed": 1002,
+          "detik": 459.1498191110004,
+          "macro_f1": 0.5021541090791034,
+          "anomali_pr_auc": 0.6206765334249772,
+          "forecast_t30_mae_c": 0.21169838309288025
+        },
+        {
+          "seed": 1003,
+          "detik": 462.96646150099696,
+          "macro_f1": 0.49312529173522596,
+          "anomali_pr_auc": 0.627564732957574,
+          "forecast_t30_mae_c": 0.2097042351961136
+        },
+        {
+          "seed": 1004,
+          "detik": 459.2154968429968,
+          "macro_f1": 0.532364257465557,
+          "anomali_pr_auc": 0.626746305865792,
+          "forecast_t30_mae_c": 0.21042373776435852
+        }
+      ],
+      "macro_f1_mean": 0.5114484170464937,
+      "anomali_pr_auc_mean": 0.6268782747301653,
+      "forecast_t30_mae_c_mean": 0.21067745089530945,
+      "detik_mean": 459.9644168318002
+    },
+    "tanpa_stat": {
+      "runs": [
+        {
+          "seed": 1000,
+          "detik": 467.17084000400064,
+          "macro_f1": 0.363595471774739,
+          "anomali_pr_auc": 0.5123801058575015,
+          "forecast_t30_mae_c": 0.24230070412158966
+        },
+        {
+          "seed": 1001,
+          "detik": 451.7588290779968,
+          "macro_f1": 0.35087138040325944,
+          "anomali_pr_auc": 0.5153743861619646,
+          "forecast_t30_mae_c": 0.2511673867702484
+        },
+        {
+          "seed": 1002,
+          "detik": 455.45306478400016,
+          "macro_f1": 0.3600535896435799,
+          "anomali_pr_auc": 0.5438844425372268,
+          "forecast_t30_mae_c": 0.26550015807151794
+        },
+        {
+          "seed": 1003,
+          "detik": 458.46260558899667,
+          "macro_f1": 0.3603050113731654,
+          "anomali_pr_auc": 0.5271164977560809,
+          "forecast_t30_mae_c": 0.2576961815357208
+        },
+        {
+          "seed": 1004,
+          "detik": 459.17910549099906,
+          "macro_f1": 0.3440372367580057,
+          "anomali_pr_auc": 0.5159077233358692,
+          "forecast_t30_mae_c": 0.26486191153526306
+        }
+      ],
+      "macro_f1_mean": 0.35577253799054986,
+      "anomali_pr_auc_mean": 0.5229326311297287,
+      "forecast_t30_mae_c_mean": 0.25630526840686796,
+      "detik_mean": 458.40488898919864
+    }
+  },
+  "telemetri": {
+    "tersedia": false
+  }
+}
