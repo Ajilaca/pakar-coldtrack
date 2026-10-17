@@ -111,7 +111,7 @@ export default function KerugianPage() {
             <div><dt className="font-semibold">Berhasil diatasi</dt><dd className="text-muted">Insiden selesai sebelum breach, atau kembali AMAN tanpa breach</dd></div>
             <div><dt className="font-semibold">Lead time</dt><dd className="text-muted">Waktu perkiraan breach dikurangi waktu terdeteksi (TTB saat terdeteksi). Bila breach terjadi: waktu breach dikurangi waktu terdeteksi; 0 berarti terdeteksi saat sudah melewati batas.</dd></div>
           </dl>
-          <p className="mt-4 text-[12px] text-muted">Harga per kg adalah [ASUMSI] di konfigurasi, bukan data pelanggan. &quot;Berhasil diatasi&quot; tidak membuktikan tindakan operator yang mencegahnya.</p>
+          <p className="mt-4 text-[12px] text-muted">Harga per kg di sini adalah perkiraan, bukan harga dari data Anda. &quot;Berhasil diatasi&quot; berarti masalah selesai sebelum suhu melewati batas, belum tentu karena tindakan operator.</p>
         </Card>
       </div>
 
