@@ -63,7 +63,7 @@ export default function TindakanPage() {
       <div className="flex flex-col gap-3 rounded-2xl border bg-[#f3f6ff] px-4 py-3 text-[13px] sm:flex-row sm:items-center sm:justify-between">
         <p className="flex items-center gap-2 text-[#2b3f87]">
           <UserCircle size={18} aria-hidden />
-          Hanya fase Terdeteksi dan Gagal diisi otomatis oleh sistem. Fase lain diubah operator dan tercatat di audit trail.
+          Status Terdeteksi dan Gagal diisi otomatis oleh sistem. Status lainnya diubah operator, dan setiap perubahan dicatat beserta nama pengubahnya.
         </p>
         <label className="flex items-center gap-2">
           <span className="whitespace-nowrap text-muted">Nama operator</span>

@@ -67,7 +67,6 @@ function PosisiSensor({ t }: { t: TrukDetail }) {
           <span className="num font-semibold">{suhu(b?.temp_c)}</span>
         </li>
       </ul>
-      <p className="mt-2 text-[11px] text-muted">Logger saat ini satu sensor per truk; desain Figma menampilkan tiga posisi (depan/tengah/belakang).</p>
     </Card>
   );
 }

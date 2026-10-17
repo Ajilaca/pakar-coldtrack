@@ -96,9 +96,10 @@ export default function SensorPage() {
         <div className="flex flex-col gap-4">
           <Card title="Perlu diperbarui">{d ? <PerluDiperbarui temuan={d.perlu_diperbarui} /> : <Muat tinggi={260} />}</Card>
           <p className="rounded-2xl border bg-surface p-4 text-[12px] text-muted">
-            Skor 0–100 dihitung dari penalti: menit curiga/rusak, flatline terpanjang, derau vs baseline Intel 0,073 °C,
-            lompatan &gt; 5 °C, dan baterai. Bobot penalti bersifat desain, bukan hasil pelatihan. Model Berkeley belum
-            lolos evaluasi (G4), jadi aturan v0 tetap dipakai.
+            Skor 0–100 menunjukkan seberapa layak sensor dipercaya. Skor turun bila sensor sering memberi bacaan
+            janggal, bacaannya berhenti berubah terlalu lama, terlalu bergetar, melonjak lebih dari 5 °C sekaligus,
+            atau baterainya lemah. Bobot tiap faktor masih perkiraan awal dan belum dikalibrasi dengan data
+            lapangan, jadi anggap skor ini sebagai penanda untuk dicek, bukan vonis kerusakan.
           </p>
         </div>
       </div>
