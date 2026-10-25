@@ -90,6 +90,10 @@ pakar-coldtrack/
   docs/        Arsitektur, kontrak, kartu model/dataset, governance, panduan demo, proposal
 ```
 
+Setiap folder utama punya `README.md` sendiri: [backend](backend/README.md), [frontend](frontend/README.md),
+[ml](ml/README.md), [bench](bench/README.md), [eval](eval/README.md), [hw](hw/README.md),
+[data](data/README.md), [docker](docker/README.md), [docs](docs/README.md).
+
 ## Dokumentasi
 
 - [Architecture](docs/architecture.md)
