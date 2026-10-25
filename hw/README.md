@@ -33,31 +33,6 @@ Peta register dan format paket hasil: `golden/regmap.py`. Format rekaman segel: 
 Satuan semua masukan: suhu, kelembapan, kecepatan 0,01; radiasi 1/16 W/m2; siklus kerja 1/10000. Satuan
 desimal membuat kelipatan 0,1 C data latih eksak, karena ambang pohon XGBoost sering tepat di nilai data.
 
-## Menjalankan
-
-Butuh OSS CAD Suite di `~/FPGA/tools/oss-cad-suite` (Verilator 5.05x, Yosys, Icarus) dan `.venv` repo dengan
-`cocotb`, `pytest`, serta paket `backend/requirements.txt`.
-
-```bash
-cd hw
-make test                       # 7 testbench, Verilator (SIM=icarus untuk Icarus)
-make lint TOP=coldtrack_top     # verilator -Wall, setiap modul bersih
-yosys -s synth/kv260.ys         # sintesis KV260 (sekitar 2 menit), laporan build/util_coldtrack_top.txt
-cd .. && python -m hw.golden.check_physics   # paritas golden fisika vs backend/app/core/engine.py
-python -m hw.golden.check_trees             # paritas golden pohon vs XGBoost float
-python -m hw.scripts.export_trees           # ekspor ulang model beku ke hw/model/
-```
-
-Vivado 2026.1 (lisensi node-locked di `~/.Xilinx`). Laptop 7,5 GB: jalankan satu build saja, skrip membatasi
-2 thread dan satu run.
-
-```bash
-cd hw
-vivado -mode batch -source synth/kv260_vivado.tcl -tclargs 10.0   # coldtrack_top OOC, periode ns -> build/vivado/p10.0/
-vivado -mode batch -source synth/kv260_bd.tcl                     # PS Zynq + coldtrack_axil, bitstream + .xsa
-vivado -mode batch -source synth/kv260_report.tcl                 # laporan dari checkpoint routed block design
-```
-
 ## Status verifikasi
 
 | Tahap | Modul | Hasil |
