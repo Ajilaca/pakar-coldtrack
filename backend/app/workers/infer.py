@@ -12,8 +12,8 @@ Env: DATABASE_URL, SIM_SPEED / SIM_ANCHOR (app/clock.py, HARUS sama dengan simul
 - Setelah menulis: NOTIFY fleet_events '{"type": "truck"|"notification", ...}' (SSE Fase 4).
 - Data terlambat: prediksi dihitung ulang untuk menit TERAKHIR saja; prediksi menit lampau tidak ditulis ulang.
 - Truk ber-chip edge: bila menit terakhir punya hasil edge yang sah (app/edge.py), status, TTB, dan diagnosis
-  diambil dari chip, model kondisi cloud tidak dijalankan (provider edge_kv260, tanpa forecast). Sensor health
-  tetap dihitung di cloud. Tanpa hasil edge sah, jalur cloud seperti biasa (fleet.edge.pakai: false mematikan).
+  diambil dari chip, model kondisi cloud tidak dijalankan (provider edge_kv260). Cloud hanya menjalankan GRU untuk
+  forecast suhu +15/30/60 (fleet.edge.forecast_cloud) dan sensor health. Tanpa hasil edge sah, jalur cloud seperti biasa (fleet.edge.pakai: false mematikan).
 """
 
 import json
@@ -35,6 +35,7 @@ from app.db import dsn
 from app.fleet import incidents as inc
 from app.fleet.devices import perlu_diperbarui
 from app.fleet.window import KOLOM, bangun_jendela
+from app.inference import inference_engine
 from app.models.base import Konteks
 from app.models.orchestrator import orchestrator
 
@@ -47,6 +48,7 @@ FFILL = int(CFG.get("ffill_maks_menit", 5))
 ZONA = CFG.get("zona_waktu", "Asia/Jakarta")       # fitur hour_of_day = jam lokal (app/fleet/window.py)
 OFFLINE = int(CFG.get("offline_setelah_menit", 10))
 PAKAI_EDGE = bool((CFG.get("edge") or {}).get("pakai", True))
+FORECAST_CLOUD = bool((CFG.get("edge") or {}).get("forecast_cloud", True))
 SENSOR_JAM = 3
 TOLERANSI_JAM_PERANGKAT = timedelta(minutes=2)    # bacaan sedikit di depan jam server tetap dipakai
 KOLOM_SQL = ", ".join(["ts", *KOLOM])
@@ -128,6 +130,8 @@ def hitung(c: psycopg.Connection, truck_id: str) -> list[dict[str, Any]]:
                   if PAKAI_EDGE and jendela.keadaan == "OK" else None)
     if hasil_edge is not None:                    # dihitung sekali di chip truk; cloud tidak menghitung ulang
         cond = edge.kondisi(hasil_edge, trip["cargo_profile"], trip["mass_kg"], jendela)
+        if FORECAST_CLOUD:                        # forecast hanya ada di cloud (GRU); bukan hitung ulang hasil chip
+            cond["forecast"] = inference_engine.forecast_last(jendela.readings)
         sh = orchestrator.provider("sensor_health").run(ctx)
     else:
         hasil = orchestrator.analyze(ctx)

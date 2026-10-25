@@ -320,6 +320,16 @@ class HybridInferenceEngine:
             self.provider.run(trip, out, feats)
         return out
 
+    def forecast_last(self, readings: list[TelemetryReading]) -> dict[str, float] | None:
+        """Forecast suhu muatan t+15/t+30/t+60 untuk jendela terakhir saja: satu kali GRU, tanpa mesin fisika dan
+        tanpa XGBoost TTB. Dipakai worker-infer untuk truk ber-chip edge (status, TTB, diagnosis dari chip).
+        Sama dengan forecast predict_last untuk bacaan yang sama. None bila provider bukan v3 atau model tidak ada."""
+        if not isinstance(self.provider, V3Provider) or not self.provider.is_ready or len(readings) < WINDOW:
+            return None
+        feats = features_per_minute(ke_zona_armada(readings))
+        fc = self.provider.gru.run(None, {"window": self.provider.windows(feats, np.array([len(feats) - 1]))})[0]
+        return {h: float(round(float(v), 2)) for h, v in zip(("t15", "t30", "t60"), fc[0], strict=True)}
+
     def predict(
         self, readings: list[TelemetryReading], cargo_profile: str, mass_kg: float | None = None
     ) -> dict[str, Any]:

@@ -220,3 +220,21 @@ def test_simpan_rekaman_tanpa_bacaan_menyambung_rantai():
     tanpa = [{"rek": rek.hex(), "rantai": rantai.hex(), "paket": paket.hex(), "mac": mac.hex()}]
     assert edge.simpan(c, V["truck_id"], V["device_id"], raw, ok, {V["device_id"]: KUNCI}, tanpa) == {"OK": 3}
     assert [p[3] for p in c.cur.insert] == [0, 1, 2]
+
+
+@pytest.mark.parametrize("i", [59, 100, 139])
+def test_forecast_cloud_sama_dengan_predict_last(i):
+    """Truk ber-chip: cloud hanya menjalankan GRU untuk forecast, hasilnya sama dengan jalur cloud penuh."""
+    from app.inference import inference_engine
+
+    j = jendela_sampai(i)
+    penuh, _ = inference_engine.predict_last(j.readings, V["cargo_profile"], V["mass_kg"])
+    assert penuh["forecast"] is not None
+    assert inference_engine.forecast_last(j.readings) == pytest.approx(penuh["forecast"], abs=1e-6)
+
+
+def test_forecast_cloud_butuh_60_menit_dan_provider_v3():
+    from app.inference import HybridInferenceEngine, inference_engine
+
+    assert inference_engine.forecast_last(jendela_sampai(80).readings[:30]) is None
+    assert HybridInferenceEngine("checkpoint2").forecast_last(jendela_sampai(80).readings) is None
