@@ -11,6 +11,9 @@ Env: DATABASE_URL, SIM_SPEED / SIM_ANCHOR (app/clock.py, HARUS sama dengan simul
   awal trip). Model hanya dijalankan untuk jendela terakhir (inference.predict_last).
 - Setelah menulis: NOTIFY fleet_events '{"type": "truck"|"notification", ...}' (SSE Fase 4).
 - Data terlambat: prediksi dihitung ulang untuk menit TERAKHIR saja; prediksi menit lampau tidak ditulis ulang.
+- Truk ber-chip edge: bila menit terakhir punya hasil edge yang sah (app/edge.py), status, TTB, dan diagnosis
+  diambil dari chip, model kondisi cloud tidak dijalankan (provider edge_kv260, tanpa forecast). Sensor health
+  tetap dihitung di cloud. Tanpa hasil edge sah, jalur cloud seperti biasa (fleet.edge.pakai: false mematikan).
 """
 
 import json
@@ -26,7 +29,7 @@ import psycopg
 from psycopg.rows import dict_row
 from psycopg.types.json import Jsonb
 
-from app import clock
+from app import clock, edge
 from app.config import settings
 from app.db import dsn
 from app.fleet import incidents as inc
@@ -43,6 +46,7 @@ CAP_MIN = int(CFG.get("history_cap_min", 240))
 FFILL = int(CFG.get("ffill_maks_menit", 5))
 ZONA = CFG.get("zona_waktu", "Asia/Jakarta")       # fitur hour_of_day = jam lokal (app/fleet/window.py)
 OFFLINE = int(CFG.get("offline_setelah_menit", 10))
+PAKAI_EDGE = bool((CFG.get("edge") or {}).get("pakai", True))
 SENSOR_JAM = 3
 TOLERANSI_JAM_PERANGKAT = timedelta(minutes=2)    # bacaan sedikit di depan jam server tetap dipakai
 KOLOM_SQL = ", ".join(["ts", *KOLOM])
@@ -85,7 +89,7 @@ def muat(c: psycopg.Connection, truck_id: str, now: datetime) -> dict[str, Any]:
 
 def _ringkas_prediksi(cond: dict[str, Any], raw: pd.DataFrame) -> dict[str, Any]:
     keys = ("status", "reason", "risk_index", "time_to_breach_min", "ttb_model_min", "forecast", "failure_mode",
-            "data_lengkap", "catatan_data", "t_cargo_est", "t_hi", "model_version", "provider")
+            "data_lengkap", "catatan_data", "t_cargo_est", "t_hi", "model_version", "provider", "edge")
     out = {k: cond.get(k) for k in keys}
     if not raw.empty:
         last = raw.iloc[-1]
@@ -120,8 +124,14 @@ def hitung(c: psycopg.Connection, truck_id: str) -> list[dict[str, Any]]:
 
     jendela = bangun_jendela(m["trip_rows"], now, FFILL, OFFLINE, ZONA)
     ctx = Konteks(truck_id, now, jendela, trip["cargo_profile"], trip["mass_kg"], device, m["raw"])
-    hasil = orchestrator.analyze(ctx)
-    cond, sh = hasil["condition"], hasil["sensor_health"]
+    hasil_edge = (edge.muat_terakhir(cur, truck_id, jendela.readings[-1].ts)
+                  if PAKAI_EDGE and jendela.keadaan == "OK" else None)
+    if hasil_edge is not None:                    # dihitung sekali di chip truk; cloud tidak menghitung ulang
+        cond = edge.kondisi(hasil_edge, trip["cargo_profile"], trip["mass_kg"], jendela)
+        sh = orchestrator.provider("sensor_health").run(ctx)
+    else:
+        hasil = orchestrator.analyze(ctx)
+        cond, sh = hasil["condition"], hasil["sensor_health"]
     status = cond["status"]
     pdb = perlu_diperbarui(device or {}, sh, now, CFG.get("perangkat", {}), m["last_any"])
     ts = jendela.readings[-1].ts if jendela.keadaan == "OK" else (

@@ -38,6 +38,9 @@ fleet:
   offline_setelah_menit: 10     # tanpa bacaan selama ini -> TIDAK_ADA_DATA (tidak pernah AMAN)
   zona_waktu: Asia/Jakarta      # fitur hour_of_day dilatih dengan jam lokal (WIB); ts tetap disimpan UTC
   infer_debounce_detik: 2      # worker-infer: tunggu sekian detik dinding setelah NOTIFY sebelum menghitung
+  # Truk ber-chip edge (hw/, KV260): pakai status/TTB/diagnosis dari chip bila verifikasinya sah (app/edge.py).
+  edge:
+    pakai: true
   # Panel "Perlu diperbarui" (app/fleet/devices.py). [ASUMSI] sampai ada data mitra.
   perangkat:
     firmware_terbaru: "1.5.0"
