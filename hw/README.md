@@ -14,10 +14,12 @@ disintesis Vivado maupun Yosys.
 | `model/` | Hasil ekspor: `nodes.mem`, `trees.mem`, `base.mem` per model |
 | `bd/` | Pembungkus Verilog AXI4-Lite (`coldtrack_axil.v`) untuk block design Vivado + pin alarm PMOD |
 | `synth/` | Skrip Yosys (perkiraan) dan Vivado (implementasi out-of-context, block design KV260, laporan) |
-| `docs/` | Gambar block design Vivado (`vivado_block_design.png`/`.svg`) |
+| `docs/` | Gambar arsitektur (`rtl_architecture.png`) dan block design Vivado (`vivado_block_design.png`/`.svg`) |
 | `results/` | Laporan paritas golden vs float (JSON) dan laporan Vivado (`results/vivado/`) |
 
 ## Arsitektur
+
+![Arsitektur RTL ColdTrack di KV260](docs/rtl_architecture.png)
 
 ```
 ARM KV260 (Linux, MQTT/TLS) --AXI4-Lite--> coldtrack_top
