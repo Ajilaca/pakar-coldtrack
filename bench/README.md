@@ -100,3 +100,10 @@ bench/results/<tag>/env.json                    lingkungan saat run
 bench/results/<tag>/<workload>/run_<n>.json     satu berkas per run
 bench/results/telemetry/                        CSV nvidia-smi (tidak dikomit)
 ```
+
+## Hash commit di hasil run
+
+Berkas JSON di `bench/results/` mencatat hash commit tempat run dijalankan. Riwayat repo ditulis ulang pada
+2026-10-25 (baris `Co-Authored-By` dan nama author dibersihkan), sehingga hash lama tidak ada lagi di fork ini.
+`bench/results/commit_map.txt` memetakan hash lama (kolom 1) ke hash baru (kolom 2); cari hash dari JSON di
+kolom 1 untuk menemukan commit yang sama di riwayat sekarang. Isi berkas dan pohon kodenya tidak berubah.
