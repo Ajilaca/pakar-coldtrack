@@ -75,6 +75,7 @@ services:
       - MQTT_HOST=mosquitto
       - MQTT_USER=ingest
       - MQTT_PASSWORD=${MQTT_INGEST_PASSWORD:-ingest-dev}
+      - EDGE_KEYS=${EDGE_KEYS:-}
     depends_on:
       api:
         condition: service_healthy              # migrasi + seed sudah jalan
@@ -122,6 +123,7 @@ services:
       - API_URL=http://api:8000
       - SIM_SPEED=${SIM_SPEED:-30}
       - SIM_ANCHOR=${SIM_ANCHOR:-2026-10-11T00:00:00+00:00}
+      - SIM_LEWATI=${SIM_LEWATI:-}
     depends_on:
       worker-ingest:
         condition: service_healthy

@@ -1,0 +1,4630 @@
+{
+ "truck_id": "E 8659 FR",
+ "device_id": "DEV-015",
+ "kunci": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f",
+ "cargo_profile": "vaksin_2_8C",
+ "mass_kg": 1500.0,
+ "sumber_trip_v4": 330,
+ "menit": [
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:00:00Z",
+    "temp_c": 5.0,
+    "humidity": 66.12,
+    "ambient_c": 30.91,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 606.1875,
+    "edge": {
+     "rek": "0000000071050b6001f419d40c1325e317700e19f9005a",
+     "rantai": "f3c8d75510e31a4c1769c3c229d3650d8bba421597a292027c5b647548704927",
+     "paket": "000000000000000000000001f4000000",
+     "mac": "0f5d77d6bc0687eddf13968121384cf5bc069567872c0d42cc256c67981f5fa8",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:01:00Z",
+    "temp_c": 5.0,
+    "humidity": 67.26,
+    "ambient_c": 30.92,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 604.6875,
+    "edge": {
+     "rek": "0000000171050b9c01f41a460c1425cb17700e1a33005a",
+     "rantai": "f013dd65e730bd1bb8c5a2b46d259cf0d4f07c38632a9e5f1dcbd3d5866a11ec",
+     "paket": "000000010001000000000001f4000000",
+     "mac": "01fa9112ab8b73abded501e568ca51c3e1c14b56e5ed88cc8d67efa1dd4d448e",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:02:00Z",
+    "temp_c": 5.0,
+    "humidity": 63.53,
+    "ambient_c": 30.92,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 603.125,
+    "edge": {
+     "rek": "0000000271050bd801f418d10c1425b217700e18ea005a",
+     "rantai": "5604e2abd547e65917d0e9d43c0a46d29ed2ac919647a5435a9babb64cc6a97d",
+     "paket": "000000020002000000000001f4000000",
+     "mac": "ce5309d201a7cdd11ad66fa219d2a7e29c2a1441a000133c123414b0cd43ce7e",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:03:00Z",
+    "temp_c": 5.0,
+    "humidity": 63.37,
+    "ambient_c": 30.92,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 601.5625,
+    "edge": {
+     "rek": "0000000371050c1401f418c10c14259917700e18fd005a",
+     "rantai": "019e62fa60ea1a3de9dab0977243f467dd2adb40fa82fd91a4be6e6476d06621",
+     "paket": "000000030003000000000001f4000000",
+     "mac": "b633ecbbb6a59c830749a3a71ca3457a5eaff7bf0ecc260fb38a11197cb3c7e3",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:04:00Z",
+    "temp_c": 5.2,
+    "humidity": 66.57,
+    "ambient_c": 30.93,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 600.0,
+    "edge": {
+     "rek": "0000000471050c5002081a010c15258017700e1746005a",
+     "rantai": "7b5b0aa8fd94a23b020728da48402d0be10780857ebee72575ff1a7184ebcca4",
+     "paket": "000000040004000000000001f4000000",
+     "mac": "a13df7ef8fadda8485dd2aae6c5b2ba5ed7575bffdb6ab7d1e6f86a823b1c477",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:05:00Z",
+    "temp_c": 5.3,
+    "humidity": 64.75,
+    "ambient_c": 30.93,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 598.4375,
+    "edge": {
+     "rek": "0000000571050c8c0212194b0c15256717700e1775005a",
+     "rantai": "5c289d6699907d1eafa87e37d6db78d114a103e235dff9b9020eae67bccf0d04",
+     "paket": "000000050005000000000001f4050000",
+     "mac": "00ff63f6e357e6d492ce322f7dfa5722cb0388f9b70b2c17e7ec121887f0006b",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:06:00Z",
+    "temp_c": 5.4,
+    "humidity": 64.87,
+    "ambient_c": 30.93,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 596.875,
+    "edge": {
+     "rek": "0000000671050cc8021c19570c15254e17700e167b005a",
+     "rantai": "ec3e9ebc7c7ea91992725ead63a349269af68f2a36082d1e5731e2bc360de189",
+     "paket": "000000060006000000000001f40d0000",
+     "mac": "d2259ba2baa2d4162ec09833a9420721313bf8310a30da0477a682318b9d4397",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:07:00Z",
+    "temp_c": 5.5,
+    "humidity": 65.18,
+    "ambient_c": 30.93,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 595.25,
+    "edge": {
+     "rek": "0000000771050d04022619760c15253417700e17d3005a",
+     "rantai": "73336eb47c0bb16dabb5c50d722cb85453b951f2d8fa3614663f582dad008b7a",
+     "paket": "000000070007000000000001f4180000",
+     "mac": "6e3eb2176a88935c631750667441acc706386fea36e39224052c421af674283a",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:08:00Z",
+    "temp_c": 5.6,
+    "humidity": 64.76,
+    "ambient_c": 30.94,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 593.625,
+    "edge": {
+     "rek": "0000000871050d400230194c0c16251a17700e18d4005a",
+     "rantai": "67e27cb1ad4cfa7661a008b2eec8d632aedc3e295b46e837bde3fae84ff0567f",
+     "paket": "000000080008000000000001f4250000",
+     "mac": "1829042df365a8eea82b357f6ed9b6f61800547da763b801c2e6a09bf70b5ac4",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:09:00Z",
+    "temp_c": 5.6,
+    "humidity": 66.75,
+    "ambient_c": 30.94,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 1,
+    "solar_radiation": 592.0,
+    "edge": {
+     "rek": "0000000971050d7c02301a130c16250017700e17bc015a",
+     "rantai": "d352b5eecb54a4b2ce2c15c3314ed614c9a94825276cca0805b5eec3246660ca",
+     "paket": "000000090009000000000001f4350000",
+     "mac": "132b8e9a880d714467c3d6cde3219eec80637b662444a4edc063197852894933",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:10:00Z",
+    "temp_c": 5.6,
+    "humidity": 63.97,
+    "ambient_c": 30.94,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 590.375,
+    "edge": {
+     "rek": "0000000a71050db8023018fd0c1624e617700e19d1005a",
+     "rantai": "c658aea805cb711150832a13606487cb2ee214e662febe4bae2d1a23d4478252",
+     "paket": "0000000a000a000000000001f4450000",
+     "mac": "a3a903c20f0e8b3eee5baf382745b5242b3350978bc5c58d67951eaf19031f3a",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:11:00Z",
+    "temp_c": 5.7,
+    "humidity": 65.66,
+    "ambient_c": 30.94,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 588.75,
+    "edge": {
+     "rek": "0000000b71050df4023a19a60c1624cc17700e1867005a",
+     "rantai": "2afa0fc00473d6ccdd081a0d9ecda5d19ad9cb5c4f027cd664c8820ca4c553c5",
+     "paket": "0000000b000b000000000001f4550000",
+     "mac": "9b97718994876d466ed5fb9b5b4598610d1185574fc767db48fc50323733fa8a",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:12:00Z",
+    "temp_c": 5.7,
+    "humidity": 66.01,
+    "ambient_c": 30.95,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 1,
+    "solar_radiation": 587.0625,
+    "edge": {
+     "rek": "0000000c71050e30023a19c90c1724b117700e1670015a",
+     "rantai": "f28a36d08db23279c5ff9c440f58df27ae6847b792430fec3a0c334f6ab65610",
+     "paket": "0000000c000c000000000001f4680000",
+     "mac": "fd97fb28013bd37a017ce16c6ba7cca55381a27c8e48b934dcdb1f888a81345e",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:13:00Z",
+    "temp_c": 5.7,
+    "humidity": 65.26,
+    "ambient_c": 30.95,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 585.375,
+    "edge": {
+     "rek": "0000000d71050e6c023a197e0c17249617700e16c2005a",
+     "rantai": "c1bfc86fb58d20ebff6bbb45b9ab9de14888733b1546fb831fe463f40bb31160",
+     "paket": "0000000d000d000000000001f47b0000",
+     "mac": "fb5d77daa616df46920e9c74de5b0207968c1e043d8b929cba6f92fd388076dc",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:14:00Z",
+    "temp_c": 5.7,
+    "humidity": 65.23,
+    "ambient_c": 30.95,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 583.75,
+    "edge": {
+     "rek": "0000000e71050ea8023a197b0c17247c17700e187d005a",
+     "rantai": "718b45e09857cb8ccc687b09b1c77a0ab685e277b9acc059381667bb54d4b59f",
+     "paket": "0000000e000e000000000001f48e0000",
+     "mac": "6fb667704c91534a42685e1ae1659a1ed4d24031408c3484d8c4685055a13fcb",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:15:00Z",
+    "temp_c": 5.7,
+    "humidity": 63.66,
+    "ambient_c": 30.95,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 582.0,
+    "edge": {
+     "rek": "0000000f71050ee4023a18de0c17246017700e1830005a",
+     "rantai": "16cd51002df01d78613bd05c969e15ad881161eace420943d84d966dead3aff8",
+     "paket": "0000000f000f000000000001f4a00000",
+     "mac": "c195625b4a4803c7e75d44872c900c2589fa2f43ca323692495c7a48ed117daf",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:16:00Z",
+    "temp_c": 5.7,
+    "humidity": 63.29,
+    "ambient_c": 30.95,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 580.3125,
+    "edge": {
+     "rek": "0000001071050f20023a18b90c17244517700e1948005a",
+     "rantai": "f466d1372d1e7ee349051fb94349988fcbf239018d65f06248e7dd4a035d2171",
+     "paket": "000000100010000000000001f4b30000",
+     "mac": "0e85e8ba86d266a17a889833e88c4580ade4529584a9f966e4eb7d87170a1f81",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:17:00Z",
+    "temp_c": 5.7,
+    "humidity": 66.58,
+    "ambient_c": 30.96,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 578.625,
+    "edge": {
+     "rek": "0000001171050f5c023a1a020c18242a17700e18ec005a",
+     "rantai": "276baccba90a16b303681598c7d8ab36b0d37beb742d82459ae882150d438d6f",
+     "paket": "000000110011000000000001f4c60000",
+     "mac": "e4f4d653574d43456360bd5ffc0012fcc6cb2a0ac2b8032325f362e9f7616a60",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:18:00Z",
+    "temp_c": 5.6,
+    "humidity": 64.82,
+    "ambient_c": 30.96,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 576.875,
+    "edge": {
+     "rek": "0000001271050f98023019520c18240e17700e17a3005a",
+     "rantai": "dc3b619f9a82926115c537a9ae48a8922e115dddfcb39afcddf69ccb1b339f42",
+     "paket": "000000120012000000000001f4d80000",
+     "mac": "26ace6418431e4e0fe1e598237691b508e60e135e18cc8d3068735af146c7707",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:19:00Z",
+    "temp_c": 5.6,
+    "humidity": 67.26,
+    "ambient_c": 30.96,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 575.125,
+    "edge": {
+     "rek": "0000001371050fd402301a460c1823f217700e16ab005a",
+     "rantai": "93020f7ecce982b9ba2db0422b629c3c7141f51b4a99c46fd3ed7ae252aa6c4c",
+     "paket": "000000130013000000000001f4e80000",
+     "mac": "39138e09f660e86e5c58373deca13bef0d8ed89c0ed03bcb73dd4fd4220b6d7e",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:20:00Z",
+    "temp_c": 5.6,
+    "humidity": 66.59,
+    "ambient_c": 30.96,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 573.4375,
+    "edge": {
+     "rek": "000000147105101002301a030c1823d717700e1499005a",
+     "rantai": "952833a498e0cb51e843bd1543a135e0dbe10d57b1e3226a487b4c088a692799",
+     "paket": "000000140014000000000001f4f80000",
+     "mac": "8df3e463647d03b09dd34d69265f259bdb6690565fc5b4b195990f6c73adf75d",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:21:00Z",
+    "temp_c": 5.7,
+    "humidity": 66.46,
+    "ambient_c": 30.96,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 571.625,
+    "edge": {
+     "rek": "000000157105104c023a19f60c1823ba17700e14f6005a",
+     "rantai": "23dc34636b6bc0c436d071d0c536bf08a3a6760bbff0b91c8ae2b9790f48bcc3",
+     "paket": "000000150015000000000001f5080000",
+     "mac": "b2fe4aa0f38709eb9aa2700b6d3a919a0bfe1c9612777be94cbc351c24f239a0",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:22:00Z",
+    "temp_c": 5.7,
+    "humidity": 66.04,
+    "ambient_c": 30.97,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 569.875,
+    "edge": {
+     "rek": "0000001671051088023a19cc0c19239e17700e164d005a",
+     "rantai": "ab72ac6b0a645fda572e0d22b71ddd81bf22a460787f4c14eac20291e1c8d85a",
+     "paket": "000000160016000000000001f51a0000",
+     "mac": "4050222598b1020349047016d70d2a02975b653e69f8ebd778915651d0d9d6ba",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:23:00Z",
+    "temp_c": 5.7,
+    "humidity": 67.38,
+    "ambient_c": 30.97,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 568.125,
+    "edge": {
+     "rek": "00000017710510c4023a1a520c19238217700e189a005a",
+     "rantai": "e5c3dcbdd1513c80d8bbbe7b1f5140e037696e36720f3932998ad530e650368d",
+     "paket": "000000170017000000000001f52d0000",
+     "mac": "ad4085ab95305c6c6d478cab367b0403d5d58690309b841b1b3bcbb6b59e0dc7",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:24:00Z",
+    "temp_c": 5.6,
+    "humidity": 66.79,
+    "ambient_c": 30.97,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 566.3125,
+    "edge": {
+     "rek": "000000187105110002301a170c19236517700e1862005a",
+     "rantai": "6bd89982261a0eb3b727f3e696c2ae6534a9ef6000b3fe3025ac7c2584b768d4",
+     "paket": "000000180018000000000001f53f0000",
+     "mac": "5e228bc6cf689195843d51f66453b1722d6fe553fb153dbe3502dbbcca277d8c",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:25:00Z",
+    "temp_c": 5.5,
+    "humidity": 65.67,
+    "ambient_c": 30.97,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 564.5,
+    "edge": {
+     "rek": "000000197105113c022619a70c19234817700e17b1005a",
+     "rantai": "2662525ad244fefeedf8fb94f74651522bc7451f6ef5478304ac676470f039f7",
+     "paket": "000000190019000000000001f54f0000",
+     "mac": "20e314ff022e0964661e7f84baae21156554c42aefe079d96d7c9346de5f3880",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:26:00Z",
+    "temp_c": 5.5,
+    "humidity": 68.03,
+    "ambient_c": 30.97,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 562.6875,
+    "edge": {
+     "rek": "0000001a7105117802261a930c19232b17700e162f005a",
+     "rantai": "1c1f2d3c36997331235bc8301153150f2675776ef87bc812ca50e3a6275a0245",
+     "paket": "0000001a001a000000000001f55c0000",
+     "mac": "fd99bd5fe0345f0113761c697f003c360dd000e0fba9ca567aa55f35ade3c238",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:27:00Z",
+    "temp_c": 5.5,
+    "humidity": 65.82,
+    "ambient_c": 30.97,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 560.875,
+    "edge": {
+     "rek": "0000001b710511b4022619b60c19230e17700e1839005a",
+     "rantai": "f019af399af8ba91115ef09e5ed03f0924318cfa8686364f9c967de64c045bca",
+     "paket": "0000001b001b000000000001f5690000",
+     "mac": "4222df8993f2f11331f68601f4cdfeff4b85c376c6a8d2fb19a372b4f37271cf",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:28:00Z",
+    "temp_c": 5.5,
+    "humidity": 65.6,
+    "ambient_c": 30.98,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 559.0625,
+    "edge": {
+     "rek": "0000001c710511f0022619a00c1a22f117700e16a8005a",
+     "rantai": "7ae9762598661b7b6573cd70b702bf3163520462b25ce992ba1272cf60ea7ef0",
+     "paket": "0000001c001c000000000001f5770000",
+     "mac": "6827d751a2083e8cae3ffa0b3bbd319429e9d2e8bf61fb9519a7fa1e8dc28765",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:29:00Z",
+    "temp_c": 5.6,
+    "humidity": 65.86,
+    "ambient_c": 30.98,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 557.1875,
+    "edge": {
+     "rek": "0000001d7105122c023019ba0c1a22d317700e16d0005a",
+     "rantai": "b0e2ddda59d10e653c27f02e4338eea0de11b5c5f71bdf05eb268eaa13c7f0b6",
+     "paket": "0000001d001d000000000001f5840000",
+     "mac": "510c51686c36b83d47ab3d48c87fdd74c961382d80c064581f27a7ad75e98425",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:30:00Z",
+    "temp_c": 5.7,
+    "humidity": 67.67,
+    "ambient_c": 30.98,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 555.375,
+    "edge": {
+     "rek": "0000001e71051268023a1a6f0c1a22b617700e161b005a",
+     "rantai": "5d78c9e72be1806a779b95a9beb36e8f12fa7d26d70d2d0d7a79d9c96d467312",
+     "paket": "0000001e001e000000000001f5930000",
+     "mac": "067c816a62de859838ea06bd567bd0b7243baaacee07e104f84e6fcc3986a4c5",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:31:00Z",
+    "temp_c": 5.8,
+    "humidity": 65.83,
+    "ambient_c": 30.98,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 1,
+    "solar_radiation": 553.5,
+    "edge": {
+     "rek": "0000001f710512a4024419b70c1a229817700e1863015a",
+     "rantai": "1f689453d2a91bd3b52754148db20a3fe872ea3d5d224294eb9dcb3b12f62e95",
+     "paket": "0000001f001f000000000001f5a60000",
+     "mac": "c354a8afa1e61daecd08c4cb20fb6d94425868eb73a6321a1989ec6ce43a5635",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:32:00Z",
+    "temp_c": 5.8,
+    "humidity": 64.62,
+    "ambient_c": 30.98,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 551.625,
+    "edge": {
+     "rek": "00000020710512e00244193e0c1a227a17700e17e1005a",
+     "rantai": "d2c427dd6bd84ce80d873f12cec9719c9ad2958a7c26ae1c2d70184dcbfb884e",
+     "paket": "000000200020000000000001f5bb0000",
+     "mac": "92cf8d14929393ef939d028a1481f651978e4ba34b111f2d63b016ff602ca46d",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:33:00Z",
+    "temp_c": 5.9,
+    "humidity": 66.61,
+    "ambient_c": 30.98,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 549.75,
+    "edge": {
+     "rek": "000000217105131c024e1a050c1a225c17700e16d7005a",
+     "rantai": "c39c24b6c61514b9c07c42f07d9cfc45248cd033ae94e258ca8abc878ebf40bd",
+     "paket": "000000210021000000000001f5d00000",
+     "mac": "07bc90b5daa7cafd43b29eeabda51153b7c909bb228313341eef9b79bf552de3",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:34:00Z",
+    "temp_c": 5.9,
+    "humidity": 67.17,
+    "ambient_c": 30.98,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 547.8125,
+    "edge": {
+     "rek": "0000002271051358024e1a3d0c1a223d17700e16f1005a",
+     "rantai": "d81c8430723340141fa17b2339eb2b526c24e160d37070f999a993ef130ca907",
+     "paket": "000000220022000000000001f5e80000",
+     "mac": "2fccc00fae8f5c486d7511a6fc7ee62af87d3b4bf0f0f38dd45d5177197a53ee",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:35:00Z",
+    "temp_c": 5.9,
+    "humidity": 67.97,
+    "ambient_c": 30.99,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 545.9375,
+    "edge": {
+     "rek": "0000002371051394024e1a8d0c1b221f17700e1655005a",
+     "rantai": "3d9130bc0c131414dfd9b4071335b3a91a1e3654a4b9b8149abbd55428a3fc75",
+     "paket": "000000230023000000000001f5ff0000",
+     "mac": "529b4ca26a2d4997a314f9f066d0e4c05ff1d97f6040bd3502fee2111a7b44e3",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:36:00Z",
+    "temp_c": 5.9,
+    "humidity": 67.56,
+    "ambient_c": 30.99,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 544.0,
+    "edge": {
+     "rek": "00000024710513d0024e1a640c1b220017700e1482005a",
+     "rantai": "8aad076686bd4e88b58e4168874d7bd40755de6327de859330733a2c1a7a18d7",
+     "paket": "000000240024000000000001f6170000",
+     "mac": "472117ed9768b523dda3ff4a996052cb4a3305a0c538b273a760030e1374d8f5",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:37:00Z",
+    "temp_c": 5.9,
+    "humidity": 67.66,
+    "ambient_c": 30.99,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 542.0625,
+    "edge": {
+     "rek": "000000257105140c024e1a6e0c1b21e117700e14b2005a",
+     "rantai": "2c2304dc42ab3ab33ff6698f92e5a11830e704171946946b9b063342c93e8fb8",
+     "paket": "000000250025000000000001f62f0000",
+     "mac": "bad77416908cd106590087bd456d813353637710b7b9ab1e6b85fadd753c26d7",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:38:00Z",
+    "temp_c": 5.9,
+    "humidity": 66.08,
+    "ambient_c": 30.99,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 540.125,
+    "edge": {
+     "rek": "0000002671051448024e19d00c1b21c217700e1709005a",
+     "rantai": "a7603f2f834ed3916963acbff200a0324c9bac683a3c4c50891b88eddaead47f",
+     "paket": "000000260026000000000001f6460000",
+     "mac": "c720b90d4e0ed16c5bb78b894ce4916e61fc84ffc1ed7e762de75a04bfcac41a",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:39:00Z",
+    "temp_c": 6.0,
+    "humidity": 67.29,
+    "ambient_c": 30.99,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 538.1875,
+    "edge": {
+     "rek": "000000277105148402581a490c1b21a317700e14f4005a",
+     "rantai": "3ee501bda9a32149c2c3c9602fa03a3de838699b9ec1e32adf40fb96fe2602ea",
+     "paket": "000000270027000000000001f65e0000",
+     "mac": "9a0dbc38aaa9dfc331e62ddd740bb1289ccbe244875269cb9889c55ef5db12ef",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:40:00Z",
+    "temp_c": 5.9,
+    "humidity": 65.91,
+    "ambient_c": 30.99,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 536.25,
+    "edge": {
+     "rek": "00000028710514c0024e19bf0c1b218417700e14ab005a",
+     "rantai": "2c2fb4638ad8fa7122d64561205112dfb4a778fab8ed743b4a202e96339968ed",
+     "paket": "000000280028000000000001f6780000",
+     "mac": "1e26fae7f7a50ee499759d28eb73cdfe5d7a039a5eb8fae7a187c63b02d5a571",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:41:00Z",
+    "temp_c": 5.9,
+    "humidity": 67.58,
+    "ambient_c": 30.99,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 534.25,
+    "edge": {
+     "rek": "00000029710514fc024e1a660c1b216417700e172d005a",
+     "rantai": "10567ed746b87acc2df593cd2e8b11866fda3ef124a375485b97a573e638948d",
+     "paket": "000000290029000000000001f6900000",
+     "mac": "7667e3dabc13548a3a2124d3dd3e53d5406fdefa1804d33eea17ec8ccefd95d7",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:42:00Z",
+    "temp_c": 5.9,
+    "humidity": 70.64,
+    "ambient_c": 30.99,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 532.3125,
+    "edge": {
+     "rek": "0000002a71051538024e1b980c1b214517700e1852005a",
+     "rantai": "a6e6f97552d3fe1b8b6f78589372c781ed4f3e4d748436a15052df199769640f",
+     "paket": "0000002a002a000000000001f6a70000",
+     "mac": "41ba42ef420ad854b377548e939d7179931ae0924b9976122d3bd567253ffbec",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:43:00Z",
+    "temp_c": 5.9,
+    "humidity": 63.8,
+    "ambient_c": 30.99,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 530.3125,
+    "edge": {
+     "rek": "0000002b71051574024e18ec0c1b212517700e1480005a",
+     "rantai": "c5decd6133607593b84e8758f2a785a91c646a9b31bbb216811fdcf876cab37d",
+     "paket": "0000002b002b000000000001f6bf0000",
+     "mac": "236ca5910777f0bd04e2cbf18f98d360c55b0ab0e79feb8f77af4c99c06a56f4",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:44:00Z",
+    "temp_c": 5.8,
+    "humidity": 66.01,
+    "ambient_c": 30.99,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 528.3125,
+    "edge": {
+     "rek": "0000002c710515b0024419c90c1b210517700e1594005a",
+     "rantai": "3368bdcf8795913939e158fc1ad10b9f40ca6a0d48b96a4682106329adb97965",
+     "paket": "0000002c002c000000000001f6d60000",
+     "mac": "b96736bffd5ce7c9de6c31937cfb9a5f01f217ac278ca93addb33ca09a475e39",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:45:00Z",
+    "temp_c": 5.9,
+    "humidity": 66.22,
+    "ambient_c": 30.99,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 526.3125,
+    "edge": {
+     "rek": "0000002d710515ec024e19de0c1b20e517700e17ab005a",
+     "rantai": "719ca4a03bf4d0e9632a990b4f01e3ec92fb650538a78032017244ac6ff8ee4e",
+     "paket": "0000002d002d000000000001f6eb0000",
+     "mac": "b74689d5afb220ef0596aeecf121bb6ac6f41855ba3fef0f8a9d893172e9e261",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:46:00Z",
+    "temp_c": 5.9,
+    "humidity": 68.43,
+    "ambient_c": 31.0,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 524.25,
+    "edge": {
+     "rek": "0000002e71051628024e1abb0c1c20c417700e1601005a",
+     "rantai": "4426de9dfe2b0251dd1011193cdc314d2160109e78b2729c338e2e17aaefb0df",
+     "paket": "0000002e002e000000000001f7020000",
+     "mac": "6c4ffd0f40fa5128f922146bf4e5d0ccd740061ef3f9d92c71f7613290059b96",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:47:00Z",
+    "temp_c": 5.8,
+    "humidity": 69.51,
+    "ambient_c": 31.0,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 522.25,
+    "edge": {
+     "rek": "0000002f7105166402441b270c1c20a417700e168d005a",
+     "rantai": "7e126e5ae00626caa7f39337caf79a107165fe11f8bdb0c05097be2136bbd026",
+     "paket": "0000002f002f000000000001f71a0000",
+     "mac": "b7c76a91a88066e9da7a9c9766fb163791229dda1d00f39b37f8503210693036",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:48:00Z",
+    "temp_c": 5.8,
+    "humidity": 64.11,
+    "ambient_c": 31.0,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 520.1875,
+    "edge": {
+     "rek": "00000030710516a00244190b0c1c208317700e1758005a",
+     "rantai": "d2da5c0e9f1b6e950fab562a0c019387a181e63f892114f4782429bd05c6d19e",
+     "paket": "000000300030000000000001f72e0000",
+     "mac": "124896319eb8445f5cdf4b3845edfe1613a10c52e499d5e509f3e741a81b0363",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:49:00Z",
+    "temp_c": 5.8,
+    "humidity": 67.71,
+    "ambient_c": 31.0,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 518.125,
+    "edge": {
+     "rek": "00000031710516dc02441a730c1c206217700e1781005a",
+     "rantai": "666acc099c4e7e2337ff7c0aebaacb434e832efcf8cf169f1fbbaa39fb01d614",
+     "paket": "000000310031000000000001f7430000",
+     "mac": "6a28a5cc1013d6f2b4cf6dceacf92ce1845f40e715fd3fc47542336d6daf98ed",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:50:00Z",
+    "temp_c": 6.0,
+    "humidity": 68.05,
+    "ambient_c": 31.0,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 516.125,
+    "edge": {
+     "rek": "000000327105171802581a950c1c204217700e16fe005a",
+     "rantai": "67241c073ffce09b8544a5092bb3a847b102fe37d79ff2b0490d61916c13b20f",
+     "paket": "000000320032000000000001f7580000",
+     "mac": "9fac8b4ddd94caa362d72e7c15c1cfaf5db1c247382037bd2d7ec9e7513db62f",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:51:00Z",
+    "temp_c": 5.9,
+    "humidity": 68.98,
+    "ambient_c": 31.0,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 514.0,
+    "edge": {
+     "rek": "0000003371051754024e1af20c1c202017700e16a5005a",
+     "rantai": "1399dff8f92031dc5289e779f6eaa7232de91f3de684569ffaf7def1580e5604",
+     "paket": "000000330033000000000001f7720000",
+     "mac": "47c9fdfd9537119d6e0e55c27b3274d8db1c5cc907a7b62be4b963d8cf04d689",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:52:00Z",
+    "temp_c": 6.0,
+    "humidity": 65.46,
+    "ambient_c": 31.0,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 511.9375,
+    "edge": {
+     "rek": "0000003471051790025819920c1c1fff17700e1724005a",
+     "rantai": "dce07c876c7dc948ccaabd18df65bdf19027d009ec51cc5838a7150e5c9f7d8a",
+     "paket": "000000340034000000000001f7890000",
+     "mac": "ef42fed3dce42767399dd05f3822fbea839decf7279335e730c7d7baf17aee81",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:53:00Z",
+    "temp_c": 5.9,
+    "humidity": 68.04,
+    "ambient_c": 31.0,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 509.875,
+    "edge": {
+     "rek": "00000035710517cc024e1a940c1c1fde17700e14c2005a",
+     "rantai": "8c45ce98db69d9871e472bd62dd651e11d80cbc9eab3e6a78f02d30fac94779d",
+     "paket": "000000350035000000000001f7a30000",
+     "mac": "20a2b8f08ba4a29198e83b5317ca857b2a9be9c669e9294d31ad51931b3bd18c",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:54:00Z",
+    "temp_c": 6.0,
+    "humidity": 66.09,
+    "ambient_c": 31.0,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 507.75,
+    "edge": {
+     "rek": "0000003671051808025819d10c1c1fbc17700e14ce005a",
+     "rantai": "b89bf1a9a6c440b5d7c505d2b8fe8f4de483cc6a1eea275ec82775ef60558aca",
+     "paket": "000000360036000000000001f7ba0000",
+     "mac": "f75542125bd0532b96afcc9d35565e574ae967ba8f85139613ba19a1b1b3b7e3",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:55:00Z",
+    "temp_c": 6.0,
+    "humidity": 68.21,
+    "ambient_c": 31.0,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 505.625,
+    "edge": {
+     "rek": "000000377105184402581aa50c1c1f9a17700e165e005a",
+     "rantai": "1fe7ea29ca65fd8a2e6bd5c7c282b3a0f69d9cf010791c222eaa2e2b166ce4b4",
+     "paket": "000000370037000000000001f7d40000",
+     "mac": "b28e51ae09e2a488b5e9e7076b7261b2f9849341b4ba9111ce9117534fa1295a",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:56:00Z",
+    "temp_c": 5.9,
+    "humidity": 67.87,
+    "ambient_c": 31.0,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 503.5625,
+    "edge": {
+     "rek": "0000003871051880024e1a830c1c1f7917700e17a1005a",
+     "rantai": "1bf5830db90c9e1da91a54d8183555f823bd0179708e83985fc1d653fb100c48",
+     "paket": "000000380038000000000001f7ee0000",
+     "mac": "84acb8a86b03c144a821a2d37685dc6fc0abe6c1af71b51b9e3e662b44cad98d",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:57:00Z",
+    "temp_c": 6.0,
+    "humidity": 67.22,
+    "ambient_c": 31.0,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 501.4375,
+    "edge": {
+     "rek": "00000039710518bc02581a420c1c1f5717700e15ae005a",
+     "rantai": "c7e4ef8907005966a9826ba452d50e7ff61c3054c30e73fb6135bcc7217f072e",
+     "paket": "000000390039000000000001f8050000",
+     "mac": "054d90810c21949d1fbc9e64729265e9392ba75d7f49afd154b8b5fe835bf2bc",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:58:00Z",
+    "temp_c": 5.9,
+    "humidity": 66.59,
+    "ambient_c": 31.0,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 499.25,
+    "edge": {
+     "rek": "0000003a710518f8024e1a030c1c1f3417700e163d005a",
+     "rantai": "ebc8ff456c58418451988708fee3464272fbae064b433ceed920b0b7da74f387",
+     "paket": "0000003a003a000000000001f81f0000",
+     "mac": "25bca60ced64148fafa3a012c94ddc4b62db38885c554d72ffa9b9b18446c1ed",
+     "skor": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": false,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T06:59:00Z",
+    "temp_c": 5.8,
+    "humidity": 69.31,
+    "ambient_c": 31.0,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 497.125,
+    "edge": {
+     "rek": "0000003b7105193402441b130c1c1f1217700e16bc005a",
+     "rantai": "1c7ee489ea36e990398cdff394713c9393adba0411f4b162f9e8e1db37a9bede",
+     "paket": "0000003b003b000008000001f8360378",
+     "mac": "0795b4a38a828741a1ee31eb9d1e5e1f6c65619f394373656847d09ae103d1a2",
+     "skor": [
+      227403,
+      -275388,
+      -247221,
+      -285314,
+      -203576,
+      -60029,
+      -111155
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:00:00Z",
+    "temp_c": 5.8,
+    "humidity": 67.08,
+    "ambient_c": 31.0,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 495.0,
+    "edge": {
+     "rek": "0000003c7105197002441a340c1c1ef017700e159f005a",
+     "rantai": "b4fa77c02ae31c7873d3576e91f7cba9ba0c23ed75ee9936c39f2dcd17021438",
+     "paket": "0000003c003c000008000001f84a0378",
+     "mac": "06029ff85f6d720a9e4ef8c3566ca2cea932038ec1deaf6bb2a9c688ba664ff3",
+     "skor": [
+      227403,
+      -275388,
+      -247221,
+      -285314,
+      -203576,
+      -60029,
+      -111155
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:01:00Z",
+    "temp_c": 5.7,
+    "humidity": 64.82,
+    "ambient_c": 31.0,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 492.8125,
+    "edge": {
+     "rek": "0000003d710519ac023a19520c1c1ecd17700e154b005a",
+     "rantai": "5819721a0acabd4d81562c55b2bbe6b6a101e6c0b5f94cdb6f3e03b936ec6ac3",
+     "paket": "0000003d003d000008000001f85f0378",
+     "mac": "2055a367ed92d19d8a00f54c0d1dd2007a60f89ac6074343929225ba69546fd9",
+     "skor": [
+      227403,
+      -275388,
+      -247221,
+      -285314,
+      -203576,
+      -29853,
+      -113026
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:02:00Z",
+    "temp_c": 5.7,
+    "humidity": 68.58,
+    "ambient_c": 31.0,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 490.625,
+    "edge": {
+     "rek": "0000003e710519e8023a1aca0c1c1eaa17700e151a005a",
+     "rantai": "7eda20e88191bf884fb84429c0fdc4bd7db8c24d495e51ef9882256c015a736c",
+     "paket": "0000003e003e000008000001f8700378",
+     "mac": "3559ab21169d33c2e709b60a258fc4a8f6a6e24c851f63ef589033cc2ed43699",
+     "skor": [
+      227403,
+      -275388,
+      -247221,
+      -285314,
+      -203576,
+      -29853,
+      -113026
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:03:00Z",
+    "temp_c": 5.7,
+    "humidity": 69.57,
+    "ambient_c": 31.0,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 488.4375,
+    "edge": {
+     "rek": "0000003f71051a24023a1b2d0c1c1e8717700e161e005a",
+     "rantai": "05c1a85abe0a7a0b04aa918637be530ee9482bee55e1e018169aacd9137af0dc",
+     "paket": "0000003f003f000008000001f8820361",
+     "mac": "d203a24b10b53ed2c30b72099521e741d096cea15380daa0b6db2b4b50302817",
+     "skor": [
+      221508,
+      -275388,
+      -247221,
+      -285314,
+      -203576,
+      -29853,
+      -113026
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:04:00Z",
+    "temp_c": 5.8,
+    "humidity": 70.4,
+    "ambient_c": 31.0,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 486.25,
+    "edge": {
+     "rek": "0000004071051a6002441b800c1c1e6417700e1447005a",
+     "rantai": "b5ae717687cb3a520d0794b07c269b2d2fddbd6246e20d4691928f8588a5b095",
+     "paket": "000000400040000008000001f8940378",
+     "mac": "9ad666a2d17ff91ca5c7e503aa3a8856b258f0b19567c6807dc57201d5dbc981",
+     "skor": [
+      227403,
+      -275388,
+      -247221,
+      -285314,
+      -203576,
+      -60029,
+      -113026
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:05:00Z",
+    "temp_c": 5.7,
+    "humidity": 67.86,
+    "ambient_c": 31.0,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 484.0625,
+    "edge": {
+     "rek": "0000004171051a9c023a1a820c1c1e4117700e14b0005a",
+     "rantai": "06ec26b4cdc066ab7bdcbf5a59b659b9f6440c608ee7dd66028109210e703461",
+     "paket": "000000410041000008000001f8a80361",
+     "mac": "39be0fe896037689290bb61c573b03ac363b7aad74ad1d9488cfdef1525e5c2d",
+     "skor": [
+      221508,
+      -275388,
+      -247221,
+      -285314,
+      -203576,
+      -60029,
+      -113026
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:06:00Z",
+    "temp_c": 5.7,
+    "humidity": 65.82,
+    "ambient_c": 31.0,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 481.875,
+    "edge": {
+     "rek": "0000004271051ad8023a19b60c1c1e1e17700e1474005a",
+     "rantai": "cc1af036b9b6a6d685853085a3d7fdc384b5f7537a11497234094d5759fb1aaf",
+     "paket": "000000420042000008000001f8ba0378",
+     "mac": "09d68be8072e5696358befec4927744552a1d75c108ca5ebbd24aa9d038635fe",
+     "skor": [
+      227403,
+      -277270,
+      -247221,
+      -285314,
+      -203576,
+      -60029,
+      -113026
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:07:00Z",
+    "temp_c": 5.7,
+    "humidity": 66.95,
+    "ambient_c": 31.0,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 479.625,
+    "edge": {
+     "rek": "0000004371051b14023a1a270c1c1dfa17700e15b4005a",
+     "rantai": "3b48f059f7a43aee8a2ee896a1b06117609970b41db4a5e0b4a92e6e05986ff6",
+     "paket": "000000430043000008000001f8cb0378",
+     "mac": "264a67aa6fd62bbf2fb501b99b5faf4e5893082d2ba584c4a804a470ac64128d",
+     "skor": [
+      227403,
+      -277261,
+      -247221,
+      -285314,
+      -203576,
+      -60029,
+      -113026
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:08:00Z",
+    "temp_c": 5.7,
+    "humidity": 66.64,
+    "ambient_c": 31.0,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 477.375,
+    "edge": {
+     "rek": "0000004471051b50023a1a080c1c1dd617700e15eb005a",
+     "rantai": "e3c2d1ebb9dd4a1cb5d2c1b906483eeba754616708847f27e7530f494e038e57",
+     "paket": "000000440044000008000001f8dd0361",
+     "mac": "c07db197a29303f31c6108e963bcd3c82975c77f16133d584f0f56acf869ee89",
+     "skor": [
+      221508,
+      -277261,
+      -247221,
+      -285314,
+      -203576,
+      -60029,
+      -113026
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 0
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:09:00Z",
+    "temp_c": 5.7,
+    "humidity": 68.95,
+    "ambient_c": 31.0,
+    "door_open": true,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 475.1875,
+    "edge": {
+     "rek": "0000004571051b8c023a1aef0c1c1db317700f2710005a",
+     "rantai": "e2b016d05b2c035522eb0fe846600da91e585ff1b149363b416a6a2f71a23606",
+     "paket": "00000045004500000d000001f8ee05d9",
+     "mac": "0f7f0747658ec8592b602c1726d43a033076ef0c515b46ff7cdf880186de85e4",
+     "skor": [
+      -51035,
+      -279133,
+      -247221,
+      -285314,
+      -203576,
+      383274,
+      -110083
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 5
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:10:00Z",
+    "temp_c": 6.0,
+    "humidity": 67.15,
+    "ambient_c": 31.0,
+    "door_open": true,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 472.9375,
+    "edge": {
+     "rek": "0000004671051bc802581a3b0c1c1d8f17700f2710005a",
+     "rantai": "d9fc4675147a6656ad3a98674203450d31d7a2a1b6f6b72d8313ee0bfa3dfc33",
+     "paket": "000000460046000009000001f900055d",
+     "mac": "52ea70b9618987e731be9a4587e45bb8778bbfe147b84aa3e24802e97dbec338",
+     "skor": [
+      -39230,
+      351657,
+      -247221,
+      -285314,
+      -203576,
+      167706,
+      -90758
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:11:00Z",
+    "temp_c": 6.2,
+    "humidity": 69.53,
+    "ambient_c": 31.0,
+    "door_open": true,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 470.6875,
+    "edge": {
+     "rek": "0000004771051c04026c1b290c1c1d6b17700f2662005a",
+     "rantai": "ca81b2cf4b827a9ae42f03f418efb6382d3258c52244add331528cd6fdbeffc1",
+     "paket": "000000470047000009000001f9190557",
+     "mac": "542ed032a1a655d09a59b1f8a234e8e92045e189951d9b867df62306ad68a9a8",
+     "skor": [
+      -39230,
+      350129,
+      -247221,
+      -285314,
+      -203576,
+      167706,
+      -90758
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:12:00Z",
+    "temp_c": 6.4,
+    "humidity": 68.96,
+    "ambient_c": 31.0,
+    "door_open": true,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 468.375,
+    "edge": {
+     "rek": "0000004871051c4002801af00c1c1d4617700f2710005a",
+     "rantai": "236e8b8f2186d036092531d678141d1ed05a5e3b8f17f799a1ee81d7d4480ab4",
+     "paket": "000000480048000009000001f9380584",
+     "mac": "12d9ff71c97690bad901e8ab6d22ac00a002210035af168c7d25aa4beffadd8b",
+     "skor": [
+      -39230,
+      361726,
+      -247221,
+      -285314,
+      -203576,
+      167706,
+      -90758
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:13:00Z",
+    "temp_c": 6.5,
+    "humidity": 65.92,
+    "ambient_c": 31.0,
+    "door_open": true,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 466.125,
+    "edge": {
+     "rek": "0000004971051c7c028a19c00c1c1d2217700f2710005a",
+     "rantai": "62bfe91fd3370f80d65cc2a7806fff514c1eff9064f669671209165932519f34",
+     "paket": "000000490049000009000001f95c0584",
+     "mac": "4e62cee8554ba089d80d9b82e977bbce962d326092226aa3405bd9789305b675",
+     "skor": [
+      -39230,
+      361726,
+      -247221,
+      -285314,
+      -203576,
+      167706,
+      -90758
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:14:00Z",
+    "temp_c": 6.6,
+    "humidity": 67.85,
+    "ambient_c": 31.0,
+    "door_open": true,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 463.8125,
+    "edge": {
+     "rek": "0000004a71051cb802941a810c1c1cfd17700f2710005a",
+     "rantai": "2ed0ad889016486febf403c746874283084feb22c911aba1006c690b7100379a",
+     "paket": "0000004a004a000009000001f98305aa",
+     "mac": "102611f344ac507646546f1c2b845347bd7ddbe95f743d3bea78200ee40e3954",
+     "skor": [
+      -39386,
+      371372,
+      -247221,
+      -285314,
+      -203576,
+      133128,
+      -73909
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:15:00Z",
+    "temp_c": 6.7,
+    "humidity": 67.06,
+    "ambient_c": 30.99,
+    "door_open": true,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 461.5625,
+    "edge": {
+     "rek": "0000004b71051cf4029e1a320c1b1cd917700f2710005a",
+     "rantai": "92f3628e78afc38efa9cb9981ea369e7b10a469b2a3af5580a6ca244b181b9f7",
+     "paket": "0000004b004b000009000001f9ad05aa",
+     "mac": "c9a680bb00e2093255c3d1e49a1f74d39479f989e7d67e16415c4d1981fe88c6",
+     "skor": [
+      -39386,
+      371372,
+      -247221,
+      -285314,
+      -203576,
+      117141,
+      -73909
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:16:00Z",
+    "temp_c": 6.7,
+    "humidity": 70.81,
+    "ambient_c": 30.99,
+    "door_open": true,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 459.25,
+    "edge": {
+     "rek": "0000004c71051d30029e1ba90c1b1cb417700f2703005a",
+     "rantai": "e7490ee0dd9b0a5ce7b958e00286c8aaa9dde36d72b542c69bb9b98292a70fb5",
+     "paket": "0000004c004c000009000001f9d905aa",
+     "mac": "464ea3f34f4f989116c9aa1c729372043e4b153364ed2d39d541d625073b9262",
+     "skor": [
+      -39386,
+      371372,
+      -247221,
+      -285314,
+      -203576,
+      117141,
+      -73909
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:17:00Z",
+    "temp_c": 6.8,
+    "humidity": 68.67,
+    "ambient_c": 30.99,
+    "door_open": true,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 456.9375,
+    "edge": {
+     "rek": "0000004d71051d6c02a81ad30c1b1c8f17700f2710005a",
+     "rantai": "eed74281758da98d53b268cf483cf3c1f58ae71c1e57590c22df34b15f4a6f9f",
+     "paket": "0000004d004d000009000001fa0505aa",
+     "mac": "d1926beb6d1e0c856643115bc5748bc28297e1a8950fe5bdfdc094b1ab4a7a5d",
+     "skor": [
+      -39386,
+      371372,
+      -247221,
+      -285314,
+      -203576,
+      117141,
+      -73909
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:18:00Z",
+    "temp_c": 7.0,
+    "humidity": 68.12,
+    "ambient_c": 30.99,
+    "door_open": true,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 454.625,
+    "edge": {
+     "rek": "0000004e71051da802bc1a9c0c1b1c6a17700f2710005a",
+     "rantai": "749a7098a1b37e9edbec49bdff1f4194b211f8b1abde226d2e15b59989ed63d4",
+     "paket": "0000004e004e000009000001fa3405aa",
+     "mac": "ba81452ec598f70949d5c0d4dd41fd3659e813f7e2a21083a43861dc23d031ea",
+     "skor": [
+      -39386,
+      371372,
+      -247221,
+      -285314,
+      -203576,
+      117141,
+      -73909
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:19:00Z",
+    "temp_c": 7.0,
+    "humidity": 67.15,
+    "ambient_c": 30.99,
+    "door_open": true,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 452.3125,
+    "edge": {
+     "rek": "0000004f71051de402bc1a3b0c1b1c4517700f2710005a",
+     "rantai": "e79d23aed9a6f90da77cdb9565dec7c15d4b366b943e29d39c9e03ccee5dcdab",
+     "paket": "0000004f004f000009000001fa6805aa",
+     "mac": "87acbe5a9908a8446854f1babd03f3249ee90fb14a964fd2d36f781d609fb2c9",
+     "skor": [
+      -39386,
+      371372,
+      -247221,
+      -285314,
+      -203576,
+      117141,
+      -73909
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:20:00Z",
+    "temp_c": 7.0,
+    "humidity": 69.28,
+    "ambient_c": 30.99,
+    "door_open": true,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 449.9375,
+    "edge": {
+     "rek": "0000005071051e2002bc1b100c1b1c1f17700f2710005a",
+     "rantai": "e63f15af511d829ea0d87fad835d625154b2ae8bf91bea66b47dbcfc90ba71f9",
+     "paket": "000000500050000009000001fa9c05aa",
+     "mac": "0fe6f2bcea52d92640567cf3486cc41e796eb0974a9e591a282d7f29bf86679e",
+     "skor": [
+      -39386,
+      371372,
+      -247221,
+      -285314,
+      -203576,
+      117141,
+      -66835
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:21:00Z",
+    "temp_c": 7.2,
+    "humidity": 67.51,
+    "ambient_c": 30.99,
+    "door_open": true,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 447.625,
+    "edge": {
+     "rek": "0000005171051e5c02d01a5f0c1b1bfa17700f2710005a",
+     "rantai": "de59387c8a8aaa045094cdf1223e8e2b1dc9fe2f233a7ca5adb1286f1fda8f44",
+     "paket": "000000510051000009000001fad005aa",
+     "mac": "fd646d1898f6425e64bed38b34b89cc57fa153fd1b178fa156f4ae90f366549a",
+     "skor": [
+      -39386,
+      371372,
+      -247221,
+      -285314,
+      -203576,
+      117141,
+      -66835
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:22:00Z",
+    "temp_c": 7.3,
+    "humidity": 67.6,
+    "ambient_c": 30.99,
+    "door_open": true,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 445.25,
+    "edge": {
+     "rek": "0000005271051e9802da1a680c1b1bd417700f26b8005a",
+     "rantai": "3d68f0b5ab414b355e72679ccc1c8b73f150290c90c5caa7c51caf2a8d1af973",
+     "paket": "000000520052000009000001fb0a05aa",
+     "mac": "7866c519000e9c369ccf64d2785fcf6dfe093a4e68fb404ce761ec3d02e4d85c",
+     "skor": [
+      -39386,
+      371372,
+      -247221,
+      -285314,
+      -203576,
+      117141,
+      -66835
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:23:00Z",
+    "temp_c": 7.3,
+    "humidity": 68.09,
+    "ambient_c": 30.99,
+    "door_open": true,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 2,
+    "solar_radiation": 442.875,
+    "edge": {
+     "rek": "0000005371051ed402da1a990c1b1bae17700f26d7025a",
+     "rantai": "2c059e3f4b2fc1becd3ae1c3f823b669a3728f8c0eeef8545d1a692f78d57db0",
+     "paket": "000000530053000009000001fb4605aa",
+     "mac": "9c6fb6a328ad28c63346bd535cdc4f9ba47ddd082bef765f400e205dbe4f0ef7",
+     "skor": [
+      -39386,
+      371372,
+      -247221,
+      -285314,
+      -203576,
+      117141,
+      -70290
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:24:00Z",
+    "temp_c": 7.4,
+    "humidity": 69.41,
+    "ambient_c": 30.99,
+    "door_open": true,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 440.5,
+    "edge": {
+     "rek": "0000005471051f1002e41b1d0c1b1b8817700f2698005a",
+     "rantai": "335ed911102efaddadf68c804ed24f769f68568bfec0fd406b751ebb74be2d92",
+     "paket": "0000005400540d0009000001fb8205aa",
+     "mac": "af5d373a7f749fe4535b30d6c725bb8035a59497f28d2f14492a272f6025a500",
+     "skor": [
+      -39386,
+      371372,
+      -247221,
+      -285314,
+      -203576,
+      117141,
+      -70290
+     ]
+    }
+   },
+   "harapan": {
+    "status": 1,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:25:00Z",
+    "temp_c": 7.6,
+    "humidity": 68.03,
+    "ambient_c": 30.99,
+    "door_open": true,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 1,
+    "solar_radiation": 438.125,
+    "edge": {
+     "rek": "0000005571051f4c02f81a930c1b1b6217700f2710015a",
+     "rantai": "bbe9fcfb28910915e7f8fa4d2373b043a124f17b3aa70bc71dfcd99cc21442af",
+     "paket": "0000005500550d0009000001fbc005aa",
+     "mac": "3213f3040669460150010eeefdafe1ba5654f7a9f96d02adc00fe8b53b7e45ed",
+     "skor": [
+      -39386,
+      371372,
+      -247221,
+      -285314,
+      -203576,
+      117141,
+      -70290
+     ]
+    }
+   },
+   "harapan": {
+    "status": 1,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:26:00Z",
+    "temp_c": 7.7,
+    "humidity": 66.16,
+    "ambient_c": 30.98,
+    "door_open": true,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 435.75,
+    "edge": {
+     "rek": "0000005671051f88030219d80c1a1b3c17700f2710005a",
+     "rantai": "f7fc54350740ec341c60cec37651a6e63566fe1fe85d806094cae098349266c9",
+     "paket": "0000005600560d0009000001fc0405aa",
+     "mac": "12510fc22d80931c11e88338e1b55fa9fdad6e6edd5ba1df6522bb09b7fa5ac4",
+     "skor": [
+      -39386,
+      371372,
+      -247221,
+      -285314,
+      -203576,
+      96387,
+      -70290
+     ]
+    }
+   },
+   "harapan": {
+    "status": 1,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:27:00Z",
+    "temp_c": 7.9,
+    "humidity": 69.87,
+    "ambient_c": 30.98,
+    "door_open": true,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 433.375,
+    "edge": {
+     "rek": "0000005771051fc403161b4b0c1a1b1617700f2710005a",
+     "rantai": "fa96d8c7509d9f8838e096657b3513bd47ef5850e992d9f522890c2dcdde021d",
+     "paket": "0000005700570d0009000001fc4b05aa",
+     "mac": "dbb6761cbc3992f0d6c7c4750e798a86bd37d76768e0874240aea08f5ddd8ccd",
+     "skor": [
+      -39386,
+      371372,
+      -247221,
+      -285314,
+      -203576,
+      96387,
+      -70290
+     ]
+    }
+   },
+   "harapan": {
+    "status": 1,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:28:00Z",
+    "temp_c": 7.9,
+    "humidity": 69.11,
+    "ambient_c": 30.98,
+    "door_open": true,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 430.9375,
+    "edge": {
+     "rek": "000000587105200003161aff0c1a1aef17700f2710005a",
+     "rantai": "1da53d842f4731e0aba7b46a19d8e871c5bad739bff9873bf2a0ea315dfdcce1",
+     "paket": "0000005800580d0009000001fc9605aa",
+     "mac": "6fdec29d07df68e8ac0131514ce3b09d65c57d3ec985980f1f1225dfc2881605",
+     "skor": [
+      -39386,
+      371372,
+      -247221,
+      -250768,
+      -203576,
+      96387,
+      -70290
+     ]
+    }
+   },
+   "harapan": {
+    "status": 1,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:29:00Z",
+    "temp_c": 7.9,
+    "humidity": 70.3,
+    "ambient_c": 30.98,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 428.5625,
+    "edge": {
+     "rek": "000000597105203c03161b760c1a1ac917700e144c005a",
+     "rantai": "b78a9ae16c0a4c29a24e5132e6fab7da05f7b359c60456e0b5204fb1a1afa1a8",
+     "paket": "0000005900590d0009000001fce205aa",
+     "mac": "1571e3f6fe877e07c84c5e8367b9a469741b4e2feb3987ad6372b18182b327dc",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -278566,
+      -203576,
+      44331,
+      -70290
+     ]
+    }
+   },
+   "harapan": {
+    "status": 1,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:30:00Z",
+    "temp_c": 7.7,
+    "humidity": 70.12,
+    "ambient_c": 30.98,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 426.125,
+    "edge": {
+     "rek": "0000005a7105207803021b640c1a1aa217700e113c005a",
+     "rantai": "09415c9220fe3629f1727f171b0ea7c5a3688852c163263396c39aea441ef08f",
+     "paket": "0000005a005a0d0009000001fd2e05aa",
+     "mac": "192568b82139c4d59e2bc5f466e7d0929a61a7078cec1f957f998f6641b2882d",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -278325,
+      -201505,
+      44331,
+      -70290
+     ]
+    }
+   },
+   "harapan": {
+    "status": 1,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:31:00Z",
+    "temp_c": 7.6,
+    "humidity": 68.62,
+    "ambient_c": 30.98,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 423.6875,
+    "edge": {
+     "rek": "0000005b710520b402f81ace0c1a1a7b17700e1449005a",
+     "rantai": "4432b0740f82ee26fb53280200d9c0232184ade93e228b16295abd8a19f71084",
+     "paket": "0000005b005b0d0009000001fd7405aa",
+     "mac": "c1a7233861ba022f8a58c7f9d0eface599fa4d133af2ff3cc018552bc2abc54b",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -278325,
+      -203576,
+      44331,
+      -70290
+     ]
+    }
+   },
+   "harapan": {
+    "status": 1,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:32:00Z",
+    "temp_c": 7.6,
+    "humidity": 69.24,
+    "ambient_c": 30.98,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 421.25,
+    "edge": {
+     "rek": "0000005c710520f002f81b0c0c1a1a5417700e12d7005a",
+     "rantai": "a45a983bcbdaecd5e2e20d148a78ae555ec6e44875156264456881bff262748e",
+     "paket": "0000005c005c0d0009000001fdb705aa",
+     "mac": "9caf6f93924ca790d2cd7cdce712183acc5d5957ea124d9b8b49712770c1516f",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -278325,
+      -203576,
+      44331,
+      -70290
+     ]
+    }
+   },
+   "harapan": {
+    "status": 1,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:33:00Z",
+    "temp_c": 7.5,
+    "humidity": 69.74,
+    "ambient_c": 30.97,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 418.8125,
+    "edge": {
+     "rek": "0000005d7105212c02ee1b3e0c191a2d17700e135e005a",
+     "rantai": "ae0383e80a63a4150793d078c7e002ff5e044245a395fc2b82475519ff07ca20",
+     "paket": "0000005d005d0d0009000001fdfb05aa",
+     "mac": "7021a239a4c6aee04fa7e9dc6a515bae6cc5d12d96fdb659a5f81175b515f3e2",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -278325,
+      -203576,
+      44331,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 1,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:34:00Z",
+    "temp_c": 7.4,
+    "humidity": 71.99,
+    "ambient_c": 30.97,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 416.375,
+    "edge": {
+     "rek": "0000005e7105216802e41c1f0c191a0617700e1353005a",
+     "rantai": "e3803777f75766638accf8d7fa18c7096225228287c0090da6af502340f77509",
+     "paket": "0000005e005e0d0009000001fe3b05aa",
+     "mac": "6121f385ca20a88cc30a874188ef572fd5839ad7ce8ad698efd74300ec0da69c",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -278325,
+      -203576,
+      44331,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 1,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:35:00Z",
+    "temp_c": 7.2,
+    "humidity": 67.07,
+    "ambient_c": 30.97,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 413.9375,
+    "edge": {
+     "rek": "0000005f710521a402d01a330c1919df17700e1222005a",
+     "rantai": "8b1771e26686b45fb731cc9ac9120ece453d95634299ba107b9ea7b39f96b1bb",
+     "paket": "0000005f005f0d0009000001fe7905aa",
+     "mac": "d35903f4e55da674f233c17e1dabec09cafce13374383dfee072d6116e1cae08",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -278325,
+      -203576,
+      51986,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 1,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:36:00Z",
+    "temp_c": 7.1,
+    "humidity": 69.8,
+    "ambient_c": 30.97,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 411.4375,
+    "edge": {
+     "rek": "00000060710521e002c61b440c1919b717700e12de005a",
+     "rantai": "ba986f16245fbe61fd5735b9815596df6df09d89742c9d0bc200377c0503a2ec",
+     "paket": "0000006000600d0009000001feb105aa",
+     "mac": "8e625b2de4f016a51513fcc9d5f17161daaa79cd43409e4c5c57873849384c49",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -278325,
+      -203576,
+      51986,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 1,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:37:00Z",
+    "temp_c": 7.0,
+    "humidity": 67.82,
+    "ambient_c": 30.97,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 409.0,
+    "edge": {
+     "rek": "000000617105221c02bc1a7e0c19199017700e1331005a",
+     "rantai": "7b556244103922293caf57e269bf820964310999b651d4a37d06fb9e0133a632",
+     "paket": "0000006100610d0009000001fee705aa",
+     "mac": "5ac3f4f968036292b90f7ca9c3d59229a51033cd73698a3c1ccdcc0c4ad75a3d",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -278325,
+      -203576,
+      51986,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 1,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:38:00Z",
+    "temp_c": 7.0,
+    "humidity": 69.42,
+    "ambient_c": 30.97,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 406.5,
+    "edge": {
+     "rek": "000000627105225802bc1b1e0c19196817700e1330005a",
+     "rantai": "fbd36b057fc24393c20addd2266219b107684fdb6405d01a22d1570fd68353ba",
+     "paket": "0000006200620d0009000001ff1a05aa",
+     "mac": "486d18899ba1b237f8bca7ff15c2b035466ddcd84bec6ac024340e87b8778569",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -278325,
+      -203576,
+      60613,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 1,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:39:00Z",
+    "temp_c": 6.9,
+    "humidity": 69.52,
+    "ambient_c": 30.96,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 404.0,
+    "edge": {
+     "rek": "000000637105229402b21b280c18194017700e13f9005a",
+     "rantai": "a7cefa300f801e63ee1201b5b51bdb186abcab420ee9fba5fd085af8f7c90209",
+     "paket": "0000006300630d0009000001ff4d05aa",
+     "mac": "f99148722a7abfcd5250f251129d09490d4ac741eae0ea09482e07fd8f2d9359",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -278325,
+      -203576,
+      60960,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 1,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:40:00Z",
+    "temp_c": 6.8,
+    "humidity": 68.37,
+    "ambient_c": 30.96,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 401.5,
+    "edge": {
+     "rek": "00000064710522d002a81ab50c18191817700e12fa005a",
+     "rantai": "0507d5d49a6882b176e8ccaf922588e4a930630759f88b5f23bacc841bc4d3fe",
+     "paket": "0000006400640d0009000001ff7d05aa",
+     "mac": "96f15ad384e72a00a60970c0f78a32e4e6a771a782ffb1dee715ed2f1abd1517",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -278325,
+      -203576,
+      60613,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 1,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:41:00Z",
+    "temp_c": 6.7,
+    "humidity": 68.4,
+    "ambient_c": 30.96,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 1,
+    "solar_radiation": 399.0,
+    "edge": {
+     "rek": "000000657105230c029e1ab80c1818f017700e101c015a",
+     "rantai": "05bd935d5c902690889f7743db17e3f84ce999b49d0997b1db3845370c6ef4d1",
+     "paket": "0000006500650d0009000001ffaa05aa",
+     "mac": "1cb963bfcae85db976bb6d460b518c6fa341c3e775b73e7feb9cec5157dd536a",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -261919,
+      -203576,
+      75988,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 1,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:42:00Z",
+    "temp_c": 6.6,
+    "humidity": 68.72,
+    "ambient_c": 30.96,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 396.5,
+    "edge": {
+     "rek": "000000667105234802941ad80c1818c817700e1411005a",
+     "rantai": "b27496d334852288c259f8472128e3224825badc770b4c779b2ddfc437c8d1bb",
+     "paket": "0000006600660d0009000001ffd505aa",
+     "mac": "24bbf76ccaa25ca005e565abc7927949c9ddce01b0ce00bbdefca3a3e70887f5",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -278325,
+      -203576,
+      76747,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 1,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:43:00Z",
+    "temp_c": 6.5,
+    "humidity": 71.04,
+    "ambient_c": 30.96,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 393.9375,
+    "edge": {
+     "rek": "0000006771052384028a1bc00c18189f17700e1242005a",
+     "rantai": "d441e2f762aa30c0aad8c7bfca530aec4988b944e8293a3c9b53164e275d71ae",
+     "paket": "000000670067000009000001fffd05aa",
+     "mac": "97f525260b78fc8ea5c8ceb2370d73913d4a15c14018eb809fe7cc4f40081070",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -278325,
+      -203576,
+      72204,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:44:00Z",
+    "temp_c": 6.6,
+    "humidity": 68.13,
+    "ambient_c": 30.95,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 391.4375,
+    "edge": {
+     "rek": "00000068710523c002941a9d0c17187717700e140d005a",
+     "rantai": "aeefd16ac7049696d6955e8b0c1237a39f262e6badb8b8c6010aa99b4a39aafe",
+     "paket": "000000680068000009000002002205aa",
+     "mac": "7fbfb79231bb73d345d3fa9dfb10f4c99447e621724095ba87b689df460b3506",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -278325,
+      -203576,
+      72204,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:45:00Z",
+    "temp_c": 6.5,
+    "humidity": 69.38,
+    "ambient_c": 30.95,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 388.875,
+    "edge": {
+     "rek": "00000069710523fc028a1b1a0c17184e17700e1207005a",
+     "rantai": "fcb1d898ec4e1e83e69a21ca184c0c7743265662ddc32ea7e6682c1adcada1ff",
+     "paket": "000000690069000009000002004905aa",
+     "mac": "4cf711c8e1f032bfe0071dc4aa1547abf650965916212cd54398ee6fa6ae5598",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -278325,
+      -203576,
+      72204,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:46:00Z",
+    "temp_c": 6.6,
+    "humidity": 69.28,
+    "ambient_c": 30.95,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 386.375,
+    "edge": {
+     "rek": "0000006a7105243802941b100c17182617700e1152005a",
+     "rantai": "332855aa058247f94f901d50ed47d05776aecff3077112fc18677ccea335ef97",
+     "paket": "0000006a006a000009000002006e05aa",
+     "mac": "2b409791b9f119ed5651c082113335d635818449484b9ea797ec7337f8e78a5b",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -278325,
+      -203576,
+      72204,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:47:00Z",
+    "temp_c": 6.5,
+    "humidity": 72.12,
+    "ambient_c": 30.95,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 383.8125,
+    "edge": {
+     "rek": "0000006b71052474028a1c2c0c1717fd17700e139c005a",
+     "rantai": "366572e2a1304b27ad97b3fc2813c0418aad8994412c784297c3d3e12d4af6a9",
+     "paket": "0000006b006b000009000002009605aa",
+     "mac": "35f178384f8e4316fa9b73f0614730c16c1ef987f43fb18708aaf7cc8a68f3da",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -278325,
+      -203576,
+      72204,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:48:00Z",
+    "temp_c": 6.5,
+    "humidity": 69.52,
+    "ambient_c": 30.95,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 381.25,
+    "edge": {
+     "rek": "0000006c710524b0028a1b280c1717d417700e1003005a",
+     "rantai": "1784ada45541c7bc22be647f275daffede20a9b9a4f69d2198149da9a1328bda",
+     "paket": "0000006c006c00000900000200bb05aa",
+     "mac": "9bd1a6e3a951cf54d138f2c746147e97a66ef3e85ceb55980418da7165da840c",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -278325,
+      -203576,
+      72204,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:49:00Z",
+    "temp_c": 6.5,
+    "humidity": 70.16,
+    "ambient_c": 30.94,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 378.6875,
+    "edge": {
+     "rek": "0000006d710524ec028a1b680c1617ab17700e126a005a",
+     "rantai": "fc66e897f3243f8dc93043a0eb2183ab704059aa90005b55668355a6beb18081",
+     "paket": "0000006d006d00000900000200e005aa",
+     "mac": "3a0afcc163b79f9bac14598b8d8cdf4aa03157317083999728725980eca2acec",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -278325,
+      -203576,
+      72204,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:50:00Z",
+    "temp_c": 6.4,
+    "humidity": 70.68,
+    "ambient_c": 30.94,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 376.125,
+    "edge": {
+     "rek": "0000006e7105252802801b9c0c16178217700e1191005a",
+     "rantai": "a4f19a08dc02b753f22b6dea7e3c3bfc38767b0932898fd7439df713412b8203",
+     "paket": "0000006e006e000009000002010505aa",
+     "mac": "ac94118feb8dc836fd9a6fbc3cf13fe8f09ecc26f4d1e063e1b36e174ad45b91",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -278325,
+      -203576,
+      72204,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:51:00Z",
+    "temp_c": 6.4,
+    "humidity": 68.52,
+    "ambient_c": 30.94,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 373.5,
+    "edge": {
+     "rek": "0000006f7105256402801ac40c16175817700e1204005a",
+     "rantai": "fe663e4f4a5e49672e475aa0f26679b914cb7afc355529c5934a170c29599947",
+     "paket": "0000006f006f000009000002012705aa",
+     "mac": "1915047faf12817652c930fd621184410af00aa96807c5ad4a267b63052b414c",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -278325,
+      -203576,
+      72204,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:52:00Z",
+    "temp_c": 6.4,
+    "humidity": 67.73,
+    "ambient_c": 30.94,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 370.9375,
+    "edge": {
+     "rek": "00000070710525a002801a750c16172f17700e10b1005a",
+     "rantai": "31494fa0da5e1321cdb1cbbdac4eb2159546cd6caa7522d588a3e449fa8cc8be",
+     "paket": "000000700070000009000002014905aa",
+     "mac": "d8887d3769174a3e73b5ddeefc9d9b4e6f588296d3bee15175755a3d5d382deb",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -278325,
+      -203576,
+      72204,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:53:00Z",
+    "temp_c": 6.4,
+    "humidity": 70.03,
+    "ambient_c": 30.93,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 368.375,
+    "edge": {
+     "rek": "00000071710525dc02801b5b0c15170617700e1128005a",
+     "rantai": "532ee3db6ae9a22708ea92320466ccf99ab0640d119bf19f822d35c6a29436b9",
+     "paket": "000000710071000009000002016b05aa",
+     "mac": "5c930c901326d371488b9337667433cabf85889978dcd1b935c0c97e2847aac7",
+     "skor": [
+      -26957,
+      371372,
+      -247221,
+      -278325,
+      -203576,
+      72204,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:54:00Z",
+    "temp_c": 6.3,
+    "humidity": 70.22,
+    "ambient_c": 30.93,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 365.75,
+    "edge": {
+     "rek": "000000727105261802761b6e0c1516dc17700e106b005a",
+     "rantai": "75421bb0d4b402b69220adfdeaeb67270cbd40f9eb3d5cb31c494921ab68b916",
+     "paket": "000000720072000009000002018d0578",
+     "mac": "b037d3460a9fc26ef46b8ceac760bd14359eb32b00676bd5eea05d51aabcd5b2",
+     "skor": [
+      -26957,
+      358472,
+      -247221,
+      -278325,
+      -203576,
+      72204,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:55:00Z",
+    "temp_c": 6.3,
+    "humidity": 68.08,
+    "ambient_c": 30.93,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 363.125,
+    "edge": {
+     "rek": "000000737105265402761a980c1516b217700e11ab005a",
+     "rantai": "5be885d4f5492c1b9182a018e7a9ebf103fbd356dae561b3a047e8f154ed1caa",
+     "paket": "00000073007300000900000201ad0578",
+     "mac": "2a0d86de4f77d96b2051e8acd416ac552e2ff6219f63d3552bfb6f28951c2587",
+     "skor": [
+      -26957,
+      358472,
+      -247221,
+      -278325,
+      -203576,
+      72204,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:56:00Z",
+    "temp_c": 6.3,
+    "humidity": 73.16,
+    "ambient_c": 30.93,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 360.5,
+    "edge": {
+     "rek": "000000747105269002761c940c15168817700e10c4005a",
+     "rantai": "f26b11ca2ec46ce5d40b3fa11640e588d48d4f4280ee1650d11a73bf4cf2fd8a",
+     "paket": "00000074007400000900000201cc0578",
+     "mac": "6b5984bfbadf53de9bd68d91baa8d86d33e48fed2d56d2e917ab612079e5286d",
+     "skor": [
+      -26957,
+      358472,
+      -247221,
+      -271462,
+      -203576,
+      73298,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:57:00Z",
+    "temp_c": 6.2,
+    "humidity": 67.43,
+    "ambient_c": 30.92,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 357.875,
+    "edge": {
+     "rek": "00000075710526cc026c1a570c14165e17700e1065005a",
+     "rantai": "a06e542196ec3f6526e162589c5cbb536efbf5e26487088ac7aa663fab9ed256",
+     "paket": "00000075007500000900000201eb0541",
+     "mac": "4ce9f8cc8bb9b2d4b322169648ae34e3c37016325c75e4c6a1dda146cb3bd3a0",
+     "skor": [
+      -26957,
+      344524,
+      -247221,
+      -271462,
+      -203576,
+      73298,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:58:00Z",
+    "temp_c": 6.3,
+    "humidity": 67.68,
+    "ambient_c": 30.92,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 355.25,
+    "edge": {
+     "rek": "000000767105270802761a700c14163417700e1133005a",
+     "rantai": "b2ccd1dfa249571cee51f75b3b6d141590b8a67437c01c123df2497abaf4bbe0",
+     "paket": "00000076007600000900000202080578",
+     "mac": "2222d5194bd90a98783a6ce0da238cfe0e147d7ed80d3774969cdce4cbd52776",
+     "skor": [
+      -26957,
+      358472,
+      -247221,
+      -271462,
+      -203576,
+      82330,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T07:59:00Z",
+    "temp_c": 6.3,
+    "humidity": 72.59,
+    "ambient_c": 30.92,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 352.625,
+    "edge": {
+     "rek": "000000777105274402761c5b0c14160a17700e1086005a",
+     "rantai": "021e7b7b168662525cd870550d2ad565b493f23e236c30e5946d3492cb257f89",
+     "paket": "00000077007700000900000202270578",
+     "mac": "ce965e09d4248c246dd20a315afdb7761e09f9059afea0f3dd4a7d5823482796",
+     "skor": [
+      -26957,
+      358472,
+      -247221,
+      -271462,
+      -203576,
+      82330,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T08:00:00Z",
+    "temp_c": 6.1,
+    "humidity": 69.43,
+    "ambient_c": 30.91,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 350.0,
+    "edge": {
+     "rek": "000000787105278002621b1f0c1315e017700e1241005a",
+     "rantai": "f359e7c8b279679d45182b5b8114bac9aceaf43e84bab3d87e8eca23057d2663",
+     "paket": "00000078007800000900000202460541",
+     "mac": "583d0b56887fa657b6233cf49fdbf012153af0bb7d3cd6359c0802f13b40a74b",
+     "skor": [
+      -26957,
+      344524,
+      -247221,
+      -271462,
+      -203576,
+      95449,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T08:01:00Z",
+    "temp_c": 6.1,
+    "humidity": 71.74,
+    "ambient_c": 30.91,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 347.375,
+    "edge": {
+     "rek": "00000079710527bc02621c060c1315b617700e10c6005a",
+     "rantai": "9b282ee604b3fbd171de786a58f22d5b184fe281ba93feae998609522ed7e6a2",
+     "paket": "00000079007900000900000202600523",
+     "mac": "e22bad775183bef9b176d9afb965cce3dc6a27f5c46d55ddf3edea3c6bb5d6bc",
+     "skor": [
+      -26957,
+      336773,
+      -247221,
+      -271462,
+      -203576,
+      92131,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T08:02:00Z",
+    "temp_c": 6.2,
+    "humidity": 70.49,
+    "ambient_c": 30.91,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 344.6875,
+    "edge": {
+     "rek": "0000007a710527f8026c1b890c13158b17700e0ff5005a",
+     "rantai": "2b9081c37957bf6128221b9320ca250d345620d1bf5934ff4582e8a07f1d5a0d",
+     "paket": "0000007a007a000009000002027a0523",
+     "mac": "dfd21174dc06a55d1f1ef14c5b30ff39669a426d956a7e86c3cddee92689fd40",
+     "skor": [
+      -26957,
+      336773,
+      -247221,
+      -271462,
+      -203576,
+      92131,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T08:03:00Z",
+    "temp_c": 6.1,
+    "humidity": 70.82,
+    "ambient_c": 30.91,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 342.0625,
+    "edge": {
+     "rek": "0000007b7105283402621baa0c13156117700e11bd005a",
+     "rantai": "a9a8075201669a73e3b73dc80a27fd1f35f6bf4f3edbc44a19b987b3df2d61f2",
+     "paket": "0000007b007b00000900000202960523",
+     "mac": "21c306e51f940d4ec2bcb4b43ac552cc4da11e94fe4c8fe8c5c4b53c0f7060ad",
+     "skor": [
+      -26957,
+      336773,
+      -247221,
+      -278325,
+      -203576,
+      92131,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T08:04:00Z",
+    "temp_c": 6.1,
+    "humidity": 71.05,
+    "ambient_c": 30.9,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 339.375,
+    "edge": {
+     "rek": "0000007c7105287002621bc10c12153617700e100f005a",
+     "rantai": "299236af31f2eea4703609e83981748d6cd4b8581b577791cf06cdd7d8506ddb",
+     "paket": "0000007c007c00000900000202b00523",
+     "mac": "301624fe8438eefe09e0b6dee776023a4ee8018075e1f7a97ae2c1d4f8fd21e8",
+     "skor": [
+      -26957,
+      336773,
+      -247221,
+      -278325,
+      -203576,
+      92131,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T08:05:00Z",
+    "temp_c": 6.0,
+    "humidity": 69.66,
+    "ambient_c": 30.9,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 336.6875,
+    "edge": {
+     "rek": "0000007d710528ac02581b360c12150b17700e118a005a",
+     "rantai": "05be9e2f76cefc48b7829944beb341a979a08a3ed0cdb89afc59658522e5c1c3",
+     "paket": "0000007d007d00000900000202c90523",
+     "mac": "abede6b956eee57a075d841b7923281b91a0eb31707d479eab0dac7aaa112a1c",
+     "skor": [
+      -26957,
+      336773,
+      -247221,
+      -278325,
+      -203576,
+      92131,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T08:06:00Z",
+    "temp_c": 6.0,
+    "humidity": 72.31,
+    "ambient_c": 30.9,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 334.0,
+    "edge": {
+     "rek": "0000007e710528e802581c3f0c1214e017700e10e5005a",
+     "rantai": "2e3c4047cc238bc628ee92890558a2d405d838e5e71e1bf77be3a447fc28ec55",
+     "paket": "0000007e007e00000900000202e00523",
+     "mac": "0cb4aad2861c8eb00e3d910ab2189154507c85cb384cc4f24e46cd9f1ee716f0",
+     "skor": [
+      -26957,
+      336773,
+      -247221,
+      -278325,
+      -203576,
+      92131,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T08:07:00Z",
+    "temp_c": 6.0,
+    "humidity": 71.61,
+    "ambient_c": 30.89,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 331.3125,
+    "edge": {
+     "rek": "0000007f7105292402581bf90c1114b517700e1140005a",
+     "rantai": "87bf45203c865c8b793d59a417092a8a8c03b0b4d8771a394bf2e1e3bbb24c8d",
+     "paket": "0000007f007f00000900000202f70523",
+     "mac": "c74519d39fbb60d8a7524b4f5ef1da1ad78ff81f4cf5f5f5596e5b0e659b2c66",
+     "skor": [
+      -26957,
+      336773,
+      -247221,
+      -278325,
+      -203576,
+      92131,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T08:08:00Z",
+    "temp_c": 6.1,
+    "humidity": 68.3,
+    "ambient_c": 30.89,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 328.625,
+    "edge": {
+     "rek": "000000807105296002621aae0c11148a17700e1202005a",
+     "rantai": "f4d41eefe4f418f9df365fcc9b37167c42dc10a0007a071efb1c729a0dd4ad08",
+     "paket": "000000800080000009000002030e0523",
+     "mac": "3c86c62f5e2590758ca0348ccd22ea596c804de528a0a52da6fe26363881260b",
+     "skor": [
+      -26957,
+      336773,
+      -247221,
+      -278325,
+      -203576,
+      92131,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T08:09:00Z",
+    "temp_c": 6.0,
+    "humidity": 71.15,
+    "ambient_c": 30.89,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 325.9375,
+    "edge": {
+     "rek": "000000817105299c02581bcb0c11145f17700e10e5005a",
+     "rantai": "59312a61225ed5374c496d7b27194b2befea3dde87de4891f88f88cce1a12e81",
+     "paket": "0000008100810000090000020328052d",
+     "mac": "23e5b3ef28d0d2f4b7025d40e37d5df3335ee38ec6b8e2d109f9d2690792a07b",
+     "skor": [
+      -26957,
+      339294,
+      -247221,
+      -261041,
+      -201505,
+      94847,
+      -69786
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T08:10:00Z",
+    "temp_c": 5.9,
+    "humidity": 70.23,
+    "ambient_c": 30.88,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 323.25,
+    "edge": {
+     "rek": "00000082710529d8024e1b6f0c10143417700e100d005a",
+     "rantai": "c7f210ee5b7ed170f14550a809312473b171274b7941c1028b687a8730760193",
+     "paket": "000000820082000009000002033e0536",
+     "mac": "f96ed40661cb0df1836135b923ccf3d0e4186b860a2cc4938d870c4a858c4794",
+     "skor": [
+      -25904,
+      341512,
+      -247221,
+      -232203,
+      -201505,
+      94847,
+      -89111
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T08:11:00Z",
+    "temp_c": 6.0,
+    "humidity": 68.9,
+    "ambient_c": 30.88,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 320.5,
+    "edge": {
+     "rek": "0000008371052a1402581aea0c10140817700e11af005a",
+     "rantai": "e1923430f9478df5a57f80c8c90748881fa6726e1a7ba8d8e25f98cdaa396c4c",
+     "paket": "0000008300830000090000020353055b",
+     "mac": "876d0adc46518078fffb51d93f6ae13b84d015d57322ab6ccdb02a0849c54eda",
+     "skor": [
+      -30496,
+      351111,
+      -247221,
+      -232203,
+      -203576,
+      94847,
+      -89111
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T08:12:00Z",
+    "temp_c": 5.9,
+    "humidity": 71.57,
+    "ambient_c": 30.88,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 317.8125,
+    "edge": {
+     "rek": "0000008471052a50024e1bf50c1013dd17700e0ffd005a",
+     "rantai": "bfa5cf736a2c0bd233d997aef326a9a3e59a6f202124977e3358ebd857c73083",
+     "paket": "00000084008400000900000203690554",
+     "mac": "bf9d694b3953294c342d0c9ba8f5ae816a4eb5ac31ecd1a1368d5ac7b480484c",
+     "skor": [
+      -36029,
+      349291,
+      -247221,
+      -214018,
+      -203576,
+      94847,
+      -106464
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T08:13:00Z",
+    "temp_c": 5.9,
+    "humidity": 69.6,
+    "ambient_c": 30.87,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 315.0625,
+    "edge": {
+     "rek": "0000008571052a8c024e1b300c0f13b117700e103e005a",
+     "rantai": "3b6452aeca57d59662c9289c74e8ddd86659257d86f752517cf0ed79017fc473",
+     "paket": "000000850085000009000002037d0554",
+     "mac": "f6dd2ab7c07ccc8865b2f4d6339e21a67c990119cb9ecc47e72e28ab0e28c075",
+     "skor": [
+      -36029,
+      349291,
+      -247221,
+      -214018,
+      -203576,
+      94847,
+      -106464
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T08:14:00Z",
+    "temp_c": 5.9,
+    "humidity": 72.35,
+    "ambient_c": 30.87,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 312.3125,
+    "edge": {
+     "rek": "0000008671052ac8024e1c430c0f138517700e1183005a",
+     "rantai": "45ffc8f162032b4f2403b9bd84127d667deb66f4a279b47e48e88d9949bff8c3",
+     "paket": "00000086008600000900000203910554",
+     "mac": "18a6c75181ab9dfdda829ea4cc0f44b87d0b623fe99092fa3274b100371d715d",
+     "skor": [
+      -36029,
+      349291,
+      -247221,
+      -214113,
+      -203576,
+      94847,
+      -106464
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T08:15:00Z",
+    "temp_c": 5.9,
+    "humidity": 70.11,
+    "ambient_c": 30.87,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 309.625,
+    "edge": {
+     "rek": "0000008771052b04024e1b630c0f135a17700e10b5005a",
+     "rantai": "10eba760c5f60e90ed6eee14c59651f134ea6cd7d349aa3b6d72064e4f8a5e43",
+     "paket": "00000087008700000900000203a50554",
+     "mac": "18531165993ec9eeaf055de58ce1773b3aa0929b78ed5251070beb8458fbae90",
+     "skor": [
+      -36029,
+      349291,
+      -247221,
+      -214113,
+      -203576,
+      94847,
+      -106464
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T08:16:00Z",
+    "temp_c": 5.9,
+    "humidity": 71.96,
+    "ambient_c": 30.86,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 306.875,
+    "edge": {
+     "rek": "0000008871052b40024e1c1c0c0e132e17700e0f34005a",
+     "rantai": "a7537820900fefedf7031c3530a91c667fd74849d4011742284b6b75e67f0f44",
+     "paket": "00000088008800000900000203b90554",
+     "mac": "7a71a7a70ed2c95995d14b549595ab137f3bae8f567ed093af924d11fe5b0709",
+     "skor": [
+      -36029,
+      349291,
+      -247221,
+      -211201,
+      -203576,
+      94847,
+      -106464
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T08:17:00Z",
+    "temp_c": 5.9,
+    "humidity": 70.18,
+    "ambient_c": 30.86,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 304.125,
+    "edge": {
+     "rek": "0000008971052b7c024e1b6a0c0e130217700e10b5005a",
+     "rantai": "69c7c1600b6d30e3aeb6a2141b299ab66ca565100b452dd44413243a23431718",
+     "paket": "00000089008900000900000203cd0554",
+     "mac": "4a21839297771f33f190a34efe7ad8fcddfc7bd9d18b191c6e47146a375badd6",
+     "skor": [
+      -36029,
+      349291,
+      -247221,
+      -211201,
+      -203576,
+      94847,
+      -106464
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T08:18:00Z",
+    "temp_c": 6.0,
+    "humidity": 70.1,
+    "ambient_c": 30.86,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 301.375,
+    "edge": {
+     "rek": "0000008a71052bb802581b620c0e12d617700e1085005a",
+     "rantai": "fba552d67c6297f106d98b1f447ede0e004b09cbeaecd0fa22efc50a54a90711",
+     "paket": "0000008a008a00000900000203e10554",
+     "mac": "f0f82583e48332ca5c9283e98fd2ff338ecf4ff6734f28d22b7078f6b38a7aac",
+     "skor": [
+      -36029,
+      349291,
+      -247221,
+      -211201,
+      -203576,
+      94847,
+      -106464
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  },
+  {
+   "bacaan": {
+    "ts": "2030-02-01T08:19:00Z",
+    "temp_c": 5.9,
+    "humidity": 69.77,
+    "ambient_c": 30.85,
+    "door_open": false,
+    "reefer_on": true,
+    "speed_kmh": 60.0,
+    "harsh_events": 0,
+    "solar_radiation": 298.625,
+    "edge": {
+     "rek": "0000008b71052bf4024e1b410c0d12aa17700e0ff5005a",
+     "rantai": "f556a4d3b7d9fc14dba3f3c9820052017ed72878e479ea00a9ed3e0dfc9c4f98",
+     "paket": "0000008b008b00000900000203f80554",
+     "mac": "e5d60857766f2d1019ff082a77aa1c4abc1a3a357d06e0951aecd3853c821024",
+     "skor": [
+      -36029,
+      349291,
+      -247221,
+      -211201,
+      -203576,
+      94847,
+      -106464
+     ]
+    }
+   },
+   "harapan": {
+    "status": 0,
+    "diag_valid": true,
+    "kelas": 1
+   }
+  }
+ ]
+}

@@ -5,6 +5,8 @@
 Env: MQTT_HOST (mosquitto), MQTT_PORT (1883), MQTT_USER (ingest), MQTT_PASSWORD, DATABASE_URL.
 Berlangganan QoS 1 ke coldtrack/v1/+/telemetry dan coldtrack/v1/+/status dengan sesi persisten
 (clean_start False) supaya pesan yang datang saat worker restart tidak hilang dari broker.
+Bacaan dari truk ber-chip membawa objek `edge`; hasilnya diverifikasi dan disimpan (app/edge.py) SEBELUM
+telemetri, supaya NOTIFY telemetry_arrived tidak mendahului hasil edge. Env tambahan: EDGE_KEYS.
 """
 
 import json
@@ -14,6 +16,7 @@ import signal
 
 import paho.mqtt.client as mqtt
 
+from app import edge
 from app.db import conn
 from app.ingest.store import (
     resolve_truck,
@@ -50,11 +53,15 @@ def tangani(topic: str, payload: bytes) -> None:
         if jenis != "telemetry" or body.get("schema") != "coldtrack.telemetry.v1":
             logger.warning("skema tidak didukung di %s: %s", topic, body.get("schema"))
             return
-        ok, errors = validate_readings(body.get("readings", []))
+        raw = body.get("readings", [])
+        ok, errors = validate_readings(raw)
         for e in errors:
             logger.warning("%s: %s", truck_id, e)
+        hasil_edge = edge.simpan(c, truck_id, body.get("device_id"), raw, ok,
+                                 tanpa_bacaan=body.get("rekaman_tanpa_bacaan"))
         baru = store_readings(c, truck_id, body.get("device_id"), body.get("seq"), ok)
-        logger.info("%s: %d bacaan diterima, %d baru, %d ditolak", truck_id, len(ok), baru, len(errors))
+        logger.info("%s: %d bacaan diterima, %d baru, %d ditolak%s", truck_id, len(ok), baru, len(errors),
+                    f", edge {hasil_edge}" if hasil_edge else "")
 
 
 def main() -> None:
