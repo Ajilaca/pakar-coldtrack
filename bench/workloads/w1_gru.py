@@ -1,6 +1,6 @@
-"""W1 -- latih GRU (konfigurasi ml/finetune.py) dengan variasi batch, presisi, dan pemuatan data.
+"""W1 -- latih GRU (konfigurasi ml/training/finetune.py) dengan variasi batch, presisi, dan pemuatan data.
 
-Tiap run = satu pelatihan penuh (N_EPOCHS ml.finetune) + evaluasi metrik resmi di split val.
+Tiap run = satu pelatihan penuh (N_EPOCHS ml.training.finetune) + evaluasi metrik resmi di split val.
 Ulangan memakai seed 1000-1004, jadi ulangan sekaligus distribusi kualitas untuk gerbang G2.
 Pemanasan = 1 epoch (cukup untuk kompilasi kernel dan cache disk), dibuang.
 
@@ -20,7 +20,7 @@ FAKTOR_TARGET = 1.05
 
 # (config_id, argumen train_gru, hanya_cuda)
 CONFIGS = [
-    ("b256_fp32", {"batch_size": 256}, False),            # konfigurasi asli ml/finetune.py
+    ("b256_fp32", {"batch_size": 256}, False),            # konfigurasi asli ml/training/finetune.py
     ("b1024_fp32", {"batch_size": 1024}, False),
     ("b4096_fp32", {"batch_size": 4096}, False),
     ("b256_bf16", {"batch_size": 256, "amp": "bf16"}, True),
@@ -49,7 +49,7 @@ def target_val_loss():
 
 def run(ctx):
     from bench import train_lib as tl
-    from ml import finetune as ft
+    from ml.training import finetune as ft
 
     tl.ensure_windows()
     target, sumber_target = target_val_loss()

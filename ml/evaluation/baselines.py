@@ -3,7 +3,7 @@
 XGBoost/Linear/IsolationForest tidak bisa memakan data berurutan, jadi tiap jendela
 60x12 diringkas jadi 72 fitur agregat (6 statistik x 12 kolom).
 
-Menjalankan: python -m ml.baselines
+Menjalankan: python -m ml.evaluation.baselines
 """
 
 import json

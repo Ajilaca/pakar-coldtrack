@@ -1,7 +1,7 @@
 """Pustaka B3 (latih ulang sesuai PRD): pelatih GRU yang bisa disetel + diagnosis per kelas.
 
 Pelatih di sini adalah generalisasi bench.train_lib.train_gru: dengan argumen bawaan hasilnya
-setara konfigurasi ml/finetune.py (bobot loss 30/1/8, LR 5e-4/2e-3, class weight sqrt, freeze 3
+setara konfigurasi ml/training/finetune.py (bobot loss 30/1/8, LR 5e-4/2e-3, class weight sqrt, freeze 3
 epoch, cosine 30 epoch, hidden 64 x 2 lapis, dropout 0,2). Benchmark W1 tetap memakai
 train_lib.train_gru supaya angka B2 tidak berubah.
 
@@ -33,7 +33,7 @@ class GruCfg:
     freeze_epochs: int = 3
     n_epochs: int = 30
     batch_size: int = 256
-    weight_decay: float = 0.01           # bawaan AdamW, sama dengan ml/finetune.py
+    weight_decay: float = 0.01           # bawaan AdamW, sama dengan ml/training/finetune.py
     label_smoothing: float = 0.0
     pakai_statistik: bool = True         # False = ablation: jalur statistik ringkasan diganti nol
 
@@ -42,7 +42,7 @@ class GruCfg:
 
 
 def _tanpa_stat_cls():
-    from ml.model import ColdTrackGRU
+    from ml.training.model import ColdTrackGRU
 
     class ColdTrackGRUTanpaStat(ColdTrackGRU):
         """Ablation W4: statistik ringkasan diganti nol (dimensi kepala tetap sama)."""
@@ -60,8 +60,8 @@ def class_weights(y_mode, n_classes, power):
 
 
 def train(data, cfg: GruCfg, seed, device, log=None):
-    from ml.model import ColdTrackGRU
     from ml.preprocess.build_windows import FAILURE_CLASSES
+    from ml.training.model import ColdTrackGRU
 
     dev = torch.device(device)
     ColdTrackGRUTanpaStat = _tanpa_stat_cls()
@@ -125,7 +125,7 @@ def train(data, cfg: GruCfg, seed, device, log=None):
 @torch.no_grad()
 def predict(model, data, device, split="val", bs=4096):
     from bench.train_lib import split_path
-    from ml.scaler import apply_scaler
+    from ml.training.scaler import apply_scaler
 
     d = np.load(split_path(split))
     X = torch.tensor(apply_scaler(d["X"], data["mean"], data["std"]))
@@ -138,10 +138,10 @@ def predict(model, data, device, split="val", bs=4096):
 
 
 def metrik_lengkap(forecast, logits, ttb_log, d, mean, std):
-    """Metrik resmi (ml.evaluate) + rincian per kelas + matriks kebingungan."""
+    """Metrik resmi (ml.evaluation.evaluate) + rincian per kelas + matriks kebingungan."""
     from sklearn.metrics import confusion_matrix, precision_recall_fscore_support
 
-    from ml.evaluate import metrics_from_outputs
+    from ml.evaluation.evaluate import metrics_from_outputs
     from ml.preprocess.build_windows import FAILURE_CLASSES
 
     m = metrics_from_outputs(forecast, logits, ttb_log, d, mean, std)

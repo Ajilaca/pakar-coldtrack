@@ -100,7 +100,7 @@ def cargo_params(cargo_profile: str, mass_kg: float | None) -> dict[str, float]:
 def ke_zona_armada(readings: list[TelemetryReading]) -> list[TelemetryReading]:
     """Ubah ts ber-zona waktu ke zona armada (config fleet.zona_waktu, bawaan Asia/Jakarta).
 
-    hour_of_day dilatih dengan JAM LOKAL (ml/coldtrack_sim.py, skenario demo WIB). Tanpa ini, bacaan yang
+    hour_of_day dilatih dengan JAM LOKAL (ml/legacy_colab/coldtrack_sim.py, skenario demo WIB). Tanpa ini, bacaan yang
     sama yang dikirim dengan "Z" dan dengan "+07:00" menghasilkan fitur jam yang bergeser 7 jam.
     ts tanpa zona waktu dianggap sudah jam lokal armada dan tidak diubah. Lewat pandas (bukan zoneinfo)
     supaya tidak bergantung pada tzdata sistem di image slim.

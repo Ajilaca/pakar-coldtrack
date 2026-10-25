@@ -41,7 +41,7 @@ def fitur(split, duty, izinkan_test=False):
     from bench import b8_lib as b8
     from bench import b9_lib as b9
     from bench.b9_arus_sintetis import KONTEKS_TANPA_SUHU_AWAL
-    from ml.baselines import aggregate
+    from ml.evaluation.baselines import aggregate
 
     d = b8.bangun(split, izinkan_test=izinkan_test)[0] if split == "test" else b8.muat(split)
     ix = [b8.KONTEKS.index(k) for k in KONTEKS_TANPA_SUHU_AWAL]
@@ -56,7 +56,7 @@ def main(argv=None):
     import xgboost as xgb
 
     from bench.b8_label_konteks import UKURAN, metrik_kelas
-    from ml.baselines import XGB_PARAMS
+    from ml.evaluation.baselines import XGB_PARAMS
 
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--id", required=True, choices=list(KANDIDAT))

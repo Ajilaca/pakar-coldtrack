@@ -67,7 +67,7 @@ def cmd_v3(_):
 
 def _fitur_xgb(split, konteks):
     from bench import b8_lib as b8
-    from ml.baselines import aggregate
+    from ml.evaluation.baselines import aggregate
 
     X = aggregate(np.load(ROOT / f"data/processed/windows/windows_{split}.npz")["X"])
     d = b8.muat(split)
@@ -79,7 +79,7 @@ def _fitur_xgb(split, konteks):
 def cmd_xgb(a):
     import xgboost as xgb
 
-    from ml.baselines import XGB_PARAMS
+    from ml.evaluation.baselines import XGB_PARAMS
     from ml.preprocess.build_windows import FAILURE_CLASSES
 
     hasil = {"waktu_utc": now_iso(), "git": git_info(), "split": "val", "ukuran": UKURAN, "run": []}

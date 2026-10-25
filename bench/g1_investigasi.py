@@ -48,13 +48,13 @@ def evaluasi(w):
     import xgboost as xgb
     from sklearn.metrics import average_precision_score, f1_score
 
-    from ml.baselines import SENTINEL, XGB_PARAMS, aggregate
+    from ml.evaluation.baselines import SENTINEL, XGB_PARAMS, aggregate
 
     tr, va = w["train"], w["val"]
     Xtr, Xva = aggregate(tr["X"]), aggregate(va["X"])
     mt, mv = tr["y_ttb"] != SENTINEL, va["y_ttb"] != SENTINEL
     params = {**XGB_PARAMS, "device": "cpu"}
-    # persis ml/baselines.py: expm1 tanpa clip
+    # persis ml/evaluation/baselines.py: expm1 tanpa clip
     reg = xgb.XGBRegressor(**params).fit(Xtr[mt], np.log1p(tr["y_ttb"][mt]))
     ttb = float(np.abs(np.expm1(reg.predict(Xva[mv])) - va["y_ttb"][mv]).mean())
     clf = xgb.XGBClassifier(objective="multi:softprob", num_class=7, disable_default_eval_metric=True,

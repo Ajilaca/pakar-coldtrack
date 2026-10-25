@@ -5,7 +5,7 @@ temp/ambient/humidity/speed 0,01, solar 1/16 W/m2, duty 1/10000, sisanya bilanga
 membuat kelipatan 0,1 C data simulator eksak (ambang pohon sering tepat di nilai data).
 
 Fitur (urutan = bench/b10_test_once.fitur):
-  0..71   6 statistik x 12 kolom jendela 60 menit (ml.baselines.aggregate):
+  0..71   6 statistik x 12 kolom jendela 60 menit (ml.evaluation.baselines.aggregate):
           rata-rata -> JUMLAH, simpangan baku -> V = 60*sum(x^2) - (sum x)^2, min, maks, terakhir, tren
   72..75  konteks: menit_trip, tren_240, rata240_minus_rata60 dan kemiringan_240 (0,01 C x 2^24)
   76..81  6 statistik siklus kerja kompresor (hanya model b9)

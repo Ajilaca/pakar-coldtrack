@@ -10,7 +10,7 @@ Kontrak input SENGAJA dibuat identik dengan coldtrack.onnx -- perhitungan 72
 fitur agregat dan konversi kembali ke satuan menit dibungkus ke dalam grafik
 ONNX, sehingga backend tidak perlu mengubah cara memanggilnya.
 
-Menjalankan: python -m ml.export_ttb_xgboost
+Menjalankan: python -m ml.export.export_ttb_xgboost
 """
 
 import json
@@ -27,7 +27,7 @@ from onnxmltools.convert import convert_xgboost
 from onnxmltools.convert.common.data_types import FloatTensorType
 from torch import nn
 
-from ml.baselines import SENTINEL, XGB_PARAMS, aggregate
+from ml.evaluation.baselines import SENTINEL, XGB_PARAMS, aggregate
 from ml.preprocess.build_windows import WINDOW_SIZE
 from ml.tests.test_data_contract import FEATURE_COLUMNS
 
@@ -42,7 +42,7 @@ _TMP = ["ml/reports/_agg.onnx", "ml/reports/_xgb.onnx", "ml/reports/_post.onnx"]
 
 class Aggregate(nn.Module):
     """72 statistik ringkasan dari jendela 60x12 -- harus sama persis dengan
-    ml.baselines.aggregate(). Perhatikan unbiased=False: NumPy memakai pembagi n,
+    ml.evaluation.baselines.aggregate(). Perhatikan unbiased=False: NumPy memakai pembagi n,
     PyTorch memakai n-1 secara default. Perbedaan itu pernah membuat prediksi meleset."""
 
     def forward(self, x):

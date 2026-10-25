@@ -1,6 +1,6 @@
 """Fase 6 R2 -- ekspor model ke ONNX untuk diserahkan ke R3.
 
-Menjalankan: python -m ml.export_onnx
+Menjalankan: python -m ml.export.export_onnx
 """
 
 import json
@@ -11,15 +11,15 @@ import numpy as np
 import onnxruntime as ort
 import torch
 
-from ml.model import ColdTrackDeploy, ColdTrackGRU
 from ml.preprocess.build_windows import (
     FAILURE_CLASSES,
     HORIZONS,
     MODE_MAPPING,
     WINDOW_SIZE,
 )
-from ml.scaler import load_scaler
 from ml.tests.test_data_contract import FEATURE_COLUMNS
+from ml.training.model import ColdTrackDeploy, ColdTrackGRU
+from ml.training.scaler import load_scaler
 
 sys.stdout.reconfigure(encoding='utf-8')   # exporter PyTorch mencetak emoji; konsol Windows perlu ini
 

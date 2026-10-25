@@ -200,7 +200,7 @@ Rencana awal memakai transfer learning dua tahap: prapelatihan pada data suhu Io
 fine-tuning pada domain rantai dingin. Rencana itu **diuji dan ditinggalkan** karena tidak terbukti
 memberi manfaat — lihat Ablation B di bawah.
 
-Skrip prapelatihan (`ml/pretrain.py`) dan korpusnya tetap dipertahankan di repositori sebagai bukti
+Skrip prapelatihan (`ml/training/pretrain.py`) dan korpusnya tetap dipertahankan di repositori sebagai bukti
 eksperimen, tetapi tidak berada di jalur produksi.
 
 ---
@@ -358,16 +358,16 @@ lomba mengenai parameter statis. Setiap pembaruan menuntut pelatihan ulang dan v
 
 ```bash
 python -m ml.preprocess.build_windows        # jendela dari dataset v4
-python -m ml.finetune                        # latih GRU (~35 menit CPU)
-python -m ml.export_onnx                     # ekspor coldtrack.onnx + labels.json
-python -m ml.export_ttb_xgboost              # ekspor coldtrack_ttb.onnx (~1 menit)
-python -m ml.make_reports                    # metrics.json + grafik
-python -m ml.baselines                       # baseline pembanding
-python -m ml.ablation                        # ablation A & B (~2,5 jam)
+python -m ml.training.finetune                        # latih GRU (~35 menit CPU)
+python -m ml.export.export_onnx                     # ekspor coldtrack.onnx + labels.json
+python -m ml.export.export_ttb_xgboost              # ekspor coldtrack_ttb.onnx (~1 menit)
+python -m ml.evaluation.make_reports                    # metrics.json + grafik
+python -m ml.evaluation.baselines                       # baseline pembanding
+python -m ml.evaluation.ablation                        # ablation A & B (~2,5 jam)
 ```
 
 Seluruh skrip memakai `seed = 42`. Bobot model (`*.pt`) tidak disertakan di repositori; jalankan
-`ml.finetune` untuk membangunnya kembali.
+`ml.training.finetune` untuk membangunnya kembali.
 
 **Berkas terkait:** `ml/reports/metrics.json` · `baseline_metrics.json` · `ablation_results.json` ·
 `loss_curves.png` · `confusion_matrix.png` · `ttb_by_horizon.png` · `docs/dataset_card.md` ·

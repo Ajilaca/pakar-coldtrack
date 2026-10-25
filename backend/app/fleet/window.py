@@ -9,7 +9,7 @@
     MENUNGGU_DATA   kurang dari 60 menit bacaan sejak awal trip (model butuh jendela 60 menit).
     OK              jendela siap; `data_lengkap` False bila 60 menit terakhir masih berlubang setelah pengisian.
 - Zona waktu: ts disimpan UTC (docs/device_contract.md), tetapi fitur hour_of_day model dilatih dengan JAM LOKAL
-  (ml/coldtrack_sim.py, skenario demo WIB). Bacaan jendela dikonversi ke `zona_waktu` (config fleet.zona_waktu,
+  (ml/legacy_colab/coldtrack_sim.py, skenario demo WIB). Bacaan jendela dikonversi ke `zona_waktu` (config fleet.zona_waktu,
   bawaan Asia/Jakarta) sebelum masuk model; tanpa ini fitur jam bergeser 7 jam.
 """
 

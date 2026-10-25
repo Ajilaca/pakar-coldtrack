@@ -30,7 +30,7 @@ def cek_torch(kind):
     import torch
     from torch import nn
 
-    from ml.model import ColdTrackGRU
+    from ml.training.model import ColdTrackGRU
 
     out = {"ok": False}
     dev = torch.device(kind)

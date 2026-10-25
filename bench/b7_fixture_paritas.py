@@ -38,7 +38,7 @@ def main(argv=None):
 
     from bench import b3_lib as b3
     from bench import train_lib as tl
-    from ml.model import ColdTrackDeploy, ColdTrackGRU
+    from ml.training.model import ColdTrackDeploy, ColdTrackGRU
 
     kartu = json.loads((ROOT / "ml" / "reports" / "labels_b3.json").read_text(encoding="utf-8"))
     cfg = b3.GruCfg(**kartu["konfigurasi"])

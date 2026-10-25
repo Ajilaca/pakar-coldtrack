@@ -4,7 +4,7 @@ Semua metrik dihitung di split TEST -- split yang tidak pernah dipakai untuk
 mengambil keputusan apa pun. Angka val lebih bagus tapi optimistis, karena
 arsitektur dan hiperparameter dipilih berdasarkan val.
 
-Menjalankan: python -m ml.make_reports
+Menjalankan: python -m ml.evaluation.make_reports
 """
 
 import json
@@ -19,10 +19,10 @@ import torch
 from matplotlib.colors import LinearSegmentedColormap
 from sklearn.metrics import confusion_matrix
 
-from ml.evaluate import SENTINEL, TARGETS, compute_metrics
-from ml.model import ColdTrackGRU
+from ml.evaluation.evaluate import SENTINEL, TARGETS, compute_metrics
 from ml.preprocess.build_windows import FAILURE_CLASSES
-from ml.scaler import apply_scaler, load_scaler
+from ml.training.model import ColdTrackGRU
+from ml.training.scaler import apply_scaler, load_scaler
 
 TEST_PATH = "data/processed/windows/windows_test.npz"
 VAL_PATH = "data/processed/windows/windows_val.npz"

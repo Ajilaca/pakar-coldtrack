@@ -4,7 +4,7 @@ Korpus: Intel Berkeley Lab Data (1,3 juta jendela) -- menggantikan korpus lama
 IOT-temp India (5.630 jendela) yang terbukti tidak memberi manfaat transfer
 pada ablation B.
 
-Menjalankan: python -m ml.pretrain
+Menjalankan: python -m ml.training.pretrain
 """
 
 import numpy as np
@@ -12,8 +12,8 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader, TensorDataset
 
-from ml.model import ColdTrackGRU
-from ml.scaler import apply_scaler, fit_scaler, save_scaler
+from ml.training.model import ColdTrackGRU
+from ml.training.scaler import apply_scaler, fit_scaler, save_scaler
 
 TRAIN_PATH = "data/processed/windows/pretrain_train.npz"
 VAL_PATH = "data/processed/windows/pretrain_val.npz"

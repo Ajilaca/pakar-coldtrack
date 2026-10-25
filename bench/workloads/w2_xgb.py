@@ -16,7 +16,7 @@ CONFIGS = [
 
 def run(ctx):
     from bench import train_lib as tl
-    from ml.baselines import XGB_PARAMS
+    from ml.evaluation.baselines import XGB_PARAMS
 
     tl.ensure_windows()
     pilih = set(ctx.configs) if ctx.configs else None

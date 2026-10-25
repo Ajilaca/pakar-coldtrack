@@ -21,7 +21,7 @@ def main(argv=None):
     ap.add_argument("--tag", required=True)
     ap.add_argument("--models", default="gru,xgb_ttb,xgb_clf")
     ap.add_argument("--seeds", default=",".join(map(str, SEEDS)))
-    ap.add_argument("--epochs", type=int, default=None, help="hanya untuk uji cepat; default = ml.finetune.N_EPOCHS")
+    ap.add_argument("--epochs", type=int, default=None, help="hanya untuk uji cepat; default = ml.training.finetune.N_EPOCHS")
     a = ap.parse_args(argv)
 
     profile, kind = resolve_tag(a.tag)
@@ -52,7 +52,7 @@ def main(argv=None):
                                                 log=lambda s: print(s, flush=True))
             t0 = time.perf_counter()
             metrik = tl.eval_gru(model, data, "val", kind)
-            r = base("gru", seed) | {"konfigurasi": "ml.finetune (asli)", "waktu": t_prep | ringkas |
+            r = base("gru", seed) | {"konfigurasi": "ml.training.finetune (asli)", "waktu": t_prep | ringkas |
                                      {"eval_s": time.perf_counter() - t0}, "metrik_val": metrik,
                                      "riwayat": hist}
             print(f"  val: {metrik}")
@@ -66,13 +66,13 @@ def main(argv=None):
                 metrik, t_pred = tl.eval_xgb_ttb(m, xdata)
                 print(f"[XGB TTB] seed {seed}: {metrik}  ({t_fit['latih_s']:.1f}s)", flush=True)
                 write_json(out_dir / f"xgb_ttb_seed{seed}.json", base("xgb_ttb", seed) | {
-                    "konfigurasi": "ml.baselines.XGB_PARAMS + pola ml.export_ttb_xgboost.latih_model",
+                    "konfigurasi": "ml.evaluation.baselines.XGB_PARAMS + pola ml.export.export_ttb_xgboost.latih_model",
                     "waktu": t_prep | t_fit | {"eval_s": t_pred}, "metrik_val": metrik})
             if "xgb_clf" in models:
                 metrik, t_fit = tl.train_eval_xgb_clf(xdata, seed, kind)
                 print(f"[XGB clf] seed {seed}: {metrik}  ({t_fit:.1f}s)", flush=True)
                 write_json(out_dir / f"xgb_clf_seed{seed}.json", base("xgb_clf", seed) | {
-                    "konfigurasi": "ml.baselines (XGBClassifier multi:softprob)",
+                    "konfigurasi": "ml.evaluation.baselines (XGBClassifier multi:softprob)",
                     "waktu": t_prep | {"latih_s": t_fit}, "metrik_val": metrik})
     return 0
 

@@ -1,11 +1,11 @@
 """Pustaka latih bersama untuk B1 (reproduksi) dan W1/W2 (benchmark).
 
-Konfigurasi GRU DIIMPOR dari ml/finetune.py (bobot loss, LR per grup, freeze 3 epoch, cosine,
+Konfigurasi GRU DIIMPOR dari ml/training/finetune.py (bobot loss, LR per grup, freeze 3 epoch, cosine,
 class weight, pilih epoch val terbaik) -- bukan disalin -- supaya reproduksi tidak diam-diam
 menyimpang dari konfigurasi yang divalidasi proposal. Yang ditambahkan hanya: device, seed
 eksplisit, AMP opsional, dan pencatatan waktu per komponen.
 
-Konfigurasi XGBoost TTB diimpor dari ml/baselines.py (XGB_PARAMS: 300 pohon, hist) dengan pola
+Konfigurasi XGBoost TTB diimpor dari ml/evaluation/baselines.py (XGB_PARAMS: 300 pohon, hist) dengan pola
 latih ml/export_ttb_xgboost.latih_model (sentinel di-mask, target log1p).
 
 Split test TIDAK pernah dimuat di modul ini.
@@ -26,7 +26,7 @@ TRAIN, VAL = "train", "val"
 
 
 def split_path(split):
-    from ml import finetune as ft
+    from ml.training import finetune as ft
 
     if split == "test":
         raise PermissionError("split test tidak boleh dimuat lewat train_lib (aturan: sekali per model, di akhir)")
@@ -60,8 +60,8 @@ def _sync(dev):
 
 def prepare_gru_data():
     """Muat + normalisasi jendela train/val (CPU). Kembalikan dict data dan waktu per komponen."""
-    from ml import finetune as ft
-    from ml.scaler import fit_scaler
+    from ml.training import finetune as ft
+    from ml.training.scaler import fit_scaler
 
     t = {}
     t0 = time.perf_counter()
@@ -89,15 +89,15 @@ def _loss(model, batch, loss_fns, w):
 
 def train_gru(data, seed, device, batch_size=None, n_epochs=None, amp=None, num_workers=0,
               pin_memory=False, resident=False, log=print):
-    """Latih ColdTrackGRU persis seperti ml.finetune.main, di device mana pun.
+    """Latih ColdTrackGRU persis seperti ml.training.finetune.main, di device mana pun.
 
     amp: None (fp32) | "bf16" | "fp16" (hanya bermakna di cuda).
     resident: seluruh tensor latih/val dipindah ke device sekali di awal (tanpa DataLoader);
       waktu pemindahan dicatat terpisah sebagai transfer_ke_device_s.
     Kembalikan (model terbaik, riwayat per epoch, ringkasan waktu).
     """
-    from ml import finetune as ft
-    from ml.model import ColdTrackGRU
+    from ml.training import finetune as ft
+    from ml.training.model import ColdTrackGRU
 
     batch_size = batch_size or ft.BATCH_SIZE
     n_epochs = n_epochs or ft.N_EPOCHS
@@ -216,9 +216,9 @@ def train_gru(data, seed, device, batch_size=None, n_epochs=None, amp=None, num_
 
 @torch.no_grad()
 def eval_gru(model, data, split, device, bs=4096):
-    """Metrik resmi (ml.evaluate) pada split val. Inferensi per batch di device, metrik di CPU."""
-    from ml.evaluate import metrics_from_outputs
-    from ml.scaler import apply_scaler
+    """Metrik resmi (ml.evaluation.evaluate) pada split val. Inferensi per batch di device, metrik di CPU."""
+    from ml.evaluation.evaluate import metrics_from_outputs
+    from ml.training.scaler import apply_scaler
 
     dev = torch.device(device)
     d = np.load(split_path(split))
@@ -235,7 +235,7 @@ def eval_gru(model, data, split, device, bs=4096):
 # ----------------------------------------------------------------------------- XGBoost
 
 def prepare_xgb_data():
-    from ml.baselines import SENTINEL, aggregate
+    from ml.evaluation.baselines import SENTINEL, aggregate
 
     t = {}
     t0 = time.perf_counter()
@@ -255,7 +255,7 @@ def prepare_xgb_data():
 
 
 def xgb_params(seed, device):
-    from ml.baselines import XGB_PARAMS
+    from ml.evaluation.baselines import XGB_PARAMS
 
     return {**XGB_PARAMS, "random_state": seed, "device": device}
 
@@ -285,7 +285,7 @@ def eval_xgb_ttb(model, data):
 
 
 def train_eval_xgb_clf(data, seed, device):
-    """Pembanding mode kegagalan + PR-AUC anomali (pola ml/baselines.py)."""
+    """Pembanding mode kegagalan + PR-AUC anomali (pola ml/evaluation/baselines.py)."""
     import xgboost as xgb
     from sklearn.metrics import average_precision_score, f1_score
 

@@ -1,7 +1,7 @@
 """Fase 4 R2 -- fine-tuning Tahap 2: load backbone pretrained, aktifkan 3 head,
 latih di data cold chain asli (v3).
 
-Menjalankan: python -m ml.finetune
+Menjalankan: python -m ml.training.finetune
 """
 
 import numpy as np
@@ -9,9 +9,9 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader, TensorDataset
 
-from ml.model import ColdTrackGRU
 from ml.preprocess.build_windows import FAILURE_CLASSES
-from ml.scaler import apply_scaler, fit_scaler, save_scaler
+from ml.training.model import ColdTrackGRU
+from ml.training.scaler import apply_scaler, fit_scaler, save_scaler
 
 TRAIN_PATH = "data/processed/windows/windows_train.npz"
 VAL_PATH = "data/processed/windows/windows_val.npz"

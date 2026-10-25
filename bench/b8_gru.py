@@ -16,7 +16,7 @@ from bench.train_lib import seed_all
 
 
 def kelas_model():
-    from ml.model import ColdTrackGRU
+    from ml.training.model import ColdTrackGRU
 
     class ColdTrackGRUKonteks(ColdTrackGRU):
         def __init__(self, n_konteks=0, **kw):
@@ -35,8 +35,8 @@ def kelas_model():
 
 
 def siapkan(b8_tr, b8_va, konteks, label="y_baru"):
-    from ml import finetune as ft
-    from ml.scaler import fit_scaler
+    from ml.training import finetune as ft
+    from ml.training.scaler import fit_scaler
 
     mean, std = fit_scaler(np.load(ft.TRAIN_PATH)["X"])
     ctx_mean = b8_tr["ctx"].mean(0).astype(np.float32)
@@ -113,7 +113,7 @@ def latih(data, cfg, seed, log=None):
 @torch.no_grad()
 def evaluasi(model, data, bs=4096):
     from bench.b8_label_konteks import metrik_kelas
-    from ml.evaluate import metrics_from_outputs
+    from ml.evaluation.evaluate import metrics_from_outputs
 
     va = data["val"]
     model.eval()

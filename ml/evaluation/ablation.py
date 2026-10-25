@@ -3,7 +3,7 @@
 A. Multi-task vs single-task  -- apakah backbone bersama merugikan?
 B. Fine-tuning vs dari nol     -- apakah pretraining memberi nilai tambah?
 
-Menjalankan: python -m ml.ablation
+Menjalankan: python -m ml.evaluation.ablation
 PERINGATAN: 5 konfigurasi x 30 epoch, perkiraan 2-3 jam di CPU.
 """
 
@@ -15,10 +15,10 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader, TensorDataset
 
-from ml.evaluate import SENTINEL, TEMP_IDX, compute_metrics
-from ml.model import ColdTrackGRU
+from ml.evaluation.evaluate import SENTINEL, TEMP_IDX, compute_metrics
 from ml.preprocess.build_windows import FAILURE_CLASSES
-from ml.scaler import apply_scaler, fit_scaler
+from ml.training.model import ColdTrackGRU
+from ml.training.scaler import apply_scaler, fit_scaler
 
 TRAIN_PATH = "data/processed/windows/windows_train.npz"
 VAL_PATH = "data/processed/windows/windows_val.npz"

@@ -38,9 +38,9 @@ def main(argv=None):
 
     from bench import b3_lib as b3
     from bench import train_lib as tl
-    from ml.model import ColdTrackDeploy, ColdTrackGRU
     from ml.preprocess.build_windows import FAILURE_CLASSES, HORIZONS, WINDOW_SIZE
     from ml.tests.test_data_contract import FEATURE_COLUMNS
+    from ml.training.model import ColdTrackDeploy, ColdTrackGRU
 
     kep = json.loads((RESULTS_DIR / a.tag / "B3" / "keputusan_kandidat.json").read_text(encoding="utf-8"))
     nama = kep["kandidat_terbaik"]["gru"]

@@ -3,7 +3,7 @@
   python -m bench.b3_confirm --tag g16-gpu
 
 Varian GRU (5 seed masing-masing):
-  baseline              konfigurasi asli ml/finetune.py
+  baseline              konfigurasi asli ml/training/finetune.py
   baseline_tanpa_stat   ablation: jalur statistik ringkasan dimatikan
   sweep_top{1,2,3}      top-3 sweep GRU
   top1_tanpa_stat       ablation pada kandidat terbaik
@@ -52,7 +52,7 @@ def main(argv=None):
 
     from bench import train_lib as tl
     from bench.b3_lib import GruCfg
-    from ml.baselines import XGB_PARAMS
+    from ml.evaluation.baselines import XGB_PARAMS
 
     tl.ensure_windows()
     out = RESULTS_DIR / a.tag / "B3" / "confirm"

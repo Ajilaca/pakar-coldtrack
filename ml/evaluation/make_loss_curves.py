@@ -4,11 +4,11 @@ Bukti visual untuk ablation B (context-r2 baris 67). Melatih dua konfigurasi
 dengan resep identik -- satu memuat bobot GRU hasil pretraining, satu dari nol --
 lalu memplot kurva train & val loss keduanya.
 
-Menjalankan: python -m ml.make_loss_curves
+Menjalankan: python -m ml.evaluation.make_loss_curves
 PERINGATAN: 2 konfigurasi x 30 epoch, perkiraan 70 menit di CPU.
 
 Untuk menggambar ulang tanpa melatih lagi (riwayat sudah tersimpan):
-    python -c "import json; from ml.make_loss_curves import plot; \
+    python -c "import json; from ml.evaluation.make_loss_curves import plot; \
                plot(json.load(open('ml/reports/loss_history.json')))"
 """
 
@@ -23,7 +23,7 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader
 
-from ml.finetune import (
+from ml.training.finetune import (
     BATCH_SIZE,
     FREEZE_EPOCHS,
     LOSS_WEIGHTS,
@@ -35,8 +35,8 @@ from ml.finetune import (
     make_dataset,
     set_layer0_frozen,
 )
-from ml.model import ColdTrackGRU
-from ml.scaler import fit_scaler
+from ml.training.model import ColdTrackGRU
+from ml.training.scaler import fit_scaler
 
 BACKBONE_PATH = "ml/reports/backbone_pretrained.pt"
 HISTORY_OUT = "ml/reports/loss_history.json"

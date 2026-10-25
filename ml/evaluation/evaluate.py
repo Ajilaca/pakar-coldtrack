@@ -4,7 +4,7 @@ import numpy as np
 import torch
 from sklearn.metrics import average_precision_score, f1_score
 
-from ml.scaler import apply_scaler
+from ml.training.scaler import apply_scaler
 
 SENTINEL = 999.0
 TEMP_IDX = 0        # posisi temp_c di FEATURE_COLUMNS

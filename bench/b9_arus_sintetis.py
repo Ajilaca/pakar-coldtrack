@@ -29,7 +29,7 @@ def main():
     from bench import b8_lib as b8
     from bench import b9_lib as b9
     from bench.b8_label_konteks import UKURAN, metrik_kelas
-    from ml.baselines import XGB_PARAMS, aggregate
+    from ml.evaluation.baselines import XGB_PARAMS, aggregate
 
     d = {s: b8.muat(s) for s in ("train", "val")}
     ix = [b8.KONTEKS.index(k) for k in KONTEKS_TANPA_SUHU_AWAL]
