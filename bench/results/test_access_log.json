@@ -32,5 +32,27 @@
       "dirty": false
     },
     "split": "mote test (B4)"
+  },
+  {
+    "id": "b8_xgb_chip_v5_konteks",
+    "model": "bench/results/lokal-cpu/B10/b8_xgb_chip_v5_konteks.json",
+    "sha256_model": "970a1efac1c100ad68eab1cce59129ba22d94217c2e7734e268b27ae311315c3",
+    "waktu_utc": "2026-10-25T10:11:12+00:00",
+    "git": {
+      "commit": "0603eb83b05f7598665bb5836ef3901e4db1df31",
+      "branch": "feat/label-v5-konteks",
+      "dirty": true
+    }
+  },
+  {
+    "id": "b9_xgb_chip_v5_konteks_duty_sintetis",
+    "model": "bench/results/lokal-cpu/B10/b9_xgb_chip_v5_konteks_duty_sintetis.json",
+    "sha256_model": "e4f804f7828d00dd1820ec7ac321139b343f285e54df868cc3567ab689e2c0e6",
+    "waktu_utc": "2026-10-25T10:11:21+00:00",
+    "git": {
+      "commit": "0603eb83b05f7598665bb5836ef3901e4db1df31",
+      "branch": "feat/label-v5-konteks",
+      "dirty": true
+    }
   }
 ]
