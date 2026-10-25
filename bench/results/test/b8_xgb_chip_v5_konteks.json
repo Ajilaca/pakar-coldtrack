@@ -1,0 +1,122 @@
+{
+  "id": "b8_xgb_chip_v5_konteks",
+  "model": "bench/results/lokal-cpu/B10/b8_xgb_chip_v5_konteks.json",
+  "sha256_model": "970a1efac1c100ad68eab1cce59129ba22d94217c2e7734e268b27ae311315c3",
+  "waktu_utc": "2026-10-25T10:11:12+00:00",
+  "git": {
+    "commit": "0603eb83b05f7598665bb5836ef3901e4db1df31",
+    "branch": "feat/label-v5-konteks",
+    "dirty": true
+  },
+  "split": "test",
+  "label": "v5 (bench/b8_lib.py)",
+  "model_jenis": "XGBoost multi:softprob, 60 ronde, kedalaman 4",
+  "fitur": "72 statistik jendela + konteks tanpa suhu saat muat",
+  "val_seleksi": {
+    "macro_f1": 0.852,
+    "sumber": "bench/results/lokal-cpu/B9/arus_sintetis.json (tanpa sinyal kompresor)"
+  },
+  "val_artefak_beku": {
+    "macro_f1": 0.8521091315594977,
+    "anomali_pr_auc": 0.8694215740478862,
+    "akurasi": 0.9231753381259901
+  },
+  "metrik_test_label_v5": {
+    "macro_f1": 0.8097690940961062,
+    "akurasi": 0.9252031519330214,
+    "anomali_pr_auc": 0.8521215448662596,
+    "per_kelas": {
+      "A0": {
+        "presisi": 0.9258588201188578,
+        "recall": 0.9874014530839388,
+        "f1": 0.9556403351286654,
+        "n": 12938
+      },
+      "A1": {
+        "presisi": 1.0,
+        "recall": 0.7016129032258065,
+        "f1": 0.8246445497630331,
+        "n": 248
+      },
+      "A3": {
+        "presisi": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "n": 379
+      },
+      "A7": {
+        "presisi": 1.0,
+        "recall": 0.8761609907120743,
+        "f1": 0.933993399339934,
+        "n": 323
+      },
+      "A8": {
+        "presisi": 0.9880341880341881,
+        "recall": 0.8878648233486943,
+        "f1": 0.9352750809061489,
+        "n": 651
+      },
+      "degradasi_bertahap": {
+        "presisi": 0.35365853658536583,
+        "recall": 0.06962785114045618,
+        "f1": 0.11634904714142427,
+        "n": 833
+      },
+      "masalah_sensor": {
+        "presisi": 0.908246225319396,
+        "recall": 0.8967889908256881,
+        "f1": 0.9024812463935372,
+        "n": 872
+      }
+    }
+  },
+  "metrik_test_label_lama": {
+    "macro_f1": 0.7441611117050613,
+    "akurasi": 0.9010711647377493,
+    "anomali_pr_auc": 0.819479582131458,
+    "per_kelas": {
+      "A0": {
+        "presisi": 0.8974489056384983,
+        "recall": 0.9870078112545831,
+        "f1": 0.9401002125721227,
+        "n": 12546
+      },
+      "A1": {
+        "presisi": 1.0,
+        "recall": 0.5420560747663551,
+        "f1": 0.703030303030303,
+        "n": 321
+      },
+      "A3": {
+        "presisi": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "n": 379
+      },
+      "A7": {
+        "presisi": 1.0,
+        "recall": 0.440809968847352,
+        "f1": 0.6118918918918919,
+        "n": 642
+      },
+      "A8": {
+        "presisi": 0.9880341880341881,
+        "recall": 0.8878648233486943,
+        "f1": 0.9352750809061489,
+        "n": 651
+      },
+      "degradasi_bertahap": {
+        "presisi": 0.35365853658536583,
+        "recall": 0.06962785114045618,
+        "f1": 0.11634904714142427,
+        "n": 833
+      },
+      "masalah_sensor": {
+        "presisi": 0.908246225319396,
+        "recall": 0.8967889908256881,
+        "f1": 0.9024812463935372,
+        "n": 872
+      }
+    }
+  }
+}
