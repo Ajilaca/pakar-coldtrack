@@ -1,5 +1,5 @@
 # Sintesis Yosys untuk KV260 (Zynq UltraScale+, keluarga xcup). Perkiraan resource; timing resmi lewat Vivado.
-read_verilog -sv rtl/sha256_core.sv rtl/segel.sv rtl/fisika.sv rtl/bagi_floor.sv rtl/fitur.sv rtl/tree_engine.sv rtl/coldtrack_top.sv
-chparam -set BERKAS_SIMPUL "model/b9_xgb_chip_v5_konteks_duty_sintetis/simpul.mem" -set BERKAS_POHON "model/b9_xgb_chip_v5_konteks_duty_sintetis/pohon.mem" -set BERKAS_BASE "model/b9_xgb_chip_v5_konteks_duty_sintetis/base.mem" coldtrack_top
+read_verilog -sv rtl/sha256_core.sv rtl/seal.sv rtl/physics.sv rtl/floor_div.sv rtl/features.sv rtl/tree_engine.sv rtl/coldtrack_top.sv
+chparam -set BERKAS_SIMPUL "model/xgb_v5_context_duty/nodes.mem" -set BERKAS_POHON "model/xgb_v5_context_duty/trees.mem" -set BERKAS_BASE "model/xgb_v5_context_duty/base.mem" coldtrack_top
 synth_xilinx -family xcup -top coldtrack_top
 tee -o build/util_coldtrack_top.txt stat

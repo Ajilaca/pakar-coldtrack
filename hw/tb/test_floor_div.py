@@ -1,4 +1,4 @@
-"""bagi_floor: floor(n/d) bertanda dibandingkan dengan // Python, termasuk kasus tepi."""
+"""floor_div: floor(n/d) bertanda dibandingkan dengan // Python, termasuk kasus tepi."""
 
 import random
 
@@ -39,7 +39,7 @@ async def acak_dan_tepi(dut):
         assert (await bagi(dut, n, d)) == n // d, (n, d)
 
 
-def test_bagi_floor():
+def test_floor_div():
     from runner import jalankan
 
-    jalankan("bagi_floor", ["bagi_floor.sv"], "test_bagi_floor")
+    jalankan("floor_div", ["floor_div.sv"], "test_floor_div")

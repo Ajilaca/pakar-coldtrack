@@ -1,6 +1,6 @@
-"""Model acuan fitur bilangan bulat dan inferensi tree ensemble (RTL: hw/rtl/tree_engine.sv, fitur.sv).
+"""Model acuan fitur bilangan bulat dan inferensi tree ensemble (RTL: hw/rtl/tree_engine.sv, features.sv).
 
-Masukan per menit = kolom rekaman tersegel (hw/golden/segel.py), dalam satuan bilangan bulat SKALA:
+Masukan per menit = kolom rekaman tersegel (hw/golden/seal.py), dalam satuan bilangan bulat SKALA:
 temp/ambient/humidity/speed 0,01, solar 1/16 W/m2, duty 1/10000, sisanya bilangan bulat. Satuan desimal
 membuat kelipatan 0,1 C data simulator eksak (ambang pohon sering tepat di nilai data).
 

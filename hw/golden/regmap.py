@@ -33,7 +33,7 @@ def flags(pintu, reefer, kopling, temp_ok):
 
 
 def paket_hasil(seq, menit, fis, diag_valid, kelas, skor_kelas):
-    """16 byte yang di-HMAC bersama rantai: hasil fisika (dict hw/golden/fisika) + diagnosis."""
+    """16 byte yang di-HMAC bersama rantai: hasil fisika (dict hw/golden/physics) + diagnosis."""
     b_fis = int(fis["ttb"] is not None) << 7 | fis["sensor"] << 5 | fis["alasan"] << 2 | fis["status"]
     v = (seq & 0xFFFFFFFF) << 96 | (menit & 0xFFFF) << 80 | b_fis << 72 | ((fis["ttb_mentah"] or 0) & 0x3F) << 64
     v |= (int(diag_valid) << 3 | kelas) << 56 | ((fis["tc"] >> 8) & 0xFFFFFFFF) << 16 | ((skor_kelas >> 8) & 0xFFFF)

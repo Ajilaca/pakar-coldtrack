@@ -1,4 +1,4 @@
-"""segel: rantai hash dan HMAC dibandingkan dengan hw/golden/segel.py (hashlib/hmac), plus kunci terkunci
+"""segel: rantai hash dan HMAC dibandingkan dengan hw/golden/seal.py (hashlib/hmac), plus kunci terkunci
 dan deteksi manipulasi di sisi verifikasi."""
 
 import random
@@ -10,7 +10,7 @@ from cocotb.clock import Clock
 from cocotb.triggers import ClockCycles, FallingEdge
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from golden import segel as g
+from golden import seal as g
 
 
 async def reset(dut):
@@ -111,7 +111,7 @@ async def reset_rantai(dut):
     assert (await segel_rtl(dut, rek)) == g.segel(bytes(32), rek)
 
 
-def test_segel():
+def test_seal():
     from runner import jalankan
 
-    jalankan("segel", ["sha256_core.sv", "segel.sv"], "test_segel")
+    jalankan("seal", ["sha256_core.sv", "seal.sv"], "test_seal")

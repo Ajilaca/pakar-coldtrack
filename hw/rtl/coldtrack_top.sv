@@ -82,14 +82,14 @@ module coldtrack_top #(
 
     assign rekaman = {s_seq, s_ts, s_temp, s_rh, s_amb, s_solar, s_speed, 4'd0, s_flags, s_duty, s_harsh, s_batt};
 
-    segel u_segel (
+    seal u_segel (
         .clk(clk), .rst_n(rst_n),
         .kunci_tulis(c_kunci_tulis), .kunci_data(kunci_stage), .kunci_kunci(c_kunci_kunci), .kunci_terkunci(sg_terkunci),
         .rantai_reset(c_trip_reset && !sg_busy), .segel_start(sg_segel_start), .rekaman(rekaman), .rantai(sg_rantai),
         .mac_start(sg_mac_start), .hasil(paket_hasil), .mac(sg_mac), .busy(sg_busy), .done(sg_done)
     );
 
-    fisika u_fisika (
+    physics u_fisika (
         .clk(clk), .rst_n(rst_n),
         .cfg_t_lo(cfg_t_lo), .cfg_t_hi(cfg_t_hi), .cfg_t_set(cfg_t_set), .cfg_batas_waspada(cfg_batas),
         .cfg_k(cfg_k), .cfg_ek(cfg_ek),
@@ -100,7 +100,7 @@ module coldtrack_top #(
         .ttb(fs_ttb), .sensor(fs_sensor), .tc(fs_tc), .ts10(fs_ts10), .seri(fs_seri)
     );
 
-    fitur #(.FW(48), .N_FITUR(82)) u_fitur (
+    features #(.FW(48), .N_FITUR(82)) u_fitur (
         .clk(clk), .rst_n(rst_n), .trip_reset(c_trip_reset), .sampel(c_sampel && !busy), .temp_ok(s_flags[3]),
         .temp(s_temp), .amb(s_amb), .solar(s_solar), .rh(s_rh), .speed(s_speed), .duty(s_duty),
         .door(s_flags[0]), .reefer(s_flags[1]), .harsh(s_harsh), .hour(s_hour),

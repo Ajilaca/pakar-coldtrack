@@ -1,10 +1,10 @@
-// Blok fitur model: dari sampel per menit ke 82 fitur bilangan bulat (hw/golden/pohon.py: fitur_bulat).
+// Blok fitur model: dari sampel per menit ke 82 fitur bilangan bulat (hw/golden/trees.py: fitur_bulat).
 // Satuan masukan = rekaman segel: suhu/ambien/rh/kecepatan 0,01; radiasi 1/16 W/m2; duty 1/10000.
 // Per sampel: tulis ring buffer (256 entri), lintasan jendela 61 entri (13 kolom paralel),
 // lintasan konteks hingga 240 entri, dua pembagian floor, lalu fitur dialirkan lewat fitur_we/addr/data.
 // Fitur hanya dihitung bila menit >= 59 (siap). Suhu hilang (temp_ok=0) diisi nilai terakhir;
 // lengkap=0 bila ada bacaan hilang di jendela + 1 menit sebelumnya (dataset membuang jendela seperti itu).
-module fitur #(
+module features #(
     parameter int FW      = 48,
     parameter int N_FITUR = 82       // 76 = tanpa statistik duty
 ) (
@@ -38,7 +38,7 @@ module fitur #(
     // ---------------- ring buffer ----------------
     // [15:0] temp_ff | [31:16] amb | [47:32] solar | [63:48] rh | [79:64] speed | [95:80] duty |
     // [103:96] harsh | [108:104] hour | [109] door | [110] reefer
-    logic [110:0] mem [256];
+    (* ram_style = "block" *) logic [110:0] mem [256];
     logic [7:0]   rd_addr;
     logic [110:0] rd_q;
     logic         wr_en;
@@ -49,7 +49,7 @@ module fitur #(
         rd_q <= mem[rd_addr];
     end
 
-    typedef enum logic [3:0] {DIAM, JENDELA, KONTEKS, RATA, RATA_TUNGGU, MIRING, MIRING_TUNGGU, KELUAR} tahap_t;
+    typedef enum logic [3:0] {DIAM, JENDELA, KONTEKS, RATA, RATA_N, RATA_TUNGGU, MIRING, MIRING_N, MIRING_TUNGGU, KELUAR} tahap_t;
     tahap_t tahap;
 
     logic [15:0]        t_next;
@@ -79,11 +79,12 @@ module fitur #(
     // ---------------- pembagi ----------------
     logic                bg_start, bg_busy, bg_done;
     logic signed [71:0]  bg_n;
+    logic signed [71:0]  num_r;        // pembilang sebelum geser, register pemutus jalur
     /* verilator lint_off UNUSEDSIGNAL */
     logic signed [71:0]  bg_q;         // nilai fitur muat di FW bit; bit atas tidak dipakai
     /* verilator lint_on UNUSEDSIGNAL */
     logic [33:0]         bg_d;
-    bagi_floor #(.NW(72), .DW(34)) u_bagi (
+    floor_div #(.NW(72), .DW(34)) u_bagi (
         .clk(clk), .rst_n(rst_n), .start(bg_start), .n(bg_n), .d(bg_d), .busy(bg_busy), .done(bg_done), .q(bg_q)
     );
 
@@ -145,7 +146,7 @@ module fitur #(
             done <= 1'b0; wr_en <= 1'b0; wr_addr <= '0; wr_data <= '0; rd_addr <= '0;
             iss <= '0; n_iss <= '0; dasar <= '0; va <= 1'b0; vb <= 1'b0; ia <= '0; ib <= '0;
             prev_t <= '0; rdur <= '0; m <= '0; s240 <= '0; sxy <= '0; y_first <= '0; y_last <= '0;
-            rata <= '0; miring <= '0; bg_start <= 1'b0; bg_n <= '0; bg_d <= '0;
+            rata <= '0; miring <= '0; bg_start <= 1'b0; bg_n <= '0; bg_d <= '0; num_r <= '0;
             o <= '0; o_stat <= '0; o_kol <= '0; fitur_we <= 1'b0; fitur_addr <= '0; fitur_data <= '0;
             for (int c = 0; c < NK; c++) begin
                 s_sum[c] <= '0; s_sq[c] <= '0; s_min[c] <= '0; s_max[c] <= '0; s_first[c] <= '0; s_last[c] <= '0;
@@ -248,8 +249,12 @@ module fitur #(
 
                 RATA: if (!bg_busy) begin
                     // floor(((60*S240 - m*S60) << 24) / (60*m)), S60 = jumlah suhu jendela
-                    bg_n     <= 72'((60 * 72'(s240) - 72'($signed({1'b0, m})) * 72'(s_sum[0])) <<< 24);
-                    bg_d     <= 34'(60 * m);
+                    num_r <= 72'(60 * 72'(s240) - 72'($signed({1'b0, m})) * 72'(s_sum[0]));
+                    bg_d  <= 34'(60 * m);
+                    tahap <= RATA_N;
+                end
+                RATA_N: begin
+                    bg_n     <= num_r <<< 24;
                     bg_start <= 1'b1;
                     tahap    <= RATA_TUNGGU;
                 end
@@ -267,11 +272,15 @@ module fitur #(
                         logic signed [71:0] mm, num;
                         mm  = 72'($signed({1'b0, m}));
                         num = mm * 72'(sxy) - ((mm * (mm - 1)) >>> 1) * 72'(s240);
-                        bg_n     <= (12 * num) <<< 24;
-                        bg_d     <= 34'(m * m) * 34'(m * m - 1);
-                        bg_start <= 1'b1;
-                        tahap    <= MIRING_TUNGGU;
+                        num_r <= num;
+                        bg_d  <= 34'(m * m) * 34'(m * m - 1);
+                        tahap <= MIRING_N;
                     end
+                end
+                MIRING_N: begin
+                    bg_n     <= (12 * num_r) <<< 24;
+                    bg_start <= 1'b1;
+                    tahap    <= MIRING_TUNGGU;
                 end
                 MIRING_TUNGGU: if (bg_done) begin
                     miring <= FW'(bg_q);

@@ -1,11 +1,11 @@
 // Segel data: rantai hash per bacaan sensor dan HMAC-SHA256 per paket hasil, berbagi satu sha256_core.
 //
-// Rantai : h_i = SHA256(h_{i-1} || rekaman_i), rekaman 23 byte (format di hw/golden/segel.py).
+// Rantai : h_i = SHA256(h_{i-1} || rekaman_i), rekaman 23 byte (format di hw/golden/seal.py).
 //          32 + 23 = 55 byte muat satu blok: {h_prev, rekaman, 8'h80, 64'd440}.
 // HMAC   : HMAC-SHA256(kunci 32 byte, rantai || hasil 16 byte) = 4 kompresi:
 //          SHA(K^ipad) -> SHA(.., {pesan 48 B, 0x80, 0, len 896}) -> SHA(K^opad) -> SHA(.., {dalam, 0x80, 0, len 768}).
 // Kunci hanya bisa ditulis sebelum dikunci (kunci_kunci); tidak ada jalur baca balik kunci.
-module segel (
+module seal (
     input  logic         clk,
     input  logic         rst_n,
     // kunci HMAC

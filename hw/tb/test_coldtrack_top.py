@@ -15,10 +15,10 @@ HW = Path(__file__).resolve().parent.parent
 ROOT = HW.parent
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "backend"))
-from hw.golden import fisika as fx
-from hw.golden import pohon as ph
+from hw.golden import physics as fx
+from hw.golden import trees as ph
 from hw.golden import regmap as rm
-from hw.golden import segel as sg
+from hw.golden import seal as sg
 
 B9 = "b9_xgb_chip_v5_konteks_duty_sintetis"
 MENIT = int(os.environ.get("MENIT_TOP", "140"))
@@ -82,7 +82,7 @@ def trip(mode_pilih):
     from app.inference import cargo_params
 
     from eval.common import CARGO_TO_PROFILE
-    from hw.golden.uji_pohon import duty_trip
+    from hw.golden.check_trees import duty_trip
 
     df = pd.read_parquet(ROOT / "data/processed/v4_seed1000_700trips.parquet")
     val = df[df.split == "val"]
@@ -190,8 +190,8 @@ async def ujung_ke_ujung(dut):
 def test_coldtrack_top():
     from runner import jalankan
 
-    folder = HW / "model" / B9
-    jalankan("coldtrack_top", ["sha256_core.sv", "segel.sv", "fisika.sv", "bagi_floor.sv", "fitur.sv",
+    folder = HW / "model" / "xgb_v5_context_duty"
+    jalankan("coldtrack_top", ["sha256_core.sv", "seal.sv", "physics.sv", "floor_div.sv", "features.sv",
                                "tree_engine.sv", "coldtrack_top.sv"], "test_coldtrack_top",
-             parameters={"BERKAS_SIMPUL": f'"{folder / "simpul.mem"}"', "BERKAS_POHON": f'"{folder / "pohon.mem"}"',
+             parameters={"BERKAS_SIMPUL": f'"{folder / "nodes.mem"}"', "BERKAS_POHON": f'"{folder / "trees.mem"}"',
                          "BERKAS_BASE": f'"{folder / "base.mem"}"'})

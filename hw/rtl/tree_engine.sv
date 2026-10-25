@@ -1,10 +1,10 @@
 // Inferensi tree ensemble (XGBoost multikelas) atas fitur bilangan bulat.
-// Model dimuat dari berkas hw/model/<nama>/{simpul,pohon,base}.mem (hw/scripts/ekspor_pohon.py) atau
+// Model dimuat dari berkas hw/model/<nama>/{simpul,pohon,base}.mem (hw/scripts/export_trees.py) atau
 // ditulis ulang host lewat port simpul_*/pohon_*/base_* (ganti model tanpa sintesis ulang).
 // Format simpul 72 bit: cabang [71]=0 | [70:64] fitur | [63:16] ambang s48 | [15:0] anak kiri (kanan = kiri+1);
 //                       daun   [71]=1 | [31:0] nilai s32 Q8.16.
 // Per simpul 2 siklus (baca BRAM sinkron + bandingkan); skor kelas = base + jumlah daun; kelas = argmax
-// (seri -> indeks terkecil, sama dengan hw/golden/pohon.py).
+// (seri -> indeks terkecil, sama dengan hw/golden/trees.py).
 module tree_engine #(
     parameter int    N_FITUR  = 82,
     parameter int    N_KELAS  = 7,
@@ -42,7 +42,7 @@ module tree_engine #(
     localparam int PW = $clog2(N_POHON);
     localparam int AW = $clog2(N_SIMPUL);      // field alamat di memori 16 bit; bit atas tidak dipakai
 
-    logic [71:0]          mem_simpul [N_SIMPUL];
+    (* ram_style = "block" *) logic [71:0] mem_simpul [N_SIMPUL];
     logic [18:0]          mem_pohon  [N_POHON];
     logic signed [SW-1:0] mem_base   [N_KELAS];
     logic signed [FW-1:0] fitur      [N_FITUR];

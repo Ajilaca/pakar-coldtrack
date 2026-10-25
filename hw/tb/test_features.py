@@ -1,4 +1,4 @@
-"""fitur: 82 fitur per menit identik dengan hw/golden/pohon.fitur_bulat, flag siap/lengkap sesuai golden.
+"""fitur: 82 fitur per menit identik dengan hw/golden/trees.fitur_bulat, flag siap/lengkap sesuai golden.
 
 Trip val diputar menit demi menit (berbagai mode, termasuk A6 dengan bacaan hilang) sampai lewat menit
 240 agar jendela konteks 240 menit benar-benar bergeser.
@@ -15,7 +15,7 @@ from cocotb.triggers import ClockCycles, FallingEdge
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
-from hw.golden import pohon as ph
+from hw.golden import trees as ph
 
 FW = 48
 MENIT = int(os.environ.get("MENIT_FITUR", "300"))
@@ -23,7 +23,7 @@ MODE = ["A0", "A1", "A6", "A8", "A2", "A7"]
 
 
 def trip_uji():
-    from hw.golden.uji_pohon import duty_trip
+    from hw.golden.check_trees import duty_trip
 
     df = pd.read_parquet(ROOT / "data/processed/v4_seed1000_700trips.parquet")
     val = df[df.split == "val"]
@@ -101,7 +101,7 @@ async def trip_val(dut):
     dut._log.info(f"total {total} jendela lengkap identik")
 
 
-def test_fitur():
+def test_features():
     from runner import jalankan
 
-    jalankan("fitur", ["bagi_floor.sv", "fitur.sv"], "test_fitur")
+    jalankan("features", ["floor_div.sv", "features.sv"], "test_features")

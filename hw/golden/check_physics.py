@@ -1,11 +1,11 @@
-"""Paritas golden model fixed-point (hw/golden/fisika.py) terhadap backend/app/core/engine.py (float).
+"""Paritas golden model fixed-point (hw/golden/physics.py) terhadap backend/app/core/engine.py (float).
 
 Data: 5 skenario demo + trip train/val dataset v4 (split test tidak dipakai). Celah suhu (NaN) diisi
 nilai terakhir lebih dulu, seperti jalur armada (fleet.ffill_maks_menit), untuk kedua mesin.
   A  engine.py menerima suhu float asli, golden menerima satuan 0,01 C (kondisi nyata)
   B  keduanya menerima suhu yang sama yang sudah dikuantisasi 0,01 C (selisih murni aritmetika)
 
-  python -m hw.golden.uji_fisika            -> hw/hasil/paritas_fisika.json
+  python -m hw.golden.check_physics            -> hw/results/parity_physics.json
 """
 
 import json
@@ -26,7 +26,7 @@ from app.core import engine
 from app.inference import cargo_params
 
 from eval.common import CARGO_TO_PROFILE
-from hw.golden import fisika as fx
+from hw.golden import physics as fx
 
 KODE = [("Kondisi normal", 0), ("Suhu muatan di luar", 1), ("Muatan diperkirakan", 2), ("Suhu mendekati", 3),
         ("Pintu terbuka", 4), ("Sensor rusak", 5), ("Sensor mencurigakan", 6)]
@@ -111,7 +111,7 @@ def main():
                            "status_sama": float((A[-1]["status_f"] == A[-1]["status_g"]).mean())})
     hasil = {"A_float_asli_vs_fixed": ringkas(A), "B_input_sama_terkuantisasi": ringkas(B), "skenario": contoh,
              "jumlah_trip": len(A) - len(contoh), "detik": time.perf_counter() - t0}
-    out = ROOT / "hw/hasil/paritas_fisika.json"
+    out = ROOT / "hw/results/parity_physics.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(hasil, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps(hasil, indent=2, ensure_ascii=False))

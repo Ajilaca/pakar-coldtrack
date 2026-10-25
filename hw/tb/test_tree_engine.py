@@ -1,4 +1,4 @@
-"""tree_engine: skor 7 kelas dan argmax harus identik bit per bit dengan hw/golden/pohon.py.
+"""tree_engine: skor 7 kelas dan argmax harus identik bit per bit dengan hw/golden/trees.py.
 
 Fitur diambil dari jendela val acak (fitur bilangan bulat golden). Model #8 dimuat dari berkas .mem
 saat elaborasi; model #7 kemudian ditulis host lewat port simpul_/pohon_/base_ (ganti model tanpa sintesis).
@@ -17,7 +17,7 @@ from cocotb.triggers import ClockCycles, FallingEdge
 HW = Path(__file__).resolve().parent.parent
 ROOT = HW.parent
 sys.path.insert(0, str(ROOT))
-from hw.golden import pohon as ph
+from hw.golden import trees as ph
 
 B8, B9 = "b8_xgb_chip_v5_konteks", "b9_xgb_chip_v5_konteks_duty_sintetis"
 SW, N_JENDELA = 32, int(os.environ.get("N_JENDELA", "120"))
@@ -26,7 +26,7 @@ SW, N_JENDELA = 32, int(os.environ.get("N_JENDELA", "120"))
 def kasus(duty, n, seed):
     """n jendela val acak -> (fitur int, skor golden, kelas golden)."""
     from bench import b8_lib as b8
-    from hw.golden.uji_pohon import duty_trip
+    from hw.golden.check_trees import duty_trip
 
     d = b8.muat("val")
     df = pd.read_parquet(ROOT / "data/processed/v4_seed1000_700trips.parquet")
@@ -91,9 +91,9 @@ async def model_b9_dari_berkas_lalu_b8_dari_host(dut):
     await reset(dut)
     await cek(dut, kasus(True, N_JENDELA, 11), "b9 (berkas .mem)")
 
-    folder = HW / "model" / B8
-    simpul = [int(x, 16) for x in (folder / "simpul.mem").read_text().split()]
-    pohon = [int(x, 16) for x in (folder / "pohon.mem").read_text().split()]
+    folder = HW / "model" / "xgb_v5_context"
+    simpul = [int(x, 16) for x in (folder / "nodes.mem").read_text().split()]
+    pohon = [int(x, 16) for x in (folder / "trees.mem").read_text().split()]
     base = [int(x, 16) for x in (folder / "base.mem").read_text().split()]
     await tulis(dut, "simpul_we", "simpul_addr", "simpul_data", list(enumerate(simpul)))
     await tulis(dut, "pohon_we", "pohon_addr", "pohon_data", list(enumerate(pohon)))
@@ -104,7 +104,7 @@ async def model_b9_dari_berkas_lalu_b8_dari_host(dut):
 def test_tree_engine():
     from runner import jalankan
 
-    folder = HW / "model" / B9
+    folder = HW / "model" / "xgb_v5_context_duty"
     jalankan("tree_engine", ["tree_engine.sv"], "test_tree_engine",
-             parameters={"BERKAS_SIMPUL": f'"{folder / "simpul.mem"}"', "BERKAS_POHON": f'"{folder / "pohon.mem"}"',
+             parameters={"BERKAS_SIMPUL": f'"{folder / "nodes.mem"}"', "BERKAS_POHON": f'"{folder / "trees.mem"}"',
                          "BERKAS_BASE": f'"{folder / "base.mem"}"'})

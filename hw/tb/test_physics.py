@@ -1,4 +1,4 @@
-"""fisika: semua keluaran per menit identik bit per bit dengan hw/golden/fisika.MesinFisika.
+"""fisika: semua keluaran per menit identik bit per bit dengan hw/golden/physics.MesinFisika.
 
 Data: 5 skenario demo + trip train/val pilihan (berbagai mode dan muatan, termasuk beku), diputar
 menit demi menit seperti di truk.
@@ -16,7 +16,7 @@ from cocotb.triggers import ClockCycles, FallingEdge
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "backend"))
-from hw.golden import fisika as fx
+from hw.golden import physics as fx
 
 PER_MODE = int(os.environ.get("TRIP_PER_MODE", "2"))
 
@@ -24,7 +24,7 @@ PER_MODE = int(os.environ.get("TRIP_PER_MODE", "2"))
 def data_uji():
     import pandas as pd
 
-    from hw.golden.uji_fisika import sumber
+    from hw.golden.check_physics import sumber
 
     df = pd.read_parquet(ROOT / "data/processed/v4_seed1000_700trips.parquet")
     mode = df.groupby("trip_id")["failure_mode"].agg(lambda s: ([m for m in s.unique() if m != "A0"] + ["A0"])[0])
@@ -98,7 +98,7 @@ async def trip_dan_skenario(dut):
     dut._log.info(f"total {total} menit identik dengan golden; cakupan {dict(sorted(cakupan.items()))}")
 
 
-def test_fisika():
+def test_physics():
     from runner import jalankan
 
-    jalankan("fisika", ["fisika.sv"], "test_fisika")
+    jalankan("physics", ["physics.sv"], "test_physics")

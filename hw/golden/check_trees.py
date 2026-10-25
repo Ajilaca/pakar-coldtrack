@@ -1,9 +1,9 @@
-"""Kecocokan golden fitur+pohon bilangan bulat (hw/golden/pohon.py) dengan XGBoost float, split VAL.
+"""Kecocokan golden fitur+pohon bilangan bulat (hw/golden/trees.py) dengan XGBoost float, split VAL.
 
 Untuk kedua model beku B10 (#7 tanpa duty, #8 dengan duty sintetis): kelas argmax golden vs
 XGBoost.predict pada fitur float bench/b10_test_once.fitur, Macro F1 label v5, dan selisih margin.
 
-  python -m hw.golden.uji_pohon            -> hw/hasil/paritas_pohon.json
+  python -m hw.golden.check_trees            -> hw/results/parity_trees.json
 """
 
 import json
@@ -21,7 +21,7 @@ from bench import b8_lib as b8
 from bench import b9_lib as b9
 from bench.b8_label_konteks import metrik_kelas
 from bench.b10_test_once import fitur as fitur_float
-from hw.golden import pohon as ph
+from hw.golden import trees as ph
 
 MODEL = {"b8_xgb_chip_v5_konteks": False, "b9_xgb_chip_v5_konteks_duty_sintetis": True}
 
@@ -74,7 +74,7 @@ def main():
         }
         print(nama, json.dumps(hasil[nama], indent=1), flush=True)
     hasil["detik"] = time.perf_counter() - t0
-    out = ROOT / "hw/hasil/paritas_pohon.json"
+    out = ROOT / "hw/results/parity_trees.json"
     out.write_text(json.dumps(hasil, indent=2, ensure_ascii=False), encoding="utf-8")
 
 

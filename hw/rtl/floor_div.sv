@@ -1,5 +1,5 @@
 // Pembagian floor bertanda: q = floor(n / d), d > 0. Restoring iteratif: NW siklus + 1 siklus koreksi.
-module bagi_floor #(
+module floor_div #(
     parameter int NW = 72,      // lebar pembilang (bertanda)
     parameter int DW = 34       // lebar penyebut (positif)
 ) (

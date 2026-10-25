@@ -1,7 +1,7 @@
-"""Model acuan segel (hw/rtl/segel.sv): format rekaman 23 byte, rantai hash, dan HMAC paket hasil.
+"""Model acuan segel (hw/rtl/seal.sv): format rekaman 23 byte, rantai hash, dan HMAC paket hasil.
 
 Rekaman (big-endian, 23 byte), satuan sama dengan masukan mesin fisika dan fitur model
-(hw/golden/fisika.py, hw/golden/pohon.py), jadi yang disegel tepat yang dipakai chip:
+(hw/golden/physics.py, hw/golden/trees.py), jadi yang disegel tepat yang dipakai chip:
   seq u32 | ts u32 (detik UNIX) | temp_c s16 (0,01 C) | humidity u16 (0,01 %) | ambient_c s16 (0,01 C) |
   solar u16 (1/16 W/m2) | speed u16 (0,01 km/jam) | flags u8 | duty u16 (1/10000) | harsh u8 |
   battery u8 (10 mV di atas 2,00 V)

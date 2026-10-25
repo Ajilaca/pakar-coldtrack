@@ -1,8 +1,9 @@
-// Mesin fisika ColdTrack (port bit-exact dari hw/golden/fisika.py, asal backend/app/core/engine.py).
+// Mesin fisika ColdTrack (port bit-exact dari hw/golden/physics.py, asal backend/app/core/engine.py).
 // Per sampel menit: aturan sensor -> observer suhu muatan -> pencarian TTB T=0..60 -> status AMAN/WASPADA/KRITIS.
 // Satuan suhu 0,01 C; Tc dan ts10 = 0,01 C x 2^16; k dan e^-k Q0.40 dari host sekali per trip.
 // Riwayat <= 90 menit disimpan di register geser (aturan jendela = OR/mux kombinasional).
-module fisika (
+// Perkalian 82 bit di pencarian TTB dan aturan pintu diberi register pipeline (L = 3) agar lolos 100 MHz.
+module physics (
     input  logic               clk,
     input  logic               rst_n,
     // konfigurasi trip (host)
@@ -23,7 +24,7 @@ module fisika (
     output logic               busy,
     output logic               done,
     output logic [1:0]         status,         // 0 AMAN, 1 WASPADA, 2 KRITIS
-    output logic [2:0]         alasan,         // kode hw/golden/fisika.ALASAN
+    output logic [2:0]         alasan,         // kode hw/golden/physics.ALASAN
     output logic               ttb_valid,      // TTB <= 60 dan sensor tidak rusak
     output logic [5:0]         ttb,            // menit (ceil)
     output logic [1:0]         sensor,         // 0 ok, 1 curiga, 2 rusak
@@ -49,9 +50,9 @@ module fisika (
     logic signed [15:0] last_clean;
     logic signed [15:0] prev, last_ok;
     logic               prev_ada, ok_ada;
-    logic [6:0]         flat;
+    logic [6:0]         flat, flat_r;  // flat_r = flat_nx yang diregister di tahap FLAT
 
-    typedef enum logic [2:0] {DIAM, SENSOR, OBSERVER, CARI, PUTUS} tahap_t;
+    typedef enum logic [3:0] {DIAM, FLAT, SENSOR, OBSERVER, SIAP, CARI, KURAS, PINTU, PUTUS} tahap_t;
     tahap_t tahap;
 
     // ---------------- tahap SENSOR (kombinasional atas riwayat) ----------------
@@ -75,7 +76,7 @@ module fisika (
         sah = |(door_sr & topeng60(w10)) | mov_beda;
 
         flat_nx = bad_now ? 7'd0 : ((prev_ada && raw_now == prev) ? ((flat == 7'd127) ? flat : flat + 7'd1) : 7'd0);
-        f       = flat_nx;
+        f       = flat_r;
         lompat  = raw_now - last_ok;
         st      = bad_now ? 2'd2 : 2'd0;
         ctx = 1'b0; bad_dlm = 1'b0; wf = '0; la = '0;
@@ -132,15 +133,21 @@ module fisika (
     logic [40:0]         p, p30;
     logic                ttb_ada;
     logic [5:0]          ttb_r;
-    logic [81:0]         kanan_fisik;
-    logic signed [81:0]  kiri_fisik;
+    // tahap SIAP menyimpan selisih yang tetap selama CARI; perkalian lalu melewati L register (diserap DSP)
+    localparam int L = 3;
+    logic signed [39:0]  d_ct, d_at;                 // cab - tc, amb24 - tc
+    logic signed [81:0]  kiri_fisik, kiri_pintu;     // (cab - thi) << 40, (amb24 - thi) << 40
+    logic [81:0]         kanan_q [L];
+    logic signed [31:0]  drift_q [L];
+    logic [5:0]          t_q     [L];
+    logic [L-1:0]        v_q, akhir_q;
+    logic [81:0]         pintu_q [L];
+    logic [1:0]          n_pintu;
     logic                fisik_t, drift_t, drift_eq;
     always_comb begin
-        kiri_fisik  = 82'(cab - thi) <<< FRAK;
-        kanan_fisik = 82'(p) * 82'(cab - tc);
-        fisik_t  = sudah || (bisa && ($signed(kiri_fisik) >= $signed(kanan_fisik)));
-        drift_t  = hanyut && (kiri_drift <= $signed({26'd0, t}) * d20_num);
-        drift_eq = hanyut && (kiri_drift == $signed({26'd0, t}) * d20_num);
+        fisik_t  = sudah || (bisa && ($signed(kiri_fisik) >= $signed(kanan_q[L-1])));
+        drift_t  = hanyut && (kiri_drift <= drift_q[L-1]);
+        drift_eq = hanyut && (kiri_drift == drift_q[L-1]);
     end
     logic [40:0]  p_nx;
     logic [81:0]  p_kali;
@@ -161,7 +168,11 @@ module fisika (
             tc <= '0; ts10 <= '0; seri <= 1'b0;
             thi <= '0; tlo <= '0; amb24 <= '0; cab <= '0; sudah <= 1'b0; bisa <= 1'b0;
             hanyut <= 1'b0; d20_num <= '0; kiri_drift <= '0; s10_r <= '0; n10_r <= '0;
-            t <= '0; p <= '0; p30 <= '0; ttb_ada <= 1'b0; ttb_r <= '0;
+            t <= '0; p <= '0; p30 <= '0; ttb_ada <= 1'b0; ttb_r <= '0; flat_r <= '0;
+            d_ct <= '0; d_at <= '0; kiri_fisik <= '0; kiri_pintu <= '0; v_q <= '0; akhir_q <= '0; n_pintu <= '0;
+            for (int j = 0; j < L; j++) begin
+                kanan_q[j] <= '0; drift_q[j] <= '0; t_q[j] <= '0; pintu_q[j] <= '0;
+            end
         end else begin
             done <= 1'b0;
             case (tahap)
@@ -184,13 +195,18 @@ module fisika (
                         amb_sr[0] <= t_amb;
                         for (int j = 9; j > 0; j--) clean_sr[j] <= clean_sr[j - 1];
                         clean_sr[0] <= cl;
-                        tahap <= SENSOR;
+                        tahap <= FLAT;
                     end
+                end
+
+                FLAT: begin
+                    flat_r <= flat_nx;
+                    tahap  <= SENSOR;
                 end
 
                 SENSOR: begin
                     sensor <= st;
-                    flat   <= flat_nx;
+                    flat   <= flat_r;
                     if (bad_now) begin
                         prev_ada <= 1'b0;
                     end else begin
@@ -251,21 +267,33 @@ module fisika (
                     p <= 41'd1 << FRAK;
                     ttb_ada <= 1'b0;
                     ttb_r   <= '0;
-                    tahap <= CARI;
+                    tahap <= SIAP;
                 end
 
+                SIAP: begin
+                    d_ct       <= cab - tc;
+                    d_at       <= amb24 - tc;
+                    kiri_fisik <= 82'(cab - thi) <<< FRAK;
+                    kiri_pintu <= 82'(amb24 - thi) <<< FRAK;
+                    tahap      <= CARI;
+                end
+
+                // CARI mengirim T = 0..60 ke pipeline; hasil dinilai L siklus kemudian (blok di bawah case)
                 CARI: begin
-                    if (!ttb_ada && (fisik_t || drift_t)) begin
-                        ttb_ada <= 1'b1;
-                        ttb_r   <= t;
-                        if (!fisik_t && drift_eq && (t == 6'd30 || t == 6'd60)) seri <= 1'b1;
-                    end
                     if (t == 6'd30) p30 <= p;
-                    if (t == 6'd60) tahap <= PUTUS;
+                    if (t == 6'd60) tahap <= KURAS;
                     else begin
                         t <= t + 1'b1;
                         p <= p_nx;
                     end
+                end
+                KURAS: if (akhir_q[L-1]) begin
+                    n_pintu <= '0;
+                    tahap   <= PINTU;
+                end
+                PINTU: begin                                 // tunggu p30 * (amb24 - tc) melewati pipeline
+                    n_pintu <= n_pintu + 1'b1;
+                    if (n_pintu == 2'(L)) tahap <= PUTUS;
                 end
 
                 PUTUS: begin
@@ -276,7 +304,7 @@ module fisika (
                     if (!door_sr[0]) pintu_bahaya = 1'b0;
                     else if (tc >= thi) pintu_bahaya = 1'b1;
                     else if (amb24 <= thi) pintu_bahaya = 1'b0;
-                    else pintu_bahaya = $signed(82'(amb24 - thi) <<< FRAK) >= $signed(82'(p30) * 82'(amb24 - tc));
+                    else pintu_bahaya = $signed(kiri_pintu) >= $signed(pintu_q[L-1]);
                     if (tc >= thi || tc < tlo) begin s = 2'd2; al = 3'd1; end
                     if (ttb_ada && ttb_r <= 6'd30 && s < 2'd2) begin s = 2'd2; al = 3'd2; end
                     if (ttb_ada && s < 2'd1) begin s = 2'd1; al = 3'd2; end
@@ -296,6 +324,25 @@ module fisika (
                 end
                 default: tahap <= DIAM;
             endcase
+
+            // pipeline perkalian TTB dan pintu
+            kanan_q[0] <= 82'(p) * 82'(d_ct);
+            drift_q[0] <= $signed({26'd0, t}) * d20_num;
+            t_q[0]     <= t;
+            v_q[0]     <= (tahap == CARI);
+            akhir_q[0] <= (tahap == CARI) && (t == 6'd60);
+            pintu_q[0] <= 82'(p30) * 82'(d_at);
+            for (int j = 1; j < L; j++) begin
+                kanan_q[j] <= kanan_q[j-1]; drift_q[j] <= drift_q[j-1]; t_q[j] <= t_q[j-1];
+                pintu_q[j] <= pintu_q[j-1];
+            end
+            v_q[L-1:1]     <= v_q[L-2:0];
+            akhir_q[L-1:1] <= akhir_q[L-2:0];
+            if (v_q[L-1] && !ttb_ada && (fisik_t || drift_t)) begin
+                ttb_ada <= 1'b1;
+                ttb_r   <= t_q[L-1];
+                if (!fisik_t && drift_eq && (t_q[L-1] == 6'd30 || t_q[L-1] == 6'd60)) seri <= 1'b1;
+            end
         end
     end
 
