@@ -3,7 +3,8 @@
   python -m app.workers.virtual_trucks
 
 Env: MQTT_HOST, MQTT_PORT, MQTT_USER (simulator), MQTT_PASSWORD, API_URL (http://api:8000),
-     SIM_SPEED / SIM_ANCHOR (app/clock.py), SIM_SEED.
+     SIM_SPEED / SIM_ANCHOR (app/clock.py), SIM_SEED, SIM_LEWATI (truk yang dikirim driver edge hw/driver,
+     dipisah koma, mis. "B 3036 WN").
 
 - Satu menit simulasi = satu bacaan per truk; ts = jam bersama (app/clock.now) dibulatkan ke menit.
 - Putus sinyal: tiap truk punya peluang mulai putus per menit (P_PUTUS) selama 3-25 menit; selama itu
@@ -101,7 +102,8 @@ class TrukVirtual:
 def main() -> None:
     rng = random.Random(int(os.environ.get("SIM_SEED", "7")))
     rows = pd.read_parquet(FLEET / "telemetry.parquet")
-    trucks = json.loads((FLEET / "trucks.json").read_text(encoding="utf-8"))
+    lewati = {t.strip() for t in os.environ.get("SIM_LEWATI", "").split(",") if t.strip()}
+    trucks = [t for t in json.loads((FLEET / "trucks.json").read_text(encoding="utf-8")) if t["id"] not in lewati]
     devices = {d["truck_id"]: d for d in json.loads((FLEET / "devices.json").read_text(encoding="utf-8"))}
     trips = {t["truck_id"]: t for t in json.loads((FLEET / "trips.json").read_text(encoding="utf-8"))}
     mati = set(rng.sample([t["id"] for t in trucks], N_MATI))
