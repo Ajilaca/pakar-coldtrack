@@ -1,0 +1,14 @@
+build/
+sim_build/
+results.xml
+*.result.xml
+*.vcd
+*.fst
+__pycache__/
+.Xil/
+clockInfo.txt
+iter_*_Congested*.txt
+*.jou
+*.bit
+*.xsa
+.pytest_cache/

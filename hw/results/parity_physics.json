@@ -1,0 +1,76 @@
+{
+  "A_float_asli_vs_fixed": {
+    "menit": 214406,
+    "status_sama": 0.9990485340895311,
+    "status_beda": {
+      "0->1": 80,
+      "1->2": 90,
+      "1->0": 30,
+      "2->1": 4
+    },
+    "status_fixed_lebih_rendah": 34,
+    "status_beda_di_menit_seri": 195,
+    "status_beda_bukan_seri": 9,
+    "menit_seri": 4933,
+    "kritis_float_tapi_aman_fixed": 0,
+    "alasan_sama": 0.9987546990289451,
+    "sensor_sama": 0.9999207111741276,
+    "ttb_tampil_sama": 0.9987780192718487,
+    "ttb_tampil_selisih_maks_1": 0.9989226047778513,
+    "tc_galat_maks_c": 0.001834130092863262
+  },
+  "B_input_sama_terkuantisasi": {
+    "menit": 214406,
+    "status_sama": 0.9990905105267577,
+    "status_beda": {
+      "0->1": 75,
+      "1->2": 88,
+      "1->0": 28,
+      "2->1": 4
+    },
+    "status_fixed_lebih_rendah": 32,
+    "status_beda_di_menit_seri": 193,
+    "status_beda_bukan_seri": 2,
+    "menit_seri": 4933,
+    "kritis_float_tapi_aman_fixed": 0,
+    "alasan_sama": 0.9988293238062368,
+    "sensor_sama": 0.9999906719028385,
+    "ttb_tampil_sama": 0.9989692452636587,
+    "ttb_tampil_selisih_maks_1": 0.9989692452636587,
+    "tc_galat_maks_c": 2.9477180614190246e-05
+  },
+  "skenario": [
+    {
+      "skenario": "scenario_1_normal",
+      "status_akhir_float": 0,
+      "status_akhir_fixed": 0,
+      "status_sama": 1.0
+    },
+    {
+      "skenario": "scenario_2_door_open",
+      "status_akhir_float": 2,
+      "status_akhir_fixed": 2,
+      "status_sama": 1.0
+    },
+    {
+      "skenario": "scenario_3_compressor_degradation",
+      "status_akhir_float": 2,
+      "status_akhir_fixed": 2,
+      "status_sama": 1.0
+    },
+    {
+      "skenario": "scenario_4_sensor_stuck",
+      "status_akhir_float": 1,
+      "status_akhir_fixed": 1,
+      "status_sama": 1.0
+    },
+    {
+      "skenario": "scenario_5_extreme_ambient",
+      "status_akhir_float": 1,
+      "status_akhir_fixed": 1,
+      "status_sama": 1.0
+    }
+  ],
+  "jumlah_trip": 594,
+  "detik": 18.068357749001734
+}

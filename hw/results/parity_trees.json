@@ -1,0 +1,25 @@
+{
+  "b8_xgb_chip_v5_konteks": {
+    "jendela": 16414,
+    "kelas_sama_dengan_xgboost": 0.9979895211404898,
+    "jumlah_beda": 33,
+    "margin_selisih_median": 2.288818359375e-05,
+    "margin_selisih_p99": 0.35523176193237305,
+    "macro_f1_float": 0.8521091315594977,
+    "macro_f1_bulat": 0.8477748522605281,
+    "jumlah_simpul": 8480,
+    "jumlah_pohon": 420
+  },
+  "b9_xgb_chip_v5_konteks_duty_sintetis": {
+    "jendela": 16414,
+    "kelas_sama_dengan_xgboost": 0.9989642987693432,
+    "jumlah_beda": 17,
+    "margin_selisih_median": 1.8596649169921875e-05,
+    "margin_selisih_p99": 0.27162150502204896,
+    "macro_f1_float": 0.9333790254734631,
+    "macro_f1_bulat": 0.9304588566332296,
+    "jumlah_simpul": 8318,
+    "jumlah_pohon": 420
+  },
+  "detik": 17.212548524999875
+}
