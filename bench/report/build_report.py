@@ -8,7 +8,7 @@ plus summary.csv dan grafik.
 
 import json
 
-from bench.common import RESULTS_DIR, ROOT, now_iso
+from bench.core.common import RESULTS_DIR, ROOT, now_iso
 
 OUT = ROOT / "bench" / "report" / "REPORT.md"
 TAGS = ["g16-cpu", "g16-gpu", "d0-old"]
@@ -181,7 +181,7 @@ def bagian_b2(g2, gambar):
             "",
             (
                 f"**{r['n_setara']}/{r['n_config']} config setara.** Kriteria ditetapkan sebelum run penuh "
-                f"(`bench/g2_check.py`): W1 selisih mean ≤ rentang antar-seed; W2/W7 selisih relatif ≤ "
+                f"(`bench/gates/g2_check.py`): W1 selisih mean ≤ rentang antar-seed; W2/W7 selisih relatif ≤ "
                 f"{g2['kriteria']['W2_W7_rel']:.0%}, akurasi ≤ {g2['kriteria']['W7_akurasi_abs']}."
             ),
             "Tidak setara: " + (", ".join(r["tidak_setara"]) or "tidak ada") + ".",

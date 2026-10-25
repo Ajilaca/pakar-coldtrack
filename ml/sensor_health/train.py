@@ -38,7 +38,7 @@ def latih(Xtr, ytr, params, device):
 
 
 def main(argv=None):
-    from bench.common import RESULTS_DIR, git_info, now_iso, rel, write_json
+    from bench.core.common import RESULTS_DIR, git_info, now_iso, rel, write_json
     from bench.run import apply_device_env, check_cuda_or_die, resolve_tag
 
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])

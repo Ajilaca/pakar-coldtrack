@@ -1,6 +1,6 @@
 """W3 -- sweep hyperparameter Optuna dengan beban TETAP, sama di semua device.
 
-Ruang pencarian = bench/b3_sweep.py (ruang_gru / ruang_xgb), sampler TPE seed 0, tanpa pruning.
+Ruang pencarian = bench/experiments/b3/b3_sweep.py (ruang_gru / ruang_xgb), sampler TPE seed 0, tanpa pruning.
 Beban dikecilkan dari sweep B3 (60 trial x 30 epoch) agar dapat dijalankan di CPU dan d0-old dalam
 waktu wajar; yang diukur adalah throughput (trial/jam) dan waktu dinding, bukan mutu model terbaik.
   gru: 8 trial x 5 epoch (data resident di device)    xgb: 20 trial classifier
@@ -12,7 +12,7 @@ sebaran waktu antar-trial tercatat di dalam run.
 import time
 from dataclasses import replace
 
-from bench.harness import run_config, tidak_berlaku
+from bench.core.harness import run_config, tidak_berlaku
 
 BEBAN = {"gru": {"trial": 8, "epoch": 5}, "xgb": {"trial": 20}}
 
@@ -20,8 +20,8 @@ BEBAN = {"gru": {"trial": 8, "epoch": 5}, "xgb": {"trial": 20}}
 def _sweep(model, device, quick):
     import optuna
 
-    from bench import b3_sweep as sw
-    from bench import train_lib as tl
+    from bench.core import train_lib as tl
+    from bench.experiments.b3 import b3_sweep as sw
 
     n_trial = 2 if quick else BEBAN[model]["trial"]
     data = tl.prepare_gru_data()[0] if model == "gru" else tl.prepare_xgb_data()[0]
@@ -53,7 +53,7 @@ def _sweep(model, device, quick):
 
 
 def run(ctx):
-    from bench import train_lib as tl
+    from bench.core import train_lib as tl
 
     tl.ensure_windows()
     files = []

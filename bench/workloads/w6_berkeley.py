@@ -11,8 +11,8 @@ import time
 
 import numpy as np
 
-from bench.common import RESULTS_DIR
-from bench.harness import run_config, tidak_berlaku
+from bench.core.common import RESULTS_DIR
+from bench.core.harness import run_config, tidak_berlaku
 
 SUMBER_PARAMS = RESULTS_DIR / "g16-gpu" / "B4" / "val_kesehatan.json"
 

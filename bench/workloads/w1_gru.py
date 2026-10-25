@@ -13,8 +13,8 @@ import json
 import statistics
 import time
 
-from bench.common import RESULTS_DIR, rel
-from bench.harness import run_config, tidak_berlaku
+from bench.core.common import RESULTS_DIR, rel
+from bench.core.harness import run_config, tidak_berlaku
 
 FAKTOR_TARGET = 1.05
 
@@ -48,7 +48,7 @@ def target_val_loss():
 
 
 def run(ctx):
-    from bench import train_lib as tl
+    from bench.core import train_lib as tl
     from ml.training import finetune as ft
 
     tl.ensure_windows()

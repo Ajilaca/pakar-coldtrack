@@ -10,17 +10,17 @@ from dataclasses import replace
 
 import numpy as np
 
-from bench.common import SEEDS
-from bench.harness import run_config
+from bench.core.common import SEEDS
+from bench.core.harness import run_config
 
 EPOCH = 10
 VARIAN = {"dengan_stat": {}, "tanpa_stat": {"pakai_statistik": False}}
 
 
 def _ablation(device, quick):
-    from bench import b3_sweep as sw
-    from bench import train_lib as tl
-    from bench.b3_lib import GruCfg
+    from bench.core import train_lib as tl
+    from bench.experiments.b3 import b3_sweep as sw
+    from bench.experiments.b3.b3_lib import GruCfg
 
     data = tl.prepare_gru_data()[0]
     seeds = SEEDS[:1] if quick else SEEDS
@@ -55,7 +55,7 @@ def _ablation(device, quick):
 
 
 def run(ctx):
-    from bench import train_lib as tl
+    from bench.core import train_lib as tl
 
     tl.ensure_windows()
     cfg = {"varian": list(VARIAN), "seed": SEEDS, "epoch": EPOCH, "basis": "ml/training/finetune.py (asli)"}

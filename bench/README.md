@@ -17,7 +17,7 @@ Jalur ML + benchmark untuk ASUS ROG Strix G16 (RTX 5070) vs device lama. Rencana
 | `d0-old` | CPU | Lenovo Yoga 6 (Ryzen 7 5700U). Variasi khusus GPU dicatat "tidak berlaku" |
 
 Tag didefinisikan di `bench/devices/*.yaml`. Spesifikasi perangkat keras tidak ditulis
-manual; `bench/env_capture.py` mencatatnya dari mesin. Yang diisi manual hanya bagian `kondisi`
+manual; `bench/core/env_capture.py` mencatatnya dari mesin. Yang diisi manual hanya bagian `kondisi`
 (charger, mode daya, pendingin), diisi sebelum tiap sesi.
 
 ## Lingkungan
@@ -44,12 +44,12 @@ lalu `wsl --shutdown`. Nilainya ikut tercatat otomatis di `env.json`.
 ### Di dalam WSL (dari root repo, mis. `cd /mnt/c/Users/<user>/pakar-coldtrack`)
 
 ```bash
-bash bench/setup_wsl.sh cuda    # G16
-bash bench/setup_wsl.sh cpu     # d0-old
+bash bench/scripts/setup_wsl.sh cuda    # G16
+bash bench/scripts/setup_wsl.sh cpu     # d0-old
 ```
 
 Skrip memasang uv, Python 3.11, dan paket dengan versi dari `bench/requirements.lock.txt`
-(dibangkitkan di G16 oleh `bench/freeze_lock.sh`), jadi `d0-old` memakai versi yang sama.
+(dibangkitkan di G16 oleh `bench/scripts/freeze_lock.sh`), jadi `d0-old` memakai versi yang sama.
 
 **Dua venv di G16 (temuan B0, 2026-10-10).** `onnxruntime-gpu` 1.31 dibangun untuk CUDA 13,
 sedangkan PyTorch cu128 memakai CUDA 12. Memasang pustaka CUDA 13 di venv torch menimpa
@@ -58,7 +58,7 @@ sedangkan PyTorch cu128 memakai CUDA 12. Memasang pustaka CUDA 13 di venv torch 
 | venv | Isi | Dipakai untuk |
 |---|---|---|
 | `~/.venvs/coldtrack` | torch cu128 + `onnxruntime` CPU (sama di semua device) | semua workload |
-| `~/.venvs/coldtrack-ort` | `onnxruntime-gpu[cuda,cudnn]` (CUDA 13) | hanya jalur CUDA EP (smoke, W7) lewat `bench/ort_probe.py` |
+| `~/.venvs/coldtrack-ort` | `onnxruntime-gpu[cuda,cudnn]` (CUDA 13) | hanya jalur CUDA EP (smoke, W7) lewat `bench/core/ort_probe.py` |
 
 Catatan paritas ONNX Runtime CUDA EP vs CPU EP (jendela val asli):
 - GRU: TF32 bawaan CUDA EP membuat selisih forecast ~4e-3 C; dengan `use_tf32=0` ~1e-5.
@@ -69,12 +69,12 @@ Catatan paritas ONNX Runtime CUDA EP vs CPU EP (jendela val asli):
 
 ## Menjalankan
 
-Dari PowerShell, `bench/wsl_run.sh` menjalankan perintah di venv WSL dari root repo:
-`wsl -e bash bench/wsl_run.sh python -m bench.run --tag g16-gpu --workloads smoke`
+Dari PowerShell, `bench/scripts/wsl_run.sh` menjalankan perintah di venv WSL dari root repo:
+`wsl -e bash bench/scripts/wsl_run.sh python -m bench.run --tag g16-gpu --workloads smoke`
 
 ```bash
 python -m bench.run --list                         # daftar workload + status
-python -m bench.env_capture --tag g16-gpu          # catat lingkungan saja
+python -m bench.core.env_capture --tag g16-gpu          # catat lingkungan saja
 python -m bench.run --tag g16-gpu --workloads smoke
 python -m bench.run --tag g16-cpu --workloads smoke
 python -m bench.run --tag d0-old  --workloads smoke
@@ -83,7 +83,7 @@ python -m bench.run --tag d0-old  --workloads smoke
 python -m bench.run --tag g16-gpu --workloads W1,W2,W7
 python -m bench.run --tag g16-cpu --workloads W1,W2,W7
 python -m bench.run --tag d0-old  --workloads W1,W2,W7       # varian khusus GPU tercatat "tidak berlaku"
-python -m bench.g2_check --cpu-tag g16-cpu --gpu-tag g16-gpu  # gerbang G2 (paritas kualitas)
+python -m bench.gates.g2_check --cpu-tag g16-cpu --gpu-tag g16-gpu  # gerbang G2 (paritas kualitas)
 ```
 
 Konfigurasi yang sudah lengkap dilewati (bisa dilanjutkan setelah terputus); `--overwrite` mengulang,
@@ -92,6 +92,29 @@ workload lain 60 detik.
 
 `--quick` menjalankan versi kecil untuk menguji harness; hasilnya ke `bench/results/_quick/`
 (tidak dikomit, bukan angka benchmark).
+
+## Susunan folder
+
+| Path | Isi |
+|---|---|
+| `run.py` | CLI benchmark: `python -m bench.run` |
+| `core/` | Kerangka harness: `harness.py`, `common.py`, `env_capture.py`, `telemetry.py`, `train_lib.py`, `ort_bench.py`, `ort_probe.py`, `w8_cycle.py` |
+| `workloads/` | Workload benchmark W1 sampai W8 dan `smoke`; `w8_ab_kode.py` untuk uji A/B kode backend |
+| `gates/` | Gerbang G1 (reproduksi) dan G2 (paritas kualitas CPU vs GPU) |
+| `experiments/b1/` | B1: reproduksi baseline |
+| `experiments/b3/` | B3: diagnosis, sweep Optuna, konfirmasi, ekspor kandidat, uji split test (G3) |
+| `experiments/b7/` | B7: banding model, tes `/analyze` ujung ke ujung, fixture paritas ONNX |
+| `experiments/b8/` | B8: label v5 (A1/A7 sementara) dan fitur konteks trip |
+| `experiments/b9/` | B9: sinyal kompresor sintetis |
+| `experiments/b10/` | B10: uji split test sekali untuk kandidat chip |
+| `scripts/` | Skrip shell untuk WSL: `setup_wsl.sh`, `wsl_run.sh`, `freeze_lock.sh`, `chain_b2b3.sh`, `fe.sh` |
+| `devices/` | Konfigurasi per device (`g16.yaml`, `d0-old.yaml`) |
+| `report/` | Pembangun laporan (`REPORT.md`, grafik) |
+| `results/` | Semua hasil run (JSON) |
+
+Perintah modul memakai jalur lengkap, misalnya `python -m bench.experiments.b3.b3_sweep` dan
+`python -m bench.gates.g1_check`. Berkas JSON di `bench/results/` dan `D0_OLD.md` mencatat nama skrip
+seperti saat run dijalankan (mis. `bench/b3_sweep.py`); skrip itu sekarang ada di folder di atas.
 
 ## Susunan hasil
 

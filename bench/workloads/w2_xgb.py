@@ -6,7 +6,7 @@ Catatan: prediksi di jalur cuda memakai masukan NumPy (CPU) -- XGBoost memberi p
 DMatrix; itu kondisi pemakaian nyata dan ikut terukur di prediksi_s.
 """
 
-from bench.harness import run_config, tidak_berlaku
+from bench.core.harness import run_config, tidak_berlaku
 
 CONFIGS = [
     ("cpu_hist", "cpu", False),
@@ -15,7 +15,7 @@ CONFIGS = [
 
 
 def run(ctx):
-    from bench import train_lib as tl
+    from bench.core import train_lib as tl
     from ml.evaluation.baselines import XGB_PARAMS
 
     tl.ensure_windows()

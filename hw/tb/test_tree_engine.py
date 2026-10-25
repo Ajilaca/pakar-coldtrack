@@ -25,7 +25,7 @@ SW, N_JENDELA = 32, int(os.environ.get("N_JENDELA", "120"))
 
 def kasus(duty, n, seed):
     """n jendela val acak -> (fitur int, skor golden, kelas golden)."""
-    from bench import b8_lib as b8
+    from bench.experiments.b8 import b8_lib as b8
     from hw.golden.check_trees import duty_trip
 
     d = b8.muat("val")

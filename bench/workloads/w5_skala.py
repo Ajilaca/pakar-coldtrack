@@ -7,7 +7,7 @@ ml/legacy_colab/coldtrack_sim.py adalah simulator garis checkpoint-2 (kejadian A
 dengan simulator lain akan mengubah label, yang dilarang rencana.
 """
 
-from bench.harness import tidak_berlaku
+from bench.core.harness import tidak_berlaku
 
 ALASAN = (
     "simulator v4 tidak dapat direproduksi dari repo: notebook ml/simulator/02_simulator_fixed_v4.ipynb "

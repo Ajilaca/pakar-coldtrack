@@ -17,7 +17,15 @@ from types import SimpleNamespace
 
 import yaml
 
-from bench.common import DEVICES_DIR, RESULTS_DIR, ROOT, SEEDS, rel, stamp, write_json
+from bench.core.common import (
+    DEVICES_DIR,
+    RESULTS_DIR,
+    ROOT,
+    SEEDS,
+    rel,
+    stamp,
+    write_json,
+)
 
 
 def load_profiles():
@@ -97,7 +105,7 @@ def main(argv=None):
     if kosong and not a.quick:
         print(f"PERINGATAN: kondisi device belum diisi di bench/devices/{profile['device']}.yaml: {kosong}")
 
-    from bench.env_capture import capture
+    from bench.core.env_capture import capture
 
     out_root = RESULTS_DIR / ("_quick" if a.quick else "") / a.tag
     # satu env per pemanggilan (tidak menimpa env run sebelumnya, yang dirujuk hasil lama)

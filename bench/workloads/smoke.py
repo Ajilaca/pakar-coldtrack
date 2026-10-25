@@ -13,7 +13,7 @@ import time
 
 import numpy as np
 
-from bench.common import ROOT, git_info, now_iso, write_json
+from bench.core.common import ROOT, git_info, now_iso, write_json
 
 ONNX_MODELS = {
     "gru": ROOT / "ml" / "reports" / "coldtrack.onnx",
@@ -108,22 +108,22 @@ def cek_xgboost(kind):
 
 
 def cek_onnxruntime(kind):
-    """Jalur cpu: ORT di venv ini. Jalur cuda: ORT di venv ORT GPU terpisah (lihat bench/ort_probe.py)."""
+    """Jalur cpu: ORT di venv ini. Jalur cuda: ORT di venv ORT GPU terpisah (lihat bench/core/ort_probe.py)."""
     import json
     import subprocess
     import sys
 
-    from bench.common import ort_gpu_python
+    from bench.core.common import ort_gpu_python
 
     if kind == "cuda":
         py = ort_gpu_python()
         if py is None:
-            return {"ok": False, "error": "venv ORT GPU tidak ditemukan (jalankan bench/setup_wsl.sh cuda)"}
+            return {"ok": False, "error": "venv ORT GPU tidak ditemukan (jalankan bench/scripts/setup_wsl.sh cuda)"}
         minta = "CUDAExecutionProvider,CPUExecutionProvider"
     else:
         py, minta = sys.executable, "CPUExecutionProvider"
     win = ROOT / "data" / "processed" / "windows" / "windows_val.npz"
-    r = subprocess.run([py, str(ROOT / "bench" / "ort_probe.py"), "--providers", minta,
+    r = subprocess.run([py, str(ROOT / "bench" / "core" / "ort_probe.py"), "--providers", minta,
                         *(["--windows", str(win)] if win.exists() else []),
                         *[str(p) for p in ONNX_MODELS.values()]],
                        check=False, capture_output=True, text=True, timeout=300)

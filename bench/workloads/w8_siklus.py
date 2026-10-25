@@ -1,6 +1,6 @@
 """W8 -- siklus worker inferensi end-to-end: 24 / 100 / 500 truk virtual per siklus.
 
-HARNESS berbasis endpoint backend POST /api/v1/analyze (bench/w8_cycle.py). Worker Fase 3
+HARNESS berbasis endpoint backend POST /api/v1/analyze (bench/core/w8_cycle.py). Worker Fase 3
 (backend/app/workers/infer.py) kini ada dan memakai jalur komputasi yang sama (inference.predict_last:
 mesin fisika atas riwayat + model untuk jendela terakhir), tetapi juga I/O TimescaleDB; W8 sengaja hanya
 mengukur komputasinya, tanpa database dan broker. Backend memakai ONNX Runtime CPU, jadi W8 hanya bermakna di jalur CPU;
@@ -12,8 +12,8 @@ import json
 import subprocess
 import sys
 
-from bench.common import ROOT
-from bench.harness import run_config, tidak_berlaku
+from bench.core.common import ROOT
+from bench.core.harness import run_config, tidak_berlaku
 
 CONFIGS = [("truk24", 24, 0), ("truk100", 100, 0), ("truk500", 500, 0), ("truk100_2inti", 100, 2)]
 
@@ -29,7 +29,7 @@ def run(ctx):
             continue
         args = [
             sys.executable,
-            str(ROOT / "bench" / "w8_cycle.py"),
+            str(ROOT / "bench" / "core" / "w8_cycle.py"),
             "--trucks",
             str(5 if ctx.quick else n),
             "--cycles",

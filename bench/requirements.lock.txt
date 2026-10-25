@@ -1,4 +1,4 @@
-# Dibangkitkan bench/freeze_lock.sh di G16 -- venv utama (torch cu128 + onnxruntime CPU)
+# Dibangkitkan bench/scripts/freeze_lock.sh di G16 -- venv utama (torch cu128 + onnxruntime CPU)
 alembic==1.20.0
 annotated-doc==0.0.5
 annotated-types==0.8.0

@@ -262,7 +262,7 @@ Sumber: `bench/results/<tag>/W7/<config>/run_*.json`
 
 ## Gerbang G2 (paritas kualitas CPU vs GPU)
 
-**26/26 config setara.** Kriteria ditetapkan sebelum run penuh (`bench/g2_check.py`): W1 selisih mean ≤ rentang antar-seed; W2/W7 selisih relatif ≤ 2%, akurasi ≤ 0.005.
+**26/26 config setara.** Kriteria ditetapkan sebelum run penuh (`bench/gates/g2_check.py`): W1 selisih mean ≤ rentang antar-seed; W2/W7 selisih relatif ≤ 2%, akurasi ≤ 0.005.
 Tidak setara: tidak ada.
 
 Sumber: `bench/results/G2.json`
@@ -481,7 +481,7 @@ Alasan throttle `0x4` = batas daya perangkat lunak (wajar di laptop), `0x0` = ti
 | workload | config | commit g16-cpu | commit d0-old | kode workload | berkas berbeda |
 |---|---|---|---|---|---|
 | W1 | 4 config | 009ed57 | fcd0fb0 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml` |
-| W1 | b256_fp32_resident | 5b64886 | 9d97fe9 | **berbeda** (tinjauan manual: tidak memengaruhi W1. `bench/harness.py` hanya menambah parameter opsional repeats/warmup (bawaan sama) untuk W3/W4; berkas lain yang berbeda tidak di-import W1; bukti: `git diff 5b64886 9d97fe9 -- bench/harness.py`) | `bench/chain_b2b3.sh`, `bench/fe.sh`, `bench/harness.py`, `ml/reports/coldtrack_b3.onnx`, `ml/reports/labels_b3.json`, `ml/sensor_health/data.py` … |
+| W1 | b256_fp32_resident | 5b64886 | 9d97fe9 | **berbeda** (tinjauan manual: tidak memengaruhi W1. `bench/core/harness.py` hanya menambah parameter opsional repeats/warmup (bawaan sama) untuk W3/W4; berkas lain yang berbeda tidak di-import W1; bukti: `git diff 5b64886 9d97fe9 -- bench/core/harness.py`) | `bench/scripts/chain_b2b3.sh`, `bench/scripts/fe.sh`, `bench/core/harness.py`, `ml/reports/coldtrack_b3.onnx`, `ml/reports/labels_b3.json`, `ml/sensor_health/data.py` … |
 | W2 | cpu_hist | 009ed57 | fcd0fb0 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml` |
 | W7 | 8 config | 009ed57 | fcd0fb0 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml` |
 | W3 | gru, xgb_cpu | 5d13490 | fd61a98 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml`, `bench/workloads/w8_siklus.py`, `ml/preprocess/export_fleet.py` |
@@ -493,7 +493,7 @@ W8 mengirim jendela 60 bacaan ke `POST /api/v1/analyze`; di kedua versi backend 
 
 **Uji A/B kode (mesin sama, g16-cpu, 100 truk, 3 ulangan bergantian):** median siklus `fd61a98` 3.184 s vs `5d13490` 3.435 s; kode `5d13490` 7.9% lebih berat. Status keluaran identik. Karena G16 menjalankan kode yang lebih berat, speedup W8 laptop lama → G16 di atas cenderung lebih kecil dari seharusnya (konservatif terhadap G16).
 
-Sumber: `bench/results/g16-cpu/W8_ab_kode/ab.json` (`python -m bench.w8_ab_kode`).
+Sumber: `bench/results/g16-cpu/W8_ab_kode/ab.json` (`python -m bench.workloads.w8_ab_kode`).
 
 ## Keterbatasan
 

@@ -195,7 +195,7 @@ def grafik_inferensi(out):
 def grafik_telemetri(out, csv_path, judul):
     """(5) Daya, suhu, clock GPU selama satu run -- tiga small multiples, satu sumbu masing-masing."""
     plt = _plt()
-    from bench.telemetry import FIELDS
+    from bench.core.telemetry import FIELDS
 
     rows = []
     with open(csv_path, encoding="utf-8") as f:

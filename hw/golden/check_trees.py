@@ -17,10 +17,10 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-from bench import b8_lib as b8
-from bench import b9_lib as b9
-from bench.b8_label_konteks import metrik_kelas
-from bench.b10_test_once import fitur as fitur_float
+from bench.experiments.b8 import b8_lib as b8
+from bench.experiments.b8.b8_label_konteks import metrik_kelas
+from bench.experiments.b9 import b9_lib as b9
+from bench.experiments.b10.b10_test_once import fitur as fitur_float
 from hw.golden import trees as ph
 
 MODEL = {"b8_xgb_chip_v5_konteks": False, "b9_xgb_chip_v5_konteks_duty_sintetis": True}

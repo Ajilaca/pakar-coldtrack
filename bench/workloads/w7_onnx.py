@@ -1,6 +1,6 @@
 """W7 -- inferensi ONNX model proposal: CPU EP vs CUDA EP, batch 1 / 32 / 256 / 1024.
 
-Pengukuran dijalankan bench/ort_bench.py sebagai subprocess:
+Pengukuran dijalankan bench/core/ort_bench.py sebagai subprocess:
 - CPU EP  : Python venv ini (onnxruntime CPU, versi sama di semua device)
 - CUDA EP : venv ORT GPU terpisah (CUDA 13; lihat bench/README.md). EP aktif dicek tiap run;
             bila CUDA EP jatuh ke CPU, run ditandai cuda_ep_aktif=false, bukan disembunyikan.
@@ -14,8 +14,8 @@ import json
 import subprocess
 import sys
 
-from bench.common import ROOT, ort_gpu_python
-from bench.harness import run_config, tidak_berlaku
+from bench.core.common import ROOT, ort_gpu_python
+from bench.core.harness import run_config, tidak_berlaku
 
 COOLDOWN_W7 = 15
 BATCHES = [1, 32, 256, 1024]
@@ -29,7 +29,7 @@ VARIAN = [
 
 
 def run(ctx):
-    from bench import train_lib as tl
+    from bench.core import train_lib as tl
 
     tl.ensure_windows()
     win = ROOT / "data" / "processed" / "windows" / "windows_val.npz"
@@ -52,7 +52,7 @@ def run(ctx):
                 if py is None:
                     files += tidak_berlaku(ctx, "W7", cid, cfg, "venv ORT GPU tidak ditemukan")
                     continue
-                args = [py, str(ROOT / "bench" / "ort_bench.py"), "--model", str(ROOT / MODELS[m]),
+                args = [py, str(ROOT / "bench" / "core" / "ort_bench.py"), "--model", str(ROOT / MODELS[m]),
                         "--ep", ep, "--batch", str(b), "--windows", str(win)]
                 if tf32 is not None:
                     args += ["--tf32", str(tf32)]

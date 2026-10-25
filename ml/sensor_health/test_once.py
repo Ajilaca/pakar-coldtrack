@@ -19,7 +19,7 @@ from ml.sensor_health.train import ART, LABEL
 
 
 def main(argv=None):
-    from bench.common import (
+    from bench.core.common import (
         RESULTS_DIR,
         git_info,
         now_iso,

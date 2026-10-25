@@ -4,7 +4,7 @@
 # (PyTorch CPU, XGBoost hist CPU, ONNX Runtime CPU). Variasi khusus GPU (AMP, CUDA EP)
 # dicatat "tidak berlaku", bukan dikosongkan.
 #
-# Spesifikasi terukur diambil otomatis oleh bench/env_capture.py saat dijalankan di sana.
+# Spesifikasi terukur diambil otomatis oleh bench/core/env_capture.py saat dijalankan di sana.
 
 device: d0-old
 deskripsi: Lenovo Yoga 6

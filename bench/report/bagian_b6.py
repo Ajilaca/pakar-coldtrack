@@ -319,7 +319,7 @@ JALUR_KODE = {
 # Tinjauan manual atas perbedaan kode yang ditandai otomatis (dapat diperiksa ulang dengan perintah di kolom bukti).
 TINJAUAN = {
     ("W1", "5b64886", "9d97fe9"): (
-        ("tinjauan manual: tidak memengaruhi W1. `bench/harness.py` hanya menambah parameter opsional "
+        ("tinjauan manual: tidak memengaruhi W1. `bench/core/harness.py` hanya menambah parameter opsional "
         "repeats/warmup (bawaan sama) untuk W3/W4; berkas lain yang berbeda tidak di-import W1"),
         "git diff 5b64886 9d97fe9 -- bench/harness.py",
     ),
@@ -426,7 +426,7 @@ def bagian_kesamaan_kode():
 
 
 def _catatan_ab_w8():
-    """Efek perbedaan kode backend W8, diukur A/B di mesin yang sama (bench/w8_ab_kode.py)."""
+    """Efek perbedaan kode backend W8, diukur A/B di mesin yang sama (bench/workloads/w8_ab_kode.py)."""
     import json
 
     p = an.RESULTS_DIR / "g16-cpu" / "W8_ab_kode" / "ab.json"
@@ -443,7 +443,7 @@ def _catatan_ab_w8():
             "dari seharusnya (konservatif terhadap G16)." if r > 1 else
             "Karena G16 menjalankan kode yang lebih ringan, speedup W8 laptop lama → G16 di atas cenderung terlalu besar.")),
         "",
-        "Sumber: `bench/results/g16-cpu/W8_ab_kode/ab.json` (`python -m bench.w8_ab_kode`).",
+        "Sumber: `bench/results/g16-cpu/W8_ab_kode/ab.json` (`python -m bench.workloads.w8_ab_kode`).",
         "",
     ]
 

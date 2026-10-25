@@ -1,4 +1,4 @@
-# Dibangkitkan bench/freeze_lock.sh di G16 -- venv ORT GPU (CUDA 13), khusus jalur cuda
+# Dibangkitkan bench/scripts/freeze_lock.sh di G16 -- venv ORT GPU (CUDA 13), khusus jalur cuda
 flatbuffers==25.12.19
 numpy==2.4.6
 nvidia-cublas==13.8.1.7

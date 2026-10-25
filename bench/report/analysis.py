@@ -7,7 +7,7 @@ import json
 
 import numpy as np
 
-from bench.common import RESULTS_DIR, ROOT, rel  # noqa: F401  (ROOT dipakai bagian_b6)
+from bench.core.common import RESULTS_DIR, ROOT, rel  # noqa: F401  (ROOT dipakai bagian_b6)
 
 TAGS = ["g16-gpu", "g16-cpu", "d0-old"]
 
@@ -118,10 +118,10 @@ def speedups(workload, g2=None):
 
 
 def acuan_cpu(workload, cid):
-    """Config CPU padanan sebuah config jalur GPU (sama dengan pasangan di bench/g2_check.py)."""
+    """Config CPU padanan sebuah config jalur GPU (sama dengan pasangan di bench/gates/g2_check.py)."""
     import re
 
-    from bench.g2_check import W1_ACUAN_CPU
+    from bench.gates.g2_check import W1_ACUAN_CPU
 
     if workload == "W1":
         return W1_ACUAN_CPU.get(cid, cid)

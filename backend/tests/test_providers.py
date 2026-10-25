@@ -3,7 +3,7 @@ and the v3 ONNX matches its PyTorch reference.
 
 Parity tolerance (documented in tests/fixtures/v3_parity.json, same as ml/export_onnx.TOLERANCE):
 an output passes if max|onnx - torch| < 1e-4 OR max|onnx - torch| / max|torch| < 1e-4. The reference
-was produced by bench/b7_fixture_paritas.py, which retrained v3 (seed 1000) and verified it matches
+was produced by bench/experiments/b7/b7_fixture_paritas.py, which retrained v3 (seed 1000) and verified it matches
 the G3-tested ONNX before writing the fixture. No torch is needed to run these tests.
 """
 
