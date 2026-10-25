@@ -38,6 +38,34 @@ MQTT tetapi rawan salah ketik, jadi tidak dipakai di topik.
 - Bacaan yang tidak lolos validasi dibuang satu per satu dan dicatat di log ingest; sisa batch tetap
   disimpan.
 
+## Hasil chip edge (opsional)
+
+Truk dengan chip ColdTrack (`hw/`, AMD Kria KV260) menghitung status, TTB, dan diagnosis sekali di truk. Tiap
+bacaan membawa objek `edge`; cloud memverifikasinya (`backend/app/edge.py`) dan memakai hasil chip tanpa
+menghitung ulang. Truk tanpa chip tidak mengirim `edge` dan tetap dihitung di cloud.
+
+```json
+{"ts": "2026-10-11T03:15:00Z", "temp_c": 4.8, "...": "...",
+ "edge": {"rek": "<23 byte hex>", "rantai": "<32 byte hex>", "paket": "<16 byte hex>", "mac": "<32 byte hex>",
+          "skor": [12345, -2048, 0, 0, 0, 0, 0]}}
+```
+
+| Field | Isi |
+|---|---|
+| `rek` | Rekaman yang disegel chip (format `hw/golden/seal.py`): isinya harus sama dengan bacaan ini |
+| `rantai` | `SHA256(rantai sebelumnya ‖ rek)`; rantai mulai dari 32 byte nol di rekaman `seq` 0 (awal trip) |
+| `paket` | Paket hasil 16 byte (`hw/golden/regmap.paket_hasil`): status, alasan, TTB, Tc, kelas diagnosis, skor teratas |
+| `mac` | `HMAC-SHA256(kunci perangkat, rantai ‖ paket)` |
+| `skor` | 7 skor kelas Q8.16, opsional dan di luar MAC; dipakai untuk peluang kelas bila konsisten dengan `paket` |
+
+Menit yang bacaan suhunya gagal tetap disegel chip; objek `edge`-nya dikirim di field batch
+`"rekaman_tanpa_bacaan": [{...}]` supaya rantai menit berikutnya tetap bisa diverifikasi.
+
+Hasil verifikasi disimpan di `edge_results.verifikasi`: `OK`, `OK_RANTAI_BARU` (rekaman sebelumnya belum
+diterima), `MAC_SALAH`, `RANTAI_PUTUS`, `REKAMAN_BEDA`, `TANPA_KUNCI`. Hanya dua yang pertama dipakai worker-infer.
+Kunci perangkat: env `EDGE_KEYS` di worker-ingest (dev); produksi memakai penyimpanan rahasia dan kunci
+tertanam di chip (eFUSE/BBRAM).
+
 ## Payload status
 
 ```json

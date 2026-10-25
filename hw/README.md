@@ -10,7 +10,8 @@ disintesis Vivado maupun Yosys.
 | `rtl/` | Modul sintesis |
 | `tb/` | Testbench cocotb (`test_*.py`), dijalankan lewat pytest |
 | `golden/` | Model acuan Python bilangan bulat; RTL harus sama bit per bit dengan model ini |
-| `scripts/` | Ekspor model XGBoost beku ke berkas memori |
+| `scripts/` | Ekspor model XGBoost beku ke berkas memori; vektor uji hasil edge untuk backend |
+| `driver/` | Driver ARM: `chip.py` (`ChipAxi` lewat `/dev/mem`, belum diuji di board; `ChipGolden` identik bit per bit dengan RTL) dan `edge_driver.py` (sampel ke chip, kirim bacaan + hasil tersegel lewat MQTT) |
 | `model/` | Hasil ekspor: `nodes.mem`, `trees.mem`, `base.mem` per model |
 | `bd/` | Pembungkus Verilog AXI4-Lite (`coldtrack_axil.v`) untuk block design Vivado + pin alarm PMOD |
 | `synth/` | Skrip Yosys (perkiraan) dan Vivado (implementasi out-of-context, block design KV260, laporan) |
