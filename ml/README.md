@@ -15,7 +15,7 @@ Kode latih dan eksperimen model awal (Fase 1 sampai 8). Latih ulang dan benchmar
 | `reports/` | Metrik, grafik, dan ONNX hasil Fase 5 sampai 6 |
 | `notebooks/` | Notebook eksplorasi |
 | `tests/` | Tes kontrak data (label tidak boleh bocor jadi fitur) |
-| `engine.py`, `observer.py`, `door_budget.py`, `sensor_rules.py`, `coldtrack_sim.py`, `prep_windows.py`, `ttb_features.py` | **Salinan lama** modul di `backend/app/core/`. `sensor_rules.py` dan `ttb_features.py` masih identik; `engine`, `observer`, `door_budget`, `coldtrack_sim`, `prep_windows` sudah berbeda dari backend. Sumber kebenaran adalah `backend/app/core/` |
+| `engine.py`, `observer.py`, `door_budget.py`, `sensor_rules.py`, `coldtrack_sim.py`, `prep_windows.py`, `ttb_features.py` | Salinan lama modul di `backend/app/core/`. `sensor_rules.py` dan `ttb_features.py` masih identik; `engine`, `observer`, `door_budget`, `coldtrack_sim`, `prep_windows` sudah berbeda dari backend. Sumber kebenaran adalah `backend/app/core/` |
 | `coldtrack_gru.onnx`, `coldtrack_ttb.onnx`, `gru_v1.pt`, `scalers_v1.json`, `xgb_ttb.json`, `xgb_features.txt` | Artefak model generasi pertama |
 
 Konteks Checkpoint 2: `CHECKPOINT2_CONTEXT.md`. Jalankan modul dari root repo, misalnya

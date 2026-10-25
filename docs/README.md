@@ -12,4 +12,4 @@
 | `PROPOSAL.md` | Proposal COMPFEST 18 (satu berkas utuh) |
 | `images/` | Gambar untuk README |
 
-RTL dan chip edge dijelaskan di `hw/README.md`, bukan di sini.
+RTL dan chip edge: lihat `hw/README.md`.

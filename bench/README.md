@@ -1,4 +1,4 @@
-# bench/ — latih ulang ColdTrack + benchmark device
+# bench/: latih ulang ColdTrack dan benchmark device
 
 Jalur ML + benchmark untuk ASUS ROG Strix G16 (RTX 5070) vs device lama. Rencana lengkap:
 `CONTEXT_MODEL_BENCHMARK_RTX5070.md` (handoff). Aturan yang tidak bisa ditawar:
@@ -16,9 +16,9 @@ Jalur ML + benchmark untuk ASUS ROG Strix G16 (RTX 5070) vs device lama. Rencana
 | `g16-cpu` | CPU (`CUDA_VISIBLE_DEVICES=""`) | Kontrol internal: efek GPU murni = `g16-cpu` vs `g16-gpu` |
 | `d0-old` | CPU | Lenovo Yoga 6 (Ryzen 7 5700U). Variasi khusus GPU dicatat "tidak berlaku" |
 
-Tag didefinisikan di `bench/devices/*.yaml`. Spesifikasi perangkat keras **tidak** ditulis
+Tag didefinisikan di `bench/devices/*.yaml`. Spesifikasi perangkat keras tidak ditulis
 manual; `bench/env_capture.py` mencatatnya dari mesin. Yang diisi manual hanya bagian `kondisi`
-(charger, mode daya, pendingin) — isi sebelum tiap sesi.
+(charger, mode daya, pendingin), diisi sebelum tiap sesi.
 
 ## Lingkungan
 

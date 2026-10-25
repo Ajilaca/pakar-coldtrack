@@ -1,4 +1,4 @@
-# Simulator Termal — ColdTrack AI
+# Simulator termal ColdTrack AI
 
 README ini menjelaskan isi notebook simulator (`simulator_dev.ipynb`) yang digunakan untuk
 menghasilkan data sintetik cold chain. Dikerjakan oleh R1 (AI Data Engineer), mengacu pada
@@ -13,18 +13,18 @@ sendiri melalui simulasi berbasis persamaan pendinginan Newton.
 
 ## Struktur Notebook
 
-1. **Setup** — import library (`numpy`, `pandas`, `matplotlib`, `scipy.stats`)
-2. **Cargo Profiles** — dictionary `cargo_profiles`, berisi rentang suhu aman, massa, dan
+1. Setup: import library (`numpy`, `pandas`, `matplotlib`, `scipy.stats`)
+2. Cargo Profiles: dictionary `cargo_profiles`, berisi rentang suhu aman, massa, dan
    toleransi waktu tiap jenis muatan. Rentang suhu telah diverifikasi terhadap standar resmi
-   (WHO, Peraturan BPOM No. 6/2020, Codex Alimentarius, SNI, HACCP) — detail dan sumber ada di
+   (WHO, Peraturan BPOM No. 6/2020, Codex Alimentarius, SNI, HACCP). Detail dan sumber ada di
    `dataset_card.md`.
-3. **Ambient & Solar Generator** — fungsi `generate_ambient_solar()`, menghasilkan suhu ambien
+3. Ambient & Solar Generator: fungsi `generate_ambient_solar()`, menghasilkan suhu ambien
    dan radiasi matahari mengikuti pola siklus harian, dikalibrasi berdasarkan data NASA POWER
    untuk koordinat Jakarta.
-4. **Model Termal Inti** — fungsi `simulate_trip_full()`, mesin utama simulator. Menjalankan
+4. Model Termal Inti: fungsi `simulate_trip_full()`, mesin utama simulator. Menjalankan
    persamaan pendinginan Newton per menit, dengan opsi menyuntikkan salah satu dari 9 kode
-   anomali (A0–A8), lapisan realisme sensor, dan perhitungan label per-menit.
-5. **Generator Dataset** — fungsi `generate_full_dataset()`, memanggil `simulate_trip_full()`
+   anomali (A0 sampai A8), lapisan realisme sensor, dan perhitungan label per-menit.
+5. Generator Dataset: fungsi `generate_full_dataset()`, memanggil `simulate_trip_full()`
    berulang dengan variasi acak untuk menghasilkan ratusan trip sekaligus.
 
 ## Fungsi Utama: `simulate_trip_full()`
@@ -42,15 +42,15 @@ simulate_trip_full(
 
 Mengembalikan `(df_trip, labels)`. `df_trip` adalah DataFrame per-menit berisi:
 - 12 kolom fitur inti sesuai `feature_schema.md`
-- `temp_true_c` — suhu asli/ground truth (tidak tersedia di dunia nyata, hanya untuk evaluasi
-  dan perhitungan `time_to_breach`; **tidak boleh** dipakai sebagai fitur input model)
-- `time_to_breach` — dihitung **per menit** (hitung mundur ke breach terdekat), bukan satu angka
+- `temp_true_c`: suhu asli/ground truth (tidak tersedia di dunia nyata, hanya untuk evaluasi
+  dan perhitungan `time_to_breach`; tidak boleh dipakai sebagai fitur input model)
+- `time_to_breach`: dihitung per menit (hitung mundur ke breach terdekat), bukan satu angka
   per trip
-- `is_anomaly`, `failure_mode` — dihitung **per menit** mengikuti `onset_minute`: `A0`/0 sebelum
+- `is_anomaly`, `failure_mode`: dihitung per menit mengikuti `onset_minute`: `A0`/0 sebelum
   onset, berubah ke kode anomalinya sejak onset (A8 terkecuali, anomali sejak menit 0)
-- `onset_minute` — menit terjadinya anomali, dicatat di semua baris trip untuk keperluan audit
+- `onset_minute`: menit terjadinya anomali, dicatat di semua baris trip untuk keperluan audit
   (`NaN` untuk trip sehat)
-- `gps_jitter_m`, `timestamp_offset_sec` — metadata realisme sensor, belum resmi masuk 12 fitur
+- `gps_jitter_m`, `timestamp_offset_sec`: metadata realisme sensor, belum resmi masuk 12 fitur
   inti (perlu didiskusikan dengan R2 sebelum dipakai sebagai input model)
 
 ## Status Kode Anomali (9 dari 9 tervalidasi)

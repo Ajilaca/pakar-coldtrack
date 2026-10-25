@@ -1,17 +1,17 @@
 # ColdTrack AI
 
-Sistem prediksi dini kegagalan rantai dingin (cold chain) berbasis AI, dibangun untuk COMPFEST 18 AI Innovation Challenge — kategori Smart Logistics.
+Sistem prediksi dini kegagalan rantai dingin (cold chain) berbasis AI, dibangun untuk COMPFEST 18 AI Innovation Challenge, kategori Smart Logistics.
 
 ColdTrack memantau armada truk berpendingin secara langsung: telemetri masuk lewat MQTT, worker menjalankan
 model per truk, lalu dasbor menampilkan status (AMAN / WASPADA / KRITIS), Time-to-Breach, diagnosis mode
 kegagalan, faktor pendorong, tindakan yang disarankan, insiden dengan audit trail, dan estimasi kerugian.
 
-![Demo ColdTrack AI — halaman Simulasi: pilih skenario, jalankan analisis, hasil muncul](docs/images/demo.gif)
+![Demo ColdTrack AI, halaman Simulasi: pilih skenario, jalankan analisis, hasil muncul](docs/images/demo.gif)
 
 *Halaman Simulasi: pilih skenario telemetri, klik "Analisis Perjalanan", lalu sistem menampilkan status,
 Time-to-Breach, diagnosis mode kegagalan, faktor pendorong, dan tiga langkah tindakan.*
 
-## Fitur Dasbor
+## Fitur dasbor
 
 | Halaman | Isi |
 |---|---|
@@ -26,7 +26,7 @@ Time-to-Breach, diagnosis mode kegagalan, faktor pendorong, dan tiga langkah tin
 
 Notifikasi tampil di lonceng kotak masuk dan sebagai toast saat ada truk yang memburuk (lewat SSE).
 
-## Cara Menjalankan
+## Cara menjalankan
 
 Prasyarat: Docker Desktop (di Windows aktifkan WSL integration), RAM bebas sekitar 4 GB, dan port 3000,
 8000, 5432, 1883 tidak sedang dipakai. Salin `.env.example` ke `.env` lalu sesuaikan nilainya.
@@ -36,7 +36,7 @@ Prasyarat: Docker Desktop (di Windows aktifkan WSL integration), RAM bebas sekit
 docker compose --profile dev up -d --build
 ```
 Buka http://localhost:3000. `--profile dev` menyalakan simulator `virtual-trucks` yang memutar ulang trip
-dari split val v4. Dua menit pertama setiap truk berstatus **MENUNGGU DATA** karena model butuh 60 menit
+dari split val v4. Dua menit pertama setiap truk berstatus MENUNGGU DATA karena model butuh 60 menit
 data trip (bawaan `SIM_SPEED=30`).
 
 Reset data sebelum presentasi supaya angka notifikasi, insiden, dan kerugian wajar:
@@ -58,12 +58,12 @@ dan MQTT, jadi di sana hanya halaman Simulasi (`POST /api/v1/analyze`) yang berf
 
 ## Model
 
-- **Diagnosis + forecast:** GRU v3 (3 lapis, hidden 128) dalam ONNX — 7 kelas mode kegagalan dan
+- Diagnosis dan forecast: GRU v3 (3 lapis, hidden 128) dalam ONNX, dengan 7 kelas mode kegagalan dan
   forecast suhu t+15/t+30/t+60.
-- **Status dan Time-to-Breach:** mesin fisika/aturan, dengan XGBoost (`coldtrack_ttb.onnx`) untuk TTB.
-- Target Macro F1 > 0,80 dan PR-AUC > 0,85 **belum tercapai** (test: 0,668 dan 0,786). Detail,
+- Status dan Time-to-Breach: mesin fisika/aturan, dengan XGBoost (`coldtrack_ttb.onnx`) untuk TTB.
+- Target Macro F1 > 0,80 dan PR-AUC > 0,85 belum tercapai (test: 0,668 dan 0,786). Detail,
   keterbatasan, dan perbandingan versi ada di [Model Card](docs/model_card.md).
-- Semua data adalah **sintetis** dari simulator, bukan logger truk nyata.
+- Semua data adalah sintetis dari simulator, bukan logger truk nyata.
 
 ## Pengujian
 
@@ -75,7 +75,7 @@ Tes integrasi stack armada (MQTT → DB, dedupe, data terlambat, webhook, predik
 berjalan di workflow `Fleet CI` ([.github/workflows/fleet.yml](.github/workflows/fleet.yml)).
 Suite evaluasi sistem ada di [eval/](eval/README.md), benchmark latih ulang dan device di [bench/](bench/README.md).
 
-## Struktur Repo
+## Struktur repo
 
 ```
 pakar-coldtrack/

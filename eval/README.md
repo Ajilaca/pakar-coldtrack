@@ -1,8 +1,8 @@
-# ColdTrack AI — evaluation suite
+# ColdTrack AI evaluation suite
 
 Scores the system **as deployed** (`backend/app/inference.py`: physics/rule engine +
 `coldtrack_gru.onnx` + `coldtrack_ttb.onnx`, and the HTTP API) on the held-out test split of
-dataset v4 (split by `trip_id`) — the same trips and windows the baseline was scored on.
+dataset v4 (split by `trip_id`), the same trips and windows the baseline was scored on.
 
 ```bash
 pip install -r backend/requirements.txt
@@ -37,7 +37,7 @@ check outcomes are archived in `results/baseline_results.json` and `results/Eval
 | File | Purpose |
 |---|---|
 | `common.py` | test-trip loading, readings builder, per-trip scoring via `inference_engine.analyze_trip` |
-| `run_eval.py` | G1 forecast · G2 events · G3 imminent breach · G4 robustness · G5 end-to-end API (+ parity with G1–G3) |
+| `run_eval.py` | G1 forecast · G2 events · G3 imminent breach · G4 robustness · G5 end-to-end API (plus parity with G1 to G3) |
 | `test_baseline.py` | acceptance thresholds (baseline's where the metric carries over), one failure condition per check |
 | `sim_check.py` | per-trip regression check on the new simulator's held-out trips (guards against tuning to v4) |
 | `make_artifact.py` | builds `Evaluation_Artifact_Iteration.pdf` (`--tag iter1`) and `Evaluation_Artifact_Iteration_2.pdf` (`--iteration 2`) |
