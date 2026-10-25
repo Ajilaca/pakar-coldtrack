@@ -14,6 +14,7 @@ disintesis Vivado maupun Yosys.
 | `model/` | Hasil ekspor: `nodes.mem`, `trees.mem`, `base.mem` per model |
 | `bd/` | Pembungkus Verilog AXI4-Lite (`coldtrack_axil.v`) untuk block design Vivado + pin alarm PMOD |
 | `synth/` | Skrip Yosys (perkiraan) dan Vivado (implementasi out-of-context, block design KV260, laporan) |
+| `docs/` | Gambar block design Vivado (`vivado_block_design.png`/`.svg`) |
 | `results/` | Laporan paritas golden vs float (JSON) dan laporan Vivado (`results/vivado/`) |
 
 ## Arsitektur
@@ -53,6 +54,8 @@ tidak pernah bisa menentukan status. Saat pintu terbuka kabin = max(ts10, suhu l
 dulu memicu dengan status yang sama atau lebih tinggi. RTL tetap memuat aturan itu agar setara backend.
 
 ## Vivado KV260 (post-route, model #8)
+
+![Block design Vivado KV260](docs/vivado_block_design.png)
 
 Block design: Zynq UltraScale+ PS (preset board `kv260_som`) -> SmartConnect -> `coldtrack_axil` di
 `0xA000_0000` (4 KB), clock `pl_clk0` 100 MHz, alarm ke PMOD J2 (`bd/kv260_alarm.xdc`, cocokkan pin dengan
