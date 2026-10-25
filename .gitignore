@@ -71,5 +71,8 @@ data/berkeley/
 .vscode/
 .idea/
 
+# --- Claude Code (konteks lokal) ---
+CLAUDE.md
+
 # Artefak model sensor-health (dibangkitkan ulang lewat python -m ml.sensor_health.train)
 ml/sensor_health/artifacts/
