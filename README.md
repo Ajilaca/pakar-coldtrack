@@ -86,9 +86,13 @@ pakar-coldtrack/
   eval/        Suite evaluasi sistem sebagaimana di-deploy
   bench/       Latih ulang model dan benchmark antar-device (hasil di bench/results/)
   data/        Data olahan dan dataset Berkeley
-  role/        Konteks dan update per peran tim
-  docs/        Arsitektur, kontrak, kartu model/dataset, governance, panduan demo, proposal, lampiran
+  hw/          RTL chip edge KV260 (segel, mesin fisika, tree ensemble), testbench cocotb, skrip Vivado
+  docs/        Arsitektur, kontrak, kartu model/dataset, governance, panduan demo, proposal
 ```
+
+Setiap folder utama punya `README.md` sendiri: [backend](backend/README.md), [frontend](frontend/README.md),
+[ml](ml/README.md), [bench](bench/README.md), [eval](eval/README.md), [hw](hw/README.md),
+[data](data/README.md), [docker](docker/README.md), [docs](docs/README.md).
 
 ## Dokumentasi
 
