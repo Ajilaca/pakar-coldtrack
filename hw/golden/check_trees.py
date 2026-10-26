@@ -41,7 +41,7 @@ def main():
     trips = {int(t): g.sort_values("minute").reset_index(drop=True) for t, g in df[df.split == "val"].groupby("trip_id")}
     hasil = {}
     for nama, duty in MODEL.items():
-        path = ROOT / f"bench/results/lokal-cpu/B10/{nama}.json"
+        path = ROOT / f"bench/results/local-cpu/B10/{nama}.json"
         Xf, _ = fitur_float("val", duty)
         clf = xgb.XGBClassifier()
         clf.load_model(path)

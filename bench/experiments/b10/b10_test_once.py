@@ -8,7 +8,7 @@ skrip menolak berjalan.
   python -m bench.experiments.b10.b10_test_once --id b8_xgb_chip_v5_konteks
   python -m bench.experiments.b10.b10_test_once --id b9_xgb_chip_v5_konteks_duty_sintetis
 
-Hasil: bench/results/test/<id>.json; artefak model: bench/results/lokal-cpu/B10/<id>.json
+Hasil: bench/results/test/<id>.json; artefak model: bench/results/local-cpu/B10/<id>.json
 """
 
 import argparse
@@ -30,10 +30,10 @@ LOG = RESULTS_DIR / "test_access_log.json"
 KANDIDAT = {
     "b8_xgb_chip_v5_konteks": {
         "duty": False, "val_seleksi": 0.852,
-        "sumber": "bench/results/lokal-cpu/B9/arus_sintetis.json (tanpa sinyal kompresor)"},
+        "sumber": "bench/results/local-cpu/B9/arus_sintetis.json (tanpa sinyal kompresor)"},
     "b9_xgb_chip_v5_konteks_duty_sintetis": {
         "duty": True, "val_seleksi": 0.933,
-        "sumber": "bench/results/lokal-cpu/B9/arus_sintetis.json (duty saja, isolasi sedang)"},
+        "sumber": "bench/results/local-cpu/B9/arus_sintetis.json (duty saja, isolasi sedang)"},
 }
 
 
@@ -72,7 +72,7 @@ def main(argv=None):
     clf = xgb.XGBClassifier(objective="multi:softprob", num_class=7, disable_default_eval_metric=True,
                             **{**XGB_PARAMS, **UKURAN["chip"], "n_jobs": 4, "random_state": 1000})
     clf.fit(Xtr, dtr["y_baru"])
-    model = RESULTS_DIR / "lokal-cpu" / "B10" / f"{a.id}.json"
+    model = RESULTS_DIR / "local-cpu" / "B10" / f"{a.id}.json"
     model.parent.mkdir(parents=True, exist_ok=True)
     clf.save_model(model)
     val = metrik_kelas(dva["y_baru"], clf.predict_proba(Xva))

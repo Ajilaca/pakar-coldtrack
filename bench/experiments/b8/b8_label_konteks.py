@@ -10,7 +10,7 @@ Langkah (lihat bench/experiments/b8/b8_lib.py untuk definisi):
   python -m bench.experiments.b8.b8_label_konteks xgb --seeds 1000 1001 1002
   python -m bench.experiments.b8.b8_label_konteks gru --konteks --seed 1000      # berhenti dini, --patience 8
 
-Hasil: bench/results/lokal-cpu/B8/. Split test tidak disentuh.
+Hasil: bench/results/local-cpu/B8/. Split test tidak disentuh.
 """
 
 import argparse
@@ -21,7 +21,7 @@ import numpy as np
 
 from bench.core.common import RESULTS_DIR, ROOT, git_info, now_iso, write_json
 
-OUT = RESULTS_DIR / "lokal-cpu" / "B8"
+OUT = RESULTS_DIR / "local-cpu" / "B8"
 UKURAN = {"baseline": {"n_estimators": 300, "max_depth": 6}, "chip": {"n_estimators": 60, "max_depth": 4}}
 
 

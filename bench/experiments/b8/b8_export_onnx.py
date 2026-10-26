@@ -20,7 +20,7 @@ from torch import nn
 from bench.core.common import ROOT, git_info, now_iso, rel, sha256_file
 
 CKPT = ROOT / "data" / "processed" / "windows" / "gru_v5_konteks_seed1000.pt"
-SELEKSI = ROOT / "bench" / "results" / "lokal-cpu" / "B8" / "gru_v5_konteks_seed1000.json"
+SELEKSI = ROOT / "bench" / "results" / "local-cpu" / "B8" / "gru_v5_konteks_seed1000.json"
 OUT = ROOT / "backend" / "models" / "candidates" / "coldtrack_gru_v5_konteks"
 TOLERANSI = 1e-4
 

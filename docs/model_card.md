@@ -34,7 +34,7 @@ jendela), dengan dua perubahan:
   (tanpa sinyal kompresor) dan 0,900 (dengan siklus kerja kompresor sintetis);
   `bench/results/test/b8_xgb_chip_v5_konteks.json`, `b9_xgb_chip_v5_konteks_duty_sintetis.json`.
 - **Ketergantungan pada satu sinyal (B12, val, tanpa latih ulang;
-  `bench/results/lokal-cpu/B12/shortcut.json`).** Satu sinyal diubah, F1 kelas lain hampir tetap:
+  `bench/results/local-cpu/B12/shortcut.json`).** Satu sinyal diubah, F1 kelas lain hampir tetap:
 
   | Sinyal diubah | Kelas | F1 asli → diubah | Ke mana prediksinya |
   |---|---|---|---|
@@ -52,13 +52,13 @@ jendela), dengan dua perubahan:
   kelas A8 dari model, dan menambah aturan A3. `prapendinginan_buruk`: suhu awal muat (rata-rata 5 bacaan
   pertama trip) di atas batas atas profil; fakta tingkat trip, berlaku sampai akhir trip selama tidak ada
   kejadian lain. `reefer_mati_total`: reefer melapor mati >= 15 menit dan suhu naik >= 0,5 °C sejak mati
-  (ambang [ASUMSI], jeda defrost singkat tidak memicu). Di val (`bench/results/lokal-cpu/B12/aturan.json`):
+  (ambang [ASUMSI], jeda defrost singkat tidak memicu). Di val (`bench/results/local-cpu/B12/rules.json`):
   A8 presisi dan recall 1,00 (simulator memakai aturan yang sama, jadi angka ini tidak bermakna di luar
   simulator), A3 presisi 1,00, recall 0,49; sisanya tetap dari model.
 - **Kandidat augmentasi (B13, belum dipasang, split test belum dipakai).**
   `backend/models/candidates/coldtrack_gru_v5_aug.onnx`: arsitektur, label, dan konteks sama dengan v5; data latih
   diberi flag reefer palsu (50 % jendela A3), sensor pintu hilang (50 % jendela A1), suhu awal muat digeser
-  ±2,5 °C, dan derau suhu 0–0,3 °C. Val (`bench/results/lokal-cpu/B13/gru_v5_aug_seed1000.json`): macro F1
+  ±2,5 °C, dan derau suhu 0–0,3 °C. Val (`bench/results/local-cpu/B13/gru_v5_aug_seed1000.json`): macro F1
   0,856 (v5 0,875). Dengan gangguan B12: A1 saat `door_open` = 0 naik 0,00 → 0,78, A8 tanpa suhu awal
   0,32 → 0,84, macro F1 dengan derau 0,5 °C 0,651 → 0,746, tetapi A3 saat `reefer_on` = 1 hanya 0,00 → 0,30.
   Di simulator suhu A3 naik median 0,4 °C per 60 menit (massa termal muatan), jadi reefer mati hampir tidak
@@ -70,7 +70,7 @@ jendela), dengan dua perubahan:
 ## Pembaruan v3 — GRU hasil latih ulang B3 (11 Oktober 2026, digantikan v5)
 
 Model klasifikasi + forecast diganti dengan `ml/reports/coldtrack_b3.onnx` (kontrak:
-`ml/reports/labels_b3.json`), setelah lulus gerbang G3 (`bench/results/keputusan/G3.json`).
+`ml/reports/labels_b3.json`), setelah lulus gerbang G3 (`bench/results/decisions/G3.json`).
 `coldtrack_ttb.onnx` (XGBoost TTB) **tidak berubah**. Kontrak masukan/keluaran identik dengan
 `coldtrack.onnx`; berkas v2 tetap disimpan untuk keterlacakan dan benchmark.
 

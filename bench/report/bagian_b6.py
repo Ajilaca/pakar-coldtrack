@@ -12,7 +12,7 @@ PERBANDINGAN_UTAMA = [
     # (workload, config sisi "dibandingkan", pembanding, dibandingkan, label)
     ("W1", "b256_fp32_resident", "g16-cpu", "g16-gpu", "Latih GRU 30 epoch (konfigurasi asli, data di GPU)"),
     ("W3", "gru", "g16-cpu", "g16-gpu", "Sweep GRU 8 trial × 5 epoch"),
-    ("W4", "stat_vs_tanpa", "g16-cpu", "g16-gpu", "Ablation GRU 5 seed × 2 varian × 10 epoch"),
+    ("W4", "stat_vs_without", "g16-cpu", "g16-gpu", "Ablation GRU 5 seed × 2 varian × 10 epoch"),
     ("W2", "cuda_hist", "g16-cpu", "g16-gpu", "Latih XGBoost TTB"),
     ("W3", "xgb_cuda", "g16-cpu", "g16-gpu", "Sweep XGBoost 20 trial"),
     ("W6", "cuda_hist", "g16-cpu", "g16-gpu", "Sensor-health Berkeley (fitur + latih)"),
@@ -24,9 +24,9 @@ PERBANDINGAN_UTAMA = [
     ("W7", "gru_cpu_b1", "d0-old", "g16-cpu", "Inferensi GRU batch 1: laptop lama → G16 CPU"),
     ("W1", "b256_fp32_resident", "d0-old", "g16-gpu", "Latih GRU 30 epoch: laptop lama → G16 GPU"),
     ("W3", "gru", "d0-old", "g16-cpu", "Sweep GRU: laptop lama → G16 CPU"),
-    ("W4", "stat_vs_tanpa", "d0-old", "g16-cpu", "Ablation GRU: laptop lama → G16 CPU"),
-    ("W4", "stat_vs_tanpa", "d0-old", "g16-gpu", "Ablation GRU: laptop lama → G16 GPU"),
-    ("W8", "truk100", "d0-old", "g16-cpu", "Siklus inferensi 100 truk: laptop lama → G16 CPU (kode berbeda, lihat B5)"),
+    ("W4", "stat_vs_without", "d0-old", "g16-cpu", "Ablation GRU: laptop lama → G16 CPU"),
+    ("W4", "stat_vs_without", "d0-old", "g16-gpu", "Ablation GRU: laptop lama → G16 GPU"),
+    ("W8", "truck100", "d0-old", "g16-cpu", "Siklus inferensi 100 truk: laptop lama → G16 CPU (kode berbeda, lihat B5)"),
 ]
 
 
@@ -259,9 +259,9 @@ def bagian_b5(g2):
     kual = [
         ("W3", ("gru", "gru", "gru"), "skor terbaik sweep", lambda rs: rs[0]["skor_terbaik"]),
         ("W3", ("xgb_cuda", "xgb_cpu", "xgb_cpu"), "skor terbaik sweep", lambda rs: rs[0]["skor_terbaik"]),
-        ("W4", ("stat_vs_tanpa",) * 3, "macro F1 mean 5 seed, dengan statistik",
+        ("W4", ("stat_vs_without",) * 3, "macro F1 mean 5 seed, dengan statistik",
          lambda rs: mean(x["macro_f1"] for x in rs[0]["varian"]["dengan_stat"]["runs"])),
-        ("W4", ("stat_vs_tanpa",) * 3, "macro F1 mean 5 seed, tanpa statistik",
+        ("W4", ("stat_vs_without",) * 3, "macro F1 mean 5 seed, tanpa statistik",
          lambda rs: mean(x["macro_f1"] for x in rs[0]["varian"]["tanpa_stat"]["runs"])),
         ("W6", ("cuda_hist", "cpu_hist", "cpu_hist"), "PR-AUC mote val", lambda rs: median(r["metrik_val"]["pr_auc"] for r in rs)),
     ]
@@ -426,10 +426,10 @@ def bagian_kesamaan_kode():
 
 
 def _catatan_ab_w8():
-    """Efek perbedaan kode backend W8, diukur A/B di mesin yang sama (bench/workloads/w8_ab_kode.py)."""
+    """Efek perbedaan kode backend W8, diukur A/B di mesin yang sama (bench/workloads/w8_ab_code.py)."""
     import json
 
-    p = an.RESULTS_DIR / "g16-cpu" / "W8_ab_kode" / "ab.json"
+    p = an.RESULTS_DIR / "g16-cpu" / "W8_ab_code" / "ab.json"
     if not p.exists():
         return ["Efek perbedaan kode W8 belum diukur; perbandingan W8 antar-device dibaca dengan catatan ini.", ""]
     d = json.loads(p.read_text(encoding="utf-8"))
@@ -443,7 +443,7 @@ def _catatan_ab_w8():
             "dari seharusnya (konservatif terhadap G16)." if r > 1 else
             "Karena G16 menjalankan kode yang lebih ringan, speedup W8 laptop lama → G16 di atas cenderung terlalu besar.")),
         "",
-        "Sumber: `bench/results/g16-cpu/W8_ab_kode/ab.json` (`python -m bench.workloads.w8_ab_kode`).",
+        "Sumber: `bench/results/g16-cpu/W8_ab_code/ab.json` (`python -m bench.workloads.w8_ab_code`).",
         "",
     ]
 

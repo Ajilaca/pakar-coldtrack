@@ -13,7 +13,7 @@
   "model_jenis": "GRU 3x128 + 72 statistik jendela + 6 konteks trip (B8, seed 1000)",
   "val_seleksi": {
     "macro_f1": 0.8745534248195327,
-    "sumber": "bench/results/lokal-cpu/B8/gru_v5_konteks_seed1000.json"
+    "sumber": "bench/results/local-cpu/B8/gru_v5_konteks_seed1000.json"
   },
   "val_artefak_beku": {
     "macro_f1": 0.8745534248195327,

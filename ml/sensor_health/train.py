@@ -2,7 +2,7 @@
 
   python -m ml.sensor_health.train --tag g16-gpu --trials 40
 
-Langkah (definisi: bench/results/keputusan/G4_definisi.json):
+Langkah (definisi: bench/results/decisions/G4_definisi.json):
 1. v0 di mote val: PR-AUC + recall pada alarm skor >= 1.
 2. Sweep Optuna (TPE seed 0, trial tetap), objektif PR-AUC val (H = 24 jam).
 3. Latih ulang parameter terbaik, pilih ambang di val: alarm palsu/mote-hari terkecil dengan

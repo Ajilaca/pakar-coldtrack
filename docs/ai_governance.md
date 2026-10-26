@@ -106,7 +106,7 @@ Penggantian model mengikuti gerbang yang dapat diaudit (`bench/README.md`, `benc
    dan peralihan backend dikerjakan terpisah dengan tes paritas ONNX.
 
 Penggantian v2 → v3 (11 Oktober 2026) melalui seluruh langkah di atas
-(`bench/results/keputusan/G1.json`, `G3.json`, `bench/results/G2.json`). G3 **disetujui dengan
+(`bench/results/decisions/G1.json`, `G3.json`, `bench/results/G2.json`). G3 **disetujui dengan
 catatan**; v3 menjadi diagnosis provider bawaan backend, menggantikan checkpoint-2.
 
 **Pernyataan jujur tentang target.** v3 **tidak** mencapai target PRD klasifikasi: Macro F1 test

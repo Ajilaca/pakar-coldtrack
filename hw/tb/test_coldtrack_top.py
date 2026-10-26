@@ -111,7 +111,7 @@ async def ujung_ke_ujung(dut):
     await bus.tulis(rm.CTRL, rm.C_KUNCI_KUNCI)
     assert (await bus.baca(rm.STATUS)) & 8, "kunci harus terkunci"
 
-    model = ph.muat_model(ROOT / f"bench/results/lokal-cpu/B10/{B9}.json", True)
+    model = ph.muat_model(ROOT / f"bench/results/local-cpu/B10/{B9}.json", True)
     for md in ("A1", "A0"):
         tid, g, q, prod = trip(md)
         cfg = fx.konfigurasi(prod["t_lo"], prod["t_hi"], prod["t_set"], prod["c"], prod["mass_kg"])

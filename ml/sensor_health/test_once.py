@@ -1,5 +1,5 @@
 """G4 -- evaluasi mote TEST, sekali per model, dengan kriteria pra-registrasi
-(bench/results/keputusan/G4_kriteria.json + G4_definisi.json). Ambang dan penghalusan berasal dari
+(bench/results/decisions/G4_kriteria.json + G4_definisi.json). Ambang dan penghalusan berasal dari
 meta model (dipilih di mote val), tidak disetel ulang di sini.
 
   python -m ml.sensor_health.test_once --model berkeley_v1_kesehatan

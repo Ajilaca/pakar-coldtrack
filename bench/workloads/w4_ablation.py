@@ -60,5 +60,5 @@ def run(ctx):
     tl.ensure_windows()
     cfg = {"varian": list(VARIAN), "seed": SEEDS, "epoch": EPOCH, "basis": "ml/training/finetune.py (asli)"}
     return run_config(
-        ctx, "W4", "stat_vs_tanpa", cfg, lambda seed, pemanasan: _ablation(ctx.device, ctx.quick), repeats=1, warmup=0
+        ctx, "W4", "stat_vs_without", cfg, lambda seed, pemanasan: _ablation(ctx.device, ctx.quick), repeats=1, warmup=0
     )

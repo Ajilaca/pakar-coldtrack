@@ -1,4 +1,4 @@
-"""Fitur jendela per mote + label + skor aturan v0 (definisi: bench/results/keputusan/G4_definisi.json).
+"""Fitur jendela per mote + label + skor aturan v0 (definisi: bench/results/decisions/G4_definisi.json).
 
 Semua fitur kausal: hanya memakai menit <= akhir jendela. Data disusun sebagai matriks
 [mote x menit] (NaN = tidak ada bacaan / setelah mote gagal), lalu dipotong jendela 60 menit

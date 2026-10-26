@@ -1,6 +1,6 @@
 {
   "id": "b8_xgb_chip_v5_konteks",
-  "model": "bench/results/lokal-cpu/B10/b8_xgb_chip_v5_konteks.json",
+  "model": "bench/results/local-cpu/B10/b8_xgb_chip_v5_konteks.json",
   "sha256_model": "970a1efac1c100ad68eab1cce59129ba22d94217c2e7734e268b27ae311315c3",
   "waktu_utc": "2026-10-25T10:11:12+00:00",
   "git": {
@@ -14,7 +14,7 @@
   "fitur": "72 statistik jendela + konteks tanpa suhu saat muat",
   "val_seleksi": {
     "macro_f1": 0.852,
-    "sumber": "bench/results/lokal-cpu/B9/arus_sintetis.json (tanpa sinyal kompresor)"
+    "sumber": "bench/results/local-cpu/B9/arus_sintetis.json (tanpa sinyal kompresor)"
   },
   "val_artefak_beku": {
     "macro_f1": 0.8521091315594977,

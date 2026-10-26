@@ -30,7 +30,7 @@ def kasus(duty, n, seed):
 
     d = b8.muat("val")
     df = pd.read_parquet(ROOT / "data/processed/v4_seed1000_700trips.parquet")
-    m = ph.muat_model(ROOT / f"bench/results/lokal-cpu/B10/{B9 if duty else B8}.json", duty)
+    m = ph.muat_model(ROOT / f"bench/results/local-cpu/B10/{B9 if duty else B8}.json", duty)
     out = []
     for i in np.random.default_rng(seed).choice(len(d["trip"]), n, replace=False):
         tid, t = int(d["trip"][i]), int(d["menit"][i])

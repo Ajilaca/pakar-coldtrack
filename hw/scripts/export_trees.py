@@ -1,4 +1,4 @@
-"""Ekspor model XGBoost beku (bench/results/lokal-cpu/B10/) ke berkas memori hw/rtl/tree_engine.sv.
+"""Ekspor model XGBoost beku (bench/results/local-cpu/B10/) ke berkas memori hw/rtl/tree_engine.sv.
 
 Ambang sudah dikonversi ke domain bilangan bulat fitur oleh hw/golden/trees.py. Hasil di hw/model/<folder>/:
   nodes.mem  satu simpul per baris, 72 bit hex:
@@ -22,7 +22,7 @@ sys.path.insert(0, str(ROOT))
 from hw.golden import trees as ph
 
 FW, AW, SW = 48, 16, 32
-# nama JSON beku di bench/results/lokal-cpu/B10/ -> (folder hw/model/, pakai siklus kerja)
+# nama JSON beku di bench/results/local-cpu/B10/ -> (folder hw/model/, pakai siklus kerja)
 MODEL = {"b8_xgb_chip_v5_konteks": ("xgb_v5_context", False),
          "b9_xgb_chip_v5_konteks_duty_sintetis": ("xgb_v5_context_duty", True)}
 
@@ -32,7 +32,7 @@ def hexs(v, bits):
 
 
 def ekspor(nama, folder, duty):
-    m = ph.muat_model(ROOT / f"bench/results/lokal-cpu/B10/{nama}.json", duty)
+    m = ph.muat_model(ROOT / f"bench/results/local-cpu/B10/{nama}.json", duty)
     simpul, pohon = [], []
     for p in m["pohon"]:
         dasar = len(simpul)

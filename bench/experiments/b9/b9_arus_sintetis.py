@@ -9,7 +9,7 @@ Ditambah 6 statistik jendela untuk tiap kolom kompresor (bench/b9_lib.KOLOM).
 
   python -m bench.experiments.b9.b9_arus_sintetis
 
-Hasil: bench/results/lokal-cpu/B9/arus_sintetis.json. Split test tidak disentuh.
+Hasil: bench/results/local-cpu/B9/arus_sintetis.json. Split test tidak disentuh.
 """
 
 import time
@@ -18,7 +18,7 @@ import numpy as np
 
 from bench.core.common import RESULTS_DIR, ROOT, git_info, now_iso, write_json
 
-OUT = RESULTS_DIR / "lokal-cpu" / "B9"
+OUT = RESULTS_DIR / "local-cpu" / "B9"
 KONTEKS_TANPA_SUHU_AWAL = ["menit_trip", "tren_240", "rata240_minus_rata60", "kemiringan_240"]
 ISOLASI = {"sedang": (0.8, 1.4), "lebar": (0.6, 1.8)}
 

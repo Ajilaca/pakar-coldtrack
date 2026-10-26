@@ -26,7 +26,7 @@ sys.path.insert(0, str(ROOT / "backend"))
 
 H = [15, 30, 60]
 W = 60
-OUT = ROOT / "bench/results/lokal-cpu/B11/forecast_fisika.json"
+OUT = ROOT / "bench/results/local-cpu/B11/forecast_fisika.json"
 
 
 def fisika_trip(g, prod):

@@ -23,7 +23,7 @@ def _fmt(x, nd=4):
 
 
 def bagian_g1():
-    kep_path = RESULTS_DIR / "keputusan" / "G1.json"
+    kep_path = RESULTS_DIR / "decisions" / "G1.json"
     if not kep_path.exists():
         return ["## Gerbang G1 (reproduksi)", "", "Belum diputuskan.", ""]
     kep = _load(kep_path)
@@ -355,7 +355,7 @@ def bagian_g3():
         f"{(e['git']['commit'] or '')[:7]}"
         for e in log
     ]
-    kep = RESULTS_DIR / "keputusan" / "G3.json"
+    kep = RESULTS_DIR / "decisions" / "G3.json"
     if kep.exists():
         k = _load(kep)
         out += ["", f"**Keputusan G3: {k['status']}** ({k['tanggal']}). " + " ".join(k.get("alasan", []))]
@@ -376,7 +376,7 @@ def bagian_g3():
 
 
 def bagian_g4():
-    kep_p = RESULTS_DIR / "keputusan" / "G4.json"
+    kep_p = RESULTS_DIR / "decisions" / "G4.json"
     tes_p = RESULTS_DIR / "test" / "b4_berkeley_v1_kesehatan.json"
     if not (kep_p.exists() and tes_p.exists()):
         return []
@@ -386,7 +386,7 @@ def bagian_g4():
         "",
         (
             f"**{kep['status']}** ({kep['tanggal']}). H = 24 jam, kriteria dipra-registrasi sebelum data diunduh "
-            "(`bench/results/keputusan/G4_kriteria.json`, `G4_definisi.json`)."
+            "(`bench/results/decisions/G4_kriteria.json`, `G4_definisi.json`)."
         ),
         "",
         "| metrik (mote test) | v0 aturan | berkeley_v1 (kesehatan) |",
@@ -408,7 +408,7 @@ def bagian_g4():
     out += [f"- {x}" for x in kep["alasan"] + kep["keterbatasan"]]
     return out + [
         "",
-        "Sumber: `bench/results/test/b4_berkeley_v1_kesehatan.json`, `bench/results/keputusan/G4.json`",
+        "Sumber: `bench/results/test/b4_berkeley_v1_kesehatan.json`, `bench/results/decisions/G4.json`",
         "",
     ]
 

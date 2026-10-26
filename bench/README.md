@@ -99,7 +99,7 @@ workload lain 60 detik.
 |---|---|
 | `run.py` | CLI benchmark: `python -m bench.run` |
 | `core/` | Kerangka harness: `harness.py`, `common.py`, `env_capture.py`, `telemetry.py`, `train_lib.py`, `ort_bench.py`, `ort_probe.py`, `w8_cycle.py` |
-| `workloads/` | Workload benchmark W1 sampai W8 dan `smoke`; `w8_ab_kode.py` untuk uji A/B kode backend |
+| `workloads/` | Workload benchmark W1 sampai W8 dan `smoke`; `w8_ab_code.py` untuk uji A/B kode backend |
 | `gates/` | Gerbang G1 (reproduksi) dan G2 (paritas kualitas CPU vs GPU) |
 | `experiments/b1/` | B1: reproduksi baseline |
 | `experiments/b3/` | B3: diagnosis, sweep Optuna, konfirmasi, ekspor kandidat, uji split test (G3) |

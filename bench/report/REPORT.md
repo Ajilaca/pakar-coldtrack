@@ -390,7 +390,7 @@ Sumber: `bench/results/test/*.json`, `bench/results/test_access_log.json`
 
 ## Gerbang G4: sensor-health Berkeley (mote test, sekali)
 
-**tidak lulus: aturan v0 tetap default, berkeley_v1 tidak diaktifkan** (2026-10-11). H = 24 jam, kriteria dipra-registrasi sebelum data diunduh (`bench/results/keputusan/G4_kriteria.json`, `G4_definisi.json`).
+**tidak lulus: aturan v0 tetap default, berkeley_v1 tidak diaktifkan** (2026-10-11). H = 24 jam, kriteria dipra-registrasi sebelum data diunduh (`bench/results/decisions/G4_kriteria.json`, `G4_definisi.json`).
 
 | metrik (mote test) | v0 aturan | berkeley_v1 (kesehatan) |
 |---|---|---|
@@ -409,7 +409,7 @@ Kriteria: 1_pr_auc_v1_ge_v0_plus_0.05 = ya, 2_alarm_palsu_le_v0_pada_recall_ge_v
 - Domain lab (Mica2, bangunan) berbeda dari truk; skema fitur truk tidak memuat tegangan baterai, padahal tegangan adalah sinyal terkuat bagi v0 dan v1.
 - Varian dengan level suhu absolut (val PR-AUC lebih tinggi) tidak dipilih karena level suhu lab dapat menjadi penanda kalender.
 
-Sumber: `bench/results/test/b4_berkeley_v1_kesehatan.json`, `bench/results/keputusan/G4.json`
+Sumber: `bench/results/test/b4_berkeley_v1_kesehatan.json`, `bench/results/decisions/G4.json`
 
 ## B5: benchmark W3 / W4 / W6 / W8
 
@@ -418,13 +418,13 @@ Sumber: `bench/results/test/b4_berkeley_v1_kesehatan.json`, `bench/results/keput
 | W3 | gru | sweep_s (s) | 69.02 | 1793 | 3612 |
 | W3 | xgb_cpu | sweep_s (s) | — | 174.7 | 545.2 |
 | W3 | xgb_cuda | sweep_s (s) | 158.8 | tidak berlaku | tidak berlaku |
-| W4 | stat_vs_tanpa | ablation_total_s (s) | 102.8 | 2428 | 4592 |
+| W4 | stat_vs_without | ablation_total_s (s) | 102.8 | 2428 | 4592 |
 | W6 | cpu_hist | dinding_total_s (s) | — | 8.414 [8.338–9.359] | 16.03 [15.34–17.53] |
 | W6 | cuda_hist | dinding_total_s (s) | 8.043 [7.873–8.763] | tidak berlaku | tidak berlaku |
-| W8 | truk100 | siklus_median_s (s) | tidak berlaku | 3.092 [3.039–3.23] | 7.537 [7.213–7.818] |
-| W8 | truk100_2inti | siklus_median_s (s) | tidak berlaku | 2.575 [2.491–2.69] | 5.761 [5.675–6.087] |
-| W8 | truk24 | siklus_median_s (s) | tidak berlaku | 0.6465 [0.6061–0.7381] | 1.719 [1.551–1.873] |
-| W8 | truk500 | siklus_median_s (s) | tidak berlaku | 18.68 [17.78–19.09] | 40.32 [39.93–42.24] |
+| W8 | truck100 | siklus_median_s (s) | tidak berlaku | 3.092 [3.039–3.23] | 7.537 [7.213–7.818] |
+| W8 | truck100_2core | siklus_median_s (s) | tidak berlaku | 2.575 [2.491–2.69] | 5.761 [5.675–6.087] |
+| W8 | truck24 | siklus_median_s (s) | tidak berlaku | 0.6465 [0.6061–0.7381] | 1.719 [1.551–1.873] |
+| W8 | truck500 | siklus_median_s (s) | tidak berlaku | 18.68 [17.78–19.09] | 40.32 [39.93–42.24] |
 
 Median [min–maks] dari 5 ulangan; satu angka = satu run terukur. '—' = varian CPU tidak dijalankan di tag GPU (pasangannya diukur di g16-cpu). Sumber: `bench/results/<tag>/<W3|W4|W6|W8>/<config>/run_*.json`
 
@@ -438,16 +438,16 @@ Median [min–maks] dari 5 ulangan; satu angka = satu run terukur. '—' = varia
 | W3 | xgb_cpu | d0-old → g16-cpu | efek mesin baru tanpa GPU | 3.12× | - (1 run) |
 | W3 | xgb_cpu -> xgb_cuda | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 1.10× | - (1 run) |
 | W3 | xgb_cpu -> xgb_cuda | d0-old → g16-gpu | sebelum vs sesudah (gabungan) | 3.43× | - (1 run) |
-| W4 | stat_vs_tanpa | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 23.61× | - (1 run) |
-| W4 | stat_vs_tanpa | d0-old → g16-cpu | efek mesin baru tanpa GPU | 1.89× | - (1 run) |
-| W4 | stat_vs_tanpa | d0-old → g16-gpu | sebelum vs sesudah (gabungan) | 44.65× | - (1 run) |
+| W4 | stat_vs_without | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 23.61× | - (1 run) |
+| W4 | stat_vs_without | d0-old → g16-cpu | efek mesin baru tanpa GPU | 1.89× | - (1 run) |
+| W4 | stat_vs_without | d0-old → g16-gpu | sebelum vs sesudah (gabungan) | 44.65× | - (1 run) |
 | W6 | cpu_hist | d0-old → g16-cpu | efek mesin baru tanpa GPU | 1.91× | [1.71, 2.08] |
 | W6 | cpu_hist -> cuda_hist | g16-cpu → g16-gpu | efek GPU murni (mesin sama) | 1.05× | [0.96, 1.16] |
 | W6 | cpu_hist -> cuda_hist | d0-old → g16-gpu | sebelum vs sesudah (gabungan) | 1.99× | [1.83, 2.18] |
-| W8 | truk100 | d0-old → g16-cpu | efek mesin baru tanpa GPU | 2.44× | [2.28, 2.54] |
-| W8 | truk100_2inti | d0-old → g16-cpu | efek mesin baru tanpa GPU | 2.24× | [2.14, 2.36] |
-| W8 | truk24 | d0-old → g16-cpu | efek mesin baru tanpa GPU | 2.66× | [2.33, 2.93] |
-| W8 | truk500 | d0-old → g16-cpu | efek mesin baru tanpa GPU | 2.16× | [2.11, 2.27] |
+| W8 | truck100 | d0-old → g16-cpu | efek mesin baru tanpa GPU | 2.44× | [2.28, 2.54] |
+| W8 | truck100_2core | d0-old → g16-cpu | efek mesin baru tanpa GPU | 2.24× | [2.14, 2.36] |
+| W8 | truck24 | d0-old → g16-cpu | efek mesin baru tanpa GPU | 2.66× | [2.33, 2.93] |
+| W8 | truck500 | d0-old → g16-cpu | efek mesin baru tanpa GPU | 2.16× | [2.11, 2.27] |
 
 ### Paritas kualitas B5 (val)
 
@@ -455,8 +455,8 @@ Median [min–maks] dari 5 ulangan; satu angka = satu run terukur. '—' = varia
 |---|---|---|---|---|---|
 | W3 | gru / gru | skor terbaik sweep | 0.6249 | 0.6196 | 0.6283 |
 | W3 | xgb_cuda / xgb_cpu | skor terbaik sweep | 0.7252 | 0.7248 | 0.7248 |
-| W4 | stat_vs_tanpa / stat_vs_tanpa | macro F1 mean 5 seed, dengan statistik | 0.5096 | 0.5109 | 0.5114 |
-| W4 | stat_vs_tanpa / stat_vs_tanpa | macro F1 mean 5 seed, tanpa statistik | 0.3572 | 0.3558 | 0.3558 |
+| W4 | stat_vs_without / stat_vs_without | macro F1 mean 5 seed, dengan statistik | 0.5096 | 0.5109 | 0.5114 |
+| W4 | stat_vs_without / stat_vs_without | macro F1 mean 5 seed, tanpa statistik | 0.3572 | 0.3558 | 0.3558 |
 | W6 | cuda_hist / cpu_hist | PR-AUC mote val | 0.8725 | 0.8738 | 0.8738 |
 
 ### Telemetri GPU selama B5 (g16-gpu)
@@ -465,7 +465,7 @@ Median [min–maks] dari 5 ulangan; satu angka = satu run terukur. '—' = varia
 |---|---|---|---|---|---|
 | W3 | gru | 70 | 65.0 | 57 | 0x0000000000000000, 0x0000000000000004 |
 | W3 | xgb_cuda | 60 | 37.8 | 37 | 0x0000000000000000 |
-| W4 | stat_vs_tanpa | 69 | 53.0 | 45 | 0x0000000000000000 |
+| W4 | stat_vs_without | 69 | 53.0 | 45 | 0x0000000000000000 |
 | W6 | cuda_hist | 49 | 3.4 | 0 | 0x0000000000000000 |
 
 Alasan throttle `0x4` = batas daya perangkat lunak (wajar di laptop), `0x0` = tidak ada. Tidak ada alasan termal/perlambatan perangkat keras (0x8/0x20/0x40) yang tercatat.
@@ -485,7 +485,7 @@ Alasan throttle `0x4` = batas daya perangkat lunak (wajar di laptop), `0x0` = ti
 | W2 | cpu_hist | 009ed57 | fcd0fb0 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml` |
 | W7 | 8 config | 009ed57 | fcd0fb0 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml` |
 | W3 | gru, xgb_cpu | 5d13490 | fd61a98 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml`, `bench/workloads/w8_siklus.py`, `ml/preprocess/export_fleet.py` |
-| W4 | stat_vs_tanpa | 5d13490 | fd61a98 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml`, `bench/workloads/w8_siklus.py`, `ml/preprocess/export_fleet.py` |
+| W4 | stat_vs_without | 5d13490 | fd61a98 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml`, `bench/workloads/w8_siklus.py`, `ml/preprocess/export_fleet.py` |
 | W6 | cpu_hist | 5d13490 | fd61a98 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml`, `bench/workloads/w8_siklus.py`, `ml/preprocess/export_fleet.py` |
 | W8 | 4 config | 5d13490 | fd61a98 | **berbeda** | `backend/app/adapters/__init__.py`, `backend/app/clock.py`, `backend/app/db/__init__.py`, `backend/app/db/migrate.py`, `backend/app/db/seed.py`, `backend/app/fleet/__init__.py` … |
 
@@ -493,7 +493,7 @@ W8 mengirim jendela 60 bacaan ke `POST /api/v1/analyze`; di kedua versi backend 
 
 **Uji A/B kode (mesin sama, g16-cpu, 100 truk, 3 ulangan bergantian):** median siklus `fd61a98` 3.184 s vs `5d13490` 3.435 s; kode `5d13490` 7.9% lebih berat. Status keluaran identik. Karena G16 menjalankan kode yang lebih berat, speedup W8 laptop lama → G16 di atas cenderung lebih kecil dari seharusnya (konservatif terhadap G16).
 
-Sumber: `bench/results/g16-cpu/W8_ab_kode/ab.json` (`python -m bench.workloads.w8_ab_kode`).
+Sumber: `bench/results/g16-cpu/W8_ab_code/ab.json` (`python -m bench.workloads.w8_ab_code`).
 
 ## Keterbatasan
 

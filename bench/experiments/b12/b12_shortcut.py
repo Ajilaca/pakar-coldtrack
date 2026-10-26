@@ -7,7 +7,7 @@ bertahan berarti model juga membaca pola lain. Ini mengukur ketergantungan, buka
 
   python -m bench.experiments.b12.b12_shortcut
 
-Hasil: bench/results/lokal-cpu/B12/shortcut.json
+Hasil: bench/results/local-cpu/B12/shortcut.json
 """
 
 import time
@@ -18,7 +18,7 @@ from bench.core.common import RESULTS_DIR, ROOT, git_info, now_iso, rel, write_j
 
 ONNX = ROOT / "backend" / "models" / "coldtrack_v5.onnx"
 CKPT = ROOT / "data" / "processed" / "windows" / "gru_v5_konteks_seed1000.pt"
-OUT = RESULTS_DIR / "lokal-cpu" / "B12" / "shortcut.json"
+OUT = RESULTS_DIR / "local-cpu" / "B12" / "shortcut.json"
 SEED = 1000
 
 

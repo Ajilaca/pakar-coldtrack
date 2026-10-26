@@ -15,7 +15,7 @@ import sys
 from bench.core.common import ROOT
 from bench.core.harness import run_config, tidak_berlaku
 
-CONFIGS = [("truk24", 24, 0), ("truk100", 100, 0), ("truk500", 500, 0), ("truk100_2inti", 100, 2)]
+CONFIGS = [("truck24", 24, 0), ("truck100", 100, 0), ("truck500", 500, 0), ("truck100_2core", 100, 2)]
 
 
 def run(ctx):

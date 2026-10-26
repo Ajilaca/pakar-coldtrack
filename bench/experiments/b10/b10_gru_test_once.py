@@ -27,7 +27,7 @@ from bench.experiments.b10.b10_test_once import LOG
 
 ID = "b8_gru_v5_konteks"
 ONNX = ROOT / "backend" / "models" / "candidates" / "coldtrack_gru_v5_konteks.onnx"
-SELEKSI = RESULTS_DIR / "lokal-cpu" / "B8" / "gru_v5_konteks_seed1000.json"
+SELEKSI = RESULTS_DIR / "local-cpu" / "B8" / "gru_v5_konteks_seed1000.json"
 HORIZON = (15, 30, 60)
 
 
