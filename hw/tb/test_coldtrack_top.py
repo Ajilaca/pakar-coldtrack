@@ -20,7 +20,7 @@ from hw.golden import trees as ph
 from hw.golden import regmap as rm
 from hw.golden import seal as sg
 
-B9 = "b9_xgb_chip_v5_konteks_duty_sintetis"
+B9 = "b9_xgb_chip_v5_context_synthetic_duty"
 MENIT = int(os.environ.get("MENIT_TOP", "140"))
 KUNCI = bytes(range(0x40, 0x60))
 

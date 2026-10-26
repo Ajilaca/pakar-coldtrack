@@ -149,5 +149,5 @@
       0.030040953308343887
     ]
   ],
-  "model": "ml/sensor_health/artifacts/berkeley_v1_kesehatan.json"
+  "model": "ml/sensor_health/artifacts/berkeley_v1_health.json"
 }

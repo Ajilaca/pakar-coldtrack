@@ -109,7 +109,7 @@ Sumber: `bench/results/g16-gpu/B1/G1.json`
 ### Alasan "lulus dengan catatan"
 
 - **gru** — GRU tereproduksi: 6 dari 7 metrik lulus per tag, meleset tipis pada metrik yang berbeda di tiap device. Acuan (ml/reports/metrics.json: metrik_val_pembanding) adalah satu run tunggal dari ml/training/finetune.py yang tidak menyetel seed, sehingga acuan itu sendiri satu sampel acak. Dengan 14 perbandingan (7 metrik x 2 device), 1-2 metrik di luar +/- 2 SD adalah wajar secara kebetulan. Tidak ada metrik yang gagal di kedua device. (sumber: `bench/results/g16-cpu/B1/G1.json`, `bench/results/g16-gpu/B1/G1.json`)
-- **xgb_ttb, xgb_clf** — Aturan +/- 2 SD tidak bermakna untuk XGBoost: deterministik (SD 0), dan acuannya basi. XGB_PARAMS tanpa subsample/colsample sehingga seed tidak berpengaruh dan kelima seed identik; aturan +/- 2 SD berubah menjadi 'harus identik'. Acuan ml/reports/baseline_metrics.json terakhir diubah 2026-08-06, sebelum commit 55a30fe (2026-08-13) yang mengubah cara jendela menghitung reefer_duration_min. Builder lama + data v4 mendekati acuan klasifikasi; sisa selisih TTB tidak terjelaskan oleh versi XGBoost 2.1.4-3.2.0 dan versi asli tidak tercatat. (sumber: `bench/results/g16-cpu/B1/G1_investigasi.json`)
+- **xgb_ttb, xgb_clf** — Aturan +/- 2 SD tidak bermakna untuk XGBoost: deterministik (SD 0), dan acuannya basi. XGB_PARAMS tanpa subsample/colsample sehingga seed tidak berpengaruh dan kelima seed identik; aturan +/- 2 SD berubah menjadi 'harus identik'. Acuan ml/reports/baseline_metrics.json terakhir diubah 2026-08-06, sebelum commit 55a30fe (2026-08-13) yang mengubah cara jendela menghitung reefer_duration_min. Builder lama + data v4 mendekati acuan klasifikasi; sisa selisih TTB tidak terjelaskan oleh versi XGBoost 2.1.4-3.2.0 dan versi asli tidak tercatat. (sumber: `bench/results/g16-cpu/B1/G1_investigation.json`)
 
 Investigasi acuan XGBoost (XGBoost 3.2.0, split val):
 
@@ -121,7 +121,7 @@ Investigasi acuan XGBoost (XGBoost 3.2.0, split val):
 | builder_sekarang+v3 | 24.0209 | 0.4939 | 0.6925 | 0.6797 |
 | builder_sekarang+v4 | 24.0209 | 0.6900 | 0.8588 | 0.7580 |
 
-Sumber: `bench/results/g16-cpu/B1/G1_investigasi.json`
+Sumber: `bench/results/g16-cpu/B1/G1_investigation.json`
 
 **Baseline baru:** Nilai B1 dari pipeline sekarang menjadi baseline pembanding untuk B3 dan G3 (split val). Sumber: `bench/results/g16-cpu/B1/`, `bench/results/g16-gpu/B1/`.
 
@@ -269,13 +269,13 @@ Sumber: `bench/results/G2.json`
 
 ### Grafik
 
-![1_speedup_gpu_murni](figures/1_speedup_gpu_murni.png)
-![2_komponen_W1_b256_fp32](figures/2_komponen_W1_b256_fp32.png)
-![2_komponen_W1_b256_fp32_resident](figures/2_komponen_W1_b256_fp32_resident.png)
+![1_speedup_pure_gpu](figures/1_speedup_pure_gpu.png)
+![2_components_W1_b256_fp32](figures/2_components_W1_b256_fp32.png)
+![2_components_W1_b256_fp32_resident](figures/2_components_W1_b256_fp32_resident.png)
 ![3_time_to_target_W1](figures/3_time_to_target_W1.png)
-![4a_latensi_W7](figures/4a_latensi_W7.png)
+![4a_latency_W7](figures/4a_latency_W7.png)
 ![4b_throughput_W7](figures/4b_throughput_W7.png)
-![5_telemetri_run_terpanjang](figures/5_telemetri_run_terpanjang.png)
+![5_telemetry_longest_run](figures/5_telemetry_longest_run.png)
 
 ## B3: latih ulang sesuai PRD (split val)
 
@@ -317,19 +317,19 @@ Sumber: `bench/results/g16-gpu/B3/label_check.json`
 | model | varian | skor mean | rentang | Macro F1 | PR-AUC | forecast t+30 |
 |---|---|---|---|---|---|---|
 | gru | baseline | 0.6342 | 0.0219 | 0.5839 | 0.6846 | 0.2093 |
-| gru | baseline_tanpa_stat | 0.2997 | 1.0302 | 0.4146 | 0.5848 | 0.2348 |
+| gru | baseline_no_stat | 0.2997 | 1.0302 | 0.4146 | 0.5848 | 0.2348 |
 | gru | sweep_top1 | 0.7292 | 0.0393 | 0.6756 | 0.7829 | 0.2088 |
 | gru | sweep_top2 | 0.7184 | 0.0451 | 0.6737 | 0.7632 | 0.2088 |
 | gru | sweep_top3 | 0.7076 | 0.0909 | 0.6582 | 0.7570 | 0.2075 |
-| gru | top1_tanpa_stat | 0.7203 | 0.0260 | 0.6815 | 0.7591 | 0.2121 |
-| gru | top1_bobot_asli | 0.6405 | 0.1208 | 0.5774 | 0.7035 | 0.2180 |
+| gru | top1_no_stat | 0.7203 | 0.0260 | 0.6815 | 0.7591 | 0.2121 |
+| gru | top1_original_weights | 0.6405 | 0.1208 | 0.5774 | 0.7035 | 0.2180 |
 | xgb | baseline | 0.7215 | 0.0000 | 0.6865 | 0.7566 | - |
 | xgb | sweep_top1 | 0.7247 | 0.0094 | 0.6948 | 0.7545 | - |
 | xgb | sweep_top2 | 0.7260 | 0.0041 | 0.6943 | 0.7577 | - |
 | xgb | sweep_top3 | 0.7231 | 0.0069 | 0.6887 | 0.7575 | - |
 
 Aturan adopsi (didaftarkan sebelum sweep): kandidat lolos bila skor mean > mean baseline + rentang baseline. Kandidat lolos: {'gru': 'gru/sweep_top1', 'xgb': 'xgb/sweep_top2'}. Untuk XGBoost, baseline deterministik (rentang 0) sehingga selisih sekecil apa pun lolos; kenaikannya tidak berarti secara praktis.
-Sumber: `bench/results/g16-gpu/B3/keputusan_kandidat.json`
+Sumber: `bench/results/g16-gpu/B3/candidate_decision.json`
 
 ### Kandidat yang diajukan ke G3
 
@@ -338,13 +338,13 @@ Sumber: `bench/results/g16-gpu/B3/keputusan_kandidat.json`
 | model (CPU EP) | p50 batch 1 (ms) | p50 batch 1024 (ms) |
 |---|---|---|
 | proposal | 0.170 | 150.7 |
-| kandidat_b3 | 1.474 | 464.7 |
+| candidate_b3 | 1.474 | 464.7 |
 
-Sumber: `bench/results/g16-cpu/B3/latensi_kandidat.json`
+Sumber: `bench/results/g16-cpu/B3/candidate_latency.json`
 
 ## Gerbang G3: split test (dipakai sekali per model)
 
-| metrik (test) | baseline_proposal | kandidat_b3 |
+| metrik (test) | baseline_proposal | candidate_b3 |
 |---|---|---|
 | forecast_t15_mae_c | 0.1521 | 0.1565 |
 | forecast_t30_mae_c | 0.1976 | 0.1924 |
@@ -359,8 +359,8 @@ Sumber: `bench/results/g16-cpu/B3/latensi_kandidat.json`
 Log akses split test (dicatat sebelum evaluasi; run kedua untuk id yang sama ditolak):
 
 - `baseline_proposal`: ml/reports/coldtrack.onnx (sha256 3948c4476313…), 2026-10-10T22:53:08+00:00, commit 1e668e1
-- `kandidat_b3`: backend/models/candidates/coldtrack_gru_b3.onnx (sha256 fab911760e87…), 2026-10-10T22:53:13+00:00, commit 1e668e1
-- `b4_berkeley_v1_kesehatan`: ml/sensor_health/artifacts/berkeley_v1_kesehatan.json (sha256 19fbf3cd0220…), 2026-10-11T01:49:41+00:00, commit 073756a
+- `candidate_b3`: backend/models/candidates/coldtrack_gru_b3.onnx (sha256 fab911760e87…), 2026-10-10T22:53:13+00:00, commit 1e668e1
+- `b4_berkeley_v1_health`: ml/sensor_health/artifacts/berkeley_v1_health.json (sha256 19fbf3cd0220…), 2026-10-11T01:49:41+00:00, commit 073756a
 
 **Keputusan G3: disetujui dengan catatan: v3 menjadi model acuan dan diagnosis provider bawaan backend** (2026-10-11). Kandidat lebih baik dari baseline di split val (5 seed, aturan adopsi yang didaftarkan sebelum sweep) dan di split test yang dipakai sekali. Forecast tidak memburuk berarti; TTB produksi tetap XGBoost sehingga penurunan head TTB GRU tidak berdampak. Trade-off latensi diterima user: tetap jauh di bawah batas PRD 300 ms per panggilan. Target Macro F1 dan PR-AUC PRD belum tercapai; batasnya dilaporkan (label implisit).
 
@@ -383,14 +383,14 @@ Catatan:
 | v3_b3 | 0.208 | 0.837 | 0.894 | 0.975 | 0.44 | 0.89 | 3.6% |
 
 Bias: v3 dipilih di split val (sedikit optimistis); v4 out-of-distribution untuk checkpoint-2 (dilatih di simulator garis checkpoint-2).
-Sumber: `bench/results/g16-cpu/B7/banding_model_val.json`
+Sumber: `bench/results/g16-cpu/B7/model_comparison_val.json`
 
 
 Sumber: `bench/results/test/*.json`, `bench/results/test_access_log.json`
 
 ## Gerbang G4: sensor-health Berkeley (mote test, sekali)
 
-**tidak lulus: aturan v0 tetap default, berkeley_v1 tidak diaktifkan** (2026-10-11). H = 24 jam, kriteria dipra-registrasi sebelum data diunduh (`bench/results/decisions/G4_kriteria.json`, `G4_definisi.json`).
+**tidak lulus: aturan v0 tetap default, berkeley_v1 tidak diaktifkan** (2026-10-11). H = 24 jam, kriteria dipra-registrasi sebelum data diunduh (`bench/results/decisions/G4_criteria.json`, `G4_definition.json`).
 
 | metrik (mote test) | v0 aturan | berkeley_v1 (kesehatan) |
 |---|---|---|
@@ -409,7 +409,7 @@ Kriteria: 1_pr_auc_v1_ge_v0_plus_0.05 = ya, 2_alarm_palsu_le_v0_pada_recall_ge_v
 - Domain lab (Mica2, bangunan) berbeda dari truk; skema fitur truk tidak memuat tegangan baterai, padahal tegangan adalah sinyal terkuat bagi v0 dan v1.
 - Varian dengan level suhu absolut (val PR-AUC lebih tinggi) tidak dipilih karena level suhu lab dapat menjadi penanda kalender.
 
-Sumber: `bench/results/test/b4_berkeley_v1_kesehatan.json`, `bench/results/decisions/G4.json`
+Sumber: `bench/results/test/b4_berkeley_v1_health.json`, `bench/results/decisions/G4.json`
 
 ## B5: benchmark W3 / W4 / W6 / W8
 
@@ -484,9 +484,9 @@ Alasan throttle `0x4` = batas daya perangkat lunak (wajar di laptop), `0x0` = ti
 | W1 | b256_fp32_resident | 5b64886 | 9d97fe9 | **berbeda** (tinjauan manual: tidak memengaruhi W1. `bench/core/harness.py` hanya menambah parameter opsional repeats/warmup (bawaan sama) untuk W3/W4; berkas lain yang berbeda tidak di-import W1; bukti: `git diff 5b64886 9d97fe9 -- bench/core/harness.py`) | `bench/scripts/chain_b2b3.sh`, `bench/scripts/fe.sh`, `bench/core/harness.py`, `ml/reports/coldtrack_b3.onnx`, `ml/reports/labels_b3.json`, `ml/sensor_health/data.py` … |
 | W2 | cpu_hist | 009ed57 | fcd0fb0 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml` |
 | W7 | 8 config | 009ed57 | fcd0fb0 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml` |
-| W3 | gru, xgb_cpu | 5d13490 | fd61a98 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml`, `bench/workloads/w8_siklus.py`, `ml/preprocess/export_fleet.py` |
-| W4 | stat_vs_without | 5d13490 | fd61a98 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml`, `bench/workloads/w8_siklus.py`, `ml/preprocess/export_fleet.py` |
-| W6 | cpu_hist | 5d13490 | fd61a98 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml`, `bench/workloads/w8_siklus.py`, `ml/preprocess/export_fleet.py` |
+| W3 | gru, xgb_cpu | 5d13490 | fd61a98 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml`, `bench/workloads/w8_cycle.py`, `ml/preprocess/export_fleet.py` |
+| W4 | stat_vs_without | 5d13490 | fd61a98 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml`, `bench/workloads/w8_cycle.py`, `ml/preprocess/export_fleet.py` |
+| W6 | cpu_hist | 5d13490 | fd61a98 | identik (berkas berbeda tidak dipakai workload ini) | `bench/devices/d0-old.yaml`, `bench/workloads/w8_cycle.py`, `ml/preprocess/export_fleet.py` |
 | W8 | 4 config | 5d13490 | fd61a98 | **berbeda** | `backend/app/adapters/__init__.py`, `backend/app/clock.py`, `backend/app/db/__init__.py`, `backend/app/db/migrate.py`, `backend/app/db/seed.py`, `backend/app/fleet/__init__.py` … |
 
 W8 mengirim jendela 60 bacaan ke `POST /api/v1/analyze`; di kedua versi backend model dijalankan untuk satu jendela, tetapi kodenya tidak identik (versi armada menambah `predict_last` dan konversi zona waktu).

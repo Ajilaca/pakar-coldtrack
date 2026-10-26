@@ -154,7 +154,7 @@
     }
   },
   "paritas_ok": true,
-  "sumber_keputusan": "bench/results/g16-gpu/B3/keputusan_kandidat.json",
+  "sumber_keputusan": "bench/results/g16-gpu/B3/candidate_decision.json",
   "latih": {
     "detik_latih": 75.41489327300224,
     "epoch_terbaik": 10,
@@ -204,12 +204,12 @@
     "ttb_mae_le10_menit": 5.116097450256348,
     "ttb_mae_le30_menit": 12.15694522857666
   },
-  "sumber_metrik_test": "bench/results/test/kandidat_b3.json",
+  "sumber_metrik_test": "bench/results/test/candidate_b3.json",
   "keterbatasan": [
     "Target Macro F1 > 0,80 dan PR-AUC > 0,85 belum tercapai (test: lihat metrik_test).",
     "Label failure_mode bertahan dari onset sampai akhir trip; sebagian besar jendela A1/A7 jauh setelah onset tidak memuat jejak peristiwa (bench/results/g16-gpu/B3/label_check.json).",
     "Head time_to_breach_min milik GRU lebih buruk dari model proposal; TTB produksi tetap coldtrack_ttb.onnx (XGBoost).",
-    "Latensi CPU lebih tinggi dari model proposal (bench/results/g16-cpu/B3/latensi_kandidat.json).",
+    "Latensi CPU lebih tinggi dari model proposal (bench/results/g16-cpu/B3/candidate_latency.json).",
     "Dilatih dan diuji pada data simulasi v4; belum divalidasi pada telemetri truk nyata."
   ]
 }

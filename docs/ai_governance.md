@@ -116,7 +116,7 @@ diubah; peninjauan definisi label diserahkan ke tim data/PRD.
 
 **v3 → v5 (26 Oktober 2026).** Definisi label A1/A7 diubah menjadi kejadian sementara (B8) dan GRU dilatih
 ulang dengan 6 fitur konteks trip. Langkah yang sama dipakai: model dibekukan dan diekspor ke jalur kandidat,
-paritas ONNX diuji, split test dipakai sekali (`bench/results/test/b8_gru_v5_konteks.json`). Test: Macro F1
+paritas ONNX diuji, split test dipakai sekali (`bench/results/test/b8_gru_v5_context.json`). Test: Macro F1
 0,820 dan PR-AUC 0,855 dengan label v5; 0,756 dan 0,812 dengan label lama. Karena definisi label berubah,
 kedua angka selalu dilaporkan berdampingan. `degradasi_bertahap` tetap lemah (F1 0,22).
 

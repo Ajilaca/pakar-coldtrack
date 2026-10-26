@@ -5,8 +5,8 @@ angka val dicek ulang terhadap angka saat seleksi (tolak bila beda), akses dicat
 bench/results/test_access_log.json, baru split test dibangun dan dinilai. Bila --id sudah tercatat,
 skrip menolak berjalan.
 
-  python -m bench.experiments.b10.b10_test_once --id b8_xgb_chip_v5_konteks
-  python -m bench.experiments.b10.b10_test_once --id b9_xgb_chip_v5_konteks_duty_sintetis
+  python -m bench.experiments.b10.b10_test_once --id b8_xgb_chip_v5_context
+  python -m bench.experiments.b10.b10_test_once --id b9_xgb_chip_v5_context_synthetic_duty
 
 Hasil: bench/results/test/<id>.json; artefak model: bench/results/local-cpu/B10/<id>.json
 """
@@ -28,19 +28,19 @@ from bench.core.common import (
 
 LOG = RESULTS_DIR / "test_access_log.json"
 KANDIDAT = {
-    "b8_xgb_chip_v5_konteks": {
+    "b8_xgb_chip_v5_context": {
         "duty": False, "val_seleksi": 0.852,
-        "sumber": "bench/results/local-cpu/B9/arus_sintetis.json (tanpa sinyal kompresor)"},
-    "b9_xgb_chip_v5_konteks_duty_sintetis": {
+        "sumber": "bench/results/local-cpu/B9/synthetic_current.json (tanpa sinyal kompresor)"},
+    "b9_xgb_chip_v5_context_synthetic_duty": {
         "duty": True, "val_seleksi": 0.933,
-        "sumber": "bench/results/local-cpu/B9/arus_sintetis.json (duty saja, isolasi sedang)"},
+        "sumber": "bench/results/local-cpu/B9/synthetic_current.json (duty saja, isolasi sedang)"},
 }
 
 
 def fitur(split, duty, izinkan_test=False):
     from bench.experiments.b8 import b8_lib as b8
     from bench.experiments.b9 import b9_lib as b9
-    from bench.experiments.b9.b9_arus_sintetis import KONTEKS_TANPA_SUHU_AWAL
+    from bench.experiments.b9.b9_synthetic_current import KONTEKS_TANPA_SUHU_AWAL
     from ml.evaluation.baselines import aggregate
 
     d = b8.bangun(split, izinkan_test=izinkan_test)[0] if split == "test" else b8.muat(split)
@@ -55,7 +55,7 @@ def fitur(split, duty, izinkan_test=False):
 def main(argv=None):
     import xgboost as xgb
 
-    from bench.experiments.b8.b8_label_konteks import UKURAN, metrik_kelas
+    from bench.experiments.b8.b8_label_context import UKURAN, metrik_kelas
     from ml.evaluation.baselines import XGB_PARAMS
 
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])

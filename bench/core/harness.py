@@ -26,7 +26,7 @@ def header(ctx, workload, config_id, config, n, seed, pemanasan):
 
 def tidak_berlaku(ctx, workload, config_id, config, alasan):
     """Catat varian yang tidak bermakna di device ini (mis. AMP di CPU) -- bukan dikosongkan diam-diam."""
-    path = ctx.out_root / workload / config_id / "tidak_berlaku.json"
+    path = ctx.out_root / workload / config_id / "not_applicable.json"
     write_json(path, {"workload": workload, "config_id": config_id, "konfigurasi": config, "tag": ctx.tag,
                       "status": "tidak berlaku", "alasan": alasan, "waktu_utc": now_iso()})
     print(f"  {config_id}: tidak berlaku ({alasan})")

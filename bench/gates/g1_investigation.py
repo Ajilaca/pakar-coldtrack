@@ -8,9 +8,9 @@ mengubah build_windows (hitung ulang reefer_duration_min per jendela). Saat comm
 (350cb41) DATA_PATH builder masih v3. Skrip ini menguji 2 builder x 2 dataset dengan XGBoost yang
 terpasang. Builder lama dimuat langsung dari git (tidak disalin ke repo).
 
-  python -m bench.gates.g1_investigasi --tag g16-cpu
+  python -m bench.gates.g1_investigation --tag g16-cpu
 
-Hasil: bench/results/<tag>/B1/G1_investigasi.json
+Hasil: bench/results/<tag>/B1/G1_investigation.json
 """
 
 import argparse
@@ -90,7 +90,7 @@ def main(argv=None):
             hasil["kombinasi"][f"{nama_b}+{ver}"] = m
             print(f"{nama_b:22s} {ver}: " + " ".join(f"{k}={m[k]:.4f}" for k in acuan))
     print("acuan                     : " + " ".join(f"{k}={v:.4f}" for k, v in acuan.items()))
-    print("Tersimpan:", write_json(RESULTS_DIR / a.tag / "B1" / "G1_investigasi.json", hasil))
+    print("Tersimpan:", write_json(RESULTS_DIR / a.tag / "B1" / "G1_investigation.json", hasil))
 
 
 if __name__ == "__main__":

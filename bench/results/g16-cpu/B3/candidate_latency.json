@@ -62,7 +62,7 @@
         }
       }
     },
-    "kandidat_b3": {
+    "candidate_b3": {
       "path": "backend/models/candidates/coldtrack_gru_b3.onnx",
       "b1": {
         "onnxruntime": "1.31.0",

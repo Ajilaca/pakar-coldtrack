@@ -154,7 +154,7 @@
     }
   },
   "paritas_ok": true,
-  "sumber_keputusan": "bench/results/g16-gpu/B3/keputusan_kandidat.json",
+  "sumber_keputusan": "bench/results/g16-gpu/B3/candidate_decision.json",
   "latih": {
     "detik_latih": 75.41489327300224,
     "epoch_terbaik": 10,

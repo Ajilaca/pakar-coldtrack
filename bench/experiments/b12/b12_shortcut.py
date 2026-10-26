@@ -17,7 +17,7 @@ import numpy as np
 from bench.core.common import RESULTS_DIR, ROOT, git_info, now_iso, rel, write_json
 
 ONNX = ROOT / "backend" / "models" / "coldtrack_v5.onnx"
-CKPT = ROOT / "data" / "processed" / "windows" / "gru_v5_konteks_seed1000.pt"
+CKPT = ROOT / "data" / "processed" / "windows" / "gru_v5_context_seed1000.pt"
 OUT = RESULTS_DIR / "local-cpu" / "B12" / "shortcut.json"
 SEED = 1000
 
@@ -27,7 +27,7 @@ def uji_gangguan(onnx_path, ctx_mean, log=print):
     import onnxruntime as ort
 
     from bench.experiments.b8 import b8_lib as b8
-    from bench.experiments.b8.b8_label_konteks import metrik_kelas
+    from bench.experiments.b8.b8_label_context import metrik_kelas
     from ml.preprocess.build_windows import FAILURE_CLASSES
     from ml.tests.test_data_contract import FEATURE_COLUMNS
 

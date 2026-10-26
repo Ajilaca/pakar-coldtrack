@@ -36,7 +36,7 @@
         "pakai_statistik": true
       }
     },
-    "baseline_tanpa_stat": {
+    "baseline_no_stat": {
       "skor_mean": 0.29966611643755403,
       "skor_min": -0.516574088951788,
       "skor_maks": 0.5136079348676966,
@@ -148,7 +148,7 @@
         "pakai_statistik": true
       }
     },
-    "top1_tanpa_stat": {
+    "top1_no_stat": {
       "skor_mean": 0.7202944786885395,
       "skor_min": 0.7069523799666226,
       "skor_maks": 0.7329342592066308,
@@ -176,7 +176,7 @@
         "pakai_statistik": false
       }
     },
-    "top1_bobot_asli": {
+    "top1_original_weights": {
       "skor_mean": 0.6404534013639613,
       "skor_min": 0.5671723871741557,
       "skor_maks": 0.6879726688359196,

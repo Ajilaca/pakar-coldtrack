@@ -1,7 +1,7 @@
 """W6 -- model sensor-health Berkeley: pembangunan fitur (CPU) + latih XGBoost CPU hist vs cuda.
 
-Parameter XGBoost dibekukan = parameter terbaik varian "kesehatan" dari B4
-(bench/results/g16-gpu/B4/val_kesehatan.json), sehingga semua device melatih model yang sama.
+Parameter XGBoost dibekukan = parameter terbaik varian "health" dari B4
+(bench/results/g16-gpu/B4/val_health.json), sehingga semua device melatih model yang sama.
 Kualitas: PR-AUC mote val (cek paritas antar-device). Butuh data/berkeley/data.txt (lihat
 bench/D0_OLD.md); tanpa data, config dicatat "tidak berlaku".
 """
@@ -14,7 +14,7 @@ import numpy as np
 from bench.core.common import RESULTS_DIR
 from bench.core.harness import run_config, tidak_berlaku
 
-SUMBER_PARAMS = RESULTS_DIR / "g16-gpu" / "B4" / "val_kesehatan.json"
+SUMBER_PARAMS = RESULTS_DIR / "g16-gpu" / "B4" / "val_health.json"
 
 
 def _satu(dev, quick):

@@ -1,5 +1,5 @@
 {
-  "varian": "top1_tanpa_stat",
+  "varian": "top1_no_stat",
   "seed": 1003,
   "params": {
     "hidden_size": 128,

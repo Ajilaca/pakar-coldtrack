@@ -16,7 +16,7 @@ model:
   diagnosis_provider: v3
   providers:
     v3:
-      gru_onnx_path: models/coldtrack_v5.onnx            # = backend/models/candidates/coldtrack_gru_v5_konteks.onnx
+      gru_onnx_path: models/coldtrack_v5.onnx            # = backend/models/candidates/coldtrack_gru_v5_context.onnx
       ttb_onnx_path: models/coldtrack_ttb_window.onnx    # = ml/reports/coldtrack_ttb.onnx (XGBoost, kontrak jendela)
       labels_path: models/coldtrack_v5.labels.json       # urutan kelas, metrik test, keterbatasan
       version: coldtrack-hybrid-v5-gru-konteks

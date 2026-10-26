@@ -32,7 +32,7 @@ jendela), dengan dua perubahan:
   (`bench/experiments/b10/b10_gru_test_once.py`, tercatat di `bench/results/test_access_log.json`).
 - **Pembanding di chip:** XGBoost ukuran chip dengan label dan konteks yang sama, test macro F1 0,810
   (tanpa sinyal kompresor) dan 0,900 (dengan siklus kerja kompresor sintetis);
-  `bench/results/test/b8_xgb_chip_v5_konteks.json`, `b9_xgb_chip_v5_konteks_duty_sintetis.json`.
+  `bench/results/test/b8_xgb_chip_v5_context.json`, `b9_xgb_chip_v5_context_synthetic_duty.json`.
 - **Ketergantungan pada satu sinyal (B12, val, tanpa latih ulang;
   `bench/results/local-cpu/B12/shortcut.json`).** Satu sinyal diubah, F1 kelas lain hampir tetap:
 
@@ -83,9 +83,9 @@ Model klasifikasi + forecast diganti dengan `ml/reports/coldtrack_b3.onnx` (kont
 | Forecast MAE t+30 (test) | 0,198 °C | **0,192 °C** |
 | Latensi CPU batch 1 (p50, G16) | 0,21 ms | 1,38 ms |
 
-Sumber angka: `bench/results/test/{baseline_proposal,kandidat_b3}.json` (split test, dipakai sekali
+Sumber angka: `bench/results/test/{baseline_proposal,candidate_b3}.json` (split test, dipakai sekali
 per model, akses tercatat di `bench/results/test_access_log.json`) dan
-`bench/results/g16-cpu/B3/latensi_kandidat.json`. Angka val 5 seed dan seluruh proses seleksi ada di
+`bench/results/g16-cpu/B3/candidate_latency.json`. Angka val 5 seed dan seluruh proses seleksi ada di
 `bench/report/REPORT.md` bagian B3.
 
 **Yang belum berubah dan tetap diakui:**
@@ -110,7 +110,7 @@ fisika. **Kembali ke checkpoint-2:** ubah nilai itu menjadi `checkpoint2` lalu r
 perubahan kode; kedua provider diuji di CI). Rincian: `docs/architecture.md` §2.4.
 
 **Perbandingan dengan checkpoint-2 (model backend sebelumnya)** pada 16.500 jendela val v4 yang sama,
-seleksi jendela suite `eval/` (`bench/results/g16-cpu/B7/banding_model_val.json`): v3 lebih baik di
+seleksi jendela suite `eval/` (`bench/results/g16-cpu/B7/model_comparison_val.json`): v3 lebih baik di
 forecast (MAE t+30 0,208 vs 1,398 °C), deteksi pintu/kejut ambien/sensor (AUROC 0,837/0,894/0,975 vs
 0,613/0,483/0,341) dan jendela sehat yang dilabel gangguan (3,6 % vs 23,8 %). **Keterbatasan
 perbandingan:**
@@ -137,7 +137,7 @@ karena dikenali benar oleh v2; skenario dibiarkan apa adanya (tidak diganti agar
 Kelas `degradasi_bertahap` tetap salah satu kelas terlemah v3.
 
 **Latensi:** v3 lebih lambat dari v2: p50 0,21 → 1,38 ms per panggilan (CPU, batch 1, G16;
-`bench/results/g16-cpu/B3/latensi_kandidat.json`), masih jauh di bawah anggaran PRD 300 ms.
+`bench/results/g16-cpu/B3/candidate_latency.json`), masih jauh di bawah anggaran PRD 300 ms.
 
 **Data tidak lengkap:** v3 (dan model jendela lain) hanya dilatih pada jendela 60 menit tanpa bacaan
 hilang. Di val v4, 32 % jendela memuat bacaan hilang; pada jendela itu keluaran v3 lewat jalur backend

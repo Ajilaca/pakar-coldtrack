@@ -7,7 +7,7 @@ import json
 
 import numpy as np
 
-from bench.core.common import RESULTS_DIR, ROOT, rel  # noqa: F401  (ROOT dipakai bagian_b6)
+from bench.core.common import RESULTS_DIR, ROOT, rel  # noqa: F401  (ROOT dipakai section_b6)
 
 TAGS = ["g16-gpu", "g16-cpu", "d0-old"]
 
@@ -43,7 +43,7 @@ def load_runs(tag, workload, cid):
 def status_config(tag, workload, cid):
     """'ada' | 'tidak berlaku' | 'belum diukur'."""
     d = RESULTS_DIR / tag / workload / cid
-    if (d / "tidak_berlaku.json").exists():
+    if (d / "not_applicable.json").exists():
         return "tidak berlaku"
     return "ada" if any(d.glob("run_*.json")) else "belum diukur"
 

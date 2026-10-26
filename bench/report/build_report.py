@@ -2,7 +2,7 @@
 
   python -m bench.report.build_report
 
-Bagian: ringkasan, device + provenance, metodologi, G1, B2, B3, G3, G4, B5, keterbatasan (bench/report/bagian_b6.py),
+Bagian: ringkasan, device + provenance, metodologi, G1, B2, B3, G3, G4, B5, keterbatasan (bench/report/section_b6.py),
 plus summary.csv dan grafik.
 """
 
@@ -63,7 +63,7 @@ def bagian_g1():
         sumber = ", ".join(f"`{s}`" for s in a["sumber"])
         out.append(f"- **{a['model']}** — {a['ringkas']} {a['detail']} (sumber: {sumber})")
 
-    inv_p = RESULTS_DIR / "g16-cpu" / "B1" / "G1_investigasi.json"
+    inv_p = RESULTS_DIR / "g16-cpu" / "B1" / "G1_investigation.json"
     if inv_p.exists():
         inv = _load(inv_p)
         kunci = list(inv["acuan"])
@@ -77,7 +77,7 @@ def bagian_g1():
         ]
         for nama, m in inv["kombinasi"].items():
             out.append(f"| {nama} | " + " | ".join(_fmt(m[k]) for k in kunci) + " |")
-        out += ["", "Sumber: `bench/results/g16-cpu/B1/G1_investigasi.json`"]
+        out += ["", "Sumber: `bench/results/g16-cpu/B1/G1_investigation.json`"]
 
     bb = kep["baseline_baru"]
     out += [
@@ -196,12 +196,12 @@ def bagian_b2(g2, gambar):
 
 def bagian_b3():
     b3 = RESULTS_DIR / "g16-gpu" / "B3"
-    if not (b3 / "keputusan_kandidat.json").exists():
+    if not (b3 / "candidate_decision.json").exists():
         return []
     diag = _load(b3 / "diagnosis.json")
     lab = _load(b3 / "label_check.json")
-    kep = _load(b3 / "keputusan_kandidat.json")
-    sw = {m: _load(b3 / f"sweep_{m}" / "ringkasan.json") for m in ("gru", "xgb")}
+    kep = _load(b3 / "candidate_decision.json")
+    sw = {m: _load(b3 / f"sweep_{m}" / "summary.json") for m in ("gru", "xgb")}
     out = [
         "## B3: latih ulang sesuai PRD (split val)",
         "",
@@ -275,11 +275,11 @@ def bagian_b3():
             f"baseline. Kandidat lolos: {kep['kandidat_terbaik']}. Untuk XGBoost, baseline deterministik (rentang 0) "
             "sehingga selisih sekecil apa pun lolos; kenaikannya tidak berarti secara praktis."
         ),
-        "Sumber: `bench/results/g16-gpu/B3/keputusan_kandidat.json`",
+        "Sumber: `bench/results/g16-gpu/B3/candidate_decision.json`",
         "",
     ]
-    ex = b3 / "export_kandidat.json"
-    lat = RESULTS_DIR / "g16-cpu" / "B3" / "latensi_kandidat.json"
+    ex = b3 / "candidate_export.json"
+    lat = RESULTS_DIR / "g16-cpu" / "B3" / "candidate_latency.json"
     if ex.exists():
         e = _load(ex)
         out += [
@@ -300,12 +300,12 @@ def bagian_b3():
             out.append(
                 f"| {nama} | {_fmt(v['b1']['latensi_ms']['p50'], 3)} | {_fmt(v['b1024']['latensi_ms']['p50'], 1)} |"
             )
-        out += ["", "Sumber: `bench/results/g16-cpu/B3/latensi_kandidat.json`", ""]
+        out += ["", "Sumber: `bench/results/g16-cpu/B3/candidate_latency.json`", ""]
     return out
 
 
 def bagian_banding_model():
-    p = RESULTS_DIR / "g16-cpu" / "B7" / "banding_model_val.json"
+    p = RESULTS_DIR / "g16-cpu" / "B7" / "model_comparison_val.json"
     if not p.exists():
         return []
     b = _load(p)
@@ -327,7 +327,7 @@ def bagian_banding_model():
     out += [
         "",
         "Bias: " + "; ".join(b["bias"]) + ".",
-        "Sumber: `bench/results/g16-cpu/B7/banding_model_val.json`",
+        "Sumber: `bench/results/g16-cpu/B7/model_comparison_val.json`",
         "",
     ]
     return out
@@ -377,7 +377,7 @@ def bagian_g3():
 
 def bagian_g4():
     kep_p = RESULTS_DIR / "decisions" / "G4.json"
-    tes_p = RESULTS_DIR / "test" / "b4_berkeley_v1_kesehatan.json"
+    tes_p = RESULTS_DIR / "test" / "b4_berkeley_v1_health.json"
     if not (kep_p.exists() and tes_p.exists()):
         return []
     kep, t = _load(kep_p), _load(tes_p)
@@ -386,7 +386,7 @@ def bagian_g4():
         "",
         (
             f"**{kep['status']}** ({kep['tanggal']}). H = 24 jam, kriteria dipra-registrasi sebelum data diunduh "
-            "(`bench/results/decisions/G4_kriteria.json`, `G4_definisi.json`)."
+            "(`bench/results/decisions/G4_criteria.json`, `G4_definition.json`)."
         ),
         "",
         "| metrik (mote test) | v0 aturan | berkeley_v1 (kesehatan) |",
@@ -408,7 +408,7 @@ def bagian_g4():
     out += [f"- {x}" for x in kep["alasan"] + kep["keterbatasan"]]
     return out + [
         "",
-        "Sumber: `bench/results/test/b4_berkeley_v1_kesehatan.json`, `bench/results/decisions/G4.json`",
+        "Sumber: `bench/results/test/b4_berkeley_v1_health.json`, `bench/results/decisions/G4.json`",
         "",
     ]
 
@@ -452,7 +452,7 @@ def buat_grafik(g2):
 
 
 def main():
-    from bench.report import bagian_b6 as b6
+    from bench.report import section_b6 as b6
 
     g2p = RESULTS_DIR / "G2.json"
     g2 = _load(g2p) if g2p.exists() else None

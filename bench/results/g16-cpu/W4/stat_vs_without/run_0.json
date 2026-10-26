@@ -4,7 +4,7 @@
   "konfigurasi": {
     "varian": [
       "dengan_stat",
-      "tanpa_stat"
+      "no_stat"
     ],
     "seed": [
       1000,
@@ -90,7 +90,7 @@
       "forecast_t30_mae_c_mean": 0.21079759895801545,
       "detik_mean": 245.8412802477993
     },
-    "tanpa_stat": {
+    "no_stat": {
       "runs": [
         {
           "seed": 1000,

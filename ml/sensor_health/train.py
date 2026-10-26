@@ -2,7 +2,7 @@
 
   python -m ml.sensor_health.train --tag g16-gpu --trials 40
 
-Langkah (definisi: bench/results/decisions/G4_definisi.json):
+Langkah (definisi: bench/results/decisions/G4_definition.json):
 1. v0 di mote val: PR-AUC + recall pada alarm skor >= 1.
 2. Sweep Optuna (TPE seed 0, trial tetap), objektif PR-AUC val (H = 24 jam).
 3. Latih ulang parameter terbaik, pilih ambang di val: alarm palsu/mote-hari terkecil dengan
@@ -44,8 +44,8 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--tag", default="g16-gpu")
     ap.add_argument("--trials", type=int, default=40)
-    ap.add_argument("--fitur", choices=["semua", "kesehatan"], default="semua",
-                    help="kesehatan = tanpa level lingkungan absolut (suhu/kelembapan/cahaya), lihat FITUR_LINGKUNGAN")
+    ap.add_argument("--fitur", choices=["all", "health"], default="all",
+                    help="health = tanpa level lingkungan absolut (suhu/kelembapan/cahaya), lihat FITUR_LINGKUNGAN")
     a = ap.parse_args(argv)
     _, kind = resolve_tag(a.tag)
     apply_device_env(kind)
@@ -54,8 +54,8 @@ def main(argv=None):
 
     df = ev.muat()
     tr, va = df[df["split"] == "train"], df[df["split"] == "val"]
-    cols = [c for c in ev.fitur_kolom(df) if a.fitur == "semua" or c not in FITUR_LINGKUNGAN]
-    nama = "berkeley_v1" if a.fitur == "semua" else "berkeley_v1_kesehatan"
+    cols = [c for c in ev.fitur_kolom(df) if a.fitur == "all" or c not in FITUR_LINGKUNGAN]
+    nama = "berkeley_v1" if a.fitur == "all" else "berkeley_v1_health"
     Xtr, ytr, Xva = tr[cols].to_numpy(np.float32), tr[LABEL].to_numpy(), va[cols].to_numpy(np.float32)
 
     v0 = ev.ringkas(va, va["skor_v0"], 1.0)

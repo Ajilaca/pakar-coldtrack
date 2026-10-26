@@ -1,6 +1,6 @@
 {
-  "id": "b9_xgb_chip_v5_konteks_duty_sintetis",
-  "model": "bench/results/local-cpu/B10/b9_xgb_chip_v5_konteks_duty_sintetis.json",
+  "id": "b9_xgb_chip_v5_context_synthetic_duty",
+  "model": "bench/results/local-cpu/B10/b9_xgb_chip_v5_context_synthetic_duty.json",
   "sha256_model": "e4f804f7828d00dd1820ec7ac321139b343f285e54df868cc3567ab689e2c0e6",
   "waktu_utc": "2026-10-25T10:11:21+00:00",
   "git": {
@@ -14,7 +14,7 @@
   "fitur": "72 statistik jendela + konteks tanpa suhu saat muat + 6 statistik siklus kerja kompresor SINTETIS (bench/b9_lib.py, isolasi sedang)",
   "val_seleksi": {
     "macro_f1": 0.933,
-    "sumber": "bench/results/local-cpu/B9/arus_sintetis.json (duty saja, isolasi sedang)"
+    "sumber": "bench/results/local-cpu/B9/synthetic_current.json (duty saja, isolasi sedang)"
   },
   "val_artefak_beku": {
     "macro_f1": 0.9333790254734631,

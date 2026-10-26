@@ -48,12 +48,12 @@ REGISTRY = {
             "W5",
             "Skala data simulator (tidak dijalankan: simulator v4 tidak reproducible)",
             "B5",
-            "bench.workloads.w5_skala",
+            "bench.workloads.w5_scale",
         ),
         Workload("W6", "Sensor-health Berkeley: fitur + XGBoost CPU vs cuda", "B5", "bench.workloads.w6_berkeley"),
         Workload("W7", "Inferensi ONNX (CPU EP vs CUDA EP, batch 1/32/256/1024)", "B2", "bench.workloads.w7_onnx"),
         Workload(
-            "W8", "Siklus inferensi end-to-end 24/100/500 truk (harness /analyze)", "B5", "bench.workloads.w8_siklus"
+            "W8", "Siklus inferensi end-to-end 24/100/500 truk (harness /analyze)", "B5", "bench.workloads.w8_cycle"
         ),
     ]
 }

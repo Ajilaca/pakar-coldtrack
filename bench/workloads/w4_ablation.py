@@ -14,7 +14,7 @@ from bench.core.common import SEEDS
 from bench.core.harness import run_config
 
 EPOCH = 10
-VARIAN = {"dengan_stat": {}, "tanpa_stat": {"pakai_statistik": False}}
+VARIAN = {"dengan_stat": {}, "no_stat": {"pakai_statistik": False}}
 
 
 def _ablation(device, quick):

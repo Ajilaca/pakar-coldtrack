@@ -1,4 +1,4 @@
-"""Metrik G4 sesuai bench/results/decisions/G4_definisi.json (tingkat jendela + episode alarm palsu)."""
+"""Metrik G4 sesuai bench/results/decisions/G4_definition.json (tingkat jendela + episode alarm palsu)."""
 
 import numpy as np
 import pandas as pd

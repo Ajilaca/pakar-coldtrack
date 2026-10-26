@@ -23,8 +23,8 @@ from hw.golden import trees as ph
 
 FW, AW, SW = 48, 16, 32
 # nama JSON beku di bench/results/local-cpu/B10/ -> (folder hw/model/, pakai siklus kerja)
-MODEL = {"b8_xgb_chip_v5_konteks": ("xgb_v5_context", False),
-         "b9_xgb_chip_v5_konteks_duty_sintetis": ("xgb_v5_context_duty", True)}
+MODEL = {"b8_xgb_chip_v5_context": ("xgb_v5_context", False),
+         "b9_xgb_chip_v5_context_synthetic_duty": ("xgb_v5_context_duty", True)}
 
 
 def hexs(v, bits):

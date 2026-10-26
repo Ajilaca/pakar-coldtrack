@@ -15,7 +15,7 @@ DIDAFTARKAN SEBELUM SWEEP DIJALANKAN (aturan main, tidak diubah setelah melihat 
 Ruang pencarian tetap dalam keluarga model yang sama (GRU + statistik ringkasan; XGBoost dengan
 72 fitur agregat). Tanpa transfer learning (temuan proposal).
 
-Hasil: bench/results/<tag>/B3/sweep_<model>/trial_XXX.json + ringkasan.json
+Hasil: bench/results/<tag>/B3/sweep_<model>/trial_XXX.json + summary.json
 """
 
 import argparse
@@ -145,7 +145,7 @@ def main(argv=None):
     study = optuna.create_study(direction="maximize", sampler=optuna.samplers.TPESampler(seed=0))
     study.optimize(objective, n_trials=a.trials)
     top = sorted(study.trials, key=lambda t: t.value, reverse=True)[:3]
-    write_json(out / "ringkasan.json", {
+    write_json(out / "summary.json", {
         "model": a.model, "tag": a.tag, "n_trial": len(study.trials), "detik_total": time.perf_counter() - t_mulai,
         "trial_per_jam": len(study.trials) / ((time.perf_counter() - t_mulai) / 3600),
         "terbaik": [{"trial": t.number, "skor": t.value, "params": t.params} for t in top],

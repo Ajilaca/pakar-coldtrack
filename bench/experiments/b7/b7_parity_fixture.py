@@ -6,7 +6,7 @@ diuji di G3 (ml/reports/coldtrack_b3.onnx) -- bila tidak sama, skrip gagal dan t
 Bila sama, keluaran PyTorch (ColdTrackDeploy) pada 64 jendela VAL disimpan sebagai acuan; tes
 backend membandingkan ONNX Runtime terhadap acuan itu. Split test tidak dipakai.
 
-  python -m bench.experiments.b7.b7_fixture_paritas --tag g16-gpu
+  python -m bench.experiments.b7.b7_parity_fixture --tag g16-gpu
 
 Keluaran: backend/tests/fixtures/v3_parity.npz (+ .json metadata)
 """

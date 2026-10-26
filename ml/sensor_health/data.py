@@ -1,6 +1,6 @@
 """Muat data Intel Berkeley Lab, resample per menit per mote, dan tentukan kejadian kegagalan.
 
-Kegagalan (G4_kriteria.json): pembacaan ekstrem pertama (nilai 122,15 C; ml/CHECKPOINT2_CONTEXT.md
+Kegagalan (G4_criteria.json): pembacaan ekstrem pertama (nilai 122,15 C; ml/CHECKPOINT2_CONTEXT.md
 §8: ~91 % bacaan ekstrem tepat bernilai ini, hanya saat tegangan < 2,4 V) ATAU mote mati (berhenti
 mengirim lebih dari H jam sebelum akhir data). Waktu kegagalan = yang lebih dulu.
 """

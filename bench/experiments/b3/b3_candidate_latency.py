@@ -3,9 +3,9 @@
 Indikasi biaya inferensi kandidat yang lebih besar (hidden 128 x 3 lapis). Bukan bagian W7 resmi;
 W7 penuh untuk kandidat dijalankan di B5.
 
-  python -m bench.experiments.b3.b3_latensi_kandidat     (jalankan dengan GPU disembunyikan: CPU EP)
+  python -m bench.experiments.b3.b3_candidate_latency     (jalankan dengan GPU disembunyikan: CPU EP)
 
-Hasil: bench/results/g16-cpu/B3/latensi_kandidat.json
+Hasil: bench/results/g16-cpu/B3/candidate_latency.json
 """
 
 import json
@@ -15,7 +15,7 @@ import sys
 
 from bench.core.common import RESULTS_DIR, ROOT, git_info, now_iso, write_json
 
-MODELS = {"proposal": "ml/reports/coldtrack.onnx", "kandidat_b3": "backend/models/candidates/coldtrack_gru_b3.onnx"}
+MODELS = {"proposal": "ml/reports/coldtrack.onnx", "candidate_b3": "backend/models/candidates/coldtrack_gru_b3.onnx"}
 
 
 def main():
@@ -30,7 +30,7 @@ def main():
                                check=True, capture_output=True, text=True, env=env)
             hasil["model"][nama][f"b{b}"] = json.loads(r.stdout.strip().splitlines()[-1])
             print(nama, b, hasil["model"][nama][f"b{b}"]["latensi_ms"])
-    print("Tersimpan:", write_json(RESULTS_DIR / "g16-cpu" / "B3" / "latensi_kandidat.json", hasil))
+    print("Tersimpan:", write_json(RESULTS_DIR / "g16-cpu" / "B3" / "candidate_latency.json", hasil))
 
 
 if __name__ == "__main__":

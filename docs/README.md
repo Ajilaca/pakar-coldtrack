@@ -8,7 +8,7 @@
 | `dataset_card.md`, `model_card.md` | Kartu dataset dan model |
 | `fleet_assumptions.md` | Asumsi armada, depo, rute, dan biaya |
 | `ai_governance.md` | Tata kelola AI: batas keputusan, audit, risiko |
-| `demo.md`, `demo_5_menit.md` | Menjalankan demo armada lokal dan naskah presenter 5 menit |
+| `demo.md`, `demo_5_minutes.md` | Menjalankan demo armada lokal dan naskah presenter 5 menit |
 | `PROPOSAL.md` | Proposal COMPFEST 18 (satu berkas utuh) |
 | `images/` | Gambar untuk README |
 

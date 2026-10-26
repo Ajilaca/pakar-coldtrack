@@ -6,7 +6,7 @@ Skrip menolak menulis bila ONNX beda dari PyTorch atau macro F1 val beda dari an
 
   python -m bench.experiments.b8.b8_export_onnx
 
-Hasil: backend/models/candidates/coldtrack_gru_v5_konteks.{onnx,json}
+Hasil: backend/models/candidates/coldtrack_gru_v5_context.{onnx,json}
 """
 
 import json
@@ -19,9 +19,9 @@ from torch import nn
 
 from bench.core.common import ROOT, git_info, now_iso, rel, sha256_file
 
-CKPT = ROOT / "data" / "processed" / "windows" / "gru_v5_konteks_seed1000.pt"
-SELEKSI = ROOT / "bench" / "results" / "local-cpu" / "B8" / "gru_v5_konteks_seed1000.json"
-OUT = ROOT / "backend" / "models" / "candidates" / "coldtrack_gru_v5_konteks"
+CKPT = ROOT / "data" / "processed" / "windows" / "gru_v5_context_seed1000.pt"
+SELEKSI = ROOT / "bench" / "results" / "local-cpu" / "B8" / "gru_v5_context_seed1000.json"
+OUT = ROOT / "backend" / "models" / "candidates" / "coldtrack_gru_v5_context"
 TOLERANSI = 1e-4
 
 
@@ -43,7 +43,7 @@ class Deploy(nn.Module):
 def main():
     from bench.experiments.b8 import b8_lib as b8
     from bench.experiments.b8.b8_gru import kelas_model
-    from bench.experiments.b8.b8_label_konteks import metrik_kelas
+    from bench.experiments.b8.b8_label_context import metrik_kelas
     from ml.preprocess.build_windows import FAILURE_CLASSES
     from ml.tests.test_data_contract import FEATURE_COLUMNS
 

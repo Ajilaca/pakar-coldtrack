@@ -3,7 +3,7 @@
   "config_id": "cpu_hist",
   "konfigurasi": {
     "device": "cpu",
-    "params_dari": "val_kesehatan.json"
+    "params_dari": "val_health.json"
   },
   "tag": "g16-cpu",
   "device": "cpu",

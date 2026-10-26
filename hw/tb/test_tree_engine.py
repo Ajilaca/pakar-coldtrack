@@ -19,7 +19,7 @@ ROOT = HW.parent
 sys.path.insert(0, str(ROOT))
 from hw.golden import trees as ph
 
-B8, B9 = "b8_xgb_chip_v5_konteks", "b9_xgb_chip_v5_konteks_duty_sintetis"
+B8, B9 = "b8_xgb_chip_v5_context", "b9_xgb_chip_v5_context_synthetic_duty"
 SW, N_JENDELA = 32, int(os.environ.get("N_JENDELA", "120"))
 
 

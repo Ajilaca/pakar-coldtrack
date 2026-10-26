@@ -2,7 +2,7 @@
 
 Butuh stack compose berjalan (db, mosquitto, api, worker-ingest). Dilewati kecuali COLDTRACK_FLEET_IT=1.
 
-  COLDTRACK_FLEET_IT=1 INGEST_TEST_KEY=<kunci generic_json> pytest tests/test_fleet_integrasi.py
+  COLDTRACK_FLEET_IT=1 INGEST_TEST_KEY=<kunci generic_json> pytest tests/test_fleet_integration.py
 
 Bacaan uji memakai ts di tahun 2030 (tidak bertabrakan dengan simulator) dan dihapus lagi di akhir.
 Urutan pesan QoS 1 pada satu topik dari satu klien dijaga broker, jadi "pesan penanda" yang dikirim

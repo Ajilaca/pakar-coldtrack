@@ -1,8 +1,8 @@
 """G4 -- evaluasi mote TEST, sekali per model, dengan kriteria pra-registrasi
-(bench/results/decisions/G4_kriteria.json + G4_definisi.json). Ambang dan penghalusan berasal dari
+(bench/results/decisions/G4_criteria.json + G4_definition.json). Ambang dan penghalusan berasal dari
 meta model (dipilih di mote val), tidak disetel ulang di sini.
 
-  python -m ml.sensor_health.test_once --model berkeley_v1_kesehatan
+  python -m ml.sensor_health.test_once --model berkeley_v1_health
 
 Akses dicatat dulu di bench/results/test_access_log.json; id yang sama ditolak bila diulang.
 Hasil: bench/results/test/b4_<model>.json
@@ -29,7 +29,7 @@ def main(argv=None):
     )
 
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--model", default="berkeley_v1_kesehatan")
+    ap.add_argument("--model", default="berkeley_v1_health")
     a = ap.parse_args(argv)
 
     log_path = RESULTS_DIR / "test_access_log.json"

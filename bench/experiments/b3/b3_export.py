@@ -42,7 +42,7 @@ def main(argv=None):
     from ml.tests.test_data_contract import FEATURE_COLUMNS
     from ml.training.model import ColdTrackDeploy, ColdTrackGRU
 
-    kep = json.loads((RESULTS_DIR / a.tag / "B3" / "keputusan_kandidat.json").read_text(encoding="utf-8"))
+    kep = json.loads((RESULTS_DIR / a.tag / "B3" / "candidate_decision.json").read_text(encoding="utf-8"))
     nama = kep["kandidat_terbaik"]["gru"]
     if nama is None:
         print("Tidak ada kandidat GRU yang lolos aturan adopsi -- tidak ada yang diekspor.")
@@ -94,11 +94,11 @@ def main(argv=None):
         "metrik_val_mean_5_seed": {k: v for k, v in ringkas.items() if k.endswith("_mean")},
         "metrik_val_model_final_seed1000": {k: v for k, v in metrik_final.items() if k not in ("confusion",)},
         "paritas_onnx_vs_pytorch": paritas, "paritas_ok": ok,
-        "sumber_keputusan": rel(RESULTS_DIR / a.tag / "B3" / "keputusan_kandidat.json"),
+        "sumber_keputusan": rel(RESULTS_DIR / a.tag / "B3" / "candidate_decision.json"),
         "latih": info,
     }
     write_json(OUT_DIR / "coldtrack_gru_b3.json", kartu)
-    write_json(RESULTS_DIR / a.tag / "B3" / "export_kandidat.json", kartu | {"onnx": rel(onnx_path)})
+    write_json(RESULTS_DIR / a.tag / "B3" / "candidate_export.json", kartu | {"onnx": rel(onnx_path)})
     print(f"Tersimpan: {rel(onnx_path)} | paritas {'OK' if ok else 'GAGAL'} | "
           f"val seed1000 F1 {metrik_final['macro_f1']:.4f} PR-AUC {metrik_final['anomali_pr_auc']:.4f}")
     return 0 if ok else 1

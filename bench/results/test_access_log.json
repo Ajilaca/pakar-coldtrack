@@ -11,7 +11,7 @@
     }
   },
   {
-    "id": "kandidat_b3",
+    "id": "candidate_b3",
     "model": "backend/models/candidates/coldtrack_gru_b3.onnx",
     "sha256_model": "fab911760e87dd1a9b44e3ea56cb4e8cc089da0aad7bca09481cf05e014da60c",
     "waktu_utc": "2026-10-10T22:53:13+00:00",
@@ -22,8 +22,8 @@
     }
   },
   {
-    "id": "b4_berkeley_v1_kesehatan",
-    "model": "ml/sensor_health/artifacts/berkeley_v1_kesehatan.json",
+    "id": "b4_berkeley_v1_health",
+    "model": "ml/sensor_health/artifacts/berkeley_v1_health.json",
     "sha256_model": "19fbf3cd0220ae4cae53c7570e43753b79fa7e50596bd8fe0cc09977320b2863",
     "waktu_utc": "2026-10-11T01:49:41+00:00",
     "git": {
@@ -34,8 +34,8 @@
     "split": "mote test (B4)"
   },
   {
-    "id": "b8_xgb_chip_v5_konteks",
-    "model": "bench/results/local-cpu/B10/b8_xgb_chip_v5_konteks.json",
+    "id": "b8_xgb_chip_v5_context",
+    "model": "bench/results/local-cpu/B10/b8_xgb_chip_v5_context.json",
     "sha256_model": "970a1efac1c100ad68eab1cce59129ba22d94217c2e7734e268b27ae311315c3",
     "waktu_utc": "2026-10-25T10:11:12+00:00",
     "git": {
@@ -45,8 +45,8 @@
     }
   },
   {
-    "id": "b9_xgb_chip_v5_konteks_duty_sintetis",
-    "model": "bench/results/local-cpu/B10/b9_xgb_chip_v5_konteks_duty_sintetis.json",
+    "id": "b9_xgb_chip_v5_context_synthetic_duty",
+    "model": "bench/results/local-cpu/B10/b9_xgb_chip_v5_context_synthetic_duty.json",
     "sha256_model": "e4f804f7828d00dd1820ec7ac321139b343f285e54df868cc3567ab689e2c0e6",
     "waktu_utc": "2026-10-25T10:11:21+00:00",
     "git": {
@@ -56,8 +56,8 @@
     }
   },
   {
-    "id": "b8_gru_v5_konteks",
-    "model": "backend/models/candidates/coldtrack_gru_v5_konteks.onnx",
+    "id": "b8_gru_v5_context",
+    "model": "backend/models/candidates/coldtrack_gru_v5_context.onnx",
     "sha256_model": "ae90d94be348273aee5baf61795066e4f3cc21aa5867460474e8542b7db7e051",
     "waktu_utc": "2026-10-26T03:25:27+00:00",
     "git": {

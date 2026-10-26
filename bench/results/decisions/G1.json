@@ -19,7 +19,7 @@
       "model": "xgb_ttb, xgb_clf",
       "ringkas": "Aturan +/- 2 SD tidak bermakna untuk XGBoost: deterministik (SD 0), dan acuannya basi.",
       "detail": "XGB_PARAMS tanpa subsample/colsample sehingga seed tidak berpengaruh dan kelima seed identik; aturan +/- 2 SD berubah menjadi 'harus identik'. Acuan ml/reports/baseline_metrics.json terakhir diubah 2026-08-06, sebelum commit 55a30fe (2026-08-13) yang mengubah cara jendela menghitung reefer_duration_min. Builder lama + data v4 mendekati acuan klasifikasi; sisa selisih TTB tidak terjelaskan oleh versi XGBoost 2.1.4-3.2.0 dan versi asli tidak tercatat.",
-      "sumber": ["bench/results/g16-cpu/B1/G1_investigasi.json"]
+      "sumber": ["bench/results/g16-cpu/B1/G1_investigation.json"]
     }
   ],
   "baseline_baru": {

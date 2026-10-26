@@ -7,9 +7,9 @@ Model acuan v3 (ml/reports/coldtrack_b3.onnx) dievaluasi di split VAL dua kali:
 Selisih (a) vs (b) adalah indikasi batas yang ditimbulkan definisi label, bukan target baru.
 Split test TIDAK disentuh.
 
-  python -m bench.experiments.b3.b3_batas_label
+  python -m bench.experiments.b3.b3_label_boundary
 
-Hasil: bench/results/g16-gpu/B3/batas_label.json
+Hasil: bench/results/g16-gpu/B3/label_boundary.json
 """
 
 import numpy as np
@@ -63,7 +63,7 @@ def main():
             f"{nama:12s} semua: F1 {a['macro_f1']:.3f} PR-AUC {a['anomali_pr_auc']:.3f} | "
             f"tanpa tak-berjejak ({b['n']}): F1 {b['macro_f1']:.3f} PR-AUC {b['anomali_pr_auc']:.3f}"
         )
-    print("Tersimpan:", write_json(RESULTS_DIR / "g16-gpu" / "B3" / "batas_label.json", hasil))
+    print("Tersimpan:", write_json(RESULTS_DIR / "g16-gpu" / "B3" / "label_boundary.json", hasil))
 
 
 if __name__ == "__main__":

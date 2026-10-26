@@ -70,7 +70,7 @@ def grafik_speedup(out, g2=None):
     ax.set_yticks(y, [f"{r['workload']} {r['config']}" for r in rows], fontsize=8)
     ax.set_xlabel("speedup = median waktu g16-cpu / median waktu g16-gpu (log; < 1 = GPU lebih lambat)")
     ax.set_title("Efek GPU murni per workload (mesin sama, CI 95 % bootstrap)")
-    return _simpan(fig, out / "1_speedup_gpu_murni.png")
+    return _simpan(fig, out / "1_speedup_pure_gpu.png")
 
 
 def grafik_komponen(out, cid="b256_fp32"):
@@ -95,7 +95,7 @@ def grafik_komponen(out, cid="b256_fp32"):
     ax.set_xlabel("detik (median 5 ulangan)")
     ax.set_title(f"W1 {cid}: waktu per komponen")
     ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.18), ncol=5, frameon=False, fontsize=8)
-    return _simpan(fig, out / f"2_komponen_W1_{cid}.png")
+    return _simpan(fig, out / f"2_components_W1_{cid}.png")
 
 
 def grafik_time_to_target(out):
@@ -171,7 +171,7 @@ def grafik_inferensi(out):
         return []
     paths = []
     for idx, (judul, ylabel, fname) in enumerate([
-            ("Latensi inferensi p50 per panggilan", "ms (median 5 ulangan, log)", "4a_latensi_W7.png"),
+            ("Latensi inferensi p50 per panggilan", "ms (median 5 ulangan, log)", "4a_latency_W7.png"),
             ("Throughput inferensi", "jendela / detik (log)", "4b_throughput_W7.png")]):
         fig, axes = plt.subplots(1, 2, figsize=(10, 3.8), sharey=False)
         for ax, (m, ss) in zip(axes, seri.items()):
@@ -219,4 +219,4 @@ def grafik_telemetri(out, csv_path, judul):
                     xycoords="axes fraction", ha="right", fontsize=8, color=INK2)
     axes[-1].set_xlabel("detik sejak awal run (sampel 1 Hz)")
     axes[0].set_title(judul)
-    return _simpan(fig, out / "5_telemetri_run_terpanjang.png")
+    return _simpan(fig, out / "5_telemetry_longest_run.png")

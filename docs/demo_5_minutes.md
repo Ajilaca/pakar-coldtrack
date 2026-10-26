@@ -163,10 +163,10 @@ Kembali ke **Ringkasan**.
 
 | Pertanyaan | Jawaban singkat (bersumber dari berkas di repo) |
 |---|---|
-| Seakurat apa modelnya? | GRU v5, test: Macro F1 0,820, PR-AUC 0,855 (label v5); 0,756 dan 0,812 dengan label lama (v3: 0,668 dan 0,786). `bench/results/test/b8_gru_v5_konteks.json`, `docs/model_card.md`. |
+| Seakurat apa modelnya? | GRU v5, test: Macro F1 0,820, PR-AUC 0,855 (label v5); 0,756 dan 0,812 dengan label lama (v3: 0,668 dan 0,786). `bench/results/test/b8_gru_v5_context.json`, `docs/model_card.md`. |
 | Kenapa label diubah? | Di v3, 58,4 % jendela pintu terbuka dan 50,5 % lonjakan ambien tidak memuat jejak kejadian karena label bertahan sampai akhir trip. Label v5 menganggap keduanya kejadian sementara, lalu model dilatih ulang dengan konteks trip. Kedua angka tetap kami laporkan. |
 | Apakah data nyata? | Tidak. Sintetis dari simulator; model Berkeley (data sensor nyata) tidak lolos evaluasi (G4). |
-| Latensi? | Model v3, CPU, batch 1: p50 1,474 ms per panggilan, jauh di bawah anggaran PRD 300 ms. (`docs/model_card.md` masih menulis 1,38 ms; angka terukur ada di `latensi_kandidat.json`.) |
+| Latensi? | Model v3, CPU, batch 1: p50 1,474 ms per panggilan, jauh di bawah anggaran PRD 300 ms. (`docs/model_card.md` masih menulis 1,38 ms; angka terukur ada di `candidate_latency.json`.) |
 | Perlu GPU? | Untuk inferensi per truk di CPU tidak perlu: GPU batch 1 justru lebih lambat (0,04×). GPU membantu untuk pelatihan dan batch besar. Detail: bagian 4 `BAHAN_PPT_TEKNIS.md`. |
 | Bisa pakai di truk nyata? | Belum. Butuh pilot dengan logger sungguhan untuk kalibrasi ambang, bobot sensor, dan harga per kg. |
 

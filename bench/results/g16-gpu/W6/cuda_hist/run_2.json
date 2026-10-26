@@ -3,7 +3,7 @@
   "config_id": "cuda_hist",
   "konfigurasi": {
     "device": "cuda",
-    "params_dari": "val_kesehatan.json"
+    "params_dari": "val_health.json"
   },
   "tag": "g16-gpu",
   "device": "cuda",

@@ -2,7 +2,7 @@
   "gerbang": "G4",
   "jenis": "adendum definisi operasional, ditulis SEBELUM kode evaluasi dan sebelum skor model apa pun dihitung",
   "tanggal": "2026-10-11",
-  "melengkapi": "bench/results/decisions/G4_kriteria.json (kriteria tidak berubah)",
+  "melengkapi": "bench/results/decisions/G4_criteria.json (kriteria tidak berubah)",
   "fakta_data_yang_sudah_dilihat": "Hanya eksplorasi label: 54 mote valid, semua mengalami kegagalan dalam periode data (51 bacaan ekstrem, 3 mati), umur 3-27 hari. Belum ada fitur, model, atau skor v0 yang dihitung.",
   "definisi": {
     "jendela": "60 menit data per menit (rata-rata bacaan), berakhir di menit t, langkah 10 menit; hanya jendela dengan t < waktu kegagalan mote (setelah gagal tidak dinilai)",

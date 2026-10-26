@@ -1,5 +1,5 @@
 {
-  "varian": "top1_bobot_asli",
+  "varian": "top1_original_weights",
   "seed": 1002,
   "params": {
     "hidden_size": 128,

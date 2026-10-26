@@ -41,7 +41,7 @@ class GruCfg:
         return asdict(self)
 
 
-def _tanpa_stat_cls():
+def _no_stat_cls():
     from ml.training.model import ColdTrackGRU
 
     class ColdTrackGRUTanpaStat(ColdTrackGRU):
@@ -64,7 +64,7 @@ def train(data, cfg: GruCfg, seed, device, log=None):
     from ml.training.model import ColdTrackGRU
 
     dev = torch.device(device)
-    ColdTrackGRUTanpaStat = _tanpa_stat_cls()
+    ColdTrackGRUTanpaStat = _no_stat_cls()
     seed_all(seed)
     g = torch.Generator().manual_seed(seed)
     tr = [t.to(dev) for t in data["train"].tensors]

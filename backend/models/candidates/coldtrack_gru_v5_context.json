@@ -6,7 +6,7 @@
     "branch": "main",
     "dirty": false
   },
-  "checkpoint": "data/processed/windows/gru_v5_konteks_seed1000.pt",
+  "checkpoint": "data/processed/windows/gru_v5_context_seed1000.pt",
   "sha256_onnx": "ae90d94be348273aee5baf61795066e4f3cc21aa5867460474e8542b7db7e051",
   "label": "v5 (bench/experiments/b8/b8_lib.py: A1/A7 sementara)",
   "konfigurasi": {

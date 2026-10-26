@@ -1,6 +1,6 @@
 {
-  "id": "b4_berkeley_v1_kesehatan",
-  "model": "ml/sensor_health/artifacts/berkeley_v1_kesehatan.json",
+  "id": "b4_berkeley_v1_health",
+  "model": "ml/sensor_health/artifacts/berkeley_v1_health.json",
   "sha256_model": "19fbf3cd0220ae4cae53c7570e43753b79fa7e50596bd8fe0cc09977320b2863",
   "waktu_utc": "2026-10-11T01:49:41+00:00",
   "git": {

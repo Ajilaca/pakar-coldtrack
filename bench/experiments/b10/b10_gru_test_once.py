@@ -6,7 +6,7 @@ split test dibangun dan dinilai. Bila id sudah tercatat, skrip menolak berjalan.
 
   python -m bench.experiments.b10.b10_gru_test_once
 
-Hasil: bench/results/test/b8_gru_v5_konteks.json
+Hasil: bench/results/test/b8_gru_v5_context.json
 """
 
 import json
@@ -25,9 +25,9 @@ from bench.core.common import (
 )
 from bench.experiments.b10.b10_test_once import LOG
 
-ID = "b8_gru_v5_konteks"
-ONNX = ROOT / "backend" / "models" / "candidates" / "coldtrack_gru_v5_konteks.onnx"
-SELEKSI = RESULTS_DIR / "local-cpu" / "B8" / "gru_v5_konteks_seed1000.json"
+ID = "b8_gru_v5_context"
+ONNX = ROOT / "backend" / "models" / "candidates" / "coldtrack_gru_v5_context.onnx"
+SELEKSI = RESULTS_DIR / "local-cpu" / "B8" / "gru_v5_context_seed1000.json"
 HORIZON = (15, 30, 60)
 
 
@@ -40,7 +40,7 @@ def main():
     import onnxruntime as ort
 
     from bench.experiments.b8 import b8_lib as b8
-    from bench.experiments.b8.b8_label_konteks import metrik_kelas
+    from bench.experiments.b8.b8_label_context import metrik_kelas
 
     log = json.loads(LOG.read_text(encoding="utf-8")) if LOG.exists() else []
     if any(e["id"] == ID for e in log):

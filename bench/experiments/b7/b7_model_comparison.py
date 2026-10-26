@@ -1,6 +1,6 @@
 """Banding checkpoint-2 (backend saat ini) vs v3 (coldtrack_b3.onnx) vs v2 (proposal) pada jendela SAMA.
 
-  python -m bench.experiments.b7.b7_banding_model [--split val]
+  python -m bench.experiments.b7.b7_model_comparison [--split val]
 
 - Jendela dan label = eval/common.eval_rows (seleksi jendela yang sama dengan suite eval backend).
 - checkpoint-2 dijalankan seperti terpasang: inference_engine.analyze_trip (engine + GRU + aturan).

@@ -262,7 +262,7 @@ def bagian_b5(g2):
         ("W4", ("stat_vs_without",) * 3, "macro F1 mean 5 seed, dengan statistik",
          lambda rs: mean(x["macro_f1"] for x in rs[0]["varian"]["dengan_stat"]["runs"])),
         ("W4", ("stat_vs_without",) * 3, "macro F1 mean 5 seed, tanpa statistik",
-         lambda rs: mean(x["macro_f1"] for x in rs[0]["varian"]["tanpa_stat"]["runs"])),
+         lambda rs: mean(x["macro_f1"] for x in rs[0]["varian"]["no_stat"]["runs"])),
         ("W6", ("cuda_hist", "cpu_hist", "cpu_hist"), "PR-AUC mote val", lambda rs: median(r["metrik_val"]["pr_auc"] for r in rs)),
     ]
     for w, (cg, cc, cd), metrik, f in kual:

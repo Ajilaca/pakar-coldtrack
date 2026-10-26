@@ -7,9 +7,9 @@ Ditambah 6 statistik jendela untuk tiap kolom kompresor (bench/b9_lib.KOLOM).
   S2  sebaran isolasi sedang/lebar  (truk sehat berisolasi buruk juga ber-duty tinggi)
   S3  duty saja vs duty + arus      (reefer digerakkan mesin tidak punya arus kompresor)
 
-  python -m bench.experiments.b9.b9_arus_sintetis
+  python -m bench.experiments.b9.b9_synthetic_current
 
-Hasil: bench/results/local-cpu/B9/arus_sintetis.json. Split test tidak disentuh.
+Hasil: bench/results/local-cpu/B9/synthetic_current.json. Split test tidak disentuh.
 """
 
 import time
@@ -27,7 +27,7 @@ def main():
     import xgboost as xgb
 
     from bench.experiments.b8 import b8_lib as b8
-    from bench.experiments.b8.b8_label_konteks import UKURAN, metrik_kelas
+    from bench.experiments.b8.b8_label_context import UKURAN, metrik_kelas
     from bench.experiments.b9 import b9_lib as b9
     from ml.evaluation.baselines import XGB_PARAMS, aggregate
 
@@ -62,7 +62,7 @@ def main():
             hasil["run"].append(latih({s: np.c_[dasar[s], agg[s]] for s in d},
                                       f"duty + arus efek {int(skala * 100)}%, isolasi {nama_iso}",
                                       isolasi=nama_iso, fitur="duty+arus", skala_efek=skala))
-    print("Tersimpan:", write_json(OUT / "arus_sintetis.json", hasil))
+    print("Tersimpan:", write_json(OUT / "synthetic_current.json", hasil))
 
 
 if __name__ == "__main__":

@@ -9,7 +9,7 @@ sudah ada di hw/rtl/physics.sv (keluaran hw/golden/physics.py, dihitung float da
   tren20        ts10 + T x kemiringan 20 menit (sinyal "hanyut" mesin fisika)
 GRU v3 (backend/models/coldtrack_v3.onnx) dijalankan pada jendela yang sama.
 
-  python -m bench.experiments.b11.b11_forecast_fisika
+  python -m bench.experiments.b11.b11_physics_forecast
 """
 
 import json
@@ -26,7 +26,7 @@ sys.path.insert(0, str(ROOT / "backend"))
 
 H = [15, 30, 60]
 W = 60
-OUT = ROOT / "bench/results/local-cpu/B11/forecast_fisika.json"
+OUT = ROOT / "bench/results/local-cpu/B11/physics_forecast.json"
 
 
 def fisika_trip(g, prod):

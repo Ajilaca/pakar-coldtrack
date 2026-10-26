@@ -160,7 +160,7 @@ proposal §4.3.7).
 Semua endpoint di bawah membaca TimescaleDB yang diisi `worker-ingest` dan `worker-infer`
 (`docker compose up`). "Sekarang" = jam bersama `app/clock.py`; di dev ini jam simulasi (`SIM_SPEED`).
 Implementasi ada di `backend/app/routers/fleet.py` dan `backend/app/fleet/queries.py`. Tes integrasinya
-di `backend/tests/test_fleet_integrasi.py`.
+di `backend/tests/test_fleet_integration.py`.
 
 | Metode | Path | Isi |
 |---|---|---|

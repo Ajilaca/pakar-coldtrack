@@ -6,9 +6,9 @@ Langkah (lihat bench/experiments/b8/b8_lib.py untuk definisi):
   gru    GRU konfigurasi v3 (labels_b3.json) dilatih ulang dengan label v5, tanpa/dengan konteks
   ringkas  gabungkan hasil ke satu tabel
 
-  python -m bench.experiments.b8.b8_label_konteks v3
-  python -m bench.experiments.b8.b8_label_konteks xgb --seeds 1000 1001 1002
-  python -m bench.experiments.b8.b8_label_konteks gru --konteks --seed 1000      # berhenti dini, --patience 8
+  python -m bench.experiments.b8.b8_label_context v3
+  python -m bench.experiments.b8.b8_label_context xgb --seeds 1000 1001 1002
+  python -m bench.experiments.b8.b8_label_context gru --konteks --seed 1000      # berhenti dini, --patience 8
 
 Hasil: bench/results/local-cpu/B8/. Split test tidak disentuh.
 """
@@ -62,7 +62,7 @@ def cmd_v3(_):
              "label_lama": metrik_kelas(d["y_lama"], proba), "label_v5": metrik_kelas(d["y_baru"], proba)}
     for k in ("label_lama", "label_v5"):
         print(f"{k:10s} macro F1 {hasil[k]['macro_f1']:.3f}  PR-AUC {hasil[k]['anomali_pr_auc']:.3f}")
-    print("Tersimpan:", write_json(OUT / "v3_skor_ulang.json", hasil))
+    print("Tersimpan:", write_json(OUT / "v3_rescore.json", hasil))
 
 
 def _fitur_xgb(split, konteks):
@@ -116,7 +116,7 @@ def cmd_gru(a):
     data = b8_gru.siapkan(b8.muat("train"), b8.muat("val"), konteks=a.konteks, label="y_baru")
     model, info = b8_gru.latih(data, cfg, a.seed, log=print)
     m = b8_gru.evaluasi(model, data)
-    nama = f"gru_v5_{'konteks' if a.konteks else 'tanpa_konteks'}_seed{a.seed}"
+    nama = f"gru_v5_{'context' if a.konteks else 'no_context'}_seed{a.seed}"
     torch.save({"state": model.state_dict(), "mean": data["mean"], "std": data["std"],
                 "ctx_mean": data["ctx_mean"], "ctx_std": data["ctx_std"], "cfg": cfg, "konteks": a.konteks},
                ROOT / "data" / "processed" / "windows" / f"{nama}.pt")

@@ -1,5 +1,5 @@
 {
-  "b8_xgb_chip_v5_konteks": {
+  "b8_xgb_chip_v5_context": {
     "jendela": 16414,
     "kelas_sama_dengan_xgboost": 0.9979895211404898,
     "jumlah_beda": 33,
@@ -10,7 +10,7 @@
     "jumlah_simpul": 8480,
     "jumlah_pohon": 420
   },
-  "b9_xgb_chip_v5_konteks_duty_sintetis": {
+  "b9_xgb_chip_v5_context_synthetic_duty": {
     "jendela": 16414,
     "kelas_sama_dengan_xgboost": 0.9989642987693432,
     "jumlah_beda": 17,

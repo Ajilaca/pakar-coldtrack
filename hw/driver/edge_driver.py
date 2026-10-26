@@ -31,7 +31,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name
 logger = logging.getLogger("coldtrack.edge_driver")
 
 FLEET = ROOT / "backend" / "data" / "fleet"
-MODEL = ROOT / "bench/results/local-cpu/B10/b9_xgb_chip_v5_konteks_duty_sintetis.json"
+MODEL = ROOT / "bench/results/local-cpu/B10/b9_xgb_chip_v5_context_synthetic_duty.json"
 
 
 def trip_truk(truck_id: str) -> tuple[dict, dict, pd.DataFrame, dict]:

@@ -4,16 +4,16 @@
 
 Varian GRU (5 seed masing-masing):
   baseline              konfigurasi asli ml/training/finetune.py
-  baseline_tanpa_stat   ablation: jalur statistik ringkasan dimatikan
+  baseline_no_stat   ablation: jalur statistik ringkasan dimatikan
   sweep_top{1,2,3}      top-3 sweep GRU
-  top1_tanpa_stat       ablation pada kandidat terbaik
-  top1_bobot_asli       kandidat terbaik dengan bobot loss asli (30/1/8)
+  top1_no_stat       ablation pada kandidat terbaik
+  top1_original_weights       kandidat terbaik dengan bobot loss asli (30/1/8)
 Varian XGBoost classifier (5 seed): baseline (ml/baselines.XGB_PARAMS) dan top-3 sweep XGB.
 
 Aturan adopsi (didaftarkan di bench/experiments/b3/b3_sweep.py sebelum sweep): kandidat lolos bila mean skor
 5 seed > mean baseline + rentang antar-seed baseline, dan (GRU) mean forecast_t30 <= 0,25 C.
 
-Hasil: bench/results/<tag>/B3/confirm/<varian>_seed<seed>.json + keputusan_kandidat.json
+Hasil: bench/results/<tag>/B3/confirm/<varian>_seed<seed>.json + candidate_decision.json
 """
 
 import argparse
@@ -27,7 +27,7 @@ from bench.experiments.b3.b3_sweep import BATAS_FORECAST_T30, eval_gru, eval_xgb
 
 
 def _top(tag, model):
-    p = RESULTS_DIR / tag / "B3" / f"sweep_{model}" / "ringkasan.json"
+    p = RESULTS_DIR / tag / "B3" / f"sweep_{model}" / "summary.json"
     return json.loads(p.read_text(encoding="utf-8"))["terbaik"]
 
 
@@ -59,10 +59,10 @@ def main(argv=None):
     base = GruCfg()
     top_gru = _top(a.tag, "gru")
     best = GruCfg(**top_gru[0]["params"])
-    varian_gru = {"baseline": base, "baseline_tanpa_stat": replace(base, pakai_statistik=False)}
+    varian_gru = {"baseline": base, "baseline_no_stat": replace(base, pakai_statistik=False)}
     varian_gru |= {f"sweep_top{i + 1}": GruCfg(**t["params"]) for i, t in enumerate(top_gru)}
-    varian_gru |= {"top1_tanpa_stat": replace(best, pakai_statistik=False),
-                   "top1_bobot_asli": replace(best, w_forecast=30.0, w_failure=1.0, w_ttb=8.0)}
+    varian_gru |= {"top1_no_stat": replace(best, pakai_statistik=False),
+                   "top1_original_weights": replace(best, w_forecast=30.0, w_failure=1.0, w_ttb=8.0)}
 
     base_xgb = {k: v for k, v in XGB_PARAMS.items() if k not in ("random_state", "n_jobs", "tree_method")}
     varian_xgb = {"baseline": base_xgb | {"class_weight_power": 0.0}}
@@ -113,7 +113,7 @@ def main(argv=None):
     hasil["keputusan"] = keputusan
     hasil["kandidat_terbaik"] = {m: max((k for k in lolos if k.startswith(m)), key=lambda k: lolos[k]["skor_mean"],
                                         default=None) for m in ("gru", "xgb")}
-    write_json(RESULTS_DIR / a.tag / "B3" / "keputusan_kandidat.json", hasil)
+    write_json(RESULTS_DIR / a.tag / "B3" / "candidate_decision.json", hasil)
     print("Kandidat lolos aturan adopsi:", hasil["kandidat_terbaik"])
 
 

@@ -1,7 +1,7 @@
 """G3 -- evaluasi split TEST, SEKALI per model. Hanya dijalankan setelah user menyetujui di G3.
 
   python -m bench.experiments.b3.b3_test_once --model ml/reports/coldtrack.onnx --id baseline_proposal
-  python -m bench.experiments.b3.b3_test_once --model backend/models/candidates/coldtrack_gru_b3.onnx --id kandidat_b3
+  python -m bench.experiments.b3.b3_test_once --model backend/models/candidates/coldtrack_gru_b3.onnx --id candidate_b3
 
 Setiap akses dicatat di bench/results/test_access_log.json (append). Bila --id yang sama sudah
 pernah dievaluasi, skrip MENOLAK berjalan (aturan: split test dipakai sekali per model).

@@ -112,7 +112,7 @@ def latih(data, cfg, seed, log=None):
 
 @torch.no_grad()
 def evaluasi(model, data, bs=4096):
-    from bench.experiments.b8.b8_label_konteks import metrik_kelas
+    from bench.experiments.b8.b8_label_context import metrik_kelas
     from ml.evaluation.evaluate import metrics_from_outputs
 
     va = data["val"]
