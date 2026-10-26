@@ -149,7 +149,12 @@ def _guard_label(label: str, confidence: float, sensor_status: int, status: str,
     return {"label": label, "confidence": float(round(confidence, 3))}
 
 
-def pilih_label_v3(prob: np.ndarray, api_labels: list[str]) -> tuple[str, float]:
+# Kelas yang hanya boleh datang dari aturan, tidak dari model (B12: model mengenalinya dari satu sinyal bersih
+# simulator). masalah_sensor: keputusan user 2026-10-11. prapendinginan_buruk: B12, aturan_diagnosis di bawah.
+HANYA_ATURAN = ("masalah_sensor", "prapendinginan_buruk")
+
+
+def pilih_label_v3(prob: np.ndarray, api_labels: list[str], buang: tuple[str, ...] = HANYA_ATURAN) -> tuple[str, float]:
     """Kelas teratas v3, KECUALI masalah_sensor: kerusakan sensor hanya boleh datang dari lapisan
     aturan (sama dengan prinsip checkpoint-2; keputusan user 2026-10-11). Masukan sintetis yang terlalu
     mulus (mis. form isian manual) menyerupai sensor macet bagi v3 meski sensornya sehat. Bila aturan
@@ -158,15 +163,50 @@ def pilih_label_v3(prob: np.ndarray, api_labels: list[str]) -> tuple[str, float]
     Saat kelas teratas adalah masalah_sensor (dibuang), sisa kelas biasanya berpeluang kecil; aturan
     checkpoint-2 dipakai persis: kelas gangguan lain hanya dipakai bila peluangnya >= 0,5, selain itu
     normal_sehat dengan keyakinan 1 - maks(peluang kelas gangguan lain). Status bukan AMAN tetap
-    diganti label aturan oleh _guard_label."""
+    diganti label aturan oleh _guard_label. Kelas lain di `buang` diperlakukan sama."""
     top = int(np.argmax(prob))
-    if api_labels[top] != "masalah_sensor":
+    if api_labels[top] not in buang:
         return api_labels[top], float(prob[top])
-    lain = [i for i, lab in enumerate(api_labels) if lab not in ("masalah_sensor", "normal_sehat")]
+    lain = [i for i, lab in enumerate(api_labels) if lab not in (*buang, "normal_sehat")]
     j = max(lain, key=lambda i: prob[i])
     if prob[j] >= 0.5:
         return api_labels[j], float(prob[j])
     return "normal_sehat", 1.0 - float(prob[j])
+
+
+# Aturan diagnosis (B12): kelas yang model kenali hanya dari satu sinyal dijadikan aturan eksplisit.
+REEFER_MATI_MENIT = 15      # [ASUMSI] lebih lama dari jeda defrost singkat; di simulator v4 A3 mati >= 35 menit
+REEFER_MATI_NAIK_C = 0.5    # [ASUMSI] suhu naik sejak reefer melapor mati
+LABEL_UMUM = ("normal_sehat", "suhu_muatan_mendekati_batas")
+
+
+def aturan_diagnosis(out: pd.DataFrame, feats: pd.DataFrame, t_hi: float, suhu_awal: float | None = None) -> None:
+    """Timpa label pada `out` (baris terakhir `feats`) dengan aturan, setelah provider dan _guard_label.
+
+    reefer_mati_total  reefer melapor mati >= REEFER_MATI_MENIT menit berturut-turut dan suhu naik >=
+                       REEFER_MATI_NAIK_C sejak mati. Model tetap boleh memberi A3 sendiri dari pola suhu.
+    prapendinginan_buruk  suhu awal muat (rata-rata 5 bacaan pertama trip) > batas atas profil: fakta tingkat trip,
+                       berlaku sampai akhir trip seperti label simulator (muatan A8 biasanya masuk rentang < 60 menit).
+                       Hanya menggantikan label umum, jadi kejadian lain tetap tampil. Model tidak memberi kelas ini.
+    Label sensor dari aturan (sensor_status >= 1) tidak diubah."""
+    if "label" not in out or feats is None or feats.empty:
+        return
+    temp = feats["temp_c"].to_numpy(np.float64)
+    mati = feats["reefer_on"].to_numpy() < 0.5
+    run = np.zeros(len(mati), dtype=int)
+    for i, m in enumerate(mati):
+        run[i] = (run[i - 1] + 1 if i else 1) if m else 0
+    awal = float(np.mean(temp[:5])) if suhu_awal is None else float(suhu_awal)
+    rows = np.arange(len(feats) - len(out), len(feats))
+    label, conf = out["label"].to_list(), out["confidence"].to_list()
+    for k, t in enumerate(rows):
+        if out["sensor_status"].iat[k] >= 1:
+            continue
+        if run[t] >= REEFER_MATI_MENIT and temp[t] - temp[max(t - run[t], 0)] >= REEFER_MATI_NAIK_C:
+            label[k], conf[k] = "reefer_mati_total", 1.0
+        elif awal > t_hi and label[k] in LABEL_UMUM:
+            label[k], conf[k] = "prapendinginan_buruk", 1.0
+    out["label"], out["confidence"] = label, conf
 
 
 def _risk_index(status: str, ttb_phys: float, sensor_bad: bool) -> float:
@@ -336,6 +376,7 @@ class HybridInferenceEngine:
         ]
         if self.provider.is_ready:
             self.provider.run(trip, out, feats, awal)
+            aturan_diagnosis(out, feats, prod["t_hi"], None if awal is None else awal[1])
         return out
 
     def forecast_last(self, readings: list[TelemetryReading], awal: AwalTrip | None = None) -> dict[str, float] | None:
