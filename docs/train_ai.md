@@ -8,9 +8,10 @@ data logger truk sungguhan.
 
 - Model dilatih dari nol pada **dataset v4**: 700 trip hasil simulator fisika, 251.073 baris per menit
   (`data/processed/v4_seed1000_700trips.parquet`, seed 1000).
-- Dataset publik (IoT India, Intel Berkeley, NASA POWER, dan lainnya) tidak dipakai sebagai data latih. Perannya
-  hanya referensi untuk merancang simulator dan kalibrasi. Rencana prapelatihan pada data IoT diuji dan
-  ditinggalkan karena tidak membantu (model_card.md, Ablation B).
+- Dataset publik membentuk simulator, tetapi tidak ada baris data nyata yang masuk ke data latih. NASA POWER
+  memberi kurva iklim, Intel Berkeley memberi parameter kegagalan sensor, dan UAH-DriveSet memberi statistik
+  mengemudi. Data IoT India sempat dipakai untuk prapelatihan, lalu ditinggalkan karena tidak membantu
+  (model_card.md, Ablation B). Daftar lengkapnya di bagian 8.
 - Label (mode kegagalan, Time-to-Breach) tidak tersedia di data publik mana pun, jadi dibuat dari simulator.
 - Di backend, status AMAN/WASPADA/KRITIS dan TTB yang ditampilkan datang dari **mesin fisika**, bukan dari model.
   Model hanya memberi forecast suhu dan diagnosis penyebab.
@@ -208,19 +209,29 @@ asumsi desain yang konservatif, dipakai hanya untuk membuat label TTB pada data 
 - **Bug label yang sudah diperbaiki.** TTB konstan per trip dan massa muatan berat yang tidak pernah breach
   (v2/v3), serta `failure_mode` konstan per trip yang membuat 48,3% jendela salah label (v4, kini 0,00%).
 
-## 8. Dataset publik yang dipakai sebagai referensi
+## 8. Dataset publik
 
-Tidak ada yang dipakai mentah sebagai data latih.
+Tujuh dataset publik dianalisis (EDA). Tabel di bawah menunjukkan apa yang akhirnya dipakai dan untuk apa.
+Tidak ada yang dimasukkan mentah ke data latih model produksi.
 
-| Dataset | Sumber | Dipakai untuk |
-|---|---|---|
-| NASA POWER (`T2M`, `ALLSKY_SFC_SW_DWN`) | power.larc.nasa.gov | Kurva suhu luar dan radiasi Jakarta di simulator |
-| Intel Berkeley Lab (2,3 juta baris, 54 sensor) | db.csail.mit.edu/labdata | Pola kegagalan sensor nyata untuk A5 dan A6. 17,7% bacaan adalah outlier ekstrem |
-| UAH-DriveSet (1 pengemudi, 7 rute) | robesafe.uah.es | Statistik rem dan belok keras untuk `harsh_events`. Lisensi akademik, tidak boleh didistribusikan ulang |
-| Temperature Readings: IoT Devices (97.606 baris, India) | Kaggle (atulanandjha), LGPL 3.0 | Prapelatihan GRU, kemudian ditinggalkan. Dipakai juga untuk uji sim-to-real |
-| NAB realKnownCause | Kaggle (boltzmannbrain/nab) | Set uji eksternal anomali suhu, konversi Fahrenheit ke Celsius |
-| Smart Manufacturing IoT-Cloud (100.000 baris) | Kaggle (ziya07), CC0-1.0 | Pembanding struktur label. Rasio anomalinya 8,9%, jauh lebih timpang dari desain kami |
-| Taxi Trajectory Porto (1,7 juta trip) | Kaggle (crailtap) | Referensi pola berhenti dan jalan untuk generator rute |
+| Dataset | Sumber | Status | Dipakai untuk |
+|---|---|---|---|
+| NASA POWER (`T2M`, `ALLSKY_SFC_SW_DWN`) | power.larc.nasa.gov | **Dipakai** | Kurva suhu luar dan radiasi matahari Jakarta di simulator, sehingga datanya terasa Indonesia. Rentang suhu sampel 26 sampai 31,3 °C, radiasi 0 di malam hari |
+| Intel Berkeley Lab (2,3 juta baris, 54 sensor) | db.csail.mit.edu/labdata | **Dipakai** | Parameter kegagalan sensor di simulator (derau sehat, nilai macet ekstrem 122,15 °C, jumlah peralihan median) untuk A5 dan A6. Juga dipakai melatih model kesehatan sensor eksperimen (`ml/sensor_health/`), yang tidak lolos gerbang G4. 17,7% bacaan adalah outlier ekstrem |
+| UAH-DriveSet (1 pengemudi, 7 rute) | robesafe.uah.es | **Dipakai** sebagai referensi | Statistik rem dan belok keras untuk parameter `harsh_events`. Lisensi akademik, tidak boleh didistribusikan ulang, wajib disitasi (Romera et al., ITSC 2016) |
+| Temperature Readings: IoT Devices (97.606 baris, India) | Kaggle (atulanandjha), LGPL 3.0 | **Sempat dipakai**, lalu ditinggalkan | Prapelatihan backbone GRU pada data outdoor. Hasilnya tidak membantu (loss latih lebih rendah tetapi loss validasi lebih tinggi), jadi model produksi dilatih dari nol. Sekarang hanya untuk uji sim-to-real (bagian 7) |
+| NAB realKnownCause | Kaggle (boltzmannbrain/nab) | Referensi | Set uji eksternal anomali suhu nyata; nilai Fahrenheit dikonversi ke Celsius. Tidak masuk pipeline latih |
+| Smart Manufacturing IoT-Cloud (100.000 baris) | Kaggle (ziya07), CC0-1.0 | Referensi | Pembanding struktur label. Rasio anomalinya 8,9%, jauh lebih timpang dari rancangan kami, dan label `failure_type` dibuat independen dari `anomaly_flag` |
+| Taxi Trajectory Porto (1,7 juta trip) | Kaggle (crailtap) | Referensi | Gambaran pola berhenti dan jalan untuk generator rute. Trip berdurasi 0 detik dan 10,5 jam dibuang |
+
+Catatan dari analisis:
+
+- Data IoT berasal dari India (21 sampai 51 °C), jadi hanya mengajarkan bentuk kurva suhu, bukan nilai ambien
+  Indonesia. Nilai itu datang dari NASA POWER.
+- Interval pencatatan data IoT tidak konsisten (celah maksimum sekitar 11,5 hari), sehingga perlu dibuat ulang
+  ke interval 1 menit sebelum dipakai.
+- Outlier Berkeley tersebar acak di hampir semua sensor, tanda derau transmisi sesaat, bukan sensor yang mati
+  permanen. Dua sensor (moteid 5 dan 57) hampir tidak pernah mengirim data.
 
 ## 9. Mengulang dari awal
 
