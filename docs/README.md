@@ -2,7 +2,7 @@
 
 | Berkas | Isi |
 |---|---|
-| `architecture.md` | Arsitektur sistem. Bagian 1 dan 5 masih menggambarkan MVP lama tanpa database; bagian 2.5 adalah armada saat ini |
+| `architecture.md` | Arsitektur saat ini: chip edge, backend armada, model, dan alur per menit |
 | `api_contract.md`, `device_contract.md` | Kontrak REST dan kontrak perangkat (payload MQTT) |
 | `train_ai.md` | Dataset latih, rumus fisika simulator dan mesin fisika, 12 kolom fitur, keterbatasan |
 | `model_card.md` | Kartu model: arsitektur, metrik, perbandingan versi |

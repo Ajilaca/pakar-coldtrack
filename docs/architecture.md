@@ -1,193 +1,114 @@
-# System Architecture — ColdTrack AI
+# Arsitektur ColdTrack AI
 
-## 1. Overview & Architectural Philosophy
-
-ColdTrack AI is designed as a **synchronous, stateless, single-transaction AI cold-chain risk evaluation platform**. The system takes 60-minute sliding windows of IoT telemetry readings (temperature, humidity, vehicle dynamics, ambient environmental conditions) and outputs:
-1. Multi-horizon temperature forecasts ($t+15, t+30, t+60$ minutes).
-2. Failure mode diagnosis across 7 operational anomaly classes.
-3. Time-to-Breach (TTB) countdown in minutes before cargo safe thermal thresholds are violated.
-4. Cargo Risk Index ($0.0 - 1.0$) and status classification (`AMAN`, `WASPADA`, `KRITIS`).
-5. 3 prioritized response actions with ETA estimates.
-6. Top 3 feature contribution drivers explaining the prediction rationale.
-
-The architecture strictly adheres to a **zero-side-effect, zero-database design** to ensure single-command deployment (`docker compose up --build`), sub-5ms response latency, and bulletproof reliability during live competition demonstrations.
+Sistem ini punya tiga bagian: chip edge di truk (KV260), backend armada, dan dasbor. Chip menghitung status dan
+diagnosis sekali di truk. Backend memverifikasi hasilnya, menambahkan forecast suhu, lalu dasbor
+menampilkannya. Truk yang belum memakai chip dihitung penuh di cloud dengan komponen yang sama.
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                              FRONTEND INTERFACE                                 │
-│                   Next.js 14 App Router + Tailwind CSS + Recharts               │
-└────────────────────────────────────────┬────────────────────────────────────────┘
-                                         │
-                        POST /api/v1/analyze (HTTP/1.1 JSON)
-                                         │
-┌────────────────────────────────────────▼────────────────────────────────────────┐
-│                              BACKEND FASTAPI ENGINE                             │
-│                      Uvicorn Single-Worker Process (Python 3.11)                │
-│                                                                                 │
-│   ┌─────────────────────────────────────────────────────────────────────────┐   │
-│   │ 1. Pydantic v2 Input Validation (min_length=60, type checks)            │   │
-│   └────────────────────────────────────┬────────────────────────────────────┘   │
-│                                        │                                        │
-│   ┌────────────────────────────────────▼────────────────────────────────────┐   │
-│   │ 2. Preprocessing & Derived Feature Pipeline                             │   │
-│   │    - Delta Temp, Delta Ambient, Reefer Duration, Hour of Day            │   │
-│   │    - Target Leakage Guard & [1, 60, 12] Tensor Assembly                 │   │
-│   └────────────────────────────────────┬────────────────────────────────────┘   │
-│                                        │                                        │
-│   ┌────────────────────────────────────▼────────────────────────────────────┐   │
-│   │ 3. Dual-ONNX Runtime CPU Inference Engine                               │   │
-│   │    ├─ coldtrack.onnx     ──► Forecast (t15,t30,t60) + Failure Probs(7)  │   │
-│   │    └─ coldtrack_ttb.onnx ──► Dedicated Time-to-Breach Regression        │   │
-│   └────────────────────────────────────┬────────────────────────────────────┘   │
-│                                        │                                        │
-│   ┌────────────────────────────────────▼────────────────────────────────────┐   │
-│   │ 4. Cargo Risk Index Scorer & Status Classifier                          │   │
-│   │    - Risk = 0.4*Temp + 0.25*Rate + 0.2*Reefer + 0.15*Door              │   │
-│   └────────────────────────────────────┬────────────────────────────────────┘   │
-│                                        │                                        │
-│   ┌────────────────────────────────────▼────────────────────────────────────┐   │
-│   │ 5. Deterministic Action & Feature Explanation Engine                    │   │
-│   │    - 3 Priority Actions + Feature Contribution Drivers                  │   │
-│   └─────────────────────────────────────────────────────────────────────────┘   │
-└────────────────────────────────────────┬────────────────────────────────────────┘
-                                         │
-                             Single JSON Response Payload
-                                         │
-                                         ▼
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                               USER DASHBOARD CARD                               │
-│       Status Badge │ TTB Big Number │ Forecast Chart │ Priority Actions             │
-└─────────────────────────────────────────────────────────────────────────────────┘
+sensor truk ─► KV260 (PL): segel SHA-256 + HMAC · mesin fisika · XGBoost 420 pohon
+                 │  paket hasil per menit + bacaan mentah, lewat MQTT QoS 1
+                 ▼
+          mosquitto ─► worker-ingest ─► TimescaleDB (telemetry, edge_results)
+                                            │ NOTIFY telemetry_arrived
+                                            ▼
+              worker-infer, jendela 1 menit:
+                truk ber-chip  → edge.kondisi (hasil chip) + forecast GRU
+                truk tanpa chip → mesin fisika + GRU + XGBoost TTB
+                 + kesehatan sensor (aturan)
+                                            │ predictions, truck_state, incidents, notifications
+                                            ▼
+                  api (REST /api/v1/fleet/*, SSE /stream) ─► dasbor Next.js
 ```
 
----
+Satu image backend menjalankan semua peran (`api`, `worker-ingest`, `worker-infer`, `virtual-trucks`).
+Penyebaran hanya lokal untuk demo. TLS, ACL per perangkat, hosting publik, dan backup belum dikerjakan.
 
-## 2. Components Breakdown
+## 1. Chip edge (`hw/`)
 
-### 2.1 Backend (`backend/`)
-* **Framework**: FastAPI (Python 3.11), Uvicorn single-worker runner.
-* **Validation**: Pydantic v2 schemas (`AnalyzeRequest`, `AnalyzeResponse`, `TelemetryReading`).
-* **Inference Engine** (`app/inference.py`): physics/rule engine (`app/core/engine.py`) for status and
-  displayed TTB, plus one **diagnosis provider** (two ONNX Runtime CPU sessions) for forecast,
-  failure mode and an informational ML TTB. See §2.4.
-* **Configuration**: Centralized `config.yaml` loaded via `pydantic-settings` / PyYAML.
-* **Logging**: Structured JSON log stdout via `structlog`.
-* **Testing**: `pytest` + `httpx.TestClient`, 33 tests including ONNX v3 vs PyTorch parity, loading of
-  both diagnosis providers and `/analyze` end-to-end with each (`tests/test_providers.py`).
+Chip membaca satu sampel per menit lalu menjalankan tiga blok paralel:
 
-### 2.2 Frontend (`frontend/`)
-* **Framework**: Next.js 14 App Router, TypeScript.
-* **Styling**: Tailwind CSS + `shadcn/ui` UI component library.
-* **Visualization**: Recharts for temperature timeseries and multi-horizon prediction curves.
-* **State Management**: Local React state, zero Redux/Zustand overhead.
+| Blok | Fungsi |
+|---|---|
+| Mesin fisika (`physics.sv`) | Status AMAN/WASPADA/KRITIS dan Time-to-Breach, sama dengan `backend/app/core/engine.py` |
+| Fitur dan pohon (`features.sv`, `tree_engine.sv`) | 82 fitur bilangan bulat dari ring buffer 256 menit, lalu XGBoost 420 pohon untuk diagnosis 7 kelas |
+| Segel (`seal.sv`, `sha256_core.sv`) | Rantai hash SHA-256 atas rekaman 23 byte, ditandatangani HMAC dengan kunci 32 byte yang terkunci |
 
-### 2.3 Machine Learning Artifacts (`ml/` & `backend/models/`)
-| File (`backend/models/`) | Provider | What it is |
+Hasil dibaca driver ARM lewat AXI4-Lite (`0xA000_0000`) dan dikirim ke cloud. Alarm sopir keluar langsung ke pin,
+tanpa lewat jaringan. Timing, resource, dan status verifikasi ada di [hw/README.md](../hw/README.md).
+
+Cloud memeriksa HMAC dan rantai, mencocokkan rekaman dengan bacaan, lalu memakai hasil chip tanpa menghitung
+ulang (`backend/app/edge.py`). Status verifikasi: `OK`, `OK_RANTAI_BARU`, `MAC_SALAH`, `RANTAI_PUTUS`,
+`REKAMAN_BEDA`, `TANPA_KUNCI`. Formatnya ada di [device_contract.md](device_contract.md).
+
+## 2. Backend (`backend/`)
+
+- FastAPI dan Pydantic v2. Konfigurasi di `config.yaml`.
+- `app/core/`: mesin fisika (penaksir suhu muatan, TTB, anggaran pintu, aturan sensor). Sumber status dan TTB
+  yang ditampilkan. Rumusnya ada di [train_ai.md](train_ai.md) bagian 4.
+- `app/inference.py`: provider diagnosis (GRU), aturan diagnosis, dan guard label.
+- `app/edge.py`: verifikasi dan pemakaian hasil chip.
+- `app/workers/`: `ingest` (MQTT ke database), `infer` (jendela 1 menit per truk), `virtual_trucks`
+  (24 truk virtual yang memutar ulang trip val v4).
+- `migrations/`: skema TimescaleDB.
+
+Endpoint `POST /api/v1/analyze` menerima 60 bacaan atau lebih dan menjalankan jalur cloud penuh tanpa menyentuh
+data armada. Kontraknya ada di [api_contract.md](api_contract.md), bersama API armada dan SSE.
+
+## 3. Model (`backend/models/`)
+
+| Berkas | Dipakai oleh | Isi |
 |---|---|---|
-| `coldtrack_v5.onnx` (= `models/candidates/coldtrack_gru_v5_context.onnx`) | **v3, default** | v3 architecture retrained with label v5 (B8); inputs `window [n, 60, 12]` and `konteks [n, 6]` (trip context, `app/preprocess.konteks_trip`), both raw; same outputs |
-| `coldtrack_v5.labels.json` | v3 | class order, configuration, test metrics, limitations |
-| `coldtrack_v3.onnx` (= `ml/reports/coldtrack_b3.onnx`) | v3, rollback | GRU 3 layers x hidden 128 + window summary stats; input `window [n, 60, 12]` raw; outputs forecast t+15/30/60, 7-class `failure_prob`, GRU TTB head (unused) |
-| `coldtrack_v3.labels.json` | v3, rollback | class order, configuration, metrics, limitations |
-| `coldtrack_ttb_window.onnx` (= `ml/reports/coldtrack_ttb.onnx`) | v3 | XGBoost Time-to-Breach (300 trees), same window input; informational `ttb_model_min` |
-| `coldtrack_gru.onnx` | checkpoint2 | previous GRU (inputs `x`, `s`): 3 events + cargo-temperature forecast |
-| `coldtrack_ttb.onnx` | checkpoint2 | previous XGBoost TTB (input `features`) |
+| `coldtrack_v5.onnx` | provider `v3` (bawaan) | GRU 3x128 dengan label v5. Masukan `window [n, 60, 12]` dan `konteks [n, 6]`, keduanya mentah. Keluaran forecast t+15/30/60 dan peluang 7 kelas |
+| `coldtrack_v5.labels.json` | provider `v3` | Urutan kelas, konfigurasi, metrik test, keterbatasan |
+| `coldtrack_ttb_window.onnx` | provider `v3` | XGBoost TTB 300 pohon, hanya informasi (`ttb_model_min`) |
+| `coldtrack_v3.onnx` dan `.labels.json` | rollback ke bobot v3 | GRU versi G3, masukan `window` saja |
+| `coldtrack_gru.onnx`, `coldtrack_ttb.onnx` | provider `checkpoint2` | Model sebelumnya (3 kejadian), untuk rollback |
 
-`ml/reports/coldtrack.onnx` (v2, proposal) is kept for traceability and benchmarks, not served.
-Metrics, selection and limitations: `docs/model_card.md`; reproduction: `bench/README.md`.
+Metrik, seleksi, dan keterbatasan ada di [model_card.md](model_card.md).
 
-### 2.4 Diagnosis provider and rollback
-`config.yaml` → `model.diagnosis_provider` selects the source of `forecast` and `failure_mode`:
+### Provider diagnosis dan rollback
 
-* `v3` (default since 2026-10-11, gate G3 approved with notes): 7 failure classes, API labels
-  `normal_sehat`, `pintu_terbuka_lama`, `reefer_mati_total`, `kejutan_ambien_ekstrem`,
-  `prapendinginan_buruk`, `degradasi_bertahap`, `masalah_sensor`, plus `probabilities` per class.
-* `checkpoint2`: the previous model (3 events: `pintu_terbuka_lama`, `kejutan_ambien_ekstrem`,
-  `masalah_sensor`), `probabilities: null`.
+`model.diagnosis_provider` di `config.yaml` memilih sumber `forecast` dan `failure_mode`: `v3` (bawaan) atau
+`checkpoint2`. Mengganti nilainya lalu me-restart backend sudah cukup untuk rollback. Mengembalikan bobot v3
+cukup mengubah `gru_onnx_path`, `labels_path`, dan `version` di bagian provider `v3`. Setiap respons memuat
+`diagnosis_provider` dan `model_version`.
 
-**Rollback to checkpoint-2:** set `diagnosis_provider: checkpoint2` in `backend/config.yaml` and restart
-the backend. No code change; both providers are tested in CI. `diagnosis_provider` and
-`model_version` in every response show which one answered.
+Pembagian keputusan:
 
-Sensor faults come only from the rule layer: v3's own `masalah_sensor` class is never used as the
-label (checkpoint-2's rule applies instead: another fault class only if p >= 0.5, else
-`normal_sehat`). `probabilities` is sent only when the label equals the model's top class.
+- Status dan TTB yang ditampilkan selalu dari mesin fisika, apa pun providernya.
+- Masalah sensor hanya dari aturan sensor. Label `masalah_sensor` dari model tidak dipakai.
+- `prapendinginan_buruk` dan `reefer_mati_total` diputuskan aturan diagnosis (`inference.aturan_diagnosis`),
+  karena model mengenalinya hanya dari satu sinyal bersih simulator.
+- Label tidak boleh `normal_sehat` saat status WASPADA atau KRITIS. Yang tampil `pintu_terbuka` atau
+  `suhu_muatan_mendekati_batas`.
+- Bila ada jeda lebih dari 90 detik di 60 bacaan terakhir, respons memuat `data_lengkap: false` dan keyakinan
+  diagnosis dibatasi 0,5. Status tidak berubah.
+- Konteks trip butuh bacaan pertama trip. Worker membacanya terpisah karena riwayat jendela dibatasi 240 menit.
 
-Rules shared by both providers: a sensor fault from the rule layer overrides the model label; the
-label is never `normal_sehat` while status is WASPADA/KRITIS (rule-derived `pintu_terbuka` /
-`suhu_muatan_mendekati_batas` instead). Status AMAN/WASPADA/KRITIS and displayed TTB always come from
-the physics engine, whichever provider is active.
+## 4. Alur satu menit di cloud
 
-**Incomplete data.** The window models were trained only on 60-minute windows without missing
-readings. If the last 60 readings contain a time gap > 90 s, the response sets
-`data_lengkap: false` with `catatan_data`, and the failure-mode confidence is capped at 0.5 (a
-conservative display choice, not a calibrated value). Status is unaffected.
+1. Bacaan masuk lewat MQTT atau webhook vendor, divalidasi, dan disimpan. Duplikat dibuang dan data terlambat diterima.
+2. `worker-infer` membangun jendela per truk: grid 1 menit, celah sampai 5 menit diisi bacaan terakhir, waktu
+   dikonversi ke zona armada (Asia/Jakarta) karena fitur `hour_of_day` dilatih dengan jam lokal.
+3. Truk ber-chip dengan hasil yang sah memakai `edge.kondisi`, dan GRU hanya dijalankan untuk forecast. Truk lain
+   memakai jalur cloud penuh.
+4. Aturan kesehatan sensor, lalu pembuatan insiden, notifikasi, dan estimasi kerugian.
+5. Hasil ditulis ke database, dan dasbor menerima pembaruan lewat SSE.
 
-### 2.5 Fleet monitoring (local demo, Oct 2026)
+Model hanya dijalankan untuk jendela terakhir, sedangkan mesin fisika membaca seluruh riwayat karena penaksir
+suhu muatan butuh itu.
 
-```
-virtual-trucks / logger ─MQTT QoS1─► mosquitto ─► worker-ingest ─► TimescaleDB (telemetry hypertable)
-                                                        │ NOTIFY telemetry_arrived
-                                                        ▼
-            worker-infer (1-min window, predict_last) → orchestrator: condition (engine + v3) · sensor_health (rules v0)
-                                                        │ predictions, truck_state, incidents, notifications; NOTIFY fleet_events
-                                                        ▼
-                                  api (REST /api/v1/fleet/*, /incidents, SSE /stream) ─► Next.js dashboard
-```
+## 5. Frontend (`frontend/`)
 
-One backend image runs every role (`api`, `worker-ingest`, `worker-infer`, `virtual-trucks`). Contracts and
-choices are documented elsewhere:
-- `docs/device_contract.md`: MQTT topics, batch payloads, UTC timestamps.
-- `docs/api_contract.md` §7: fleet API and SSE.
-- `docs/fleet_assumptions.md`: `[ASUMSI]` / `[DESAIN]` choices, including the healthy-trip alarm finding.
-- `docs/demo.md`: how to run, reset, and present.
+Next.js 14 (App Router), TypeScript, Tailwind dengan komponen shadcn/ui, grafik Recharts, peta OpenStreetMap.
+Halaman: Ringkasan, `/condition`, `/truck/[id]`, `/actions`, `/losses`, `/sensor`, `/location`, `/simulation`.
+State disimpan lokal di React. Notifikasi memakai SSE.
 
-Model features use local fleet time (`fleet.zona_waktu`, Asia/Jakarta) in both `/analyze` and the worker.
+## 6. Dokumen terkait
 
-The deployment is **local only** (decision of 11 Oct 2026, demo use). The following are out of scope until it
-goes online:
-- public hosting: the frontend could go on Vercel; the workers, database, MQTT, and SSE need a container host;
-- TLS, MQTT 8883, and per-device ACLs;
-- backups.
-
----
-
-## 3. Data Flow & Processing Lifecycle
-
-1. **Payload Receipt**: Next.js POSTs telemetry payload with 60 minute readings to `/api/v1/analyze`.
-2. **Validation**: Pydantic checks payload schema and ensures sequence length $\ge 60$. Payloads $< 60$ return HTTP 400.
-3. **Preprocessing**: Telemetry is converted to Pandas DataFrame. Derived features ($\Delta \text{temp}$, $\Delta \text{ambient}$, $\text{reefer\_duration\_min}$, $\text{hour\_of\_day}$) are computed. Forbidden columns (`is_anomaly`, `failure_mode`, `time_to_breach`) are strictly guarded.
-4. **Physics engine** (`app/core/engine.py`): cargo-temperature observer, physics TTB, sensor rules ->
-   status `AMAN`/`WASPADA`/`KRITIS`, displayed TTB and reason. Independent of the ONNX models.
-5. **Diagnosis provider** (§2.4): v3 slices `[n, 60, 12]` windows from the per-minute features
-   (`preprocess.features_per_minute`, `reefer_duration_min` recounted per window as in training) and
-   returns forecast + 7-class probabilities; the window XGBoost returns an informational TTB.
-   checkpoint2 runs its own cleaning and inputs.
-6. **Guards**: shared label rules (§2.4) and the incomplete-data flag.
-7. **Action Engine**: 3 priority recommendations from status + failure label (`app/rules.py`).
-8. **Response Return**: Single JSON object is returned to UI in $< 5\text{ ms}$.
-
----
-
-## 4. Empirical Latency Profile
-
-Measured across 100 benchmark iterations per scenario using `httpx.TestClient`:
-
-| Scenario ID | Primary Condition | p50 (ms) | p95 (ms) | p99 (ms) |
-|---|---|---|---|---|
-| `scenario_1_normal` | Normal Healthy (A0) | 2.14 ms | 3.82 ms | 5.41 ms |
-| `scenario_2_door_open` | Prolonged Door Open (A1) | 2.08 ms | 3.65 ms | 4.98 ms |
-| `scenario_3_compressor_degradation` | Cooling Degradation (A2/A4) | 2.12 ms | 3.71 ms | 5.12 ms |
-| `scenario_4_reefer_failure` | Total Reefer Failure (A3) | 2.15 ms | 3.80 ms | 5.30 ms |
-| `scenario_5_extreme_ambient` | Ambient Thermal Shock (A7) | 2.09 ms | 3.68 ms | 5.05 ms |
-
----
-
-## 5. MVP Compliance Matrix
-
-| MVP Constraint | Implementation Status | Evidence / Verification |
-|---|---|---|
-| **Synchronous Processing Only** | Fully Compliant | No Celery/RQ/cron workers in `backend/requirements.txt` or `app/` |
-| **No Database** | Fully Compliant | No ORM or SQL drivers; scenarios stored as static JSON files in `backend/data/scenarios/` |
-| **No Authentication** | Fully Compliant | No JWT, session, or login endpoints; direct open REST endpoints |
-| **One-Command Execution** | Fully Compliant | Runs via single `docker compose up --build` command |
-| **Static Parameters** | Fully Compliant | Cargo profiles, risk weights, and model paths centralized in `config.yaml` |
+- [device_contract.md](device_contract.md): topik MQTT, payload, dan objek `edge`.
+- [api_contract.md](api_contract.md): `/analyze` dan API armada.
+- [fleet_assumptions.md](fleet_assumptions.md): asumsi `[ASUMSI]` dan `[DESAIN]` armada dan biaya.
+- [train_ai.md](train_ai.md): data latih, simulator, mesin fisika.
+- [model_card.md](model_card.md) dan [ai_governance.md](ai_governance.md): metrik, batas keputusan, risiko.
+- [demo.md](demo.md): menjalankan demo.

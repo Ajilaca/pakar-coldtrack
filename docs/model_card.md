@@ -107,7 +107,7 @@ per model, akses tercatat di `bench/results/test_access_log.json`) dan
 Backend memakai v3 sebagai sumber `forecast` + `failure_mode` (`backend/config.yaml:
 model.diagnosis_provider: v3`); status AMAN/WASPADA/KRITIS dan TTB yang ditampilkan tetap dari mesin
 fisika. **Kembali ke checkpoint-2:** ubah nilai itu menjadi `checkpoint2` lalu restart backend (tanpa
-perubahan kode; kedua provider diuji di CI). Rincian: `docs/architecture.md` §2.4.
+perubahan kode; kedua provider diuji di CI). Rincian: `docs/architecture.md` bagian 3.
 
 **Perbandingan dengan checkpoint-2 (model backend sebelumnya)** pada 16.500 jendela val v4 yang sama,
 seleksi jendela suite `eval/` (`bench/results/g16-cpu/B7/model_comparison_val.json`): v3 lebih baik di

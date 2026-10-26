@@ -115,7 +115,7 @@ def build(tag):
     s = []
     # ---------- intro + summary ----------
     s += [p("ColdTrack AI: Evaluation Artifact (Iteration 1)", H1),
-          p(f"AIC COMPFEST 18 Final · Smart Logistics · results tag: {tag} · compared with the baseline artifact", S),
+          p(f"Smart Logistics · results tag: {tag} · compared with the baseline artifact", S),
           Spacer(1, 4), p("What is this document?", H2),
           p("ColdTrack AI watches the sensors of a refrigerated truck and warns the operator before the cargo gets too warm. "
             "The baseline artifact measured the prototype from the qualifying round. This document measures the rebuilt system "
@@ -354,7 +354,7 @@ def build2(tag1="iter1", tag2="iter2"):
     s = []
     # ---------- intro + summary ----------
     s += [p("ColdTrack AI: Evaluation Artifact (Iteration 2)", H1),
-          p(f"AIC COMPFEST 18 Final · Smart Logistics · results tags: {tag1} → {tag2} · follows Evaluation_Artifact_Iteration.pdf", S),
+          p(f"Smart Logistics · results tags: {tag1} → {tag2} · follows Evaluation_Artifact_Iteration.pdf", S),
           Spacer(1, 4), p("What is this document?", H2),
           p("Iteration 1 replaced the qualifying-round prototype with a physics engine plus a learned model, and fixed its worst failure: "
             "urgent cases were no longer shown as green. It left others open, listed as N1 to N7 in the iteration 1 artifact. "

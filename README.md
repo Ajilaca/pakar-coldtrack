@@ -1,105 +1,127 @@
 # ColdTrack AI
 
-Sistem prediksi dini kegagalan rantai dingin (cold chain) berbasis AI, dibangun untuk COMPFEST 18 AI Innovation Challenge, kategori Smart Logistics.
+Sistem peringatan dini kegagalan rantai dingin untuk armada truk berpendingin. Chip FPGA di truk (AMD Kria KV260)
+menghitung status dan diagnosis sekali per menit, lalu backend di cloud memverifikasi hasilnya, menambahkan
+forecast suhu, dan menampilkannya di dasbor.
 
-ColdTrack memantau armada truk berpendingin secara langsung: telemetri masuk lewat MQTT, worker menjalankan
-model per truk, lalu dasbor menampilkan status (AMAN / WASPADA / KRITIS), Time-to-Breach, diagnosis mode
-kegagalan, faktor pendorong, tindakan yang disarankan, insiden dengan audit trail, dan estimasi kerugian.
+Untuk setiap truk, dasbor menampilkan status (AMAN, WASPADA, atau KRITIS), Time-to-Breach (sisa menit sampai muatan
+melewati batas suhu), diagnosis penyebab, tindakan yang disarankan, insiden beserta audit trail, dan estimasi
+kerugian.
 
-![Demo ColdTrack AI, halaman Simulasi: pilih skenario, jalankan analisis, hasil muncul](docs/images/demo.gif)
+![Halaman Simulasi: pilih skenario, jalankan analisis, hasilnya muncul](docs/images/demo.gif)
 
-*Halaman Simulasi: pilih skenario telemetri, klik "Analisis Perjalanan", lalu sistem menampilkan status,
-Time-to-Breach, diagnosis mode kegagalan, faktor pendorong, dan tiga langkah tindakan.*
+*Halaman Simulasi: pilih skenario telemetri, klik "Analisis Perjalanan", lalu status, Time-to-Breach, diagnosis,
+faktor pendorong, dan tiga langkah tindakan muncul.*
 
-## Fitur dasbor
+## Cara kerja
+
+```
+sensor truk ─► KV260: segel SHA-256 + HMAC · mesin fisika · XGBoost 420 pohon
+                 │  hasil per menit + bacaan mentah, lewat MQTT
+                 ▼
+          backend: verifikasi segel ─► forecast GRU ─► database ─► dasbor
+```
+
+- **Di truk:** chip menghitung status, TTB, dan diagnosis, lalu menyegel tiap rekaman dengan rantai hash dan
+  HMAC. Alarm sopir keluar langsung ke pin, jadi tetap menyala saat sinyal hilang. RTL dan hasil Vivado ada di
+  [hw/](hw/README.md).
+- **Di cloud:** backend memeriksa segel, memakai hasil chip tanpa menghitung ulang, dan menjalankan GRU hanya
+  untuk forecast suhu +15/+30/+60 menit. Truk tanpa chip dihitung penuh di cloud dengan komponen yang sama.
+- **Pembagian keputusan:** status dan TTB selalu datang dari mesin fisika. Model memberi forecast dan diagnosis
+  penyebab. Masalah sensor hanya dari aturan sensor.
+
+Penjelasan lengkap: [docs/architecture.md](docs/architecture.md).
+
+## Halaman dasbor
 
 | Halaman | Isi |
 |---|---|
 | Ringkasan | KPI armada, truk kritis, truk per diagnosis, tabel risiko, peta mini |
-| Kondisi | Status semua truk dan prediksinya |
-| Detail truk | Kondisi langsung, grafik suhu aktual + prediksi +15/+30/+60 menit, faktor pendorong, tindakan |
-| Tindakan | Alur insiden: Tugaskan → Mulai tangani → Tandai selesai, tercatat di audit trail |
-| Kerugian | Nilai berisiko, kerugian terjadi, dan yang berhasil diatasi, beserta cara menghitungnya |
-| Sensor | Skor kesehatan perangkat per truk dan panel "Perlu diperbarui" |
-| Lokasi | Peta Jawa (OpenStreetMap), truk dan depo diwarnai sesuai status |
-| Simulasi | Uji skenario lewat `POST /api/v1/analyze`, tidak mengubah data armada |
+| Kondisi (`/condition`) | Status dan prediksi semua truk |
+| Detail truk (`/truck/[id]`) | Grafik suhu aktual dan prediksi, faktor pendorong, tindakan |
+| Tindakan (`/actions`) | Alur insiden: Tugaskan, Mulai tangani, Tandai selesai, tercatat di audit trail |
+| Kerugian (`/losses`) | Nilai berisiko, kerugian terjadi, dan yang berhasil diatasi |
+| Sensor (`/sensor`) | Skor kesehatan perangkat dan daftar yang perlu diperbarui |
+| Lokasi (`/location`) | Peta Jawa dengan truk dan depo diwarnai menurut status |
+| Simulasi (`/simulation`) | Uji skenario lewat `POST /api/v1/analyze`, tidak mengubah data armada |
 
-Notifikasi tampil di lonceng kotak masuk dan sebagai toast saat ada truk yang memburuk (lewat SSE).
+Notifikasi muncul di lonceng dan sebagai toast saat ada truk yang memburuk (lewat SSE).
 
-## Cara menjalankan
+## Menjalankan
 
-Prasyarat: Docker Desktop (di Windows aktifkan WSL integration), RAM bebas sekitar 4 GB, dan port 3000,
-8000, 5432, 1883 tidak sedang dipakai. Salin `.env.example` ke `.env` lalu sesuaikan nilainya.
+Butuh Docker Desktop (di Windows aktifkan WSL integration), sekitar 4 GB RAM bebas, dan port 3000, 8000, 5432,
+dan 1883 yang kosong. Salin `.env.example` ke `.env`.
 
-### Demo armada (dasbor 24 truk virtual, lokal)
+Demo armada dengan 24 truk virtual:
+
 ```bash
 docker compose --profile dev up -d --build
 ```
-Buka http://localhost:3000. `--profile dev` menyalakan simulator `virtual-trucks` yang memutar ulang trip
-dari split val v4. Dua menit pertama setiap truk berstatus MENUNGGU DATA karena model butuh 60 menit
-data trip (bawaan `SIM_SPEED=30`).
 
-Reset data sebelum presentasi supaya angka notifikasi, insiden, dan kerugian wajar:
+Buka http://localhost:3000. `--profile dev` menyalakan simulator `virtual-trucks` yang memutar ulang trip dari
+split val v4. Dua menit pertama tiap truk berstatus MENUNGGU DATA, karena model butuh 60 menit data trip
+(`SIM_SPEED=30` secara bawaan). Reset data sebelum presentasi supaya angka insiden dan kerugian wajar:
+
 ```bash
 docker compose --profile dev down -v
 ```
 
-Panduan teknis lengkap: [docs/demo.md](docs/demo.md).
+Tanpa simulator (API, dasbor, dan database saja): `docker compose up --build`.
 
-### Tanpa simulator (API + dasbor + database saja)
-```bash
-docker compose up --build
-```
-
-### Development (live reload frontend)
-Nyalakan stack armada dengan `docker compose --profile dev up -d db mosquitto api worker-ingest worker-infer virtual-trucks`,
-lalu jalankan `npm run dev` di `frontend/`. `docker-compose.dev.yml` hanya berisi backend + frontend tanpa database
-dan MQTT, jadi di sana hanya halaman Simulasi (`POST /api/v1/analyze`) yang berfungsi.
+Untuk mengembangkan frontend, nyalakan stack dengan
+`docker compose --profile dev up -d db mosquitto api worker-ingest worker-infer virtual-trucks`, lalu jalankan
+`npm run dev` di `frontend/`. `docker-compose.dev.yml` hanya berisi backend dan frontend tanpa database dan MQTT,
+jadi di sana hanya halaman Simulasi yang berfungsi. Panduan demo: [docs/demo.md](docs/demo.md).
 
 ## Model
 
-- Diagnosis dan forecast: GRU v5 (3 lapis, hidden 128, ditambah 6 fitur konteks trip) dalam ONNX, dengan
-  7 kelas mode kegagalan dan forecast suhu t+15/t+30/t+60.
-- Status dan Time-to-Breach: mesin fisika/aturan, dengan XGBoost (`coldtrack_ttb.onnx`) untuk TTB.
-- Test v5: Macro F1 0,820 dan PR-AUC 0,855 dengan definisi label v5 (A1/A7 sebagai kejadian sementara),
-  memenuhi target > 0,80 dan > 0,85. Dengan label lama 0,756 dan 0,812 (v3: 0,668 dan 0,786).
-  `degradasi_bertahap` masih lemah. Detail ada di [Model Card](docs/model_card.md).
-- Semua data adalah sintetis dari simulator, bukan logger truk nyata.
+- **Diagnosis dan forecast:** GRU v5 (3 lapis, hidden 128, dengan 6 fitur konteks trip) dalam ONNX. Keluarannya
+  7 kelas mode kegagalan dan forecast suhu t+15, t+30, dan t+60 menit.
+- **Status dan TTB:** mesin fisika, dengan XGBoost sebagai pembanding informasi untuk TTB.
+- **Di chip:** XGBoost 420 pohon untuk diagnosis dengan 82 fitur bilangan bulat.
+- **Hasil test:** Macro F1 0,820 dan PR-AUC 0,855 dengan label v5, yang memperlakukan pintu terbuka dan kejut
+  ambien sebagai kejadian sementara. Dengan label lama hasilnya 0,756 dan 0,812 (model v3: 0,668 dan 0,786).
+- **Keterbatasan:** semua data sintetis dari simulator fisika, tanpa logger truk sungguhan. Pengujian gangguan
+  menunjukkan beberapa kelas (reefer mati, pintu terbuka, prapendinginan buruk) dikenali dari satu sinyal yang
+  terlalu bersih di simulator, jadi dua di antaranya sekarang diputuskan aturan. Kelas `degradasi_bertahap` masih
+  lemah.
+
+Angka, perbandingan versi, dan hasil pengujian gangguan ada di [docs/model_card.md](docs/model_card.md). Asal
+data dan rumus fisikanya di [docs/train_ai.md](docs/train_ai.md).
 
 ## Pengujian
 
 ```bash
-cd backend && ruff check . && pytest      # unit test backend (CI: Backend CI)
+cd backend && ruff check . && pytest        # unit test backend
 cd frontend && npm run lint && npm run build
 ```
-Tes integrasi stack armada (MQTT → DB, dedupe, data terlambat, webhook, prediksi, API, audit, SSE)
-berjalan di workflow `Fleet CI` ([.github/workflows/fleet.yml](.github/workflows/fleet.yml)).
-Suite evaluasi sistem ada di [eval/](eval/README.md), benchmark latih ulang dan device di [bench/](bench/README.md).
+
+Tes integrasi stack armada (MQTT ke database, dedupe, data terlambat, webhook, prediksi, API, audit, SSE) berjalan
+di workflow `Fleet CI` ([.github/workflows/fleet.yml](.github/workflows/fleet.yml)). RTL diuji dengan cocotb
+(`cd hw && make test`). Suite evaluasi sistem ada di [eval/](eval/README.md), dan benchmark latih ulang di
+[bench/](bench/README.md).
 
 ## Struktur repo
 
 ```
-pakar-coldtrack/
-  backend/     FastAPI + worker ingest MQTT / inferensi streaming, TimescaleDB (migrations/), tests/
-  frontend/    Next.js 14 (dasbor armada sesuai Figma)
-  docker/      Konfigurasi Mosquitto
-  ml/          Simulator data, notebook, pelatihan GRU/XGBoost, ekspor ONNX
-  eval/        Suite evaluasi sistem sebagaimana di-deploy
-  bench/       Latih ulang model dan benchmark antar-device (hasil di bench/results/)
-  data/        Data olahan dan dataset Berkeley
-  hw/          RTL chip edge KV260 (segel, mesin fisika, tree ensemble), testbench cocotb, skrip Vivado
-  docs/        Arsitektur, kontrak, kartu model/dataset, governance, panduan demo, proposal
+backend/    FastAPI, worker ingest MQTT dan inferensi, TimescaleDB (migrations/), tests/
+frontend/   Dasbor Next.js 14
+hw/         RTL chip edge KV260, testbench cocotb, skrip Vivado, driver ARM
+ml/         Simulator, notebook, pelatihan GRU dan XGBoost, ekspor ONNX
+bench/      Percobaan latih ulang dan benchmark antar-device (hasil di bench/results/)
+eval/       Evaluasi sistem sebagaimana di-deploy
+data/       Data olahan hasil simulator dan dataset Berkeley
+docker/     Konfigurasi Mosquitto
+docs/       Arsitektur, kontrak API dan perangkat, kartu model, tata kelola AI
 ```
 
-Setiap folder utama punya `README.md` sendiri: [backend](backend/README.md), [frontend](frontend/README.md),
-[ml](ml/README.md), [bench](bench/README.md), [eval](eval/README.md), [hw](hw/README.md),
-[data](data/README.md), [docker](docker/README.md), [docs](docs/README.md).
+Setiap folder punya `README.md` sendiri.
 
 ## Dokumentasi
 
-- [Architecture](docs/architecture.md)
+- [Arsitektur](docs/architecture.md)
 - [Data dan fisika untuk melatih model](docs/train_ai.md)
-- [Model Card](docs/model_card.md)
-- [AI Governance](docs/ai_governance.md)
-- [Demo armada](docs/demo.md)
-- [Kontrak API](docs/api_contract.md) · [Kontrak perangkat](docs/device_contract.md) · [Asumsi armada](docs/fleet_assumptions.md)
+- [Kartu model](docs/model_card.md)
+- [Tata kelola AI](docs/ai_governance.md)
+- [Kontrak API](docs/api_contract.md), [kontrak perangkat](docs/device_contract.md), dan [asumsi armada](docs/fleet_assumptions.md)
+- [Menjalankan demo](docs/demo.md)

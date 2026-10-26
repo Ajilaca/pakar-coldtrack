@@ -5,7 +5,7 @@ menetapkan bentuk permintaan, bentuk respons, dan semantik tiap field — termas
 kapan sebuah field bernilai `null` dan apa artinya bagi tampilan.
 
 Implementasi: `backend/app/schemas.py`, `backend/app/main.py`.
-Status: **dibekukan untuk demo COMPFEST 18**.
+Status: **dibekukan untuk demo**.
 
 ---
 
