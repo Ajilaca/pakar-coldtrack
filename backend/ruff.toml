@@ -1,8 +1,0 @@
-# Aturan bawaan ruff dipakai apa adanya. Mesin fisika di app/core/ adalah acuan bit-exact untuk chip
-# (hw/golden/physics.py, hw/rtl/physics.sv), jadi gaya kodenya tidak diubah demi lint: dict(...) dan pola
-# lama di sana dibiarkan, logikanya diuji lewat tests/ dan paritas hw/.
-[lint.per-file-ignores]
-"app/core/coldtrack_sim.py" = ["C408", "SIM115", "S110", "BLE001", "RUF046"]
-"app/core/door_budget.py" = ["C408"]
-"app/core/engine.py" = ["C408", "RUF059"]
-"app/core/prep_windows.py" = ["C408"]

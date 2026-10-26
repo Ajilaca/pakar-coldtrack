@@ -12,21 +12,21 @@ from . import sensor_rules as sr
 
 AMAN, WASPADA, KRITIS = 0, 1, 2
 NAMA = {0: "AMAN", 1: "WASPADA", 2: "KRITIS"}
-CFG = dict(
-    ttb_kritis=30,          # TTB <= 30 menit -> minimal KRITIS      (proposal lama)
-    ttb_waspada=60,         # TTB <= 60 menit -> minimal WASPADA     (proposal lama)
-    ttb_tampil=60,          # TTB hanya ditampilkan bila <= ini       (proposal lama: 30; dilonggarkan, lihat dokumen)
-    margin_waspada_k=1.0,   # muatan < 1 K dari batas atas -> WASPADA (DESAIN) ...
-    margin_waspada_frac=0.25,  # ... tapi maks. 25% lebar rentang (rentang 2-4 C -> 0,5 K). Keputusan user 2026-10-11 dari
+CFG = {
+    "ttb_kritis": 30,          # TTB <= 30 menit -> minimal KRITIS      (proposal lama)
+    "ttb_waspada": 60,         # TTB <= 60 menit -> minimal WASPADA     (proposal lama)
+    "ttb_tampil": 60,          # TTB hanya ditampilkan bila <= ini       (proposal lama: 30; dilonggarkan, lihat dokumen)
+    "margin_waspada_k": 1.0,   # muatan < 1 K dari batas atas -> WASPADA (DESAIN) ...
+    "margin_waspada_frac": 0.25,  # ... tapi maks. 25% lebar rentang (rentang 2-4 C -> 0,5 K). Keputusan user 2026-10-11 dari
                                # sapuan split VAL (eval/results/margin_sweep_val.json): alarm palsu menit trip normal
                                # 24,3% -> 17,6%, breach terlewat 0/20 tetap, jendela TTB<=30 tampil AMAN 0% -> 0,4%,
                                # lead time median 84 -> 37,5 mnt, episode alarm/jam 0,36 -> 0,39. Nilai lama 0,35
                                # dipilih dari sapuan split TEST (eval/results/margin_sweep_iter2.json).
-    drift_min_c_per_min=0.005, # kenaikan sensor >= 0,3 C/jam dianggap hanyut (DESAIN)
-    drift_door_free_min=30,    # proyeksi hanyut hanya bila pintu tertutup 30 menit terakhir (pintu ditangani aturan pintu)
-    door_waspada_min=30,    # pintu terbuka dan sisa waktu kasus terburuk <= 30 menit -> WASPADA (DESAIN)
-    entry_tol_k=2.0,        # suhu awal muatan > t_set + 2 K -> peringatan pra-pendinginan (DESAIN)
-)
+    "drift_min_c_per_min": 0.005, # kenaikan sensor >= 0,3 C/jam dianggap hanyut (DESAIN)
+    "drift_door_free_min": 30,    # proyeksi hanyut hanya bila pintu tertutup 30 menit terakhir (pintu ditangani aturan pintu)
+    "door_waspada_min": 30,    # pintu terbuka dan sisa waktu kasus terburuk <= 30 menit -> WASPADA (DESAIN)
+    "entry_tol_k": 2.0,        # suhu awal muatan > t_set + 2 K -> peringatan pra-pendinginan (DESAIN)
+}
 
 
 def check_entry(t_init, t_lo, t_hi, t_set, cfg=CFG):
@@ -90,7 +90,7 @@ def run(tel, prod, mass_kg, cfg=CFG):
     c, thi, tlo = prod["c"], prod["t_hi"], prod["t_lo"]
     tc = ob.estimate_cargo(ts, mass_kg, c)
     k = db._k_cargo(mass_kg, c)
-    ttb, cab = ttb_series(ts, tc, tamb, door, moving, k, thi)
+    ttb, _cab = ttb_series(ts, tc, tamb, door, moving, k, thi)
     ttb = np.minimum(ttb, drift_ttb(ts, door, thi, cfg))
     # sisa waktu pintu (kasus terburuk: kabin = suhu luar)
     worst = np.array([db._time_to_limit(tc[i], tamb[i], thi, k) if door[i] > 0.5 else np.nan for i in range(len(ts))])
@@ -116,7 +116,7 @@ def run(tel, prod, mass_kg, cfg=CFG):
         status[i] = s; reason[i] = why
 
     show = (ttb <= cfg["ttb_tampil"]) & (sst < 2)              # TTB disembunyikan bila sensor rusak / di luar rentang
-    out = pd.DataFrame(dict(minute=np.arange(len(ts)), T_sensor=ts_raw, T_cargo_est=tc, margin_hi=margin, ttb_phys=ttb,
-                            ttb_show=np.where(show, ttb, np.nan), door_budget_worst=worst, sensor_status=sst,
-                            status=status, status_txt=[NAMA[x] for x in status], reason=reason))
+    out = pd.DataFrame({"minute": np.arange(len(ts)), "T_sensor": ts_raw, "T_cargo_est": tc, "margin_hi": margin, "ttb_phys": ttb,
+                            "ttb_show": np.where(show, ttb, np.nan), "door_budget_worst": worst, "sensor_status": sst,
+                            "status": status, "status_txt": [NAMA[x] for x in status], "reason": reason})
     return out

@@ -55,9 +55,9 @@ def door_budget(tc_est, t_cabin, t_amb, mass_kg, c_kj, t_hi, t_set, h=None, rho=
     from_sensor = _time_to_limit(tc_est, t_cabin, t_hi, k)
     worst = _time_to_limit(tc_est, t_amb, t_hi, k)
     peak, t_peak = _close_now(t_cabin, tc_est, t_amb, mass_kg, c_kj, t_set, t_hi, h=h, rho=rho)
-    return dict(sisa_menit_sensor=round(from_sensor, 1), sisa_menit_terburuk=round(worst, 1),
-                jika_ditutup_puncak_c=round(peak, 2), jika_ditutup_menit_puncak=int(t_peak),
-                jika_ditutup_melanggar=bool(peak > t_hi))
+    return {"sisa_menit_sensor": round(from_sensor, 1), "sisa_menit_terburuk": round(worst, 1),
+                "jika_ditutup_puncak_c": round(peak, 2), "jika_ditutup_menit_puncak": int(t_peak),
+                "jika_ditutup_melanggar": bool(peak > t_hi)}
 
 
 def sensitivity(state, h_list=(5, 10, 20), rho_list=(400, 500, 700)):

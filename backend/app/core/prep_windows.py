@@ -19,7 +19,7 @@ def split_trips(ds, seed=0, frac=(0.70, 0.15, 0.15)):
     rng = np.random.default_rng(seed)
     ids = np.array(sorted(ds.trip_id.unique())); rng.shuffle(ids)
     n = len(ids); a, b = int(frac[0] * n), int((frac[0] + frac[1]) * n)
-    return dict(train=set(ids[:a]), val=set(ids[a:b]), test=set(ids[b:]))
+    return {"train": set(ids[:a]), "val": set(ids[a:b]), "test": set(ids[b:])}
 
 
 def clean_trip(g):
@@ -66,8 +66,8 @@ def make_windows(ds, trip_ids, stride=STRIDE):
         tgt = g[["a1_long", "ev_A2", "ev_A3", "ttb_min",
                  "y_Tcargo_15", "y_Tcargo_30", "y_Tcargo_60"]].to_numpy(np.float32)[ends]
         Ys.append(tgt)
-        meta.append(pd.DataFrame(dict(trip_id=tid, minute=ends, mass_kg=g.mass_kg.iloc[0],
-                                      state=g.state.iloc[0], category=g.category.iloc[0])))
+        meta.append(pd.DataFrame({"trip_id": tid, "minute": ends, "mass_kg": g.mass_kg.iloc[0],
+                                      "state": g.state.iloc[0], "category": g.category.iloc[0]}))
     X = np.concatenate(Xs); S = np.concatenate(Ss); Y = np.concatenate(Ys)
     meta = pd.concat(meta, ignore_index=True)
     return X, S, Y, meta

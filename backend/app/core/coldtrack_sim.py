@@ -4,6 +4,7 @@ A0 sehat | A1 pintu terbuka | A2 kejut ambien ekstrem | A3 sensor rusak
 Pelanggaran dinilai dari SUHU MUATAN terhadap rentang optimal produk.
 Truk = Isuzu 18 CBM refrigerated box; tiap parameter diberi tag [SUMBER]/[ATP]/[ASUMSI]/[DESAIN] di TRUCK.
 """
+import contextlib
 import json
 
 import numpy as np
@@ -30,22 +31,22 @@ PROFILES = {
 
 # ---------------- TRUK: Isuzu 18 CBM refrigerated box (isuzuvehicles.com) ----------------
 # [SUMBER] dimensi dalam, payload.  [ATP] K.  [ASUMSI] tebal isolasi, luas pintu, margin Qmax, Cd.
-TRUCK = dict(
-    L=4.015, W=2.1, H=1.8,        # m, dimensi dalam box   [SUMBER Isuzu]
-    payload_kg=4285.0,            # [SUMBER Isuzu]
-    wall_m=0.08,                  # tebal isolasi PU        [makalah truk 67-97 mm; pemasok 75-100 mm; tidak ada di halaman Isuzu]
-    K=0.40,                       # W/m2K, batas ATP isolasi diperkuat (0,70 = isolasi normal) [ATP]
-    K_design=0.70,                # K terburuk untuk mengukur Qmax
-    door_area=None,               # m2, dihitung = W*H (pintu belakang penuh)  [ASUMSI]
-    Cd=0.65,                      # koef. lubang, pertukaran udara pintu   [Gosney-Olama/ASHRAE via calcengineer.com]
-    Qmax_W=2575.0,                # kapasitas pendingin nominal (0 C dalam/30 C luar) [makalah truk: publications.cnr.it/.../188981]
-    Qmargin=1.5,                  # HANYA untuk pemeriksaan silang Qmax turunan (tidak dipakai simulasi)
-    T_design_out=36.0,            # diganti persentil-95 t_max data BMKG oleh set_truck_design()
-    T_set_design=-20.0,           # titik setel freezer Isuzu               [SUMBER Isuzu]
-    h_conv=8.0,                   # W/m2K konveksi udara-muatan             [makalah truk: 8 W/m2K, muatan karkas]
-    rho_bulk=500.0,               # kg/m3 kerapatan curah muatan kemasan    [Cargo Handbook 400-595 (ikan beku kotak/karton)]
-    band_k=1.0,                   # pita proporsional termostat (K)         [DESAIN]
-)
+TRUCK = {
+    "L": 4.015, "W": 2.1, "H": 1.8,        # m, dimensi dalam box   [SUMBER Isuzu]
+    "payload_kg": 4285.0,            # [SUMBER Isuzu]
+    "wall_m": 0.08,                  # tebal isolasi PU        [makalah truk 67-97 mm; pemasok 75-100 mm; tidak ada di halaman Isuzu]
+    "K": 0.40,                       # W/m2K, batas ATP isolasi diperkuat (0,70 = isolasi normal) [ATP]
+    "K_design": 0.70,                # K terburuk untuk mengukur Qmax
+    "door_area": None,               # m2, dihitung = W*H (pintu belakang penuh)  [ASUMSI]
+    "Cd": 0.65,                      # koef. lubang, pertukaran udara pintu   [Gosney-Olama/ASHRAE via calcengineer.com]
+    "Qmax_W": 2575.0,                # kapasitas pendingin nominal (0 C dalam/30 C luar) [makalah truk: publications.cnr.it/.../188981]
+    "Qmargin": 1.5,                  # HANYA untuk pemeriksaan silang Qmax turunan (tidak dipakai simulasi)
+    "T_design_out": 36.0,            # diganti persentil-95 t_max data BMKG oleh set_truck_design()
+    "T_set_design": -20.0,           # titik setel freezer Isuzu               [SUMBER Isuzu]
+    "h_conv": 8.0,                   # W/m2K konveksi udara-muatan             [makalah truk: 8 W/m2K, muatan karkas]
+    "rho_bulk": 500.0,               # kg/m3 kerapatan curah muatan kemasan    [Cargo Handbook 400-595 (ikan beku kotak/karton)]
+    "band_k": 1.0,                   # pita proporsional termostat (K)         [DESAIN]
+}
 def _truck_const():
     T = TRUCK
     V = T["L"] * T["W"] * T["H"]
@@ -57,21 +58,20 @@ def _truck_const():
     UA_design = T["K_design"] * A_m
     Qmax = T["Qmax_W"]                                # sumber; turunan lama tersedia di Qmax_derived
     Qmax_derived = T["Qmargin"] * UA_design * (T["T_design_out"] - T["T_set_design"])
-    return dict(V=V, A_in=A_in, A_out=A_out, A_m=A_m, UA=UA, UA_design=UA_design, Qmax=Qmax, Qmax_derived=Qmax_derived,
-                C_air=1.2 * 1005.0 * V, door_area=T["door_area"] or T["W"] * T["H"])
+    return {"V": V, "A_in": A_in, "A_out": A_out, "A_m": A_m, "UA": UA, "UA_design": UA_design, "Qmax": Qmax, "Qmax_derived": Qmax_derived,
+                "C_air": 1.2 * 1005.0 * V, "door_area": T["door_area"] or T["W"] * T["H"]}
 
-PARAM = dict(horizon_min=240)     # batas TTB (keputusan desain)
-SENSOR_DEFAULT = dict(noise_std=0.073, sat_value=122.15, n_switch_median=6)
+PARAM = {"horizon_min": 240}     # batas TTB (keputusan desain)
+SENSOR_DEFAULT = {"noise_std": 0.073, "sat_value": 122.15, "n_switch_median": 6}
 
 def load_sensor_params(path=SENSOR_PATH):
     p = dict(SENSOR_DEFAULT)
-    try:
-        j = json.load(open(path))
+    # berkas tidak ada / rusak -> tetap parameter bawaan
+    with contextlib.suppress(OSError, ValueError, AttributeError), open(path) as f:
+        j = json.load(f)
         p.update(noise_std=j.get("noise_sehat_std_c", p["noise_std"]),
                  sat_value=j.get("nilai_macet_ekstrem", p["sat_value"]),
                  n_switch_median=j.get("peralihan_median_kali", p["n_switch_median"]))
-    except Exception:
-        pass
     return p
 
 def load_data(clim_path=CLIM_PATH, spec_path=SPEC_PATH):
@@ -90,8 +90,8 @@ def get_product(specs, category, name=None, state="fresh", custom=None, rng=None
     if category == "lainnya":
         c = custom["c_above"] if state == "fresh" else custom["c_below"]
         lo, hi = custom["t_lo"], custom["t_hi"]
-        return dict(category="lainnya", name=custom.get("name", "custom"), state=state, c=float(c),
-                    t_lo=lo, t_hi=hi, t_set=custom.get("t_set", lo + 0.4 * (hi - lo)))
+        return {"category": "lainnya", "name": custom.get("name", "custom"), "state": state, "c": float(c),
+                    "t_lo": lo, "t_hi": hi, "t_set": custom.get("t_set", lo + 0.4 * (hi - lo))}
     sub = specs[specs.category == category]
     if name:
         row = sub[sub.name_id == name].iloc[0]
@@ -99,7 +99,7 @@ def get_product(specs, category, name=None, state="fresh", custom=None, rng=None
         row = sub.iloc[(rng or np.random.default_rng()).integers(len(sub))]
     c = row.c_above_kj_kgc if state == "fresh" else row.c_below_kj_kgc
     lo, hi, st = PROFILES[(category, state)]
-    return dict(category=category, name=row.name_id, state=state, c=float(c), t_lo=lo, t_hi=hi, t_set=st)
+    return {"category": category, "name": row.name_id, "state": state, "c": float(c), "t_lo": lo, "t_hi": hi, "t_set": st}
 
 # ------------------------------------------------------------------ 2. UDARA LUAR PER MENIT
 def ambient_curve(row, n, start_hour, rng, noise=0.05):
@@ -144,7 +144,7 @@ def simulate(prod, mass_kg, clim_row, events=(), duration_h=8.0, start_hour=8.0,
     events = set(events)
     rng = np.random.default_rng(seed)
     sensor = sensor or load_sensor_params()
-    n = int(round(duration_h * 60))
+    n = round(float(duration_h) * 60)     # float(): numpy 1.x mengembalikan float64 dari round(float64)
     Tamb, RHamb = ambient_curve(clim_row, n, start_hour, rng)
     P = truck(mass_kg)
     C_c = mass_kg * prod["c"] * 1000.0
@@ -220,15 +220,15 @@ def simulate(prod, mass_kg, clim_row, events=(), duration_h=8.0, start_hour=8.0,
                     for i in range(n)], dtype=object)
     lab_txt = [("normal_sehat" if x == "A0" else "+".join(CLASS_LABELS[k] for k in x.split("+"))) for x in lab]
 
-    df = pd.DataFrame(dict(
-        trip_id=trip_id, minute=np.arange(n), hour_of_day=(start_hour + np.arange(n) / 60) % 24,
-        T_amb=Tout_arr, RH_amb=RHamb, T_sensor=Ts, T_air=Tair, T_cargo=Tcar,
-        reefer_duty=duty, door_open=door, moving=moving, sensor_ok=sensor_ok,
-        category=prod["category"], product=prod["name"], state=prod["state"],
-        mass_kg=mass_kg, c_kj_kgc=prod["c"], thermal_mass_kj_k=mass_kg * prod["c"], t_lo=tlo, t_hi=thi,
-        ev_A1=ev_door, ev_A2=ev_shock, ev_A3=ev_sensor,
-        scenario="+".join(sorted(events)) or "A0", failure_mode=lab, label=lab_txt,
-        is_breach=breach.astype(int), ttb_min=ttb))
+    df = pd.DataFrame({
+        "trip_id": trip_id, "minute": np.arange(n), "hour_of_day": (start_hour + np.arange(n) / 60) % 24,
+        "T_amb": Tout_arr, "RH_amb": RHamb, "T_sensor": Ts, "T_air": Tair, "T_cargo": Tcar,
+        "reefer_duty": duty, "door_open": door, "moving": moving, "sensor_ok": sensor_ok,
+        "category": prod["category"], "product": prod["name"], "state": prod["state"],
+        "mass_kg": mass_kg, "c_kj_kgc": prod["c"], "thermal_mass_kj_k": mass_kg * prod["c"], "t_lo": tlo, "t_hi": thi,
+        "ev_A1": ev_door, "ev_A2": ev_shock, "ev_A3": ev_sensor,
+        "scenario": "+".join(sorted(events)) or "A0", "failure_mode": lab, "label": lab_txt,
+        "is_breach": breach.astype(int), "ttb_min": ttb})
     for h in (15, 30, 60):                              # target prediksi suhu
         df[f"y_Tcargo_{h}"] = df["T_cargo"].shift(-h)
         df[f"y_Tair_{h}"] = df["T_air"].shift(-h)
