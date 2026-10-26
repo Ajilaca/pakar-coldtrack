@@ -1,9 +1,43 @@
 # Model Card — ColdTrack AI
 
-**Versi aktif:** v3 (11 Oktober 2026, lihat bagian berikut) · **Versi sebelumnya:** v2 (hibrida),
-7 Agustus 2026 · **Penanggung jawab:** R2 (AI Model Engineer)
+**Versi aktif:** v5 (26 Oktober 2026, lihat bagian berikut) · **Versi sebelumnya:** v3 (11 Oktober 2026),
+v2 (hibrida, 7 Agustus 2026) · **Penanggung jawab:** R2 (AI Model Engineer)
 
-## Pembaruan v3 — GRU hasil latih ulang B3 (11 Oktober 2026)
+## Pembaruan v5 — label kejadian sementara + konteks trip (26 Oktober 2026)
+
+Bobot GRU diganti dengan hasil B8 (`backend/models/coldtrack_v5.onnx`, kontrak
+`backend/models/coldtrack_v5.labels.json`). Arsitektur sama dengan v3 (GRU 3x128 + 72 statistik
+jendela), dengan dua perubahan:
+
+1. **Definisi label v5** (`bench/experiments/b8/b8_lib.py`): A1 (pintu) dan A7 (kejut ambien) hanya
+   berlabel kelasnya selama kejadian masih ada di jendela atau suhu belum pulih (maks. 120 menit setelah
+   kejadian), sesudahnya A0. Ini perbaikan penyebab utama yang diakui di v3 (label bertahan sampai akhir trip).
+2. **Masukan kedua `konteks` [n, 6]**: menit trip, suhu awal muat, suhu kini dikurangi suhu awal, tren 240 menit,
+   rata-rata 240 dikurangi rata-rata 60 menit, kemiringan 240 menit. Semuanya kausal dari `temp_c`;
+   backend menghitungnya di `app/preprocess.konteks_trip` (paritas persis dengan `b8_lib`).
+
+| Split test (sekali, `bench/results/test/`) | v3 `coldtrack_v3.onnx` | v5 `coldtrack_v5.onnx` |
+|---|---|---|
+| Macro F1, label lama | 0,668 | 0,756 |
+| PR-AUC anomali, label lama | 0,786 | 0,812 |
+| **Macro F1, label v5** | belum diukur di test (val 0,774) | **0,820** |
+| **PR-AUC anomali, label v5** | belum diukur di test (val 0,805) | **0,855** |
+| Forecast MAE t+30 | 0,192 °C | 0,190 °C |
+
+- **Target PRD (> 0,80 dan > 0,85) tercapai dengan definisi label v5, tidak dengan label lama.**
+  Definisi label berubah, jadi kedua angka harus dilaporkan berdampingan.
+- **`degradasi_bertahap` tetap lemah** (F1 test 0,22); kelas lain 0,77 (A1) sampai 1,00.
+- **Keputusan rilis:** model dibekukan dan diekspor dulu (`bench/experiments/b8/b8_export_onnx.py`, paritas
+  ONNX vs PyTorch 1,7e-6, macro F1 val diperiksa ulang), lalu split test dipakai sekali
+  (`bench/experiments/b10/b10_gru_test_once.py`, tercatat di `bench/results/test_access_log.json`).
+- **Pembanding di chip:** XGBoost ukuran chip dengan label dan konteks yang sama, test macro F1 0,810
+  (tanpa sinyal kompresor) dan 0,900 (dengan siklus kerja kompresor sintetis);
+  `bench/results/test/b8_xgb_chip_v5_konteks.json`, `b9_xgb_chip_v5_konteks_duty_sintetis.json`.
+- **Rollback ke v3:** di `backend/config.yaml` ganti `gru_onnx_path`/`labels_path` ke berkas v3 dan
+  `version` ke `coldtrack-hybrid-v3-gru-b3`, lalu restart. Provider tetap `v3`, dan masukan konteks
+  terdeteksi dari nama masukan ONNX.
+
+## Pembaruan v3 — GRU hasil latih ulang B3 (11 Oktober 2026, digantikan v5)
 
 Model klasifikasi + forecast diganti dengan `ml/reports/coldtrack_b3.onnx` (kontrak:
 `ml/reports/labels_b3.json`), setelah lulus gerbang G3 (`bench/results/keputusan/G3.json`).

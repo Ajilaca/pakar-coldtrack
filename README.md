@@ -58,11 +58,12 @@ dan MQTT, jadi di sana hanya halaman Simulasi (`POST /api/v1/analyze`) yang berf
 
 ## Model
 
-- Diagnosis dan forecast: GRU v3 (3 lapis, hidden 128) dalam ONNX, dengan 7 kelas mode kegagalan dan
-  forecast suhu t+15/t+30/t+60.
+- Diagnosis dan forecast: GRU v5 (3 lapis, hidden 128, ditambah 6 fitur konteks trip) dalam ONNX, dengan
+  7 kelas mode kegagalan dan forecast suhu t+15/t+30/t+60.
 - Status dan Time-to-Breach: mesin fisika/aturan, dengan XGBoost (`coldtrack_ttb.onnx`) untuk TTB.
-- Target Macro F1 > 0,80 dan PR-AUC > 0,85 belum tercapai (test: 0,668 dan 0,786). Detail,
-  keterbatasan, dan perbandingan versi ada di [Model Card](docs/model_card.md).
+- Test v5: Macro F1 0,820 dan PR-AUC 0,855 dengan definisi label v5 (A1/A7 sebagai kejadian sementara),
+  memenuhi target > 0,80 dan > 0,85. Dengan label lama 0,756 dan 0,812 (v3: 0,668 dan 0,786).
+  `degradasi_bertahap` masih lemah. Detail ada di [Model Card](docs/model_card.md).
 - Semua data adalah sintetis dari simulator, bukan logger truk nyata.
 
 ## Pengujian

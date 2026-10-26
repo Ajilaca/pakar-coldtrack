@@ -114,6 +114,12 @@ catatan**; v3 menjadi diagnosis provider bawaan backend, menggantikan checkpoint
 58 % jendela A1 dan 51 % jendela A7 tidak memuat jejak kejadiannya. Definisi metrik dan target tidak
 diubah; peninjauan definisi label diserahkan ke tim data/PRD.
 
+**v3 → v5 (26 Oktober 2026).** Definisi label A1/A7 diubah menjadi kejadian sementara (B8) dan GRU dilatih
+ulang dengan 6 fitur konteks trip. Langkah yang sama dipakai: model dibekukan dan diekspor ke jalur kandidat,
+paritas ONNX diuji, split test dipakai sekali (`bench/results/test/b8_gru_v5_konteks.json`). Test: Macro F1
+0,820 dan PR-AUC 0,855 dengan label v5; 0,756 dan 0,812 dengan label lama. Karena definisi label berubah,
+kedua angka selalu dilaporkan berdampingan. `degradasi_bertahap` tetap lemah (F1 0,22).
+
 **Rollback.** Satu flag `model.diagnosis_provider` di `backend/config.yaml` (`v3` | `checkpoint2`);
 checkpoint-2 tidak dihapus dan tetap diuji di CI. Setiap respons memuat `diagnosis_provider` dan
 `model_version` sehingga perilaku dapat dilacak dari log.

@@ -153,9 +153,9 @@ Kembali ke **Ringkasan**.
 
 > *"Tiga hal yang perlu jujur kami sampaikan. Pertama, data masih sintetis; belum ada uji lapangan.
 > Kedua, alarm pada truk normal cukup sering, sekitar 20 % menit perjalanan normal, terutama muatan
-> 2–4 °C. Ketiga, target akurasi di PRD belum tercapai: pada test, Macro F1 0,668 dari target 0,80 dan
-> PR-AUC 0,786 dari target 0,85. Langkah berikutnya: definisi label diperbaiki dan uji dengan data
-> logger nyata dari pilot."*
+> 2–4 °C. Ketiga, target akurasi PRD baru tercapai setelah definisi label pintu dan kejut ambien
+> diperbaiki: pada test, Macro F1 0,820 dan PR-AUC 0,855; dengan label lama 0,756 dan 0,812. Degradasi
+> bertahap masih lemah. Langkah berikutnya: uji dengan data logger nyata dari pilot."*
 
 ---
 
@@ -163,8 +163,8 @@ Kembali ke **Ringkasan**.
 
 | Pertanyaan | Jawaban singkat (bersumber dari berkas di repo) |
 |---|---|
-| Seakurat apa modelnya? | Test: Macro F1 0,668 (baseline 0,581), PR-AUC 0,786 (baseline 0,711). Target 0,80 dan 0,85 belum tercapai. `bench/results/keputusan/G3.json`, `bench/report/BAHAN_PPT_TEKNIS.md` bagian 3. |
-| Kenapa tidak tercapai? | Sebagian besar jendela kelas pintu terbuka (58,4 %) dan lonjakan ambien (50,5 %) tidak memuat jejak kejadian di dalam jendela, jadi label tidak bisa dilihat model. Kami belum melatih ulang dengan definisi label baru. |
+| Seakurat apa modelnya? | GRU v5, test: Macro F1 0,820, PR-AUC 0,855 (label v5); 0,756 dan 0,812 dengan label lama (v3: 0,668 dan 0,786). `bench/results/test/b8_gru_v5_konteks.json`, `docs/model_card.md`. |
+| Kenapa label diubah? | Di v3, 58,4 % jendela pintu terbuka dan 50,5 % lonjakan ambien tidak memuat jejak kejadian karena label bertahan sampai akhir trip. Label v5 menganggap keduanya kejadian sementara, lalu model dilatih ulang dengan konteks trip. Kedua angka tetap kami laporkan. |
 | Apakah data nyata? | Tidak. Sintetis dari simulator; model Berkeley (data sensor nyata) tidak lolos evaluasi (G4). |
 | Latensi? | Model v3, CPU, batch 1: p50 1,474 ms per panggilan, jauh di bawah anggaran PRD 300 ms. (`docs/model_card.md` masih menulis 1,38 ms; angka terukur ada di `latensi_kandidat.json`.) |
 | Perlu GPU? | Untuk inferensi per truk di CPU tidak perlu: GPU batch 1 justru lebih lambat (0,04×). GPU membantu untuk pelatihan dan batch besar. Detail: bagian 4 `BAHAN_PPT_TEKNIS.md`. |

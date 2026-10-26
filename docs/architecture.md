@@ -84,8 +84,10 @@ The architecture strictly adheres to a **zero-side-effect, zero-database design*
 ### 2.3 Machine Learning Artifacts (`ml/` & `backend/models/`)
 | File (`backend/models/`) | Provider | What it is |
 |---|---|---|
-| `coldtrack_v3.onnx` (= `ml/reports/coldtrack_b3.onnx`) | **v3, default** | GRU 3 layers x hidden 128 + window summary stats; input `window [n, 60, 12]` raw; outputs forecast t+15/30/60, 7-class `failure_prob`, GRU TTB head (unused) |
-| `coldtrack_v3.labels.json` | v3 | class order, configuration, metrics, limitations |
+| `coldtrack_v5.onnx` (= `models/candidates/coldtrack_gru_v5_konteks.onnx`) | **v3, default** | v3 architecture retrained with label v5 (B8); inputs `window [n, 60, 12]` and `konteks [n, 6]` (trip context, `app/preprocess.konteks_trip`), both raw; same outputs |
+| `coldtrack_v5.labels.json` | v3 | class order, configuration, test metrics, limitations |
+| `coldtrack_v3.onnx` (= `ml/reports/coldtrack_b3.onnx`) | v3, rollback | GRU 3 layers x hidden 128 + window summary stats; input `window [n, 60, 12]` raw; outputs forecast t+15/30/60, 7-class `failure_prob`, GRU TTB head (unused) |
+| `coldtrack_v3.labels.json` | v3, rollback | class order, configuration, metrics, limitations |
 | `coldtrack_ttb_window.onnx` (= `ml/reports/coldtrack_ttb.onnx`) | v3 | XGBoost Time-to-Breach (300 trees), same window input; informational `ttb_model_min` |
 | `coldtrack_gru.onnx` | checkpoint2 | previous GRU (inputs `x`, `s`): 3 events + cargo-temperature forecast |
 | `coldtrack_ttb.onnx` | checkpoint2 | previous XGBoost TTB (input `features`) |

@@ -13,7 +13,7 @@ AMAN/WASPADA/KRITIS dan TTB; model ML hanya mengusulkan diagnosis.
 | `app/routers/` | REST `/api/v1/fleet/*`, insiden, SSE `/stream`, webhook vendor |
 | `app/fleet/`, `app/db/`, `app/ingest/`, `app/adapters/` | Logika armada, akses database, penerima telemetri, adaptor vendor |
 | `migrations/` | Skema TimescaleDB 001 sampai 006 (`006`: tabel `edge_results`) |
-| `models/` | ONNX yang dilayani: `coldtrack_v3.onnx` (GRU, default), `coldtrack_ttb_window.onnx` (XGBoost TTB), kandidat di `candidates/` |
+| `models/` | ONNX yang dilayani: `coldtrack_v5.onnx` (GRU v5 + konteks trip, default; `coldtrack_v3.onnx` untuk rollback), `coldtrack_ttb_window.onnx` (XGBoost TTB), kandidat di `candidates/` |
 | `data/fleet/`, `data/scenarios/` | Seed 24 truk virtual dan 5 skenario demo |
 | `config.yaml` | Pilihan provider model, profil kargo, parameter armada |
 | `tests/` | Tes pytest |
