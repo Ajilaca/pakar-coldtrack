@@ -10,8 +10,9 @@ kerugian.
 
 ![Halaman Simulasi: pilih skenario, jalankan analisis, hasilnya muncul](docs/images/demo.gif)
 
-*Halaman Simulasi: pilih skenario telemetri, klik "Analisis Perjalanan", lalu status, Time-to-Breach, diagnosis,
-faktor pendorong, dan tiga langkah tindakan muncul.*
+*Halaman Simulasi: skenario pintu terbuka menghasilkan KRITIS dengan Time-to-Breach 21 menit, sedangkan perjalanan
+normal menghasilkan AMAN. Tiap hasil dilengkapi diagnosis, faktor pendorong, dan tiga langkah tindakan. GIF dibuat
+ulang dengan `python docs/tools/record_demo_gif.py`.*
 
 ## Cara kerja
 
