@@ -1,4 +1,4 @@
-"""Daftar workload benchmark (bagian 6 CONTEXT_MODEL_BENCHMARK_RTX5070.md).
+"""Daftar workload benchmark.
 
 Tiap workload adalah modul dengan fungsi run(ctx) -> list[Path] (berkas JSON yang ditulis).
 Workload yang belum diimplementasikan tetap terdaftar supaya CLI-nya stabil sejak B0.

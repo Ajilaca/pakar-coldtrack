@@ -1,7 +1,6 @@
 # bench/: latih ulang ColdTrack dan benchmark device
 
-Jalur ML + benchmark untuk ASUS ROG Strix G16 (RTX 5070) vs device lama. Rencana lengkap:
-`CONTEXT_MODEL_BENCHMARK_RTX5070.md` (handoff). Aturan yang tidak bisa ditawar:
+Skrip untuk melatih ulang model ColdTrack dan membandingkan waktunya antar device. Aturannya:
 
 1. Tidak ada angka karangan: setiap angka laporan berasal dari JSON di `bench/results/`.
 2. Perbandingan hanya antar device yang benar-benar dijalankan dengan skrip dan data yang sama.

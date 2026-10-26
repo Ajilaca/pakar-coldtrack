@@ -1,3 +1,3 @@
 # reports
 
-Training run outputs: metrics, plots, exported ONNX models, and evaluation reports.
+Keluaran run pelatihan: metrik, plot, model ONNX hasil ekspor, dan laporan evaluasi.
