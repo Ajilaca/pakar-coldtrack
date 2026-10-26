@@ -8,11 +8,7 @@ Untuk setiap truk, dasbor menampilkan status (AMAN, WASPADA, atau KRITIS), Time-
 melewati batas suhu), diagnosis penyebab, tindakan yang disarankan, insiden beserta audit trail, dan estimasi
 kerugian.
 
-![Halaman Simulasi: pilih skenario, jalankan analisis, hasilnya muncul](docs/images/demo.gif)
-
-*Halaman Simulasi: skenario pintu terbuka menghasilkan KRITIS dengan Time-to-Breach 21 menit, sedangkan perjalanan
-normal menghasilkan AMAN. Tiap hasil dilengkapi diagnosis, faktor pendorong, dan tiga langkah tindakan. GIF dibuat
-ulang dengan `python docs/tools/record_demo_gif.py`.*
+![demo](docs/images/demo.gif)
 
 ## Cara kerja
 
