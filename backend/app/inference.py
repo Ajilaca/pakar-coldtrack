@@ -3,7 +3,8 @@
 - core.engine (physics + sensor rules): status AMAN/WASPADA/KRITIS, physics TTB, reason. Always.
 - Diagnosis provider (forecast + failure_mode + informational ML TTB), chosen by one config flag
   `model.diagnosis_provider` in config.yaml:
-    v3          (default) ml/reports/coldtrack_b3.onnx: GRU 3x128, 7 failure classes, window [n, 60, 12]
+    v3          (default) GRU 3x128, 7 failure classes, window [n, 60, 12]. Weights: coldtrack_v5.onnx (label
+                 v5 + trip context input [n, 6]) or, for rollback, coldtrack_v3.onnx (= ml/reports/coldtrack_b3.onnx)
                  + coldtrack_ttb_window.onnx (XGBoost TTB, same window contract).
     checkpoint2  the previous model (ml/CHECKPOINT2_CONTEXT.md): 3 events + cargo-temp forecast
                  + its own XGBoost TTB. Kept for rollback.
@@ -22,7 +23,7 @@ import pandas as pd
 
 from app.config import settings
 from app.core import engine, observer, prep_windows, ttb_features
-from app.preprocess import ONNX_FEATURE_COLUMNS, features_per_minute
+from app.preprocess import ONNX_FEATURE_COLUMNS, features_per_minute, konteks_trip
 from app.schemas import TelemetryReading
 
 logger = logging.getLogger("coldtrack.inference")
@@ -42,6 +43,8 @@ DEFAULT_PROVIDER = "v3"
 # diagnosis ditandai kurang andal dan keyakinannya DIBATASI (pilihan tampilan konservatif, bukan
 # nilai terkalibrasi). Status dari mesin fisika tidak berubah.
 GAP_DETIK = 90
+# (ts bacaan pertama trip, suhu awal muat = rata-rata 5 bacaan pertama): konteks GRU v5 saat riwayat dipotong
+AwalTrip = tuple[pd.Timestamp, float]
 KEYAKINAN_MAKS_DATA_TIDAK_LENGKAP = 0.5
 
 
@@ -185,7 +188,8 @@ class Checkpoint2Provider:
     def is_ready(self) -> bool:
         return self.gru is not None
 
-    def run(self, trip: pd.DataFrame, out: pd.DataFrame, feats: pd.DataFrame | None) -> None:
+    def run(self, trip: pd.DataFrame, out: pd.DataFrame, feats: pd.DataFrame | None,
+            awal: AwalTrip | None = None) -> None:
         clean = prep_windows.clean_trip(trip)
         x_feats = clean[prep_windows.FEATS].to_numpy(np.float32)
         ends = np.arange(WINDOW - 1, len(clean))
@@ -223,7 +227,10 @@ class Checkpoint2Provider:
 
 
 class V3Provider:
-    """GRU 3x128 + summary stats, 7 failure classes (G3 2026-10-11, docs/model_card.md)."""
+    """GRU 3x128 + summary stats, 7 failure classes (G3 2026-10-11, docs/model_card.md).
+
+    Model v5 (label A1/A7 sementara, bench/experiments/b8) punya masukan kedua `konteks` [n, 6]
+    (preprocess.KONTEKS_COLUMNS); terdeteksi dari nama masukan ONNX. Model v3 lama tetap jalan tanpa konteks."""
 
     name = "v3"
 
@@ -234,6 +241,13 @@ class V3Provider:
                               .read_text(encoding="utf-8"))
         self.classes: list[str] = contract["kontrak"]["outputs"]["failure_prob"]["classes"]
         self.api_labels = [V3_API_LABEL[c] for c in self.classes]
+        self.pakai_konteks = self.gru is not None and "konteks" in [i.name for i in self.gru.get_inputs()]
+
+    def masukan(self, feats: pd.DataFrame, ends: np.ndarray, awal: AwalTrip | None = None) -> dict[str, np.ndarray]:
+        x = {"window": self.windows(feats, ends)}
+        if self.pakai_konteks:
+            x["konteks"] = konteks_trip(feats, ends, *(awal or (None, None)))
+        return x
 
     @property
     def is_ready(self) -> bool:
@@ -251,12 +265,14 @@ class V3Provider:
         x[:, :, ONNX_FEATURE_COLUMNS.index("reefer_duration_min")] = np.minimum(run[idx], pos_in_window)
         return x
 
-    def run(self, trip: pd.DataFrame, out: pd.DataFrame, feats: pd.DataFrame | None) -> None:
+    def run(self, trip: pd.DataFrame, out: pd.DataFrame, feats: pd.DataFrame | None,
+            awal: AwalTrip | None = None) -> None:
         if feats is None:
             raise ValueError("v3 provider needs the 12 per-minute features (preprocess.features_per_minute)")
         ends = np.arange(len(feats) - len(out), len(feats))   # len(out) = 1 untuk predict_last
-        x = self.windows(feats, ends)
-        fc, prob, _ = self.gru.run(None, {"window": x})
+        masuk = self.masukan(feats, ends, awal)
+        x = masuk["window"]
+        fc, prob, _ = self.gru.run(None, masuk)
         out[["t15", "t30", "t60"]] = fc.round(2)
         out[[f"p_{lab}" for lab in self.api_labels]] = prob
         door_now = feats["door_open"].to_numpy()[ends] > 0.5
@@ -290,7 +306,8 @@ class HybridInferenceEngine:
         return self.provider.is_ready
 
     def analyze_trip(self, trip: pd.DataFrame, prod: dict[str, float], feats: pd.DataFrame | None = None,
-                     last_only: bool = False, engine_out: pd.DataFrame | None = None) -> pd.DataFrame:
+                     last_only: bool = False, engine_out: pd.DataFrame | None = None,
+                     awal: AwalTrip | None = None) -> pd.DataFrame:
         """Every minute of a trip, causally (row t only uses data up to t). Rows start at minute W-1.
 
         `feats` = preprocess.features_per_minute(readings), aligned with `trip` (both sorted by ts);
@@ -298,6 +315,7 @@ class HybridInferenceEngine:
         last_only=True: the physics engine still runs over the whole history (the cargo observer needs
         it), but the GRU/XGB only run for the last window (worker-infer, /analyze). Causal, so the last
         row is identical to last_only=False (tests/test_fleet_infer.py).
+        `awal` = (ts bacaan pertama trip, suhu awal muat) bila `feats` bukan riwayat sejak awal trip.
         """
         if engine_out is None:
             engine_out = engine.run(trip, prod, prod["mass_kg"])
@@ -317,17 +335,17 @@ class HybridInferenceEngine:
             _risk_index(st, float(tp), ss >= 1) for st, tp, ss in zip(out.status, out.ttb_phys, out.sensor_status)
         ]
         if self.provider.is_ready:
-            self.provider.run(trip, out, feats)
+            self.provider.run(trip, out, feats, awal)
         return out
 
-    def forecast_last(self, readings: list[TelemetryReading]) -> dict[str, float] | None:
+    def forecast_last(self, readings: list[TelemetryReading], awal: AwalTrip | None = None) -> dict[str, float] | None:
         """Forecast suhu muatan t+15/t+30/t+60 untuk jendela terakhir saja: satu kali GRU, tanpa mesin fisika dan
         tanpa XGBoost TTB. Dipakai worker-infer untuk truk ber-chip edge (status, TTB, diagnosis dari chip).
         Sama dengan forecast predict_last untuk bacaan yang sama. None bila provider bukan v3 atau model tidak ada."""
         if not isinstance(self.provider, V3Provider) or not self.provider.is_ready or len(readings) < WINDOW:
             return None
         feats = features_per_minute(ke_zona_armada(readings))
-        fc = self.provider.gru.run(None, {"window": self.provider.windows(feats, np.array([len(feats) - 1]))})[0]
+        fc = self.provider.gru.run(None, self.provider.masukan(feats, np.array([len(feats) - 1]), awal))[0]
         return {h: float(round(float(v), 2)) for h, v in zip(("t15", "t30", "t60"), fc[0], strict=True)}
 
     def predict(
@@ -337,7 +355,8 @@ class HybridInferenceEngine:
         return self.predict_last(readings, cargo_profile, mass_kg)[0]
 
     def predict_last(
-        self, readings: list[TelemetryReading], cargo_profile: str, mass_kg: float | None = None
+        self, readings: list[TelemetryReading], cargo_profile: str, mass_kg: float | None = None,
+        awal: AwalTrip | None = None,
     ) -> tuple[dict[str, Any], pd.DataFrame]:
         """predict() plus the per-minute engine series (ts, sensor_status, T_cargo_est, status) over the
         whole history, used by worker-infer for sensor health and breach detection. Models run once."""
@@ -345,7 +364,8 @@ class HybridInferenceEngine:
         readings = ke_zona_armada(readings)
         trip = readings_to_trip(readings, prod)
         eng = engine.run(trip, prod, prod["mass_kg"])
-        now = self.analyze_trip(trip, prod, features_per_minute(readings), last_only=True, engine_out=eng).iloc[-1]
+        now = self.analyze_trip(trip, prod, features_per_minute(readings), last_only=True, engine_out=eng,
+                                awal=awal).iloc[-1]
         series = pd.DataFrame({"ts": trip.ts, "sensor_status": eng.sensor_status.astype(int),
                                "t_cargo_est": eng.T_cargo_est, "status": eng.status_txt})
         result: dict[str, Any] = {

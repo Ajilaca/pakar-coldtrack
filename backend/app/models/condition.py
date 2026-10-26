@@ -31,7 +31,7 @@ class HybridCondition(Provider):
                 "t_cargo_est": None, "t_hi": None, "series": None}
         if j.keadaan != "OK" or not ctx.cargo_profile:
             return base
-        result, series = self.engine.predict_last(j.readings, ctx.cargo_profile, ctx.mass_kg)
+        result, series = self.engine.predict_last(j.readings, ctx.cargo_profile, ctx.mass_kg, awal=ctx.awal_trip)
         if result["forecast"] is None:                     # model gagal dimuat: hanya mesin fisika
             base["model_version"], base["provider"] = "coldtrack-engine-only", "engine-only"
         out = {**base, **result, "series": series, "catatan_data": j.catatan() or result.get("catatan_data")}

@@ -148,3 +148,37 @@ def features_per_minute(readings: list[TelemetryReading]) -> pd.DataFrame:
     numeric_cols = ["temp_c", "humidity", "ambient_c", "speed_kmh", "solar_radiation"]
     df[numeric_cols] = df[numeric_cols].interpolate(method="linear").bfill().ffill()
     return compute_derived_features(df)
+
+
+# Konteks trip untuk GRU v5 (bench/experiments/b8/b8_lib.py: KONTEKS, konteks_trip), urutan wajib sama.
+KONTEKS_COLUMNS: list[str] = [
+    "menit_trip", "suhu_awal_muat", "kini_minus_awal", "tren_240", "rata240_minus_rata60", "kemiringan_240",
+]
+
+
+def konteks_trip(feats: pd.DataFrame, ends: np.ndarray, mulai: pd.Timestamp | None = None,
+                 suhu_awal: float | None = None) -> np.ndarray:
+    """[n, 6] konteks untuk baris `ends` dari features_per_minute. Kausal, sama dengan b8_lib.konteks_trip.
+
+    Menit trip dihitung dari `mulai` (bacaan pertama trip) dan suhu_awal = rata-rata 5 bacaan pertama trip.
+    Keduanya perlu diisi bila `feats` hanya memuat riwayat terakhir (worker-infer membatasi 240 menit); tanpa
+    keduanya `feats` dianggap dimulai dari awal trip. Menit tanpa bacaan diisi bacaan terakhir di grid 1 menit.
+    """
+    ts = pd.to_datetime(feats["ts"])
+    m0 = 0 if mulai is None else round((ts.iloc[0] - pd.Timestamp(mulai)).total_seconds() / 60)
+    menit = np.round((ts - ts.iloc[0]).dt.total_seconds().to_numpy() / 60).astype(int)
+    y = pd.Series(feats["temp_c"].to_numpy(np.float64), index=menit)
+    y = y[~y.index.duplicated(keep="last")].reindex(np.arange(menit[-1] + 1)).ffill().bfill().to_numpy()
+    awal = float(np.mean(y[:5])) if suhu_awal is None else float(suhu_awal)
+    out = np.zeros((len(ends), len(KONTEKS_COLUMNS)), np.float32)
+    for k, j in enumerate(menit[ends]):
+        t = m0 + j                                   # menit trip absolut
+        a = max(0, max(0, t - 239) - m0)             # awal 240 menit (dipotong bila riwayat lebih pendek)
+        a60 = max(0, max(0, t - 59) - m0)
+        seg = y[a:j + 1]
+        m = len(seg)
+        x = np.arange(m, dtype=np.float64)
+        den = m * (x * x).sum() - x.sum() ** 2
+        slope = (m * (x * seg).sum() - x.sum() * seg.sum()) / den if den > 0 else 0.0
+        out[k] = [t, awal, y[j] - awal, y[j] - y[a], seg.mean() - y[a60:j + 1].mean(), slope]
+    return out

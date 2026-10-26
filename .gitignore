@@ -49,6 +49,8 @@ Thumbs.db
 # Provider diagnosis v3 (default) + TTB kontrak jendela
 !backend/models/coldtrack_v3.onnx
 !backend/models/coldtrack_ttb_window.onnx
+# Bobot v5 (B8: label v5 + konteks trip), dipakai provider v3 sejak 2026-10-26
+!backend/models/coldtrack_v5.onnx
 !ml/reports/coldtrack_ttb.onnx
 !ml/reports/coldtrack_b3.onnx
 # Kandidat B3 (menunggu G3), tidak menimpa model produksi

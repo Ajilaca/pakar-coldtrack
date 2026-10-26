@@ -9,15 +9,17 @@ app:
 
 model:
   # Sumber forecast + failure_mode. Status AMAN/WASPADA/KRITIS selalu dari mesin fisika (app/core/engine.py).
-  #   v3          (default sejak 2026-10-11, lulus G3) GRU 3x128, 7 kelas kegagalan
+  #   v3          GRU 3x128, 7 kelas kegagalan. Sejak 2026-10-26 memakai bobot v5 (B8: label A1/A7 sementara
+  #               + 6 konteks trip, test macro F1 0,820). ROLLBACK ke bobot G3: gru_onnx_path coldtrack_v3.onnx,
+  #               labels_path coldtrack_v3.labels.json, version coldtrack-hybrid-v3-gru-b3.
   #   checkpoint2 model sebelumnya (3 kejadian). ROLLBACK: ganti nilai di bawah ke checkpoint2, restart backend.
   diagnosis_provider: v3
   providers:
     v3:
-      gru_onnx_path: models/coldtrack_v3.onnx            # = ml/reports/coldtrack_b3.onnx
+      gru_onnx_path: models/coldtrack_v5.onnx            # = backend/models/candidates/coldtrack_gru_v5_konteks.onnx
       ttb_onnx_path: models/coldtrack_ttb_window.onnx    # = ml/reports/coldtrack_ttb.onnx (XGBoost, kontrak jendela)
-      labels_path: models/coldtrack_v3.labels.json       # urutan kelas + keterbatasan
-      version: coldtrack-hybrid-v3-gru-b3
+      labels_path: models/coldtrack_v5.labels.json       # urutan kelas, metrik test, keterbatasan
+      version: coldtrack-hybrid-v5-gru-konteks
     checkpoint2:
       gru_onnx_path: models/coldtrack_gru.onnx
       ttb_onnx_path: models/coldtrack_ttb.onnx

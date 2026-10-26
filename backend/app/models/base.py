@@ -23,6 +23,7 @@ class Konteks:
     mass_kg: float | None = None
     device: dict[str, Any] | None = None
     raw: pd.DataFrame = field(default_factory=pd.DataFrame)   # bacaan asli 3 jam terakhir (sensor health)
+    awal_trip: tuple[datetime, float] | None = None           # (bacaan pertama trip, suhu awal muat) untuk GRU v5
 
 
 class Provider:

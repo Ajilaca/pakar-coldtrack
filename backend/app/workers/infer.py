@@ -85,7 +85,13 @@ def muat(c: psycopg.Connection, truck_id: str, now: datetime) -> dict[str, Any]:
     trip_rows = df if trip is None else df[(df.ts >= trip["started_at"]) & (df.ts >= now - timedelta(minutes=CAP_MIN))]
     last_any = cur.execute("SELECT max(ts) FROM telemetry WHERE truck_id = %s AND ts <= %s",
                            (truck_id, batas_atas)).fetchone()["max"]
-    return {"trip": trip, "device": device, "trip_rows": trip_rows.reset_index(drop=True),
+    awal = None
+    if trip is not None:                          # konteks GRU v5: riwayat di atas dipotong CAP_MIN menit
+        lima = cur.execute("SELECT ts, temp_c FROM telemetry WHERE truck_id = %s AND ts >= %s AND temp_c IS NOT NULL "
+                           "ORDER BY ts LIMIT 5", (truck_id, trip["started_at"])).fetchall()
+        if lima:
+            awal = (lima[0]["ts"], sum(float(r["temp_c"]) for r in lima) / len(lima))
+    return {"trip": trip, "device": device, "trip_rows": trip_rows.reset_index(drop=True), "awal_trip": awal,
             "raw": df[df.ts >= dari_sensor].reset_index(drop=True) if not df.empty else df, "last_any": last_any}
 
 
@@ -125,13 +131,13 @@ def hitung(c: psycopg.Connection, truck_id: str) -> list[dict[str, Any]]:
         return [{"type": "truck", "truck_id": truck_id, "status": "TANPA_TRIP"}]
 
     jendela = bangun_jendela(m["trip_rows"], now, FFILL, OFFLINE, ZONA)
-    ctx = Konteks(truck_id, now, jendela, trip["cargo_profile"], trip["mass_kg"], device, m["raw"])
+    ctx = Konteks(truck_id, now, jendela, trip["cargo_profile"], trip["mass_kg"], device, m["raw"], m["awal_trip"])
     hasil_edge = (edge.muat_terakhir(cur, truck_id, jendela.readings[-1].ts)
                   if PAKAI_EDGE and jendela.keadaan == "OK" else None)
     if hasil_edge is not None:                    # dihitung sekali di chip truk; cloud tidak menghitung ulang
         cond = edge.kondisi(hasil_edge, trip["cargo_profile"], trip["mass_kg"], jendela)
         if FORECAST_CLOUD:                        # forecast hanya ada di cloud (GRU); bukan hitung ulang hasil chip
-            cond["forecast"] = inference_engine.forecast_last(jendela.readings)
+            cond["forecast"] = inference_engine.forecast_last(jendela.readings, m["awal_trip"])
         sh = orchestrator.provider("sensor_health").run(ctx)
     else:
         hasil = orchestrator.analyze(ctx)
