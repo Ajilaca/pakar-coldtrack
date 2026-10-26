@@ -1,0 +1,28 @@
+{
+  "waktu_utc": "2026-10-26T12:40:42+00:00",
+  "git": {
+    "commit": "4cd5bd011bb36d1f573cf12523ede804a832b14b",
+    "branch": "main",
+    "dirty": true
+  },
+  "split": "val",
+  "label": "v5",
+  "aturan": {
+    "reefer_mati_menit": 15,
+    "reefer_mati_naik_c": 0.5
+  },
+  "reefer_mati_total": {
+    "n_kelas": 541,
+    "n_ditandai": 263,
+    "presisi": 1.0,
+    "recall": 0.48613678373382624,
+    "salah_tandai_per_kelas": {}
+  },
+  "prapendinginan_buruk": {
+    "n_kelas": 700,
+    "n_ditandai": 700,
+    "presisi": 1.0,
+    "recall": 1.0,
+    "salah_tandai_per_kelas": {}
+  }
+}

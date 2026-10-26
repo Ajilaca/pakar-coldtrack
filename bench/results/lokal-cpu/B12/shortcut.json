@@ -1,0 +1,514 @@
+{
+  "waktu_utc": "2026-10-26T03:47:28+00:00",
+  "git": {
+    "commit": "4cd5bd011bb36d1f573cf12523ede804a832b14b",
+    "branch": "main",
+    "dirty": false
+  },
+  "model": "backend/models/coldtrack_v5.onnx",
+  "split": "val",
+  "label": "v5",
+  "n_jendela": 16414,
+  "n_per_kelas": {
+    "A0": 12867,
+    "A1": 295,
+    "A3": 541,
+    "A7": 302,
+    "A8": 700,
+    "degradasi_bertahap": 1122,
+    "masalah_sensor": 587
+  },
+  "uji": {
+    "asli": {
+      "keterangan": "tanpa perubahan",
+      "macro_f1": 0.8745534248195327,
+      "f1": {
+        "A0": 0.953074123731086,
+        "A1": 0.9114391143911439,
+        "A3": 1.0,
+        "A7": 0.9440559440559441,
+        "A8": 1.0,
+        "degradasi_bertahap": 0.46497145822522057,
+        "masalah_sensor": 0.8483333333333334
+      },
+      "prediksi_per_kelas": {
+        "A0": {
+          "A0": 0.9668,
+          "degradasi_bertahap": 0.0258,
+          "masalah_sensor": 0.0074
+        },
+        "A1": {
+          "A0": 0.0814,
+          "A1": 0.8373,
+          "degradasi_bertahap": 0.0814
+        },
+        "A3": {
+          "A3": 1.0
+        },
+        "A7": {
+          "A0": 0.0894,
+          "A7": 0.894,
+          "masalah_sensor": 0.0166
+        },
+        "A8": {
+          "A8": 1.0
+        },
+        "degradasi_bertahap": {
+          "A0": 0.5971,
+          "degradasi_bertahap": 0.3993,
+          "masalah_sensor": 0.0036
+        },
+        "masalah_sensor": {
+          "A0": 0.1312,
+          "degradasi_bertahap": 0.0017,
+          "masalah_sensor": 0.8671
+        }
+      }
+    },
+    "reefer_selalu_nyala": {
+      "keterangan": "reefer_on = 1 di semua menit",
+      "macro_f1": 0.7238112455734267,
+      "f1": {
+        "A0": 0.9406071604098144,
+        "A1": 0.9114391143911439,
+        "A3": 0.0,
+        "A7": 0.9440559440559441,
+        "A8": 1.0,
+        "degradasi_bertahap": 0.4222431668237512,
+        "masalah_sensor": 0.8483333333333334
+      },
+      "prediksi_per_kelas": {
+        "A0": {
+          "A0": 0.9668,
+          "degradasi_bertahap": 0.0258,
+          "masalah_sensor": 0.0074
+        },
+        "A1": {
+          "A0": 0.0814,
+          "A1": 0.8373,
+          "degradasi_bertahap": 0.0814
+        },
+        "A3": {
+          "A0": 0.6396,
+          "degradasi_bertahap": 0.3604
+        },
+        "A7": {
+          "A0": 0.0894,
+          "A7": 0.894,
+          "masalah_sensor": 0.0166
+        },
+        "A8": {
+          "A8": 1.0
+        },
+        "degradasi_bertahap": {
+          "A0": 0.5971,
+          "degradasi_bertahap": 0.3993,
+          "masalah_sensor": 0.0036
+        },
+        "masalah_sensor": {
+          "A0": 0.1312,
+          "degradasi_bertahap": 0.0017,
+          "masalah_sensor": 0.8671
+        }
+      }
+    },
+    "reefer_diacak": {
+      "keterangan": "kanal reefer_on ditukar antar jendela",
+      "macro_f1": 0.7209813945114308,
+      "f1": {
+        "A0": 0.9256852869939641,
+        "A1": 0.8992537313432836,
+        "A3": 0.034383954154727794,
+        "A7": 0.9403508771929825,
+        "A8": 0.997134670487106,
+        "degradasi_bertahap": 0.41418983700862894,
+        "masalah_sensor": 0.8358714043993232
+      },
+      "prediksi_per_kelas": {
+        "A0": {
+          "A0": 0.9356,
+          "A3": 0.0324,
+          "degradasi_bertahap": 0.0248,
+          "masalah_sensor": 0.0072
+        },
+        "A1": {
+          "A0": 0.078,
+          "A1": 0.8169,
+          "A3": 0.0237,
+          "degradasi_bertahap": 0.0814
+        },
+        "A3": {
+          "A0": 0.6192,
+          "A3": 0.0333,
+          "degradasi_bertahap": 0.3475
+        },
+        "A7": {
+          "A0": 0.0828,
+          "A3": 0.0132,
+          "A7": 0.8874,
+          "masalah_sensor": 0.0166
+        },
+        "A8": {
+          "A3": 0.0057,
+          "A8": 0.9943
+        },
+        "degradasi_bertahap": {
+          "A0": 0.5793,
+          "A3": 0.0321,
+          "degradasi_bertahap": 0.385,
+          "masalah_sensor": 0.0036
+        },
+        "masalah_sensor": {
+          "A0": 0.1227,
+          "A3": 0.0341,
+          "degradasi_bertahap": 0.0017,
+          "masalah_sensor": 0.8416
+        }
+      }
+    },
+    "pintu_diacak": {
+      "keterangan": "kanal door_open ditukar antar jendela",
+      "macro_f1": 0.7396722621383018,
+      "f1": {
+        "A0": 0.9433003579814465,
+        "A1": 0.02321083172147002,
+        "A3": 0.9981481481481481,
+        "A7": 0.9422066549912435,
+        "A8": 0.9992852037169406,
+        "degradasi_bertahap": 0.42514395393474086,
+        "masalah_sensor": 0.8464106844741235
+      },
+      "prediksi_per_kelas": {
+        "A0": {
+          "A0": 0.9523,
+          "A1": 0.015,
+          "degradasi_bertahap": 0.0253,
+          "masalah_sensor": 0.0074
+        },
+        "A1": {
+          "A0": 0.3288,
+          "A1": 0.0203,
+          "degradasi_bertahap": 0.6508
+        },
+        "A3": {
+          "A1": 0.0037,
+          "A3": 0.9963
+        },
+        "A7": {
+          "A0": 0.0894,
+          "A1": 0.0033,
+          "A7": 0.8907,
+          "masalah_sensor": 0.0166
+        },
+        "A8": {
+          "A1": 0.0014,
+          "A8": 0.9986
+        },
+        "degradasi_bertahap": {
+          "A0": 0.5873,
+          "A1": 0.0143,
+          "degradasi_bertahap": 0.3948,
+          "masalah_sensor": 0.0036
+        },
+        "masalah_sensor": {
+          "A0": 0.1295,
+          "A1": 0.0051,
+          "degradasi_bertahap": 0.0017,
+          "masalah_sensor": 0.8637
+        }
+      }
+    },
+    "pintu_selalu_tutup": {
+      "keterangan": "door_open = 0 di semua menit",
+      "macro_f1": 0.7385625026474062,
+      "f1": {
+        "A0": 0.9502711786723703,
+        "A1": 0.0,
+        "A3": 1.0,
+        "A7": 0.9440559440559441,
+        "A8": 1.0,
+        "degradasi_bertahap": 0.42727706247019553,
+        "masalah_sensor": 0.8483333333333334
+      },
+      "prediksi_per_kelas": {
+        "A0": {
+          "A0": 0.9668,
+          "degradasi_bertahap": 0.0258,
+          "masalah_sensor": 0.0074
+        },
+        "A1": {
+          "A0": 0.3424,
+          "degradasi_bertahap": 0.6576
+        },
+        "A3": {
+          "A3": 1.0
+        },
+        "A7": {
+          "A0": 0.0894,
+          "A7": 0.894,
+          "masalah_sensor": 0.0166
+        },
+        "A8": {
+          "A8": 1.0
+        },
+        "degradasi_bertahap": {
+          "A0": 0.5971,
+          "degradasi_bertahap": 0.3993,
+          "masalah_sensor": 0.0036
+        },
+        "masalah_sensor": {
+          "A0": 0.1312,
+          "degradasi_bertahap": 0.0017,
+          "masalah_sensor": 0.8671
+        }
+      }
+    },
+    "tanpa_suhu_awal": {
+      "keterangan": "suhu_awal_muat dan kini_minus_awal = rata-rata train",
+      "macro_f1": 0.7610337279985362,
+      "f1": {
+        "A0": 0.9337010397644692,
+        "A1": 0.9114391143911439,
+        "A3": 1.0,
+        "A7": 0.9440559440559441,
+        "A8": 0.3169267707082833,
+        "degradasi_bertahap": 0.4013880855986119,
+        "masalah_sensor": 0.8197251414713015
+      },
+      "prediksi_per_kelas": {
+        "A0": {
+          "A0": 0.9736,
+          "degradasi_bertahap": 0.0186,
+          "masalah_sensor": 0.0078
+        },
+        "A1": {
+          "A0": 0.0915,
+          "A1": 0.8373,
+          "degradasi_bertahap": 0.0712
+        },
+        "A3": {
+          "A3": 1.0
+        },
+        "A7": {
+          "A0": 0.0894,
+          "A7": 0.894,
+          "masalah_sensor": 0.0166
+        },
+        "A8": {
+          "A0": 0.7643,
+          "A8": 0.1886,
+          "masalah_sensor": 0.0471
+        },
+        "degradasi_bertahap": {
+          "A0": 0.6872,
+          "degradasi_bertahap": 0.3093,
+          "masalah_sensor": 0.0036
+        },
+        "masalah_sensor": {
+          "A0": 0.1346,
+          "A8": 0.0017,
+          "masalah_sensor": 0.8637
+        }
+      }
+    },
+    "tanpa_konteks": {
+      "keterangan": "6 fitur konteks = rata-rata train",
+      "macro_f1": 0.6724446109234427,
+      "f1": {
+        "A0": 0.9199062888937697,
+        "A1": 0.9014598540145985,
+        "A3": 1.0,
+        "A7": 0.9440559440559441,
+        "A8": 0.0,
+        "degradasi_bertahap": 0.10601719197707736,
+        "masalah_sensor": 0.8356729975227085
+      },
+      "prediksi_per_kelas": {
+        "A0": {
+          "A0": 0.9765,
+          "degradasi_bertahap": 0.0152,
+          "masalah_sensor": 0.0082
+        },
+        "A1": {
+          "A0": 0.1627,
+          "A1": 0.8373
+        },
+        "A3": {
+          "A3": 1.0
+        },
+        "A7": {
+          "A0": 0.0828,
+          "A7": 0.894,
+          "masalah_sensor": 0.0232
+        },
+        "A8": {
+          "A0": 0.9857,
+          "A1": 0.0086,
+          "degradasi_bertahap": 0.0057
+        },
+        "degradasi_bertahap": {
+          "A0": 0.9296,
+          "degradasi_bertahap": 0.066,
+          "masalah_sensor": 0.0045
+        },
+        "masalah_sensor": {
+          "A0": 0.1363,
+          "A8": 0.0017,
+          "masalah_sensor": 0.862
+        }
+      }
+    },
+    "derau_suhu_0.1": {
+      "keterangan": "derau Gaussian 0,1 C pada temp_c",
+      "macro_f1": 0.7700322380204881,
+      "f1": {
+        "A0": 0.9337963312448101,
+        "A1": 0.9114391143911439,
+        "A3": 1.0,
+        "A7": 0.9440559440559441,
+        "A8": 1.0,
+        "degradasi_bertahap": 0.407088122605364,
+        "masalah_sensor": 0.19384615384615383
+      },
+      "prediksi_per_kelas": {
+        "A0": {
+          "A0": 0.9614,
+          "degradasi_bertahap": 0.0386
+        },
+        "A1": {
+          "A0": 0.0203,
+          "A1": 0.8373,
+          "degradasi_bertahap": 0.1424
+        },
+        "A3": {
+          "A3": 1.0
+        },
+        "A7": {
+          "A0": 0.1026,
+          "A7": 0.894,
+          "degradasi_bertahap": 0.0033
+        },
+        "A8": {
+          "A8": 1.0
+        },
+        "degradasi_bertahap": {
+          "A0": 0.6212,
+          "degradasi_bertahap": 0.3788
+        },
+        "masalah_sensor": {
+          "A0": 0.891,
+          "degradasi_bertahap": 0.0017,
+          "masalah_sensor": 0.1073
+        }
+      }
+    },
+    "derau_suhu_0.3": {
+      "keterangan": "derau Gaussian 0,3 C pada temp_c",
+      "macro_f1": 0.7352154820263247,
+      "f1": {
+        "A0": 0.911556287585705,
+        "A1": 0.9047619047619048,
+        "A3": 1.0,
+        "A7": 0.9440559440559441,
+        "A8": 0.9156311314584696,
+        "degradasi_bertahap": 0.288946910356832,
+        "masalah_sensor": 0.18155619596541786
+      },
+      "prediksi_per_kelas": {
+        "A0": {
+          "A0": 0.9248,
+          "A1": 0.0002,
+          "A8": 0.0099,
+          "degradasi_bertahap": 0.062,
+          "masalah_sensor": 0.0031
+        },
+        "A1": {
+          "A0": 0.0237,
+          "A1": 0.8373,
+          "degradasi_bertahap": 0.139
+        },
+        "A3": {
+          "A3": 1.0
+        },
+        "A7": {
+          "A0": 0.1026,
+          "A7": 0.894,
+          "degradasi_bertahap": 0.0033
+        },
+        "A8": {
+          "A8": 1.0
+        },
+        "degradasi_bertahap": {
+          "A0": 0.7005,
+          "degradasi_bertahap": 0.2959,
+          "masalah_sensor": 0.0036
+        },
+        "masalah_sensor": {
+          "A0": 0.8807,
+          "A1": 0.0017,
+          "A8": 0.0034,
+          "degradasi_bertahap": 0.0068,
+          "masalah_sensor": 0.1073
+        }
+      }
+    },
+    "derau_suhu_0.5": {
+      "keterangan": "derau Gaussian 0,5 C pada temp_c",
+      "macro_f1": 0.6508864995319117,
+      "f1": {
+        "A0": 0.8612672354534794,
+        "A1": 0.7384155455904334,
+        "A3": 1.0,
+        "A7": 0.9278350515463918,
+        "A8": 0.6000857265323618,
+        "degradasi_bertahap": 0.263653483992467,
+        "masalah_sensor": 0.16494845360824742
+      },
+      "prediksi_per_kelas": {
+        "A0": {
+          "A0": 0.8277,
+          "A1": 0.0079,
+          "A7": 0.0006,
+          "A8": 0.0678,
+          "degradasi_bertahap": 0.0873,
+          "masalah_sensor": 0.0087
+        },
+        "A1": {
+          "A0": 0.0339,
+          "A1": 0.8373,
+          "degradasi_bertahap": 0.1254,
+          "masalah_sensor": 0.0034
+        },
+        "A3": {
+          "A3": 1.0
+        },
+        "A7": {
+          "A0": 0.096,
+          "A1": 0.0033,
+          "A7": 0.894,
+          "degradasi_bertahap": 0.0033,
+          "masalah_sensor": 0.0033
+        },
+        "A8": {
+          "A8": 1.0
+        },
+        "degradasi_bertahap": {
+          "A0": 0.6462,
+          "A1": 0.0116,
+          "A7": 0.0018,
+          "A8": 0.0187,
+          "degradasi_bertahap": 0.3119,
+          "masalah_sensor": 0.0098
+        },
+        "masalah_sensor": {
+          "A0": 0.7666,
+          "A1": 0.0187,
+          "A8": 0.0681,
+          "degradasi_bertahap": 0.0375,
+          "masalah_sensor": 0.109
+        }
+      }
+    }
+  },
+  "detik": 65.7
+}
