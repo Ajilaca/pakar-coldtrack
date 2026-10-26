@@ -54,5 +54,16 @@
       "branch": "feat/label-v5-konteks",
       "dirty": true
     }
+  },
+  {
+    "id": "b8_gru_v5_konteks",
+    "model": "backend/models/candidates/coldtrack_gru_v5_konteks.onnx",
+    "sha256_model": "ae90d94be348273aee5baf61795066e4f3cc21aa5867460474e8542b7db7e051",
+    "waktu_utc": "2026-10-26T03:25:27+00:00",
+    "git": {
+      "commit": "84c47431c446bef6287961b5d1275b9769b25df9",
+      "branch": "main",
+      "dirty": false
+    }
   }
 ]

@@ -1,0 +1,149 @@
+{
+  "status": "KANDIDAT v5 (B8). Split test lewat bench/experiments/b10/b10_gru_test_once.py.",
+  "dibuat_utc": "2026-10-26T03:24:48+00:00",
+  "git": {
+    "commit": "84c47431c446bef6287961b5d1275b9769b25df9",
+    "branch": "main",
+    "dirty": false
+  },
+  "checkpoint": "data/processed/windows/gru_v5_konteks_seed1000.pt",
+  "sha256_onnx": "ae90d94be348273aee5baf61795066e4f3cc21aa5867460474e8542b7db7e051",
+  "label": "v5 (bench/experiments/b8/b8_lib.py: A1/A7 sementara)",
+  "konfigurasi": {
+    "hidden_size": 128,
+    "num_layers": 3,
+    "dropout": 0.06207278144394572,
+    "lr_backbone": 0.0009047397390909649,
+    "lr_heads": 0.0009773288137341434,
+    "w_forecast": 24.729262075408155,
+    "w_failure": 1.0,
+    "w_ttb": 1.2234075804271196,
+    "class_weight_power": 0.25974218643437624,
+    "freeze_epochs": 0,
+    "n_epochs": 30,
+    "batch_size": 256,
+    "weight_decay": 0.01,
+    "label_smoothing": 0.08307957729490462,
+    "pakai_statistik": true,
+    "patience": 8
+  },
+  "parameter": 254949,
+  "kontrak": {
+    "input": {
+      "name": "window",
+      "shape": [
+        "batch",
+        60,
+        12
+      ],
+      "features": [
+        "temp_c",
+        "delta_temp",
+        "ambient_c",
+        "delta_ambient",
+        "solar_radiation",
+        "humidity",
+        "door_open",
+        "reefer_on",
+        "reefer_duration_min",
+        "speed_kmh",
+        "harsh_events",
+        "hour_of_day"
+      ],
+      "catatan": "identik dengan coldtrack_v3.onnx"
+    },
+    "input_konteks": {
+      "name": "konteks",
+      "shape": [
+        "batch",
+        6
+      ],
+      "features": [
+        "menit_trip",
+        "suhu_awal_muat",
+        "kini_minus_awal",
+        "tren_240",
+        "rata240_minus_rata60",
+        "kemiringan_240"
+      ],
+      "catatan": "mentah, kausal dari temp_c sejak awal trip (b8_lib.konteks_trip)"
+    },
+    "outputs": {
+      "forecast_c": {
+        "horizons_menit": [
+          15,
+          30,
+          60
+        ]
+      },
+      "failure_prob": {
+        "classes": [
+          "A0",
+          "A1",
+          "A3",
+          "A7",
+          "A8",
+          "degradasi_bertahap",
+          "masalah_sensor"
+        ]
+      },
+      "time_to_breach_min": {
+        "catatan": "head GRU; TTB produksi tetap mesin fisika"
+      }
+    }
+  },
+  "paritas_onnx_vs_pytorch": {
+    "forecast_c": 1.7651234898044702e-07,
+    "failure_prob": 2.980232238769531e-07,
+    "time_to_breach_min": 1.7180570950460682e-06
+  },
+  "metrik_val": {
+    "macro_f1": 0.8745534248195327,
+    "anomali_pr_auc": 0.8678547715188467,
+    "akurasi": 0.9232971853295967,
+    "per_kelas": {
+      "A0": {
+        "presisi": 0.9397189907841064,
+        "recall": 0.9668143312349421,
+        "f1": 0.953074123731086,
+        "n": 12867
+      },
+      "A1": {
+        "presisi": 1.0,
+        "recall": 0.8372881355932204,
+        "f1": 0.9114391143911439,
+        "n": 295
+      },
+      "A3": {
+        "presisi": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "n": 541
+      },
+      "A7": {
+        "presisi": 1.0,
+        "recall": 0.8940397350993378,
+        "f1": 0.9440559440559441,
+        "n": 302
+      },
+      "A8": {
+        "presisi": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "n": 700
+      },
+      "degradasi_bertahap": {
+        "presisi": 0.5565217391304348,
+        "recall": 0.39928698752228164,
+        "f1": 0.46497145822522057,
+        "n": 1122
+      },
+      "masalah_sensor": {
+        "presisi": 0.8303425774877651,
+        "recall": 0.8671209540034072,
+        "f1": 0.8483333333333334,
+        "n": 587
+      }
+    }
+  }
+}
