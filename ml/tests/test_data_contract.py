@@ -1,14 +1,14 @@
 """
 Tes kontrak data — ColdTrack AI
 Memastikan kolom label tidak pernah bocor jadi fitur input model, dan skema
-kolom sesuai feature_schema.md. Jalankan dengan: pytest test_data_contract.py
+kolom sesuai train_ai.md. Jalankan dengan: pytest test_data_contract.py
 """
 import pandas as pd
 import pytest
 
 DATA_PATH = "data/processed/v4_seed1000_700trips.parquet"
 
-# Sesuai feature_schema.md — HANYA 12 kolom ini yang boleh dipakai sebagai X (input model)
+# Sesuai train_ai.md — HANYA 12 kolom ini yang boleh dipakai sebagai X (input model)
 ALLOWED_FEATURE_COLUMNS = [
     "temp_c", "delta_temp", "ambient_c", "delta_ambient", "solar_radiation",
     "humidity", "door_open", "reefer_on", "reefer_duration_min",
@@ -62,7 +62,7 @@ def test_feature_columns_exclude_all_labels(df):
 
 
 def test_feature_columns_match_schema_exactly(df):
-    """Pastikan tepat 12 kolom sesuai feature_schema.md, tidak kurang tidak lebih."""
+    """Pastikan tepat 12 kolom sesuai train_ai.md, tidak kurang tidak lebih."""
     features = get_feature_columns(df)
     assert len(features) == 12, f"Jumlah fitur {len(features)}, seharusnya 12"
     assert features == ALLOWED_FEATURE_COLUMNS, (

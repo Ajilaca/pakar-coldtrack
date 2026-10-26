@@ -3,7 +3,7 @@ import pandas as pd
 DATA_PATH = "data/processed/v1_seed1000_700trips.parquet"
 OUT_PATH = "data/processed/v1_seed1000_700trips_ttbfix.parquet"
 
-# Batas aman tiap muatan, sesuai nilai TERVERIFIKASI di dataset_card.md
+# Batas aman tiap muatan, sesuai nilai TERVERIFIKASI di train_ai.md
 CARGO_THRESHOLDS = {
     'vaksin_2_8C': (2.0, 8.0),
     'daging_beku': (-25.0, -18.0),

@@ -154,7 +154,7 @@ proposal §4.3.7).
 
 - Skema Pydantic: `backend/app/schemas.py`
 - Penegakan min 60 bacaan: `backend/app/main.py` (`analyze_telemetry`)
-- Kontrak fitur model: `docs/feature_schema.md`
+- Kontrak fitur model: `docs/train_ai.md` bagian 3
 ## 7. API Armada (Fase 4)
 
 Semua endpoint di bawah membaca TimescaleDB yang diisi `worker-ingest` dan `worker-infer`

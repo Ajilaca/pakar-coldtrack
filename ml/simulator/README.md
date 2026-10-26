@@ -8,7 +8,7 @@ Playbook Teknis Bagian 2.3.
 
 Menghasilkan data suhu kargo yang realistis secara fisika, lengkap dengan label
 (`is_anomaly`, `failure_mode`, `time_to_breach`), untuk melatih model prediksi Time-to-Breach.
-Label ini tidak tersedia di data publik manapun (lihat `dataset_card.md`), sehingga dibangun
+Label ini tidak tersedia di data publik manapun (lihat `train_ai.md`), sehingga dibangun
 sendiri melalui simulasi berbasis persamaan pendinginan Newton.
 
 ## Struktur Notebook
@@ -17,7 +17,7 @@ sendiri melalui simulasi berbasis persamaan pendinginan Newton.
 2. Cargo Profiles: dictionary `cargo_profiles`, berisi rentang suhu aman, massa, dan
    toleransi waktu tiap jenis muatan. Rentang suhu telah diverifikasi terhadap standar resmi
    (WHO, Peraturan BPOM No. 6/2020, Codex Alimentarius, SNI, HACCP). Detail dan sumber ada di
-   `dataset_card.md`.
+   `train_ai.md`.
 3. Ambient & Solar Generator: fungsi `generate_ambient_solar()`, menghasilkan suhu ambien
    dan radiasi matahari mengikuti pola siklus harian, dikalibrasi berdasarkan data NASA POWER
    untuk koordinat Jakarta.
@@ -41,7 +41,7 @@ simulate_trip_full(
 ```
 
 Mengembalikan `(df_trip, labels)`. `df_trip` adalah DataFrame per-menit berisi:
-- 12 kolom fitur inti sesuai `feature_schema.md`
+- 12 kolom fitur inti sesuai `train_ai.md`
 - `temp_true_c`: suhu asli/ground truth (tidak tersedia di dunia nyata, hanya untuk evaluasi
   dan perhitungan `time_to_breach`; tidak boleh dipakai sebagai fitur input model)
 - `time_to_breach`: dihitung per menit (hitung mundur ke breach terdekat), bukan satu angka
@@ -131,7 +131,7 @@ dunia nyata selalu ada:
 ## Validasi Sim-to-Real
 
 Uji Kolmogorov-Smirnov dan ACF terhadap dataset IoT Temp India telah dilakukan -- hasil dan
-interpretasi lengkap ada di `dataset_card.md` bagian "Validasi Sim-to-Real". Ringkasnya: pola ACF
+interpretasi lengkap ada di `train_ai.md` bagian "Validasi Sim-to-Real". Ringkasnya: pola ACF
 data sintetik dan real sama-sama menurun mulus (bentuk kualitatif konsisten), tetapi data sintetik
 menurun lebih lambat (lebih autokorelatif/stabil) -- sebagian dapat dijelaskan karena data sintetik
 mensimulasikan sistem dengan reefer aktif, sementara data pembanding adalah ruangan pasif tanpa
@@ -151,8 +151,8 @@ sensor sungguhan -- dicatat sebagai perbaikan potensial untuk iterasi berikutnya
 
 ## Referensi Terkait
 
-- `dataset_card.md` -- sumber dan temuan EDA seluruh dataset publik, verifikasi cargo profiles,
+- `train_ai.md` -- sumber dan temuan EDA seluruh dataset publik, verifikasi cargo profiles,
   dan hasil validasi sim-to-real
-- `feature_schema.md` -- kontrak 12 kolom fitur yang diserahkan ke R2
+- `train_ai.md` -- kontrak 12 kolom fitur yang diserahkan ke R2
 - `ml/tests/test_data_contract.py` -- tes otomatis kontrak data
 - Playbook Teknis ColdTrack AI, Bagian 2.3 -- spesifikasi lengkap generator data sintetik

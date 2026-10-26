@@ -51,7 +51,7 @@ lantai Time-to-Breach hanya boleh **menaikkan** keparahan, tidak pernah menurunk
 Satu aturan sengaja dikecualikan dari prinsip itu. Pada diagnosis sensor bermasalah, status
 **dijepit dua arah** ke WASPADA — tidak boleh AMAN, tetapi juga tidak boleh KRITIS. Alasannya
 berbeda dari asimetri di atas: ketika alat ukurnya sendiri tidak dapat dipercaya, sistem tidak
-boleh mengklaim ketelitian ke arah mana pun. Rinciannya di `docs/PROPOSAL.md` §4.3.4.
+boleh mengklaim ketelitian ke arah mana pun.
 
 **Contoh nyata dari pengembangan kami.** Pada pengujian ujung-ke-ujung ditemukan bahwa status
 dihitung semata dari prediksi suhu, sementara Time-to-Breach dihasilkan kepala model yang terpisah.

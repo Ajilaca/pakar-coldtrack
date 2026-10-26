@@ -193,7 +193,7 @@ Sistem ini memakai **dua model** yang berbagi kontrak masukan identik.
 | Parameter / pohon | 41.443 parameter | 300 pohon |
 
 **Masukan (sama untuk keduanya):** tensor `float32` berbentuk `[batch, 60, 12]` — jendela 60 menit
-berturut-turut, 12 fitur per menit sesuai `docs/feature_schema.md`. Nilai dikirim **mentah**;
+berturut-turut, 12 fitur per menit sesuai `docs/train_ai.md` bagian 3. Nilai dikirim **mentah**;
 normalisasi dan perhitungan statistik agregat dibungkus di dalam grafik ONNX masing-masing model,
 sehingga backend tidak perlu mengulang langkah prapemrosesan apa pun.
 
@@ -247,7 +247,7 @@ memanggil teknisi, atau mengalihkan muatan.
 
 Sumber utama: `data/processed/v4_seed1000_700trips.parquet` — 700 perjalanan sintetik, 251.073
 baris, resolusi 1 menit, dibangun R1 dengan simulator termal berbasis hukum pendinginan Newton.
-Rincian sumber, kalibrasi, dan validasi sim-to-real ada di `docs/dataset_card.md`.
+Rincian sumber, kalibrasi, dan validasi sim-to-real ada di `docs/train_ai.md`.
 
 Data dipecah menjadi jendela geser 60 menit, dibagi **per `trip_id`** (bukan per baris) agar tidak
 ada perjalanan yang sama muncul di dua split:
@@ -434,5 +434,4 @@ Seluruh skrip memakai `seed = 42`. Bobot model (`*.pt`) tidak disertakan di repo
 `ml.training.finetune` untuk membangunnya kembali.
 
 **Berkas terkait:** `ml/reports/metrics.json` · `baseline_metrics.json` · `ablation_results.json` ·
-`loss_curves.png` · `confusion_matrix.png` · `ttb_by_horizon.png` · `docs/dataset_card.md` ·
-`docs/feature_schema.md`
+`loss_curves.png` · `confusion_matrix.png` · `ttb_by_horizon.png` · `docs/train_ai.md`

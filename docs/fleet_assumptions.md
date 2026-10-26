@@ -1,7 +1,7 @@
 # Asumsi armada ColdTrack AI
 
 Semua nilai di sini adalah **[ASUMSI]**: dipakai agar sistem armada bisa dijalankan dan diuji, bukan
-fakta lapangan. `docs/PROPOSAL.md` melarang angka kerugian dikarang tanpa tanda; setiap angka di
+fakta lapangan. Angka kerugian tidak boleh dikarang tanpa tanda; setiap angka di
 dashboard yang bergantung pada asumsi ini harus bisa ditelusuri ke berkas ini. Ganti dengan nilai dari
 mitra saat pilot (Fase 7).
 

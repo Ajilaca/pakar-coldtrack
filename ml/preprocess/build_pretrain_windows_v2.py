@@ -5,7 +5,7 @@ transfer (lihat ablation B): korpus itu cuma mengisi 3 dari 12 fitur dan
 ukurannya 14x lebih kecil dari data fine-tuning.
 
 Intel Lab punya suhu DAN kelembapan (4 dari 12 fitur), 1,89 juta baris bersih
-dari 53 sensor, plus derau sensor nyata (18,5% outlier -- lihat dataset_card.md).
+dari 53 sensor, plus derau sensor nyata (18,5% outlier -- lihat train_ai.md).
 
 Menjalankan: python -m ml.preprocess.build_pretrain_windows_v2
 """
@@ -25,7 +25,7 @@ HORIZONS = [15, 30, 60]
 MAX_GAP_FILL = 5
 MIN_CHUNK_LEN = WINDOW_SIZE + max(HORIZONS)
 
-# Batas wajar untuk membuang outlier ekstrem (temuan EDA R1 di dataset_card.md:
+# Batas wajar untuk membuang outlier ekstrem (temuan EDA R1 di train_ai.md:
 # 17,7% data di luar rentang fisik, termasuk -38,4 C dan 385,6 C)
 TEMP_RANGE = (0.0, 50.0)
 HUMID_RANGE = (0.0, 100.0)

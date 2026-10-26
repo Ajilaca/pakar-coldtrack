@@ -1,7 +1,7 @@
 """Telemetry data preprocessing and derived feature engineering module.
 
 Calculates derived features and constructs 3D window arrays matching the exact
-ONNX input contract specified in labels.json and docs/feature_schema.md.
+ONNX input contract specified in labels.json and docs/train_ai.md, section 3.
 """
 
 
@@ -60,7 +60,7 @@ def readings_to_dataframe(readings: list[TelemetryReading]) -> pd.DataFrame:
 
 
 def compute_derived_features(df: pd.DataFrame) -> pd.DataFrame:
-    """Compute derived features per docs/feature_schema.md.
+    """Compute derived features per docs/train_ai.md, section 3.
 
     - delta_temp[t] = temp_c[t] - temp_c[t-1]
     - delta_ambient[t] = temp_c[t] - ambient_c[t]

@@ -44,7 +44,7 @@ Reset data sebelum presentasi supaya angka notifikasi, insiden, dan kerugian waj
 docker compose --profile dev down -v
 ```
 
-Panduan teknis lengkap: [docs/demo.md](docs/demo.md). Naskah presenter: [docs/demo_5_minutes.md](docs/demo_5_minutes.md).
+Panduan teknis lengkap: [docs/demo.md](docs/demo.md).
 
 ### Tanpa simulator (API + dasbor + database saja)
 ```bash
@@ -98,10 +98,8 @@ Setiap folder utama punya `README.md` sendiri: [backend](backend/README.md), [fr
 ## Dokumentasi
 
 - [Architecture](docs/architecture.md)
-- [Feature Schema](docs/feature_schema.md)
-- [Dataset Card](docs/dataset_card.md)
+- [Data dan fisika untuk melatih model](docs/train_ai.md)
 - [Model Card](docs/model_card.md)
 - [AI Governance](docs/ai_governance.md)
-- [Demo armada](docs/demo.md) · [Alur demo 5 menit](docs/demo_5_minutes.md)
+- [Demo armada](docs/demo.md)
 - [Kontrak API](docs/api_contract.md) · [Kontrak perangkat](docs/device_contract.md) · [Asumsi armada](docs/fleet_assumptions.md)
-- [Proposal](docs/PROPOSAL.md)
