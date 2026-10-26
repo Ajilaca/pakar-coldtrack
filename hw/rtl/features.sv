@@ -40,13 +40,17 @@ module features #(
     // [103:96] harsh | [108:104] hour | [109] door | [110] reefer
     (* ram_style = "block" *) logic [110:0] mem [256];
     logic [7:0]   rd_addr;
-    logic [110:0] rd_q;
+    // rd_q memasok pengali kuadrat; tanpa keep DSP menyerap rd_q dan rd_r sebagai register masukan A1/A2
+    // sehingga baca buffer jadi asinkron dan tidak muat BRAM (Synth 8-6849)
+    logic [110:0] rd_r;
+    (* keep = "true" *) logic [110:0] rd_q;
     logic         wr_en;
     logic [7:0]   wr_addr;
     logic [110:0] wr_data;
     always_ff @(posedge clk) begin
         if (wr_en) mem[wr_addr] <= wr_data;
-        rd_q <= mem[rd_addr];
+        rd_r <= mem[rd_addr];
+        rd_q <= rd_r;
     end
 
     typedef enum logic [3:0] {DIAM, JENDELA, KONTEKS, RATA, RATA_N, RATA_TUNGGU, MIRING, MIRING_N, MIRING_TUNGGU, KELUAR} tahap_t;
@@ -56,11 +60,11 @@ module features #(
     logic signed [15:0] last_ff;
     logic [59:0]        hilang;    // bit 0 = menit terbaru
 
-    // ---------------- penjadwal baca + pipa tag (2 tahap: alamat -> data) ----------------
+    // ---------------- penjadwal baca + pipa tag (3 tahap: alamat -> data BRAM -> data) ----------------
     logic [8:0] iss, n_iss;          // indeks yang diterbitkan / jumlah
     logic [7:0] dasar;               // alamat entri indeks 1 (jendela) atau 0 (konteks)
-    logic       va, vb;
-    logic [8:0] ia, ib;
+    logic       va, vm, vb;
+    logic [8:0] ia, im, ib;
 
     // ---------------- akumulator jendela ----------------
     logic signed [31:0]   s_sum   [NK];
@@ -144,7 +148,7 @@ module features #(
             tahap <= DIAM;
             t_next <= '0; last_ff <= '0; hilang <= '0; menit <= '0; siap <= 1'b0; lengkap <= 1'b0;
             done <= 1'b0; wr_en <= 1'b0; wr_addr <= '0; wr_data <= '0; rd_addr <= '0;
-            iss <= '0; n_iss <= '0; dasar <= '0; va <= 1'b0; vb <= 1'b0; ia <= '0; ib <= '0;
+            iss <= '0; n_iss <= '0; dasar <= '0; va <= 1'b0; vm <= 1'b0; vb <= 1'b0; ia <= '0; im <= '0; ib <= '0;
             prev_t <= '0; rdur <= '0; m <= '0; s240 <= '0; sxy <= '0; y_first <= '0; y_last <= '0;
             rata <= '0; miring <= '0; bg_start <= 1'b0; bg_n <= '0; bg_d <= '0; num_r <= '0;
             o <= '0; o_stat <= '0; o_kol <= '0; fitur_we <= 1'b0; fitur_addr <= '0; fitur_data <= '0;
@@ -156,8 +160,10 @@ module features #(
             wr_en    <= 1'b0;
             bg_start <= 1'b0;
             fitur_we <= 1'b0;
-            vb <= va;
-            ib <= ia;
+            vm <= va;
+            im <= ia;
+            vb <= vm;
+            ib <= im;
             va <= 1'b0;
 
             case (tahap)

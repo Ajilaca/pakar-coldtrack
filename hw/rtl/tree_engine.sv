@@ -3,7 +3,7 @@
 // ditulis ulang host lewat port simpul_*/pohon_*/base_* (ganti model tanpa sintesis ulang).
 // Format simpul 72 bit: cabang [71]=0 | [70:64] fitur | [63:16] ambang s48 | [15:0] anak kiri (kanan = kiri+1);
 //                       daun   [71]=1 | [31:0] nilai s32 Q8.16.
-// Per simpul 2 siklus (baca BRAM sinkron + bandingkan); skor kelas = base + jumlah daun; kelas = argmax
+// Per simpul 3 siklus (baca BRAM sinkron, register keluaran BRAM, bandingkan); skor kelas = base + jumlah daun; kelas = argmax
 // (seri -> indeks terkecil, sama dengan hw/golden/trees.py).
 module tree_engine #(
     parameter int    N_FITUR  = 82,
@@ -53,12 +53,14 @@ module tree_engine #(
         if (BERKAS_BASE   != "") $readmemh(BERKAS_BASE, mem_base);
     end
 
-    // memori simpul: BRAM, tulis + baca sinkron
+    // memori simpul: BRAM, tulis + baca sinkron. simpul_q menjadi alamat baca LUTRAM fitur; tanpa simpul_r
+    // Vivado menyerapnya sebagai register alamat LUTRAM sehingga baca simpul jadi asinkron dan tidak muat BRAM.
     logic [AW-1:0] alamat;
-    logic [71:0]   simpul_q;
+    logic [71:0]   simpul_r, simpul_q;
     always_ff @(posedge clk) begin
         if (simpul_we) mem_simpul[simpul_addr] <= simpul_data;
-        simpul_q <= mem_simpul[alamat];
+        simpul_r <= mem_simpul[alamat];
+        simpul_q <= simpul_r;
     end
     always_ff @(posedge clk) begin
         if (pohon_we) mem_pohon[pohon_addr] <= pohon_data;
@@ -66,7 +68,7 @@ module tree_engine #(
         if (fitur_we) fitur[fitur_addr] <= fitur_data;
     end
 
-    typedef enum logic [1:0] {DIAM, BACA, NILAI} tahap_t;
+    typedef enum logic [1:0] {DIAM, BACA, TUNGGU, NILAI} tahap_t;
     tahap_t tahap;
     logic [PW-1:0]        p;
     logic [2:0]           kelas_p;
@@ -103,7 +105,8 @@ module tree_engine #(
                     alamat  <= mem_pohon[0][AW-1:0];
                     tahap   <= BACA;
                 end
-                BACA: tahap <= NILAI;                       // tunggu data BRAM
+                BACA:   tahap <= TUNGGU;                    // tunggu data BRAM
+                TUNGGU: tahap <= NILAI;
                 NILAI: begin
                     if (daun) begin
                         acc[kelas_p] <= acc[kelas_p] + nilai;
