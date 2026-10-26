@@ -34,6 +34,6 @@ export function patchInsiden(id: number, body: { phase?: string; assignee?: stri
 export const tandaiDibaca = (id: number) => req(`/api/v1/notifications/${id}/read`, { method: "POST" });
 export const tandaiSemuaDibaca = () => req(`/api/v1/notifications/read-all`, { method: "POST" });
 
-export function trukPath(truckId: string): string {
-  return `/truk/${encodeURIComponent(truckId.replace(/\s+/g, ""))}`;
+export function truckPath(truckId: string): string {
+  return `/truck/${encodeURIComponent(truckId.replace(/\s+/g, ""))}`;
 }

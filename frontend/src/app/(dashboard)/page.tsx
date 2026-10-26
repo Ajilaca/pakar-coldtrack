@@ -5,7 +5,7 @@ import { CheckCircle, Info, ShieldCheck, Truck, Warning, XCircle } from "@phosph
 import { PageHeader } from "@/components/fleet/notifications";
 import { Bar, Card, Galat, Kpi, Muat, StatusPill } from "@/components/fleet/ui";
 import { FleetMap, LegendaPeta } from "@/components/fleet/map-legend";
-import { trukPath } from "@/lib/fleet-api";
+import { truckPath } from "@/lib/fleet-api";
 import { DataKerugian, Peta, Ringkasan, Truk } from "@/lib/fleet-types";
 import { FLEET_TONE, muatan } from "@/lib/fleet-status";
 import { persen, rupiah } from "@/lib/format";
@@ -97,7 +97,7 @@ export default function RingkasanPage() {
       )}
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.7fr_1fr]">
-        <Card title="Armada diurutkan menurut risiko" aside={<Link href="/kondisi" className="text-[13px] font-medium text-accent hover:underline">Lihat semua →</Link>}>
+        <Card title="Armada diurutkan menurut risiko" aside={<Link href="/condition" className="text-[13px] font-medium text-accent hover:underline">Lihat semua →</Link>}>
           {truk.error && <Galat pesan={truk.error} onRetry={truk.reload} />}
           {!truk.data ? (
             !truk.error && <Muat tinggi={280} />
@@ -119,7 +119,7 @@ export default function RingkasanPage() {
                     const fm = t.kondisi?.failure_mode;
                     return (
                       <tr key={t.truck_id} className="border-b last:border-0">
-                        <td className="py-2.5 font-semibold"><Link href={trukPath(t.truck_id)} className="hover:underline">{t.truck_id}</Link></td>
+                        <td className="py-2.5 font-semibold"><Link href={truckPath(t.truck_id)} className="hover:underline">{t.truck_id}</Link></td>
                         <td className="py-2.5">{muatan(t.trip?.profil?.id)}</td>
                         <td className="py-2.5"><StatusPill status={t.status} /></td>
                         <td className={cn("num py-2.5", t.status === "KRITIS" && "font-semibold text-crit")}>{ttb != null ? `${Math.round(ttb)} mnt` : "—"}</td>

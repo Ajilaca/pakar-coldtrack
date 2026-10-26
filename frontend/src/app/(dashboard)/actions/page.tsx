@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Clock, UserCircle } from "@phosphor-icons/react/dist/ssr";
 import { PageHeader } from "@/components/fleet/notifications";
 import { Card, Galat, Muat } from "@/components/fleet/ui";
-import { patchInsiden, trukPath } from "@/lib/fleet-api";
+import { patchInsiden, truckPath } from "@/lib/fleet-api";
 import { EventInsiden, Insiden, Phase } from "@/lib/fleet-types";
 import { jam, rupiah } from "@/lib/format";
 import { diagnosisText } from "@/lib/labels";
@@ -153,7 +153,7 @@ function KartuInsiden({ i, onUbah }: { i: Insiden; onUbah: (i: Insiden, body: { 
   const btn = "w-full rounded-lg bg-[#e8edfb] py-1.5 text-[12px] font-semibold text-[#2b3f87] hover:bg-[#dbe3fa] disabled:opacity-50";
   return (
     <article className="flex flex-col gap-1.5 rounded-xl border bg-surface p-3">
-      <Link href={trukPath(i.truck_id)} className="text-[13px] font-bold hover:underline">{i.truck_id}</Link>
+      <Link href={truckPath(i.truck_id)} className="text-[13px] font-bold hover:underline">{i.truck_id}</Link>
       <p className="text-[12px]">{diagnosisText(i.failure_label)}</p>
       <p className="flex items-center gap-1 text-[12px] text-muted"><Clock size={13} aria-hidden />{info}</p>
       <p className="border-t pt-1.5 text-[11px] text-muted">

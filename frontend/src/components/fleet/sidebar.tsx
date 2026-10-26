@@ -11,17 +11,17 @@ import { cn } from "@/lib/utils";
 
 export const NAV = [
   { href: "/", label: "Ringkasan", Icon: SquaresFour },
-  { href: "/kondisi", label: "Kondisi", Icon: Thermometer },
-  { href: "/lokasi", label: "Lokasi", Icon: MapPin },
+  { href: "/condition", label: "Kondisi", Icon: Thermometer },
+  { href: "/location", label: "Lokasi", Icon: MapPin },
   { href: "/sensor", label: "Sensor", Icon: Pulse },
-  { href: "/kerugian", label: "Kerugian", Icon: Money },
-  { href: "/tindakan", label: "Tindakan", Icon: ListChecks },
-  { href: "/simulasi", label: "Simulasi", Icon: Play },
+  { href: "/losses", label: "Kerugian", Icon: Money },
+  { href: "/actions", label: "Tindakan", Icon: ListChecks },
+  { href: "/simulation", label: "Simulasi", Icon: Play },
 ];
 
 function aktif(path: string, href: string) {
   if (href === "/") return path === "/";
-  return path === href || path.startsWith(`${href}/`) || (href === "/kondisi" && path.startsWith("/truk/"));
+  return path === href || path.startsWith(`${href}/`) || (href === "/condition" && path.startsWith("/truck/"));
 }
 
 export function Sidebar() {

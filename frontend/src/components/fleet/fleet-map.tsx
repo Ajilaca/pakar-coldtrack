@@ -7,7 +7,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { useRouter } from "next/navigation";
 import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet";
-import { trukPath } from "@/lib/fleet-api";
+import { truckPath } from "@/lib/fleet-api";
 import { Peta } from "@/lib/fleet-types";
 import { tone } from "@/lib/fleet-status";
 
@@ -48,7 +48,7 @@ export default function FleetMap({ peta, mini = false }: { peta: Peta; mini?: bo
       {peta.truk.filter((t) => t.lat != null && t.lon != null).map((t) => (
         <Marker
           key={t.truck_id} position={[t.lat!, t.lon!]} icon={ikon(tone(t.status).dot, "lingkaran", mini ? 9 : 12)}
-          eventHandlers={{ click: () => router.push(trukPath(t.truck_id)) }}
+          eventHandlers={{ click: () => router.push(truckPath(t.truck_id)) }}
         >
           <Tooltip direction="top" offset={[0, -6]}>
             <span className="text-[12px]"><b>{t.truck_id}</b> · {tone(t.status).short}</span>

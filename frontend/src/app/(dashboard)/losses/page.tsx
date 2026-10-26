@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Clock, ShieldCheck, Warning, XCircle } from "@phosphor-icons/react/dist/ssr";
 import { PageHeader } from "@/components/fleet/notifications";
 import { Card, Galat, Kosong, Kpi, Muat } from "@/components/fleet/ui";
-import { trukPath } from "@/lib/fleet-api";
+import { truckPath } from "@/lib/fleet-api";
 import { DataKerugian, Phase } from "@/lib/fleet-types";
 import { angka, rupiah } from "@/lib/format";
 import { diagnosisText } from "@/lib/labels";
@@ -136,7 +136,7 @@ export default function KerugianPage() {
               <tbody>
                 {ins.slice(0, 12).map((x) => (
                   <tr key={x.incident_id} className="border-b last:border-0">
-                    <td className="py-3 font-semibold"><Link href={trukPath(x.truck_id)} className="hover:underline">{x.truck_id}</Link></td>
+                    <td className="py-3 font-semibold"><Link href={truckPath(x.truck_id)} className="hover:underline">{x.truck_id}</Link></td>
                     <td className="py-3">{diagnosisText(x.failure_label)}</td>
                     <td className="num py-3">{rupiah(x.nilai_muatan_idr)}</td>
                     <td className="py-3"><span className={cn("rounded-full px-2.5 py-1 text-[12px] font-semibold", FASE[x.phase].cls)}>{FASE[x.phase].teks}</span></td>

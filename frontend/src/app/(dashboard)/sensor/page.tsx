@@ -6,7 +6,7 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { PageHeader } from "@/components/fleet/notifications";
 import { Bar, Card, Galat, Kpi, Muat } from "@/components/fleet/ui";
-import { trukPath } from "@/lib/fleet-api";
+import { truckPath } from "@/lib/fleet-api";
 import { DataSensor, Temuan } from "@/lib/fleet-types";
 import { angka } from "@/lib/format";
 import { useFleet } from "@/lib/use-fleet";
@@ -71,7 +71,7 @@ export default function SensorPage() {
                     const gr = GRADE[h?.grade ?? ""];
                     return (
                       <tr key={p.id} className="border-b last:border-0">
-                        <td className="py-2.5 font-semibold"><Link href={trukPath(p.truck_id)} className="hover:underline">{p.truck_id}</Link></td>
+                        <td className="py-2.5 font-semibold"><Link href={truckPath(p.truck_id)} className="hover:underline">{p.truck_id}</Link></td>
                         <td className="py-2.5">
                           <span className="flex items-center gap-2">
                             <Bar value={h?.score ?? 0} max={100} color={gr?.bar ?? "var(--offline)"} className="w-14" />

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { PageHeader } from "@/components/fleet/notifications";
 import { FleetMap, LegendaPeta } from "@/components/fleet/map-legend";
 import { Card, Galat, Kosong, Muat, StatusPill } from "@/components/fleet/ui";
-import { trukPath } from "@/lib/fleet-api";
+import { truckPath } from "@/lib/fleet-api";
 import { Peta, Truk } from "@/lib/fleet-types";
 import { muatan, tone } from "@/lib/fleet-status";
 import { useFleet } from "@/lib/use-fleet";
@@ -59,7 +59,7 @@ export default function LokasiPage() {
                   const b = t.bacaan_terakhir;
                   return (
                     <li key={t.truck_id} className="flex items-center justify-between gap-2 py-2.5">
-                      <Link href={trukPath(t.truck_id)} className="min-w-0 hover:underline">
+                      <Link href={truckPath(t.truck_id)} className="min-w-0 hover:underline">
                         <span className="block text-[13px] font-semibold">{t.truck_id}</span>
                         <span className="block truncate text-[11px] text-muted">
                           {muatan(t.trip?.profil?.id)} · {t.depot.kota}

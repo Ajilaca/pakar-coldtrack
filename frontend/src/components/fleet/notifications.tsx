@@ -5,7 +5,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Bell, CheckCircle, MinusCircle, Warning, WifiHigh, WifiSlash, X, XCircle } from "@phosphor-icons/react/dist/ssr";
-import { tandaiDibaca, tandaiSemuaDibaca, trukPath } from "@/lib/fleet-api";
+import { tandaiDibaca, tandaiSemuaDibaca, truckPath } from "@/lib/fleet-api";
 import { Notifikasi } from "@/lib/fleet-types";
 import { relatif } from "@/lib/format";
 import { useFleet, useFleetCtx } from "@/lib/use-fleet";
@@ -80,7 +80,7 @@ export function NotificationBell() {
                 return (
                   <li key={x.id} className={cn("border-b last:border-0", !x.read_at && "bg-[#f1f4f9]")}>
                     <Link
-                      href={x.truck_id ? trukPath(x.truck_id) : "/tindakan"}
+                      href={x.truck_id ? truckPath(x.truck_id) : "/actions"}
                       onClick={async () => {
                         setOpen(false);
                         if (!x.read_at) {
@@ -131,7 +131,7 @@ export function Toaster() {
               <p className="text-[14px] font-semibold">{t.title}</p>
               {t.body && <p className="text-[13px] text-muted">{t.body}</p>}
               {t.truck_id && (
-                <Link href={trukPath(t.truck_id)} className="mt-1 inline-flex items-center gap-1 text-[13px] font-semibold text-[var(--chart-actual)] hover:underline" onClick={() => dismiss(t.id)}>
+                <Link href={truckPath(t.truck_id)} className="mt-1 inline-flex items-center gap-1 text-[13px] font-semibold text-[var(--chart-actual)] hover:underline" onClick={() => dismiss(t.id)}>
                   Lihat truk <ArrowRight size={13} weight="bold" aria-hidden />
                 </Link>
               )}

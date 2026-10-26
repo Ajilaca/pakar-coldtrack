@@ -6,7 +6,7 @@ import { Suspense, useState } from "react";
 import { PageHeader } from "@/components/fleet/notifications";
 import { TruckPanel } from "@/components/fleet/truck-panel";
 import { Card, Galat, Kosong, Muat, StatusPill } from "@/components/fleet/ui";
-import { trukPath } from "@/lib/fleet-api";
+import { truckPath } from "@/lib/fleet-api";
 import { FleetStatus, Truk } from "@/lib/fleet-types";
 import { muatan } from "@/lib/fleet-status";
 import { useFleet } from "@/lib/use-fleet";
@@ -62,7 +62,7 @@ function Isi() {
                   <li key={t.truck_id}>
                     <button
                       type="button"
-                      onClick={() => router.replace(`/kondisi?id=${encodeURIComponent(t.truck_id)}`, { scroll: false })}
+                      onClick={() => router.replace(`/condition?id=${encodeURIComponent(t.truck_id)}`, { scroll: false })}
                       aria-current={aktif ? "true" : undefined}
                       className={cn("flex w-full items-center justify-between gap-2 rounded-xl border px-3 py-2.5 text-left", aktif ? "border-[var(--chart-actual)] bg-[#f3f6ff]" : "border-transparent hover:bg-surface-muted")}
                     >
@@ -86,7 +86,7 @@ function Isi() {
             <>
               <div className="flex items-center justify-between">
                 <h2 className="text-[16px] font-semibold">{pilih}</h2>
-                <Link href={trukPath(pilih)} className="text-[13px] font-medium text-accent hover:underline">Detail truk →</Link>
+                <Link href={truckPath(pilih)} className="text-[13px] font-medium text-accent hover:underline">Detail truk →</Link>
               </div>
               <TruckPanel truckId={pilih} />
             </>

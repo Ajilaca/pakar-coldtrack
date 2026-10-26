@@ -16,7 +16,7 @@ export default function DetailTrukPage({ params }: { params: { id: string } }) {
   const { detail, riwayat } = useTruk(id);
   const t = detail.data;
   const kembali = (
-    <Link href="/kondisi" className="mb-3 inline-flex items-center gap-1.5 text-[14px] font-medium text-[var(--chart-actual)] hover:underline">
+    <Link href="/condition" className="mb-3 inline-flex items-center gap-1.5 text-[14px] font-medium text-[var(--chart-actual)] hover:underline">
       <ArrowLeft size={15} aria-hidden /> Semua truk
     </Link>
   );
