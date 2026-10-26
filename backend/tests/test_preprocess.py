@@ -1,9 +1,10 @@
 """Unit tests for preprocessing and feature engineering module."""
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import numpy as np
 import pytest
+
 from app.preprocess import (
     ONNX_FEATURE_COLUMNS,
     compute_derived_features,
@@ -15,7 +16,7 @@ from app.schemas import TelemetryReading
 
 @pytest.fixture
 def sample_readings():
-    base_time = datetime(2026, 8, 20, 8, 0, 0, tzinfo=timezone.utc)
+    base_time = datetime(2026, 8, 20, 8, 0, 0, tzinfo=UTC)
     readings = []
     for i in range(10):
         readings.append(
@@ -73,7 +74,7 @@ def test_lat_lon_optional_default_to_zero():
     """Contract fix: lat/lon are not model features and may be omitted."""
     readings = [
         TelemetryReading(
-            ts=datetime(2026, 8, 20, 8, 0, 0, tzinfo=timezone.utc) + timedelta(minutes=i),
+            ts=datetime(2026, 8, 20, 8, 0, 0, tzinfo=UTC) + timedelta(minutes=i),
             temp_c=4.0,
             humidity=70.0,
             ambient_c=30.0,

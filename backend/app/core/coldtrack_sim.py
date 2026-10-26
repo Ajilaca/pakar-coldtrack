@@ -5,7 +5,6 @@ Pelanggaran dinilai dari SUHU MUATAN terhadap rentang optimal produk.
 Truk = Isuzu 18 CBM refrigerated box; tiap parameter diberi tag [SUMBER]/[ATP]/[ASUMSI]/[DESAIN] di TRUCK.
 """
 import json
-import os
 
 import numpy as np
 import pandas as pd

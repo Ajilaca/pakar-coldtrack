@@ -1,6 +1,7 @@
 """Unit tests for the hybrid inference engine."""
 
 import pytest
+
 from app.inference import HybridInferenceEngine, inference_engine
 from app.main import AnalyzeRequest
 from tests.test_analyze import make_readings

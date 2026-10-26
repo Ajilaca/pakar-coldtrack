@@ -6,7 +6,6 @@ menit demi menit di frontend. Bagian belajar (GRU/XGBoost) ditambahkan terpisah 
 import numpy as np
 import pandas as pd
 
-from . import coldtrack_sim as cs
 from . import door_budget as db
 from . import observer as ob
 from . import sensor_rules as sr
