@@ -49,7 +49,7 @@ desimal membuat kelipatan 0,1 C data latih eksak, karena ambang pohon XGBoost se
 | M5 | `physics` | 7.136 menit (2 trip per mode A0-A8 + 5 skenario) identik semua keluaran |
 | M6 | `coldtrack_top` (AXI4-Lite) | 709 menit dua trip penuh: fisika, rantai, 296 diagnosis, 26 HMAC identik golden |
 | M7 | Sintesis Yosys KV260 | perkiraan resource, lihat tabel di bawah |
-| M8 | Vivado KV260 (block design, place-and-route) | lolos 100 MHz, WNS +0,777 ns, WHS +0,012 ns; bitstream + `.xsa` dibuat. Belum diuji di board |
+| M8 | Vivado KV260 (block design, place-and-route) | lolos 100 MHz, WNS +1,351 ns, WHS +0,011 ns; bitstream + `.xsa` dibuat. Belum diuji di board |
 
 Catatan dari verifikasi: aturan "pintu terbuka, sisa waktu terburuk <= 30 menit" (alasan 4) di `engine.py`
 tidak pernah bisa menentukan status. Saat pintu terbuka kabin = max(ts10, suhu luar) >= suhu luar dan
@@ -66,24 +66,25 @@ UG1089 sebelum dipakai).
 
 | Resource | Terpakai | Porsi K26 |
 |---|---|---|
-| LUT | 27.248 (12.069 sebagai memori) | 23,3 % |
-| FF | 18.862 | 8,0 % |
-| BRAM36 | 0 | 0 % |
-| DSP | 70 | 5,6 % |
+| LUT | 12.240 (133 sebagai memori) | 10,5 % |
+| FF | 18.682 | 8,0 % |
+| BRAM36 | 20 | 13,9 % |
+| DSP | 74 | 5,9 % |
 
-Tabel simpul `tree_engine` (8.704 x 72) dan ring buffer `features` (256 x 111) jatuh ke LUTRAM: Vivado
-menolak `ram_style = "block"` ("infeasible") untuk kedua memori ini, padahal pola yang sama di modul kecil
-terpetakan ke 18 BRAM. Penyebab belum ditemukan; desain tetap muat.
+Tabel simpul `tree_engine` (8.704 x 72) memakai 18 BRAM dan ring buffer `features` (256 x 111) 2 BRAM.
+Sebelumnya keduanya jatuh ke LUTRAM (27.248 LUT, 12.069 sebagai memori) karena register baca BRAM diserap
+primitif lain: `simpul_q` menjadi register alamat LUTRAM `fitur`, `rd_q` menjadi register masukan DSP. Kini
+ada satu register tambahan di depan keduanya dan `rd_q` diberi `keep`.
 
 Timing `coldtrack_top` out-of-context per frekuensi (`synth/kv260_vivado.tcl`, laporan di
-`results/vivado/sweep/`). Daya adalah logika PL saja; daya total block design (termasuk PS) 2,88 W.
+`results/vivado/sweep/`). Daya adalah logika PL saja; daya total block design (termasuk PS) 2,86 W.
 
 | Clock | WNS | Daya PL total / dinamis |
 |---|---|---|
-| 10 MHz | +85,68 ns | 0,303 W / 0,014 W |
-| 25 MHz | +24,55 ns | 0,324 W / 0,035 W |
-| 50 MHz | +9,41 ns | 0,360 W / 0,072 W |
-| 100 MHz | +0,777 ns (block design) | |
+| 10 MHz | +88,06 ns | 0,303 W / 0,014 W |
+| 25 MHz | +29,05 ns | 0,318 W / 0,029 W |
+| 50 MHz | +9,12 ns | 0,348 W / 0,059 W |
+| 100 MHz | +0,637 ns (block design +1,351 ns) | 0,407 W / 0,118 W |
 
 Sebelum perbaikan, 100 MHz gagal tipis (WNS -0,146 ns) di pencarian TTB `physics` (selisih -> perkalian 82 bit
 -> bandingkan, 23 level). Perkalian TTB dan aturan pintu kini melewati 3 register pipeline, jumlah `features`
@@ -104,4 +105,4 @@ dihitung satu siklus sebelum digeser, dan `flat` diregister sebelum aturan senso
 | Kapasitas K26 | 117.120 | 234.240 | 144 | 1.248 |
 | Porsi | 12 % | 4,4 % | 14 % | 6 % |
 
-Angka Yosys adalah perkiraan sebelum place-and-route; Yosys memetakan kedua memori ke BRAM, Vivado tidak.
+Angka Yosys adalah perkiraan sebelum place-and-route.

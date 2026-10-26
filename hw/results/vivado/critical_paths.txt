@@ -1,30 +1,30 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
-----------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version      : Vivado v.2026.1 (lin64) Build 6511674 Tue Jun 16 11:01:26 MDT 2026
-| Date              : Sun Oct 25 20:35:30 2026
+| Date              : Sun Oct 25 23:51:41 2026
 | Host              : ajil-VivoBook-ASUSLaptop-TP470EZ-TP470EZ running 64-bit Ubuntu 24.04.4 LTS
-| Command           : report_timing -max_paths 5 -sort_by slack -file /home/ajil/FPGA/Projects/Coldtrack/pakar-coldtrack/hw/build/vivado/jalur_kritis.txt
+| Command           : report_timing -max_paths 5 -sort_by slack -file /home/ajil/FPGA/Projects/Coldtrack/pakar-coldtrack/hw/build/vivado/p10.0/critical_paths.txt
 | Design            : coldtrack_top
 | Device            : xck26-sfvc784
 | Speed File        : -2LV  PRODUCTION 1.31 12-08-2025
 | Design State      : Routed
 | Temperature Grade : C
-----------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Timing Report
 
-Slack (VIOLATED) :        -0.146ns  (required time - arrival time)
-  Source:                 u_fisika/tc_reg[23]/C
+Slack (MET) :             0.637ns  (required time - arrival time)
+  Source:                 u_fitur/m_reg[2]/C
                             (rising edge-triggered cell FDCE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            u_fisika/ttb_ada_reg/CE
+  Destination:            u_fitur/num_r_reg[46]/D
                             (rising edge-triggered cell FDCE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        10.020ns  (logic 5.442ns (54.314%)  route 4.578ns (45.686%))
-  Logic Levels:           23  (CARRY8=7 DSP_A_B_DATA=1 DSP_ALU=3 DSP_M_DATA=1 DSP_MULTIPLIER=1 DSP_OUTPUT=3 DSP_PREADD_DATA=1 LUT2=1 LUT4=3 LUT5=1 LUT6=1)
-  Clock Path Skew:        -0.012ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.030ns = ( 10.030 - 10.000 ) 
+  Data Path Delay:        9.361ns  (logic 6.111ns (65.282%)  route 3.250ns (34.718%))
+  Logic Levels:           22  (CARRY8=4 DSP_A_B_DATA=2 DSP_ALU=3 DSP_M_DATA=2 DSP_MULTIPLIER=2 DSP_OUTPUT=3 DSP_PREADD_DATA=2 LUT2=1 LUT3=2 LUT6=1)
+  Clock Path Skew:        -0.013ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.029ns = ( 10.029 - 10.000 ) 
     Source Clock Delay      (SCD):    0.042ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -37,110 +37,107 @@ Slack (VIOLATED) :        -0.146ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r  <hidden>
                                                       0.000     0.000 r  clk
-                         net (fo=29772, unset)        0.042     0.042    u_fisika/clk
-    SLICE_X51Y65         FDCE                                         r  u_fisika/tc_reg[23]/C
+                         net (fo=18517, unset)        0.042     0.042    u_fitur/clk
+    SLICE_X50Y101        FDCE                                         r  u_fitur/m_reg[2]/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X51Y65         FDCE (Prop_HFF_SLICEL_C_Q)
-                                                      0.113     0.155 r  u_fisika/tc_reg[23]/Q
-                         net (fo=13, routed)          0.796     0.951    u_fisika/tc[23]
-    SLICE_X40Y58         LUT2 (Prop_H6LUT_SLICEM_I1_O)
-                                                      0.060     1.011 r  u_fisika/seri6__3_i_11/O
-                         net (fo=1, routed)           0.021     1.032    u_fisika/seri6__3_i_11_n_0
-    SLICE_X40Y58         CARRY8 (Prop_CARRY8_SLICEM_S[7]_CO[7])
-                                                      0.175     1.207 r  u_fisika/seri6__3_i_2/CO[7]
-                         net (fo=1, routed)           0.030     1.237    u_fisika/seri6__3_i_2_n_0
-    SLICE_X40Y59         CARRY8 (Prop_CARRY8_SLICEM_CI_CO[7])
-                                                      0.065     1.302 r  u_fisika/seri6__3_i_1/CO[7]
-                         net (fo=1, routed)           0.030     1.332    u_fisika/seri6__3_i_1_n_0
-    SLICE_X40Y60         CARRY8 (Prop_CARRY8_SLICEM_CI_CO[7])
-                                                      0.065     1.397 r  u_fisika/seri6_i_2/CO[7]
-                         net (fo=1, routed)           0.030     1.427    u_fisika/seri6_i_2_n_0
-    SLICE_X40Y61         CARRY8 (Prop_CARRY8_SLICEM_CI_O[0])
-                                                      0.078     1.505 f  u_fisika/seri6_i_1/O[0]
-                         net (fo=70, routed)          0.525     2.030    u_fisika/seri6__2/B[16]
-    DSP48E2_X11Y18       DSP_A_B_DATA (Prop_DSP_A_B_DATA_DSP48E2_B[16]_B2_DATA[16])
-                                                      0.216     2.246 r  u_fisika/seri6__2/DSP_A_B_DATA_INST/B2_DATA[16]
-                         net (fo=1, routed)           0.000     2.246    u_fisika/seri6__2/DSP_A_B_DATA.B2_DATA<16>
-    DSP48E2_X11Y18       DSP_PREADD_DATA (Prop_DSP_PREADD_DATA_DSP48E2_B2_DATA[16]_B2B1[16])
-                                                      0.097     2.343 r  u_fisika/seri6__2/DSP_PREADD_DATA_INST/B2B1[16]
-                         net (fo=1, routed)           0.000     2.343    u_fisika/seri6__2/DSP_PREADD_DATA.B2B1<16>
-    DSP48E2_X11Y18       DSP_MULTIPLIER (Prop_DSP_MULTIPLIER_DSP48E2_B2B1[16]_U[43])
-                                                      0.773     3.116 f  u_fisika/seri6__2/DSP_MULTIPLIER_INST/U[43]
-                         net (fo=1, routed)           0.000     3.116    u_fisika/seri6__2/DSP_MULTIPLIER.U<43>
-    DSP48E2_X11Y18       DSP_M_DATA (Prop_DSP_M_DATA_DSP48E2_U[43]_U_DATA[43])
-                                                      0.067     3.183 r  u_fisika/seri6__2/DSP_M_DATA_INST/U_DATA[43]
-                         net (fo=1, routed)           0.000     3.183    u_fisika/seri6__2/DSP_M_DATA.U_DATA<43>
-    DSP48E2_X11Y18       DSP_ALU (Prop_DSP_ALU_DSP48E2_U_DATA[43]_ALU_OUT[47])
-                                                      0.727     3.910 f  u_fisika/seri6__2/DSP_ALU_INST/ALU_OUT[47]
-                         net (fo=1, routed)           0.000     3.910    u_fisika/seri6__2/DSP_ALU.ALU_OUT<47>
-    DSP48E2_X11Y18       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[47]_PCOUT[47])
-                                                      0.167     4.077 r  u_fisika/seri6__2/DSP_OUTPUT_INST/PCOUT[47]
-                         net (fo=1, routed)           0.014     4.091    u_fisika/seri6__3/PCIN[47]
-    DSP48E2_X11Y19       DSP_ALU (Prop_DSP_ALU_DSP48E2_PCIN[47]_ALU_OUT[47])
-                                                      0.739     4.830 f  u_fisika/seri6__3/DSP_ALU_INST/ALU_OUT[47]
-                         net (fo=1, routed)           0.000     4.830    u_fisika/seri6__3/DSP_ALU.ALU_OUT<47>
-    DSP48E2_X11Y19       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[47]_PCOUT[47])
-                                                      0.167     4.997 r  u_fisika/seri6__3/DSP_OUTPUT_INST/PCOUT[47]
-                         net (fo=1, routed)           0.038     5.035    u_fisika/seri6__4/PCIN[47]
-    DSP48E2_X11Y20       DSP_ALU (Prop_DSP_ALU_DSP48E2_PCIN[47]_ALU_OUT[18])
-                                                      0.739     5.774 f  u_fisika/seri6__4/DSP_ALU_INST/ALU_OUT[18]
-                         net (fo=1, routed)           0.000     5.774    u_fisika/seri6__4/DSP_ALU.ALU_OUT<18>
-    DSP48E2_X11Y20       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[18]_P[18])
-                                                      0.146     5.920 r  u_fisika/seri6__4/DSP_OUTPUT_INST/P[18]
-                         net (fo=4, routed)           0.624     6.544    u_fisika/seri6__4_n_87
-    SLICE_X40Y53         LUT4 (Prop_E5LUT_SLICEM_I2_O)
-                                                      0.157     6.701 r  u_fisika/ttb_ada_i_124/O
-                         net (fo=2, routed)           0.188     6.888    u_fisika/ttb_ada_i_124_n_0
-    SLICE_X40Y53         LUT5 (Prop_F6LUT_SLICEM_I4_O)
-                                                      0.080     6.968 r  u_fisika/ttb_ada_i_132/O
-                         net (fo=1, routed)           0.029     6.997    u_fisika/ttb_ada_i_132_n_0
-    SLICE_X40Y53         CARRY8 (Prop_CARRY8_SLICEM_S[5]_CO[7])
-                                                      0.238     7.235 r  u_fisika/ttb_ada_reg_i_60/CO[7]
-                         net (fo=1, routed)           0.030     7.265    u_fisika/ttb_ada_reg_i_60_n_0
-    SLICE_X40Y54         CARRY8 (Prop_CARRY8_SLICEM_CI_O[3])
-                                                      0.114     7.379 r  u_fisika/ttb_ada_reg_i_59/O[3]
-                         net (fo=2, routed)           0.471     7.850    u_fisika/ttb_ada_reg_i_59_n_12
-    SLICE_X39Y55         LUT4 (Prop_F6LUT_SLICEL_I2_O)
-                                                      0.081     7.931 r  u_fisika/ttb_ada_i_17/O
-                         net (fo=1, routed)           0.015     7.946    u_fisika/ttb_ada_i_17_n_0
-    SLICE_X39Y55         CARRY8 (Prop_CARRY8_SLICEL_S[5]_CO[7])
-                                                      0.240     8.186 r  u_fisika/ttb_ada_reg_i_4/CO[7]
-                         net (fo=2, routed)           0.672     8.858    u_fisika/seri5
-    SLICE_X51Y54         LUT6 (Prop_A6LUT_SLICEL_I3_O)
-                                                      0.058     8.916 r  u_fisika/ttb_ada_i_3/O
-                         net (fo=2, routed)           0.864     9.780    u_fisika/ttb_ada_i_3_n_0
-    SLICE_X53Y118        LUT4 (Prop_D6LUT_SLICEM_I2_O)
-                                                      0.080     9.860 r  u_fisika/ttb_ada_i_1/O
-                         net (fo=8, routed)           0.202    10.062    u_fisika/ttb_ada_i_1_n_0
-    SLICE_X53Y118        FDCE                                         r  u_fisika/ttb_ada_reg/CE
+    SLICE_X50Y101        FDCE (Prop_HFF_SLICEL_C_Q)
+                                                      0.113     0.155 r  u_fitur/m_reg[2]/Q
+                         net (fo=41, routed)          0.947     1.102    u_fitur/m[2]
+    SLICE_X46Y139        LUT6 (Prop_D6LUT_SLICEL_I1_O)
+                                                      0.185     1.287 f  u_fitur/num_r3_i_10/O
+                         net (fo=4, routed)           0.049     1.336    u_fitur/num_r3_i_10_n_0
+    SLICE_X46Y139        LUT3 (Prop_A6LUT_SLICEL_I1_O)
+                                                      0.082     1.418 f  u_fitur/num_r3_i_1/O
+                         net (fo=12, routed)          0.631     2.049    u_fitur/num_r3/B[11]
+    DSP48E2_X11Y58       DSP_A_B_DATA (Prop_DSP_A_B_DATA_DSP48E2_B[11]_B2_DATA[11])
+                                                      0.216     2.265 r  u_fitur/num_r3/DSP_A_B_DATA_INST/B2_DATA[11]
+                         net (fo=1, routed)           0.000     2.265    u_fitur/num_r3/DSP_A_B_DATA.B2_DATA<11>
+    DSP48E2_X11Y58       DSP_PREADD_DATA (Prop_DSP_PREADD_DATA_DSP48E2_B2_DATA[11]_B2B1[11])
+                                                      0.097     2.362 r  u_fitur/num_r3/DSP_PREADD_DATA_INST/B2B1[11]
+                         net (fo=1, routed)           0.000     2.362    u_fitur/num_r3/DSP_PREADD_DATA.B2B1<11>
+    DSP48E2_X11Y58       DSP_MULTIPLIER (Prop_DSP_MULTIPLIER_DSP48E2_B2B1[11]_U[19])
+                                                      0.773     3.135 f  u_fitur/num_r3/DSP_MULTIPLIER_INST/U[19]
+                         net (fo=1, routed)           0.000     3.135    u_fitur/num_r3/DSP_MULTIPLIER.U<19>
+    DSP48E2_X11Y58       DSP_M_DATA (Prop_DSP_M_DATA_DSP48E2_U[19]_U_DATA[19])
+                                                      0.067     3.202 r  u_fitur/num_r3/DSP_M_DATA_INST/U_DATA[19]
+                         net (fo=1, routed)           0.000     3.202    u_fitur/num_r3/DSP_M_DATA.U_DATA<19>
+    DSP48E2_X11Y58       DSP_ALU (Prop_DSP_ALU_DSP48E2_U_DATA[19]_ALU_OUT[19])
+                                                      0.727     3.929 r  u_fitur/num_r3/DSP_ALU_INST/ALU_OUT[19]
+                         net (fo=1, routed)           0.000     3.929    u_fitur/num_r3/DSP_ALU.ALU_OUT<19>
+    DSP48E2_X11Y58       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[19]_P[19])
+                                                      0.146     4.075 f  u_fitur/num_r3/DSP_OUTPUT_INST/P[19]
+                         net (fo=12, routed)          0.556     4.631    u_fitur/num_r1/A[22]
+    DSP48E2_X11Y53       DSP_A_B_DATA (Prop_DSP_A_B_DATA_DSP48E2_A[22]_A2_DATA[22])
+                                                      0.258     4.889 r  u_fitur/num_r1/DSP_A_B_DATA_INST/A2_DATA[22]
+                         net (fo=1, routed)           0.000     4.889    u_fitur/num_r1/DSP_A_B_DATA.A2_DATA<22>
+    DSP48E2_X11Y53       DSP_PREADD_DATA (Prop_DSP_PREADD_DATA_DSP48E2_A2_DATA[22]_A2A1[22])
+                                                      0.114     5.003 r  u_fitur/num_r1/DSP_PREADD_DATA_INST/A2A1[22]
+                         net (fo=1, routed)           0.000     5.003    u_fitur/num_r1/DSP_PREADD_DATA.A2A1<22>
+    DSP48E2_X11Y53       DSP_MULTIPLIER (Prop_DSP_MULTIPLIER_DSP48E2_A2A1[22]_U[41])
+                                                      0.700     5.703 f  u_fitur/num_r1/DSP_MULTIPLIER_INST/U[41]
+                         net (fo=1, routed)           0.000     5.703    u_fitur/num_r1/DSP_MULTIPLIER.U<41>
+    DSP48E2_X11Y53       DSP_M_DATA (Prop_DSP_M_DATA_DSP48E2_U[41]_U_DATA[41])
+                                                      0.067     5.770 r  u_fitur/num_r1/DSP_M_DATA_INST/U_DATA[41]
+                         net (fo=1, routed)           0.000     5.770    u_fitur/num_r1/DSP_M_DATA.U_DATA<41>
+    DSP48E2_X11Y53       DSP_ALU (Prop_DSP_ALU_DSP48E2_U_DATA[41]_ALU_OUT[47])
+                                                      0.727     6.497 f  u_fitur/num_r1/DSP_ALU_INST/ALU_OUT[47]
+                         net (fo=1, routed)           0.000     6.497    u_fitur/num_r1/DSP_ALU.ALU_OUT<47>
+    DSP48E2_X11Y53       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[47]_PCOUT[47])
+                                                      0.167     6.664 r  u_fitur/num_r1/DSP_OUTPUT_INST/PCOUT[47]
+                         net (fo=1, routed)           0.038     6.702    u_fitur/num_r1__0/PCIN[47]
+    DSP48E2_X11Y54       DSP_ALU (Prop_DSP_ALU_DSP48E2_PCIN[47]_ALU_OUT[2])
+                                                      0.739     7.441 f  u_fitur/num_r1__0/DSP_ALU_INST/ALU_OUT[2]
+                         net (fo=1, routed)           0.000     7.441    u_fitur/num_r1__0/DSP_ALU.ALU_OUT<2>
+    DSP48E2_X11Y54       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[2]_P[2])
+                                                      0.146     7.587 r  u_fitur/num_r1__0/DSP_OUTPUT_INST/P[2]
+                         net (fo=1, routed)           0.685     8.272    u_fitur/num_r1__0_n_103
+    SLICE_X51Y135        LUT2 (Prop_D6LUT_SLICEL_I1_O)
+                                                      0.081     8.353 r  u_fitur/num_r[23]_i_7/O
+                         net (fo=1, routed)           0.013     8.366    u_fitur/num_r[23]_i_7_n_0
+    SLICE_X51Y135        CARRY8 (Prop_CARRY8_SLICEL_S[3]_CO[7])
+                                                      0.220     8.586 r  u_fitur/num_r_reg[23]_i_2/CO[7]
+                         net (fo=1, routed)           0.030     8.616    u_fitur/num_r_reg[23]_i_2_n_0
+    SLICE_X51Y136        CARRY8 (Prop_CARRY8_SLICEL_CI_CO[7])
+                                                      0.065     8.681 r  u_fitur/num_r_reg[31]_i_2/CO[7]
+                         net (fo=1, routed)           0.030     8.711    u_fitur/num_r_reg[31]_i_2_n_0
+    SLICE_X51Y137        CARRY8 (Prop_CARRY8_SLICEL_CI_CO[7])
+                                                      0.065     8.776 r  u_fitur/num_r_reg[39]_i_2/CO[7]
+                         net (fo=1, routed)           0.030     8.806    u_fitur/num_r_reg[39]_i_2_n_0
+    SLICE_X51Y138        CARRY8 (Prop_CARRY8_SLICEL_CI_O[6])
+                                                      0.157     8.963 r  u_fitur/num_r_reg[47]_i_4/O[6]
+                         net (fo=1, routed)           0.210     9.173    u_fitur/num_r0[46]
+    SLICE_X50Y139        LUT3 (Prop_F5LUT_SLICEL_I2_O)
+                                                      0.199     9.372 r  u_fitur/num_r[46]_i_1/O
+                         net (fo=1, routed)           0.031     9.403    u_fitur/num_r[46]_i_1_n_0
+    SLICE_X50Y139        FDCE                                         r  u_fitur/num_r_reg[46]/D
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r  <hidden>
                                                       0.000    10.000 r  clk
-                         net (fo=29772, unset)        0.030    10.030    u_fisika/clk
-    SLICE_X53Y118        FDCE                                         r  u_fisika/ttb_ada_reg/C
-                         clock pessimism              0.000    10.030    <hidden>
-                         clock uncertainty           -0.035     9.995    <hidden>
-    SLICE_X53Y118        FDCE (Setup_DFF2_SLICEM_C_CE)
-                                                     -0.079     9.916    u_fisika/ttb_ada_reg
+                         net (fo=18517, unset)        0.029    10.029    u_fitur/clk
+    SLICE_X50Y139        FDCE                                         r  u_fitur/num_r_reg[46]/C
+                         clock pessimism              0.000    10.029    <hidden>
+                         clock uncertainty           -0.035     9.994    <hidden>
+    SLICE_X50Y139        FDCE (Setup_FFF2_SLICEL_C_D)
+                                                      0.046    10.040    u_fitur/num_r_reg[46]
   -------------------------------------------------------------------
-                         required time                          9.916    <hidden>
-                         arrival time                         -10.062    <hidden>
+                         required time                         10.040    <hidden>
+                         arrival time                          -9.403    <hidden>
   -------------------------------------------------------------------
-                         slack                                 -0.146    <hidden>
+                         slack                                  0.637    <hidden>
 
-Slack (VIOLATED) :        -0.146ns  (required time - arrival time)
-  Source:                 u_fisika/tc_reg[23]/C
+Slack (MET) :             0.641ns  (required time - arrival time)
+  Source:                 u_fitur/m_reg[2]/C
                             (rising edge-triggered cell FDCE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            u_fisika/ttb_r_reg[0]/CE
+  Destination:            u_fitur/num_r_reg[47]/D
                             (rising edge-triggered cell FDCE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        10.019ns  (logic 5.442ns (54.319%)  route 4.577ns (45.681%))
-  Logic Levels:           23  (CARRY8=7 DSP_A_B_DATA=1 DSP_ALU=3 DSP_M_DATA=1 DSP_MULTIPLIER=1 DSP_OUTPUT=3 DSP_PREADD_DATA=1 LUT2=1 LUT4=3 LUT5=1 LUT6=1)
-  Clock Path Skew:        -0.012ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.030ns = ( 10.030 - 10.000 ) 
+  Data Path Delay:        9.357ns  (logic 6.118ns (65.385%)  route 3.239ns (34.615%))
+  Logic Levels:           22  (CARRY8=4 DSP_A_B_DATA=2 DSP_ALU=3 DSP_M_DATA=2 DSP_MULTIPLIER=2 DSP_OUTPUT=3 DSP_PREADD_DATA=2 LUT2=1 LUT3=2 LUT6=1)
+  Clock Path Skew:        -0.013ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.029ns = ( 10.029 - 10.000 ) 
     Source Clock Delay      (SCD):    0.042ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -153,110 +150,107 @@ Slack (VIOLATED) :        -0.146ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r  <hidden>
                                                       0.000     0.000 r  clk
-                         net (fo=29772, unset)        0.042     0.042    u_fisika/clk
-    SLICE_X51Y65         FDCE                                         r  u_fisika/tc_reg[23]/C
+                         net (fo=18517, unset)        0.042     0.042    u_fitur/clk
+    SLICE_X50Y101        FDCE                                         r  u_fitur/m_reg[2]/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X51Y65         FDCE (Prop_HFF_SLICEL_C_Q)
-                                                      0.113     0.155 r  u_fisika/tc_reg[23]/Q
-                         net (fo=13, routed)          0.796     0.951    u_fisika/tc[23]
-    SLICE_X40Y58         LUT2 (Prop_H6LUT_SLICEM_I1_O)
-                                                      0.060     1.011 r  u_fisika/seri6__3_i_11/O
-                         net (fo=1, routed)           0.021     1.032    u_fisika/seri6__3_i_11_n_0
-    SLICE_X40Y58         CARRY8 (Prop_CARRY8_SLICEM_S[7]_CO[7])
-                                                      0.175     1.207 r  u_fisika/seri6__3_i_2/CO[7]
-                         net (fo=1, routed)           0.030     1.237    u_fisika/seri6__3_i_2_n_0
-    SLICE_X40Y59         CARRY8 (Prop_CARRY8_SLICEM_CI_CO[7])
-                                                      0.065     1.302 r  u_fisika/seri6__3_i_1/CO[7]
-                         net (fo=1, routed)           0.030     1.332    u_fisika/seri6__3_i_1_n_0
-    SLICE_X40Y60         CARRY8 (Prop_CARRY8_SLICEM_CI_CO[7])
-                                                      0.065     1.397 r  u_fisika/seri6_i_2/CO[7]
-                         net (fo=1, routed)           0.030     1.427    u_fisika/seri6_i_2_n_0
-    SLICE_X40Y61         CARRY8 (Prop_CARRY8_SLICEM_CI_O[0])
-                                                      0.078     1.505 f  u_fisika/seri6_i_1/O[0]
-                         net (fo=70, routed)          0.525     2.030    u_fisika/seri6__2/B[16]
-    DSP48E2_X11Y18       DSP_A_B_DATA (Prop_DSP_A_B_DATA_DSP48E2_B[16]_B2_DATA[16])
-                                                      0.216     2.246 r  u_fisika/seri6__2/DSP_A_B_DATA_INST/B2_DATA[16]
-                         net (fo=1, routed)           0.000     2.246    u_fisika/seri6__2/DSP_A_B_DATA.B2_DATA<16>
-    DSP48E2_X11Y18       DSP_PREADD_DATA (Prop_DSP_PREADD_DATA_DSP48E2_B2_DATA[16]_B2B1[16])
-                                                      0.097     2.343 r  u_fisika/seri6__2/DSP_PREADD_DATA_INST/B2B1[16]
-                         net (fo=1, routed)           0.000     2.343    u_fisika/seri6__2/DSP_PREADD_DATA.B2B1<16>
-    DSP48E2_X11Y18       DSP_MULTIPLIER (Prop_DSP_MULTIPLIER_DSP48E2_B2B1[16]_U[43])
-                                                      0.773     3.116 f  u_fisika/seri6__2/DSP_MULTIPLIER_INST/U[43]
-                         net (fo=1, routed)           0.000     3.116    u_fisika/seri6__2/DSP_MULTIPLIER.U<43>
-    DSP48E2_X11Y18       DSP_M_DATA (Prop_DSP_M_DATA_DSP48E2_U[43]_U_DATA[43])
-                                                      0.067     3.183 r  u_fisika/seri6__2/DSP_M_DATA_INST/U_DATA[43]
-                         net (fo=1, routed)           0.000     3.183    u_fisika/seri6__2/DSP_M_DATA.U_DATA<43>
-    DSP48E2_X11Y18       DSP_ALU (Prop_DSP_ALU_DSP48E2_U_DATA[43]_ALU_OUT[47])
-                                                      0.727     3.910 f  u_fisika/seri6__2/DSP_ALU_INST/ALU_OUT[47]
-                         net (fo=1, routed)           0.000     3.910    u_fisika/seri6__2/DSP_ALU.ALU_OUT<47>
-    DSP48E2_X11Y18       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[47]_PCOUT[47])
-                                                      0.167     4.077 r  u_fisika/seri6__2/DSP_OUTPUT_INST/PCOUT[47]
-                         net (fo=1, routed)           0.014     4.091    u_fisika/seri6__3/PCIN[47]
-    DSP48E2_X11Y19       DSP_ALU (Prop_DSP_ALU_DSP48E2_PCIN[47]_ALU_OUT[47])
-                                                      0.739     4.830 f  u_fisika/seri6__3/DSP_ALU_INST/ALU_OUT[47]
-                         net (fo=1, routed)           0.000     4.830    u_fisika/seri6__3/DSP_ALU.ALU_OUT<47>
-    DSP48E2_X11Y19       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[47]_PCOUT[47])
-                                                      0.167     4.997 r  u_fisika/seri6__3/DSP_OUTPUT_INST/PCOUT[47]
-                         net (fo=1, routed)           0.038     5.035    u_fisika/seri6__4/PCIN[47]
-    DSP48E2_X11Y20       DSP_ALU (Prop_DSP_ALU_DSP48E2_PCIN[47]_ALU_OUT[18])
-                                                      0.739     5.774 f  u_fisika/seri6__4/DSP_ALU_INST/ALU_OUT[18]
-                         net (fo=1, routed)           0.000     5.774    u_fisika/seri6__4/DSP_ALU.ALU_OUT<18>
-    DSP48E2_X11Y20       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[18]_P[18])
-                                                      0.146     5.920 r  u_fisika/seri6__4/DSP_OUTPUT_INST/P[18]
-                         net (fo=4, routed)           0.624     6.544    u_fisika/seri6__4_n_87
-    SLICE_X40Y53         LUT4 (Prop_E5LUT_SLICEM_I2_O)
-                                                      0.157     6.701 r  u_fisika/ttb_ada_i_124/O
-                         net (fo=2, routed)           0.188     6.888    u_fisika/ttb_ada_i_124_n_0
-    SLICE_X40Y53         LUT5 (Prop_F6LUT_SLICEM_I4_O)
-                                                      0.080     6.968 r  u_fisika/ttb_ada_i_132/O
-                         net (fo=1, routed)           0.029     6.997    u_fisika/ttb_ada_i_132_n_0
-    SLICE_X40Y53         CARRY8 (Prop_CARRY8_SLICEM_S[5]_CO[7])
-                                                      0.238     7.235 r  u_fisika/ttb_ada_reg_i_60/CO[7]
-                         net (fo=1, routed)           0.030     7.265    u_fisika/ttb_ada_reg_i_60_n_0
-    SLICE_X40Y54         CARRY8 (Prop_CARRY8_SLICEM_CI_O[3])
-                                                      0.114     7.379 r  u_fisika/ttb_ada_reg_i_59/O[3]
-                         net (fo=2, routed)           0.471     7.850    u_fisika/ttb_ada_reg_i_59_n_12
-    SLICE_X39Y55         LUT4 (Prop_F6LUT_SLICEL_I2_O)
-                                                      0.081     7.931 r  u_fisika/ttb_ada_i_17/O
-                         net (fo=1, routed)           0.015     7.946    u_fisika/ttb_ada_i_17_n_0
-    SLICE_X39Y55         CARRY8 (Prop_CARRY8_SLICEL_S[5]_CO[7])
-                                                      0.240     8.186 r  u_fisika/ttb_ada_reg_i_4/CO[7]
-                         net (fo=2, routed)           0.672     8.858    u_fisika/seri5
-    SLICE_X51Y54         LUT6 (Prop_A6LUT_SLICEL_I3_O)
-                                                      0.058     8.916 r  u_fisika/ttb_ada_i_3/O
-                         net (fo=2, routed)           0.864     9.780    u_fisika/ttb_ada_i_3_n_0
-    SLICE_X53Y118        LUT4 (Prop_D6LUT_SLICEM_I2_O)
-                                                      0.080     9.860 r  u_fisika/ttb_ada_i_1/O
-                         net (fo=8, routed)           0.201    10.061    u_fisika/ttb_ada_i_1_n_0
-    SLICE_X53Y118        FDCE                                         r  u_fisika/ttb_r_reg[0]/CE
+    SLICE_X50Y101        FDCE (Prop_HFF_SLICEL_C_Q)
+                                                      0.113     0.155 r  u_fitur/m_reg[2]/Q
+                         net (fo=41, routed)          0.947     1.102    u_fitur/m[2]
+    SLICE_X46Y139        LUT6 (Prop_D6LUT_SLICEL_I1_O)
+                                                      0.185     1.287 f  u_fitur/num_r3_i_10/O
+                         net (fo=4, routed)           0.049     1.336    u_fitur/num_r3_i_10_n_0
+    SLICE_X46Y139        LUT3 (Prop_A6LUT_SLICEL_I1_O)
+                                                      0.082     1.418 f  u_fitur/num_r3_i_1/O
+                         net (fo=12, routed)          0.631     2.049    u_fitur/num_r3/B[11]
+    DSP48E2_X11Y58       DSP_A_B_DATA (Prop_DSP_A_B_DATA_DSP48E2_B[11]_B2_DATA[11])
+                                                      0.216     2.265 r  u_fitur/num_r3/DSP_A_B_DATA_INST/B2_DATA[11]
+                         net (fo=1, routed)           0.000     2.265    u_fitur/num_r3/DSP_A_B_DATA.B2_DATA<11>
+    DSP48E2_X11Y58       DSP_PREADD_DATA (Prop_DSP_PREADD_DATA_DSP48E2_B2_DATA[11]_B2B1[11])
+                                                      0.097     2.362 r  u_fitur/num_r3/DSP_PREADD_DATA_INST/B2B1[11]
+                         net (fo=1, routed)           0.000     2.362    u_fitur/num_r3/DSP_PREADD_DATA.B2B1<11>
+    DSP48E2_X11Y58       DSP_MULTIPLIER (Prop_DSP_MULTIPLIER_DSP48E2_B2B1[11]_U[19])
+                                                      0.773     3.135 f  u_fitur/num_r3/DSP_MULTIPLIER_INST/U[19]
+                         net (fo=1, routed)           0.000     3.135    u_fitur/num_r3/DSP_MULTIPLIER.U<19>
+    DSP48E2_X11Y58       DSP_M_DATA (Prop_DSP_M_DATA_DSP48E2_U[19]_U_DATA[19])
+                                                      0.067     3.202 r  u_fitur/num_r3/DSP_M_DATA_INST/U_DATA[19]
+                         net (fo=1, routed)           0.000     3.202    u_fitur/num_r3/DSP_M_DATA.U_DATA<19>
+    DSP48E2_X11Y58       DSP_ALU (Prop_DSP_ALU_DSP48E2_U_DATA[19]_ALU_OUT[19])
+                                                      0.727     3.929 r  u_fitur/num_r3/DSP_ALU_INST/ALU_OUT[19]
+                         net (fo=1, routed)           0.000     3.929    u_fitur/num_r3/DSP_ALU.ALU_OUT<19>
+    DSP48E2_X11Y58       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[19]_P[19])
+                                                      0.146     4.075 f  u_fitur/num_r3/DSP_OUTPUT_INST/P[19]
+                         net (fo=12, routed)          0.556     4.631    u_fitur/num_r1/A[22]
+    DSP48E2_X11Y53       DSP_A_B_DATA (Prop_DSP_A_B_DATA_DSP48E2_A[22]_A2_DATA[22])
+                                                      0.258     4.889 r  u_fitur/num_r1/DSP_A_B_DATA_INST/A2_DATA[22]
+                         net (fo=1, routed)           0.000     4.889    u_fitur/num_r1/DSP_A_B_DATA.A2_DATA<22>
+    DSP48E2_X11Y53       DSP_PREADD_DATA (Prop_DSP_PREADD_DATA_DSP48E2_A2_DATA[22]_A2A1[22])
+                                                      0.114     5.003 r  u_fitur/num_r1/DSP_PREADD_DATA_INST/A2A1[22]
+                         net (fo=1, routed)           0.000     5.003    u_fitur/num_r1/DSP_PREADD_DATA.A2A1<22>
+    DSP48E2_X11Y53       DSP_MULTIPLIER (Prop_DSP_MULTIPLIER_DSP48E2_A2A1[22]_U[41])
+                                                      0.700     5.703 f  u_fitur/num_r1/DSP_MULTIPLIER_INST/U[41]
+                         net (fo=1, routed)           0.000     5.703    u_fitur/num_r1/DSP_MULTIPLIER.U<41>
+    DSP48E2_X11Y53       DSP_M_DATA (Prop_DSP_M_DATA_DSP48E2_U[41]_U_DATA[41])
+                                                      0.067     5.770 r  u_fitur/num_r1/DSP_M_DATA_INST/U_DATA[41]
+                         net (fo=1, routed)           0.000     5.770    u_fitur/num_r1/DSP_M_DATA.U_DATA<41>
+    DSP48E2_X11Y53       DSP_ALU (Prop_DSP_ALU_DSP48E2_U_DATA[41]_ALU_OUT[47])
+                                                      0.727     6.497 f  u_fitur/num_r1/DSP_ALU_INST/ALU_OUT[47]
+                         net (fo=1, routed)           0.000     6.497    u_fitur/num_r1/DSP_ALU.ALU_OUT<47>
+    DSP48E2_X11Y53       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[47]_PCOUT[47])
+                                                      0.167     6.664 r  u_fitur/num_r1/DSP_OUTPUT_INST/PCOUT[47]
+                         net (fo=1, routed)           0.038     6.702    u_fitur/num_r1__0/PCIN[47]
+    DSP48E2_X11Y54       DSP_ALU (Prop_DSP_ALU_DSP48E2_PCIN[47]_ALU_OUT[2])
+                                                      0.739     7.441 f  u_fitur/num_r1__0/DSP_ALU_INST/ALU_OUT[2]
+                         net (fo=1, routed)           0.000     7.441    u_fitur/num_r1__0/DSP_ALU.ALU_OUT<2>
+    DSP48E2_X11Y54       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[2]_P[2])
+                                                      0.146     7.587 r  u_fitur/num_r1__0/DSP_OUTPUT_INST/P[2]
+                         net (fo=1, routed)           0.685     8.272    u_fitur/num_r1__0_n_103
+    SLICE_X51Y135        LUT2 (Prop_D6LUT_SLICEL_I1_O)
+                                                      0.081     8.353 r  u_fitur/num_r[23]_i_7/O
+                         net (fo=1, routed)           0.013     8.366    u_fitur/num_r[23]_i_7_n_0
+    SLICE_X51Y135        CARRY8 (Prop_CARRY8_SLICEL_S[3]_CO[7])
+                                                      0.220     8.586 r  u_fitur/num_r_reg[23]_i_2/CO[7]
+                         net (fo=1, routed)           0.030     8.616    u_fitur/num_r_reg[23]_i_2_n_0
+    SLICE_X51Y136        CARRY8 (Prop_CARRY8_SLICEL_CI_CO[7])
+                                                      0.065     8.681 r  u_fitur/num_r_reg[31]_i_2/CO[7]
+                         net (fo=1, routed)           0.030     8.711    u_fitur/num_r_reg[31]_i_2_n_0
+    SLICE_X51Y137        CARRY8 (Prop_CARRY8_SLICEL_CI_CO[7])
+                                                      0.065     8.776 r  u_fitur/num_r_reg[39]_i_2/CO[7]
+                         net (fo=1, routed)           0.030     8.806    u_fitur/num_r_reg[39]_i_2_n_0
+    SLICE_X51Y138        CARRY8 (Prop_CARRY8_SLICEL_CI_O[7])
+                                                      0.171     8.977 r  u_fitur/num_r_reg[47]_i_4/O[7]
+                         net (fo=1, routed)           0.203     9.180    u_fitur/num_r0[47]
+    SLICE_X50Y139        LUT3 (Prop_E5LUT_SLICEL_I2_O)
+                                                      0.192     9.372 r  u_fitur/num_r[47]_i_2/O
+                         net (fo=1, routed)           0.027     9.399    u_fitur/num_r[47]_i_2_n_0
+    SLICE_X50Y139        FDCE                                         r  u_fitur/num_r_reg[47]/D
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r  <hidden>
                                                       0.000    10.000 r  clk
-                         net (fo=29772, unset)        0.030    10.030    u_fisika/clk
-    SLICE_X53Y118        FDCE                                         r  u_fisika/ttb_r_reg[0]/C
-                         clock pessimism              0.000    10.030    <hidden>
-                         clock uncertainty           -0.035     9.995    <hidden>
-    SLICE_X53Y118        FDCE (Setup_BFF_SLICEM_C_CE)
-                                                     -0.080     9.915    u_fisika/ttb_r_reg[0]
+                         net (fo=18517, unset)        0.029    10.029    u_fitur/clk
+    SLICE_X50Y139        FDCE                                         r  u_fitur/num_r_reg[47]/C
+                         clock pessimism              0.000    10.029    <hidden>
+                         clock uncertainty           -0.035     9.994    <hidden>
+    SLICE_X50Y139        FDCE (Setup_EFF2_SLICEL_C_D)
+                                                      0.046    10.040    u_fitur/num_r_reg[47]
   -------------------------------------------------------------------
-                         required time                          9.915    <hidden>
-                         arrival time                         -10.061    <hidden>
+                         required time                         10.040    <hidden>
+                         arrival time                          -9.399    <hidden>
   -------------------------------------------------------------------
-                         slack                                 -0.146    <hidden>
+                         slack                                  0.641    <hidden>
 
-Slack (VIOLATED) :        -0.146ns  (required time - arrival time)
-  Source:                 u_fisika/tc_reg[23]/C
+Slack (MET) :             0.643ns  (required time - arrival time)
+  Source:                 u_fitur/m_reg[2]/C
                             (rising edge-triggered cell FDCE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            u_fisika/ttb_r_reg[1]/CE
+  Destination:            u_fitur/num_r_reg[45]/D
                             (rising edge-triggered cell FDCE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        10.020ns  (logic 5.442ns (54.314%)  route 4.578ns (45.686%))
-  Logic Levels:           23  (CARRY8=7 DSP_A_B_DATA=1 DSP_ALU=3 DSP_M_DATA=1 DSP_MULTIPLIER=1 DSP_OUTPUT=3 DSP_PREADD_DATA=1 LUT2=1 LUT4=3 LUT5=1 LUT6=1)
-  Clock Path Skew:        -0.012ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.030ns = ( 10.030 - 10.000 ) 
+  Data Path Delay:        9.353ns  (logic 5.999ns (64.140%)  route 3.354ns (35.860%))
+  Logic Levels:           22  (CARRY8=4 DSP_A_B_DATA=2 DSP_ALU=3 DSP_M_DATA=2 DSP_MULTIPLIER=2 DSP_OUTPUT=3 DSP_PREADD_DATA=2 LUT2=1 LUT3=2 LUT6=1)
+  Clock Path Skew:        -0.013ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.029ns = ( 10.029 - 10.000 ) 
     Source Clock Delay      (SCD):    0.042ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -269,110 +263,107 @@ Slack (VIOLATED) :        -0.146ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r  <hidden>
                                                       0.000     0.000 r  clk
-                         net (fo=29772, unset)        0.042     0.042    u_fisika/clk
-    SLICE_X51Y65         FDCE                                         r  u_fisika/tc_reg[23]/C
+                         net (fo=18517, unset)        0.042     0.042    u_fitur/clk
+    SLICE_X50Y101        FDCE                                         r  u_fitur/m_reg[2]/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X51Y65         FDCE (Prop_HFF_SLICEL_C_Q)
-                                                      0.113     0.155 r  u_fisika/tc_reg[23]/Q
-                         net (fo=13, routed)          0.796     0.951    u_fisika/tc[23]
-    SLICE_X40Y58         LUT2 (Prop_H6LUT_SLICEM_I1_O)
-                                                      0.060     1.011 r  u_fisika/seri6__3_i_11/O
-                         net (fo=1, routed)           0.021     1.032    u_fisika/seri6__3_i_11_n_0
-    SLICE_X40Y58         CARRY8 (Prop_CARRY8_SLICEM_S[7]_CO[7])
-                                                      0.175     1.207 r  u_fisika/seri6__3_i_2/CO[7]
-                         net (fo=1, routed)           0.030     1.237    u_fisika/seri6__3_i_2_n_0
-    SLICE_X40Y59         CARRY8 (Prop_CARRY8_SLICEM_CI_CO[7])
-                                                      0.065     1.302 r  u_fisika/seri6__3_i_1/CO[7]
-                         net (fo=1, routed)           0.030     1.332    u_fisika/seri6__3_i_1_n_0
-    SLICE_X40Y60         CARRY8 (Prop_CARRY8_SLICEM_CI_CO[7])
-                                                      0.065     1.397 r  u_fisika/seri6_i_2/CO[7]
-                         net (fo=1, routed)           0.030     1.427    u_fisika/seri6_i_2_n_0
-    SLICE_X40Y61         CARRY8 (Prop_CARRY8_SLICEM_CI_O[0])
-                                                      0.078     1.505 f  u_fisika/seri6_i_1/O[0]
-                         net (fo=70, routed)          0.525     2.030    u_fisika/seri6__2/B[16]
-    DSP48E2_X11Y18       DSP_A_B_DATA (Prop_DSP_A_B_DATA_DSP48E2_B[16]_B2_DATA[16])
-                                                      0.216     2.246 r  u_fisika/seri6__2/DSP_A_B_DATA_INST/B2_DATA[16]
-                         net (fo=1, routed)           0.000     2.246    u_fisika/seri6__2/DSP_A_B_DATA.B2_DATA<16>
-    DSP48E2_X11Y18       DSP_PREADD_DATA (Prop_DSP_PREADD_DATA_DSP48E2_B2_DATA[16]_B2B1[16])
-                                                      0.097     2.343 r  u_fisika/seri6__2/DSP_PREADD_DATA_INST/B2B1[16]
-                         net (fo=1, routed)           0.000     2.343    u_fisika/seri6__2/DSP_PREADD_DATA.B2B1<16>
-    DSP48E2_X11Y18       DSP_MULTIPLIER (Prop_DSP_MULTIPLIER_DSP48E2_B2B1[16]_U[43])
-                                                      0.773     3.116 f  u_fisika/seri6__2/DSP_MULTIPLIER_INST/U[43]
-                         net (fo=1, routed)           0.000     3.116    u_fisika/seri6__2/DSP_MULTIPLIER.U<43>
-    DSP48E2_X11Y18       DSP_M_DATA (Prop_DSP_M_DATA_DSP48E2_U[43]_U_DATA[43])
-                                                      0.067     3.183 r  u_fisika/seri6__2/DSP_M_DATA_INST/U_DATA[43]
-                         net (fo=1, routed)           0.000     3.183    u_fisika/seri6__2/DSP_M_DATA.U_DATA<43>
-    DSP48E2_X11Y18       DSP_ALU (Prop_DSP_ALU_DSP48E2_U_DATA[43]_ALU_OUT[47])
-                                                      0.727     3.910 f  u_fisika/seri6__2/DSP_ALU_INST/ALU_OUT[47]
-                         net (fo=1, routed)           0.000     3.910    u_fisika/seri6__2/DSP_ALU.ALU_OUT<47>
-    DSP48E2_X11Y18       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[47]_PCOUT[47])
-                                                      0.167     4.077 r  u_fisika/seri6__2/DSP_OUTPUT_INST/PCOUT[47]
-                         net (fo=1, routed)           0.014     4.091    u_fisika/seri6__3/PCIN[47]
-    DSP48E2_X11Y19       DSP_ALU (Prop_DSP_ALU_DSP48E2_PCIN[47]_ALU_OUT[47])
-                                                      0.739     4.830 f  u_fisika/seri6__3/DSP_ALU_INST/ALU_OUT[47]
-                         net (fo=1, routed)           0.000     4.830    u_fisika/seri6__3/DSP_ALU.ALU_OUT<47>
-    DSP48E2_X11Y19       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[47]_PCOUT[47])
-                                                      0.167     4.997 r  u_fisika/seri6__3/DSP_OUTPUT_INST/PCOUT[47]
-                         net (fo=1, routed)           0.038     5.035    u_fisika/seri6__4/PCIN[47]
-    DSP48E2_X11Y20       DSP_ALU (Prop_DSP_ALU_DSP48E2_PCIN[47]_ALU_OUT[18])
-                                                      0.739     5.774 f  u_fisika/seri6__4/DSP_ALU_INST/ALU_OUT[18]
-                         net (fo=1, routed)           0.000     5.774    u_fisika/seri6__4/DSP_ALU.ALU_OUT<18>
-    DSP48E2_X11Y20       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[18]_P[18])
-                                                      0.146     5.920 r  u_fisika/seri6__4/DSP_OUTPUT_INST/P[18]
-                         net (fo=4, routed)           0.624     6.544    u_fisika/seri6__4_n_87
-    SLICE_X40Y53         LUT4 (Prop_E5LUT_SLICEM_I2_O)
-                                                      0.157     6.701 r  u_fisika/ttb_ada_i_124/O
-                         net (fo=2, routed)           0.188     6.888    u_fisika/ttb_ada_i_124_n_0
-    SLICE_X40Y53         LUT5 (Prop_F6LUT_SLICEM_I4_O)
-                                                      0.080     6.968 r  u_fisika/ttb_ada_i_132/O
-                         net (fo=1, routed)           0.029     6.997    u_fisika/ttb_ada_i_132_n_0
-    SLICE_X40Y53         CARRY8 (Prop_CARRY8_SLICEM_S[5]_CO[7])
-                                                      0.238     7.235 r  u_fisika/ttb_ada_reg_i_60/CO[7]
-                         net (fo=1, routed)           0.030     7.265    u_fisika/ttb_ada_reg_i_60_n_0
-    SLICE_X40Y54         CARRY8 (Prop_CARRY8_SLICEM_CI_O[3])
-                                                      0.114     7.379 r  u_fisika/ttb_ada_reg_i_59/O[3]
-                         net (fo=2, routed)           0.471     7.850    u_fisika/ttb_ada_reg_i_59_n_12
-    SLICE_X39Y55         LUT4 (Prop_F6LUT_SLICEL_I2_O)
-                                                      0.081     7.931 r  u_fisika/ttb_ada_i_17/O
-                         net (fo=1, routed)           0.015     7.946    u_fisika/ttb_ada_i_17_n_0
-    SLICE_X39Y55         CARRY8 (Prop_CARRY8_SLICEL_S[5]_CO[7])
-                                                      0.240     8.186 r  u_fisika/ttb_ada_reg_i_4/CO[7]
-                         net (fo=2, routed)           0.672     8.858    u_fisika/seri5
-    SLICE_X51Y54         LUT6 (Prop_A6LUT_SLICEL_I3_O)
-                                                      0.058     8.916 r  u_fisika/ttb_ada_i_3/O
-                         net (fo=2, routed)           0.864     9.780    u_fisika/ttb_ada_i_3_n_0
-    SLICE_X53Y118        LUT4 (Prop_D6LUT_SLICEM_I2_O)
-                                                      0.080     9.860 r  u_fisika/ttb_ada_i_1/O
-                         net (fo=8, routed)           0.202    10.062    u_fisika/ttb_ada_i_1_n_0
-    SLICE_X53Y118        FDCE                                         r  u_fisika/ttb_r_reg[1]/CE
+    SLICE_X50Y101        FDCE (Prop_HFF_SLICEL_C_Q)
+                                                      0.113     0.155 r  u_fitur/m_reg[2]/Q
+                         net (fo=41, routed)          0.947     1.102    u_fitur/m[2]
+    SLICE_X46Y139        LUT6 (Prop_D6LUT_SLICEL_I1_O)
+                                                      0.185     1.287 f  u_fitur/num_r3_i_10/O
+                         net (fo=4, routed)           0.049     1.336    u_fitur/num_r3_i_10_n_0
+    SLICE_X46Y139        LUT3 (Prop_A6LUT_SLICEL_I1_O)
+                                                      0.082     1.418 f  u_fitur/num_r3_i_1/O
+                         net (fo=12, routed)          0.631     2.049    u_fitur/num_r3/B[11]
+    DSP48E2_X11Y58       DSP_A_B_DATA (Prop_DSP_A_B_DATA_DSP48E2_B[11]_B2_DATA[11])
+                                                      0.216     2.265 r  u_fitur/num_r3/DSP_A_B_DATA_INST/B2_DATA[11]
+                         net (fo=1, routed)           0.000     2.265    u_fitur/num_r3/DSP_A_B_DATA.B2_DATA<11>
+    DSP48E2_X11Y58       DSP_PREADD_DATA (Prop_DSP_PREADD_DATA_DSP48E2_B2_DATA[11]_B2B1[11])
+                                                      0.097     2.362 r  u_fitur/num_r3/DSP_PREADD_DATA_INST/B2B1[11]
+                         net (fo=1, routed)           0.000     2.362    u_fitur/num_r3/DSP_PREADD_DATA.B2B1<11>
+    DSP48E2_X11Y58       DSP_MULTIPLIER (Prop_DSP_MULTIPLIER_DSP48E2_B2B1[11]_U[19])
+                                                      0.773     3.135 f  u_fitur/num_r3/DSP_MULTIPLIER_INST/U[19]
+                         net (fo=1, routed)           0.000     3.135    u_fitur/num_r3/DSP_MULTIPLIER.U<19>
+    DSP48E2_X11Y58       DSP_M_DATA (Prop_DSP_M_DATA_DSP48E2_U[19]_U_DATA[19])
+                                                      0.067     3.202 r  u_fitur/num_r3/DSP_M_DATA_INST/U_DATA[19]
+                         net (fo=1, routed)           0.000     3.202    u_fitur/num_r3/DSP_M_DATA.U_DATA<19>
+    DSP48E2_X11Y58       DSP_ALU (Prop_DSP_ALU_DSP48E2_U_DATA[19]_ALU_OUT[19])
+                                                      0.727     3.929 r  u_fitur/num_r3/DSP_ALU_INST/ALU_OUT[19]
+                         net (fo=1, routed)           0.000     3.929    u_fitur/num_r3/DSP_ALU.ALU_OUT<19>
+    DSP48E2_X11Y58       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[19]_P[19])
+                                                      0.146     4.075 f  u_fitur/num_r3/DSP_OUTPUT_INST/P[19]
+                         net (fo=12, routed)          0.556     4.631    u_fitur/num_r1/A[22]
+    DSP48E2_X11Y53       DSP_A_B_DATA (Prop_DSP_A_B_DATA_DSP48E2_A[22]_A2_DATA[22])
+                                                      0.258     4.889 r  u_fitur/num_r1/DSP_A_B_DATA_INST/A2_DATA[22]
+                         net (fo=1, routed)           0.000     4.889    u_fitur/num_r1/DSP_A_B_DATA.A2_DATA<22>
+    DSP48E2_X11Y53       DSP_PREADD_DATA (Prop_DSP_PREADD_DATA_DSP48E2_A2_DATA[22]_A2A1[22])
+                                                      0.114     5.003 r  u_fitur/num_r1/DSP_PREADD_DATA_INST/A2A1[22]
+                         net (fo=1, routed)           0.000     5.003    u_fitur/num_r1/DSP_PREADD_DATA.A2A1<22>
+    DSP48E2_X11Y53       DSP_MULTIPLIER (Prop_DSP_MULTIPLIER_DSP48E2_A2A1[22]_U[41])
+                                                      0.700     5.703 f  u_fitur/num_r1/DSP_MULTIPLIER_INST/U[41]
+                         net (fo=1, routed)           0.000     5.703    u_fitur/num_r1/DSP_MULTIPLIER.U<41>
+    DSP48E2_X11Y53       DSP_M_DATA (Prop_DSP_M_DATA_DSP48E2_U[41]_U_DATA[41])
+                                                      0.067     5.770 r  u_fitur/num_r1/DSP_M_DATA_INST/U_DATA[41]
+                         net (fo=1, routed)           0.000     5.770    u_fitur/num_r1/DSP_M_DATA.U_DATA<41>
+    DSP48E2_X11Y53       DSP_ALU (Prop_DSP_ALU_DSP48E2_U_DATA[41]_ALU_OUT[47])
+                                                      0.727     6.497 f  u_fitur/num_r1/DSP_ALU_INST/ALU_OUT[47]
+                         net (fo=1, routed)           0.000     6.497    u_fitur/num_r1/DSP_ALU.ALU_OUT<47>
+    DSP48E2_X11Y53       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[47]_PCOUT[47])
+                                                      0.167     6.664 r  u_fitur/num_r1/DSP_OUTPUT_INST/PCOUT[47]
+                         net (fo=1, routed)           0.038     6.702    u_fitur/num_r1__0/PCIN[47]
+    DSP48E2_X11Y54       DSP_ALU (Prop_DSP_ALU_DSP48E2_PCIN[47]_ALU_OUT[2])
+                                                      0.739     7.441 f  u_fitur/num_r1__0/DSP_ALU_INST/ALU_OUT[2]
+                         net (fo=1, routed)           0.000     7.441    u_fitur/num_r1__0/DSP_ALU.ALU_OUT<2>
+    DSP48E2_X11Y54       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[2]_P[2])
+                                                      0.146     7.587 r  u_fitur/num_r1__0/DSP_OUTPUT_INST/P[2]
+                         net (fo=1, routed)           0.685     8.272    u_fitur/num_r1__0_n_103
+    SLICE_X51Y135        LUT2 (Prop_D6LUT_SLICEL_I1_O)
+                                                      0.081     8.353 r  u_fitur/num_r[23]_i_7/O
+                         net (fo=1, routed)           0.013     8.366    u_fitur/num_r[23]_i_7_n_0
+    SLICE_X51Y135        CARRY8 (Prop_CARRY8_SLICEL_S[3]_CO[7])
+                                                      0.220     8.586 r  u_fitur/num_r_reg[23]_i_2/CO[7]
+                         net (fo=1, routed)           0.030     8.616    u_fitur/num_r_reg[23]_i_2_n_0
+    SLICE_X51Y136        CARRY8 (Prop_CARRY8_SLICEL_CI_CO[7])
+                                                      0.065     8.681 r  u_fitur/num_r_reg[31]_i_2/CO[7]
+                         net (fo=1, routed)           0.030     8.711    u_fitur/num_r_reg[31]_i_2_n_0
+    SLICE_X51Y137        CARRY8 (Prop_CARRY8_SLICEL_CI_CO[7])
+                                                      0.065     8.776 r  u_fitur/num_r_reg[39]_i_2/CO[7]
+                         net (fo=1, routed)           0.030     8.806    u_fitur/num_r_reg[39]_i_2_n_0
+    SLICE_X51Y138        CARRY8 (Prop_CARRY8_SLICEL_CI_O[5])
+                                                      0.161     8.967 r  u_fitur/num_r_reg[47]_i_4/O[5]
+                         net (fo=1, routed)           0.282     9.249    u_fitur/num_r0[45]
+    SLICE_X50Y139        LUT3 (Prop_E6LUT_SLICEL_I2_O)
+                                                      0.083     9.332 r  u_fitur/num_r[45]_i_1/O
+                         net (fo=1, routed)           0.063     9.395    u_fitur/num_r[45]_i_1_n_0
+    SLICE_X50Y139        FDCE                                         r  u_fitur/num_r_reg[45]/D
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r  <hidden>
                                                       0.000    10.000 r  clk
-                         net (fo=29772, unset)        0.030    10.030    u_fisika/clk
-    SLICE_X53Y118        FDCE                                         r  u_fisika/ttb_r_reg[1]/C
-                         clock pessimism              0.000    10.030    <hidden>
-                         clock uncertainty           -0.035     9.995    <hidden>
-    SLICE_X53Y118        FDCE (Setup_BFF2_SLICEM_C_CE)
-                                                     -0.079     9.916    u_fisika/ttb_r_reg[1]
+                         net (fo=18517, unset)        0.029    10.029    u_fitur/clk
+    SLICE_X50Y139        FDCE                                         r  u_fitur/num_r_reg[45]/C
+                         clock pessimism              0.000    10.029    <hidden>
+                         clock uncertainty           -0.035     9.994    <hidden>
+    SLICE_X50Y139        FDCE (Setup_EFF_SLICEL_C_D)
+                                                      0.044    10.038    u_fitur/num_r_reg[45]
   -------------------------------------------------------------------
-                         required time                          9.916    <hidden>
-                         arrival time                         -10.062    <hidden>
+                         required time                         10.038    <hidden>
+                         arrival time                          -9.395    <hidden>
   -------------------------------------------------------------------
-                         slack                                 -0.146    <hidden>
+                         slack                                  0.643    <hidden>
 
-Slack (VIOLATED) :        -0.146ns  (required time - arrival time)
-  Source:                 u_fisika/tc_reg[23]/C
+Slack (MET) :             0.658ns  (required time - arrival time)
+  Source:                 u_fitur/m_reg[2]/C
                             (rising edge-triggered cell FDCE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            u_fisika/ttb_r_reg[2]/CE
+  Destination:            u_fitur/num_r_reg[43]/D
                             (rising edge-triggered cell FDCE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        10.019ns  (logic 5.442ns (54.319%)  route 4.577ns (45.681%))
-  Logic Levels:           23  (CARRY8=7 DSP_A_B_DATA=1 DSP_ALU=3 DSP_M_DATA=1 DSP_MULTIPLIER=1 DSP_OUTPUT=3 DSP_PREADD_DATA=1 LUT2=1 LUT4=3 LUT5=1 LUT6=1)
-  Clock Path Skew:        -0.012ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.030ns = ( 10.030 - 10.000 ) 
+  Data Path Delay:        9.340ns  (logic 6.091ns (65.215%)  route 3.249ns (34.785%))
+  Logic Levels:           22  (CARRY8=4 DSP_A_B_DATA=2 DSP_ALU=3 DSP_M_DATA=2 DSP_MULTIPLIER=2 DSP_OUTPUT=3 DSP_PREADD_DATA=2 LUT2=1 LUT3=2 LUT6=1)
+  Clock Path Skew:        -0.013ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.029ns = ( 10.029 - 10.000 ) 
     Source Clock Delay      (SCD):    0.042ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -385,110 +376,107 @@ Slack (VIOLATED) :        -0.146ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r  <hidden>
                                                       0.000     0.000 r  clk
-                         net (fo=29772, unset)        0.042     0.042    u_fisika/clk
-    SLICE_X51Y65         FDCE                                         r  u_fisika/tc_reg[23]/C
+                         net (fo=18517, unset)        0.042     0.042    u_fitur/clk
+    SLICE_X50Y101        FDCE                                         r  u_fitur/m_reg[2]/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X51Y65         FDCE (Prop_HFF_SLICEL_C_Q)
-                                                      0.113     0.155 r  u_fisika/tc_reg[23]/Q
-                         net (fo=13, routed)          0.796     0.951    u_fisika/tc[23]
-    SLICE_X40Y58         LUT2 (Prop_H6LUT_SLICEM_I1_O)
-                                                      0.060     1.011 r  u_fisika/seri6__3_i_11/O
-                         net (fo=1, routed)           0.021     1.032    u_fisika/seri6__3_i_11_n_0
-    SLICE_X40Y58         CARRY8 (Prop_CARRY8_SLICEM_S[7]_CO[7])
-                                                      0.175     1.207 r  u_fisika/seri6__3_i_2/CO[7]
-                         net (fo=1, routed)           0.030     1.237    u_fisika/seri6__3_i_2_n_0
-    SLICE_X40Y59         CARRY8 (Prop_CARRY8_SLICEM_CI_CO[7])
-                                                      0.065     1.302 r  u_fisika/seri6__3_i_1/CO[7]
-                         net (fo=1, routed)           0.030     1.332    u_fisika/seri6__3_i_1_n_0
-    SLICE_X40Y60         CARRY8 (Prop_CARRY8_SLICEM_CI_CO[7])
-                                                      0.065     1.397 r  u_fisika/seri6_i_2/CO[7]
-                         net (fo=1, routed)           0.030     1.427    u_fisika/seri6_i_2_n_0
-    SLICE_X40Y61         CARRY8 (Prop_CARRY8_SLICEM_CI_O[0])
-                                                      0.078     1.505 f  u_fisika/seri6_i_1/O[0]
-                         net (fo=70, routed)          0.525     2.030    u_fisika/seri6__2/B[16]
-    DSP48E2_X11Y18       DSP_A_B_DATA (Prop_DSP_A_B_DATA_DSP48E2_B[16]_B2_DATA[16])
-                                                      0.216     2.246 r  u_fisika/seri6__2/DSP_A_B_DATA_INST/B2_DATA[16]
-                         net (fo=1, routed)           0.000     2.246    u_fisika/seri6__2/DSP_A_B_DATA.B2_DATA<16>
-    DSP48E2_X11Y18       DSP_PREADD_DATA (Prop_DSP_PREADD_DATA_DSP48E2_B2_DATA[16]_B2B1[16])
-                                                      0.097     2.343 r  u_fisika/seri6__2/DSP_PREADD_DATA_INST/B2B1[16]
-                         net (fo=1, routed)           0.000     2.343    u_fisika/seri6__2/DSP_PREADD_DATA.B2B1<16>
-    DSP48E2_X11Y18       DSP_MULTIPLIER (Prop_DSP_MULTIPLIER_DSP48E2_B2B1[16]_U[43])
-                                                      0.773     3.116 f  u_fisika/seri6__2/DSP_MULTIPLIER_INST/U[43]
-                         net (fo=1, routed)           0.000     3.116    u_fisika/seri6__2/DSP_MULTIPLIER.U<43>
-    DSP48E2_X11Y18       DSP_M_DATA (Prop_DSP_M_DATA_DSP48E2_U[43]_U_DATA[43])
-                                                      0.067     3.183 r  u_fisika/seri6__2/DSP_M_DATA_INST/U_DATA[43]
-                         net (fo=1, routed)           0.000     3.183    u_fisika/seri6__2/DSP_M_DATA.U_DATA<43>
-    DSP48E2_X11Y18       DSP_ALU (Prop_DSP_ALU_DSP48E2_U_DATA[43]_ALU_OUT[47])
-                                                      0.727     3.910 f  u_fisika/seri6__2/DSP_ALU_INST/ALU_OUT[47]
-                         net (fo=1, routed)           0.000     3.910    u_fisika/seri6__2/DSP_ALU.ALU_OUT<47>
-    DSP48E2_X11Y18       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[47]_PCOUT[47])
-                                                      0.167     4.077 r  u_fisika/seri6__2/DSP_OUTPUT_INST/PCOUT[47]
-                         net (fo=1, routed)           0.014     4.091    u_fisika/seri6__3/PCIN[47]
-    DSP48E2_X11Y19       DSP_ALU (Prop_DSP_ALU_DSP48E2_PCIN[47]_ALU_OUT[47])
-                                                      0.739     4.830 f  u_fisika/seri6__3/DSP_ALU_INST/ALU_OUT[47]
-                         net (fo=1, routed)           0.000     4.830    u_fisika/seri6__3/DSP_ALU.ALU_OUT<47>
-    DSP48E2_X11Y19       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[47]_PCOUT[47])
-                                                      0.167     4.997 r  u_fisika/seri6__3/DSP_OUTPUT_INST/PCOUT[47]
-                         net (fo=1, routed)           0.038     5.035    u_fisika/seri6__4/PCIN[47]
-    DSP48E2_X11Y20       DSP_ALU (Prop_DSP_ALU_DSP48E2_PCIN[47]_ALU_OUT[18])
-                                                      0.739     5.774 f  u_fisika/seri6__4/DSP_ALU_INST/ALU_OUT[18]
-                         net (fo=1, routed)           0.000     5.774    u_fisika/seri6__4/DSP_ALU.ALU_OUT<18>
-    DSP48E2_X11Y20       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[18]_P[18])
-                                                      0.146     5.920 r  u_fisika/seri6__4/DSP_OUTPUT_INST/P[18]
-                         net (fo=4, routed)           0.624     6.544    u_fisika/seri6__4_n_87
-    SLICE_X40Y53         LUT4 (Prop_E5LUT_SLICEM_I2_O)
-                                                      0.157     6.701 r  u_fisika/ttb_ada_i_124/O
-                         net (fo=2, routed)           0.188     6.888    u_fisika/ttb_ada_i_124_n_0
-    SLICE_X40Y53         LUT5 (Prop_F6LUT_SLICEM_I4_O)
-                                                      0.080     6.968 r  u_fisika/ttb_ada_i_132/O
-                         net (fo=1, routed)           0.029     6.997    u_fisika/ttb_ada_i_132_n_0
-    SLICE_X40Y53         CARRY8 (Prop_CARRY8_SLICEM_S[5]_CO[7])
-                                                      0.238     7.235 r  u_fisika/ttb_ada_reg_i_60/CO[7]
-                         net (fo=1, routed)           0.030     7.265    u_fisika/ttb_ada_reg_i_60_n_0
-    SLICE_X40Y54         CARRY8 (Prop_CARRY8_SLICEM_CI_O[3])
-                                                      0.114     7.379 r  u_fisika/ttb_ada_reg_i_59/O[3]
-                         net (fo=2, routed)           0.471     7.850    u_fisika/ttb_ada_reg_i_59_n_12
-    SLICE_X39Y55         LUT4 (Prop_F6LUT_SLICEL_I2_O)
-                                                      0.081     7.931 r  u_fisika/ttb_ada_i_17/O
-                         net (fo=1, routed)           0.015     7.946    u_fisika/ttb_ada_i_17_n_0
-    SLICE_X39Y55         CARRY8 (Prop_CARRY8_SLICEL_S[5]_CO[7])
-                                                      0.240     8.186 r  u_fisika/ttb_ada_reg_i_4/CO[7]
-                         net (fo=2, routed)           0.672     8.858    u_fisika/seri5
-    SLICE_X51Y54         LUT6 (Prop_A6LUT_SLICEL_I3_O)
-                                                      0.058     8.916 r  u_fisika/ttb_ada_i_3/O
-                         net (fo=2, routed)           0.864     9.780    u_fisika/ttb_ada_i_3_n_0
-    SLICE_X53Y118        LUT4 (Prop_D6LUT_SLICEM_I2_O)
-                                                      0.080     9.860 r  u_fisika/ttb_ada_i_1/O
-                         net (fo=8, routed)           0.201    10.061    u_fisika/ttb_ada_i_1_n_0
-    SLICE_X53Y118        FDCE                                         r  u_fisika/ttb_r_reg[2]/CE
+    SLICE_X50Y101        FDCE (Prop_HFF_SLICEL_C_Q)
+                                                      0.113     0.155 r  u_fitur/m_reg[2]/Q
+                         net (fo=41, routed)          0.947     1.102    u_fitur/m[2]
+    SLICE_X46Y139        LUT6 (Prop_D6LUT_SLICEL_I1_O)
+                                                      0.185     1.287 f  u_fitur/num_r3_i_10/O
+                         net (fo=4, routed)           0.049     1.336    u_fitur/num_r3_i_10_n_0
+    SLICE_X46Y139        LUT3 (Prop_A6LUT_SLICEL_I1_O)
+                                                      0.082     1.418 f  u_fitur/num_r3_i_1/O
+                         net (fo=12, routed)          0.631     2.049    u_fitur/num_r3/B[11]
+    DSP48E2_X11Y58       DSP_A_B_DATA (Prop_DSP_A_B_DATA_DSP48E2_B[11]_B2_DATA[11])
+                                                      0.216     2.265 r  u_fitur/num_r3/DSP_A_B_DATA_INST/B2_DATA[11]
+                         net (fo=1, routed)           0.000     2.265    u_fitur/num_r3/DSP_A_B_DATA.B2_DATA<11>
+    DSP48E2_X11Y58       DSP_PREADD_DATA (Prop_DSP_PREADD_DATA_DSP48E2_B2_DATA[11]_B2B1[11])
+                                                      0.097     2.362 r  u_fitur/num_r3/DSP_PREADD_DATA_INST/B2B1[11]
+                         net (fo=1, routed)           0.000     2.362    u_fitur/num_r3/DSP_PREADD_DATA.B2B1<11>
+    DSP48E2_X11Y58       DSP_MULTIPLIER (Prop_DSP_MULTIPLIER_DSP48E2_B2B1[11]_U[19])
+                                                      0.773     3.135 f  u_fitur/num_r3/DSP_MULTIPLIER_INST/U[19]
+                         net (fo=1, routed)           0.000     3.135    u_fitur/num_r3/DSP_MULTIPLIER.U<19>
+    DSP48E2_X11Y58       DSP_M_DATA (Prop_DSP_M_DATA_DSP48E2_U[19]_U_DATA[19])
+                                                      0.067     3.202 r  u_fitur/num_r3/DSP_M_DATA_INST/U_DATA[19]
+                         net (fo=1, routed)           0.000     3.202    u_fitur/num_r3/DSP_M_DATA.U_DATA<19>
+    DSP48E2_X11Y58       DSP_ALU (Prop_DSP_ALU_DSP48E2_U_DATA[19]_ALU_OUT[19])
+                                                      0.727     3.929 r  u_fitur/num_r3/DSP_ALU_INST/ALU_OUT[19]
+                         net (fo=1, routed)           0.000     3.929    u_fitur/num_r3/DSP_ALU.ALU_OUT<19>
+    DSP48E2_X11Y58       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[19]_P[19])
+                                                      0.146     4.075 f  u_fitur/num_r3/DSP_OUTPUT_INST/P[19]
+                         net (fo=12, routed)          0.556     4.631    u_fitur/num_r1/A[22]
+    DSP48E2_X11Y53       DSP_A_B_DATA (Prop_DSP_A_B_DATA_DSP48E2_A[22]_A2_DATA[22])
+                                                      0.258     4.889 r  u_fitur/num_r1/DSP_A_B_DATA_INST/A2_DATA[22]
+                         net (fo=1, routed)           0.000     4.889    u_fitur/num_r1/DSP_A_B_DATA.A2_DATA<22>
+    DSP48E2_X11Y53       DSP_PREADD_DATA (Prop_DSP_PREADD_DATA_DSP48E2_A2_DATA[22]_A2A1[22])
+                                                      0.114     5.003 r  u_fitur/num_r1/DSP_PREADD_DATA_INST/A2A1[22]
+                         net (fo=1, routed)           0.000     5.003    u_fitur/num_r1/DSP_PREADD_DATA.A2A1<22>
+    DSP48E2_X11Y53       DSP_MULTIPLIER (Prop_DSP_MULTIPLIER_DSP48E2_A2A1[22]_U[41])
+                                                      0.700     5.703 f  u_fitur/num_r1/DSP_MULTIPLIER_INST/U[41]
+                         net (fo=1, routed)           0.000     5.703    u_fitur/num_r1/DSP_MULTIPLIER.U<41>
+    DSP48E2_X11Y53       DSP_M_DATA (Prop_DSP_M_DATA_DSP48E2_U[41]_U_DATA[41])
+                                                      0.067     5.770 r  u_fitur/num_r1/DSP_M_DATA_INST/U_DATA[41]
+                         net (fo=1, routed)           0.000     5.770    u_fitur/num_r1/DSP_M_DATA.U_DATA<41>
+    DSP48E2_X11Y53       DSP_ALU (Prop_DSP_ALU_DSP48E2_U_DATA[41]_ALU_OUT[47])
+                                                      0.727     6.497 f  u_fitur/num_r1/DSP_ALU_INST/ALU_OUT[47]
+                         net (fo=1, routed)           0.000     6.497    u_fitur/num_r1/DSP_ALU.ALU_OUT<47>
+    DSP48E2_X11Y53       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[47]_PCOUT[47])
+                                                      0.167     6.664 r  u_fitur/num_r1/DSP_OUTPUT_INST/PCOUT[47]
+                         net (fo=1, routed)           0.038     6.702    u_fitur/num_r1__0/PCIN[47]
+    DSP48E2_X11Y54       DSP_ALU (Prop_DSP_ALU_DSP48E2_PCIN[47]_ALU_OUT[2])
+                                                      0.739     7.441 f  u_fitur/num_r1__0/DSP_ALU_INST/ALU_OUT[2]
+                         net (fo=1, routed)           0.000     7.441    u_fitur/num_r1__0/DSP_ALU.ALU_OUT<2>
+    DSP48E2_X11Y54       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[2]_P[2])
+                                                      0.146     7.587 r  u_fitur/num_r1__0/DSP_OUTPUT_INST/P[2]
+                         net (fo=1, routed)           0.685     8.272    u_fitur/num_r1__0_n_103
+    SLICE_X51Y135        LUT2 (Prop_D6LUT_SLICEL_I1_O)
+                                                      0.081     8.353 r  u_fitur/num_r[23]_i_7/O
+                         net (fo=1, routed)           0.013     8.366    u_fitur/num_r[23]_i_7_n_0
+    SLICE_X51Y135        CARRY8 (Prop_CARRY8_SLICEL_S[3]_CO[7])
+                                                      0.220     8.586 r  u_fitur/num_r_reg[23]_i_2/CO[7]
+                         net (fo=1, routed)           0.030     8.616    u_fitur/num_r_reg[23]_i_2_n_0
+    SLICE_X51Y136        CARRY8 (Prop_CARRY8_SLICEL_CI_CO[7])
+                                                      0.065     8.681 r  u_fitur/num_r_reg[31]_i_2/CO[7]
+                         net (fo=1, routed)           0.030     8.711    u_fitur/num_r_reg[31]_i_2_n_0
+    SLICE_X51Y137        CARRY8 (Prop_CARRY8_SLICEL_CI_CO[7])
+                                                      0.065     8.776 r  u_fitur/num_r_reg[39]_i_2/CO[7]
+                         net (fo=1, routed)           0.030     8.806    u_fitur/num_r_reg[39]_i_2_n_0
+    SLICE_X51Y138        CARRY8 (Prop_CARRY8_SLICEL_CI_O[3])
+                                                      0.114     8.920 r  u_fitur/num_r_reg[47]_i_4/O[3]
+                         net (fo=1, routed)           0.215     9.135    u_fitur/num_r0[43]
+    SLICE_X50Y139        LUT3 (Prop_G5LUT_SLICEL_I2_O)
+                                                      0.222     9.357 r  u_fitur/num_r[43]_i_1/O
+                         net (fo=1, routed)           0.025     9.382    u_fitur/num_r[43]_i_1_n_0
+    SLICE_X50Y139        FDCE                                         r  u_fitur/num_r_reg[43]/D
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r  <hidden>
                                                       0.000    10.000 r  clk
-                         net (fo=29772, unset)        0.030    10.030    u_fisika/clk
-    SLICE_X53Y118        FDCE                                         r  u_fisika/ttb_r_reg[2]/C
-                         clock pessimism              0.000    10.030    <hidden>
-                         clock uncertainty           -0.035     9.995    <hidden>
-    SLICE_X53Y118        FDCE (Setup_CFF_SLICEM_C_CE)
-                                                     -0.080     9.915    u_fisika/ttb_r_reg[2]
+                         net (fo=18517, unset)        0.029    10.029    u_fitur/clk
+    SLICE_X50Y139        FDCE                                         r  u_fitur/num_r_reg[43]/C
+                         clock pessimism              0.000    10.029    <hidden>
+                         clock uncertainty           -0.035     9.994    <hidden>
+    SLICE_X50Y139        FDCE (Setup_GFF2_SLICEL_C_D)
+                                                      0.046    10.040    u_fitur/num_r_reg[43]
   -------------------------------------------------------------------
-                         required time                          9.915    <hidden>
-                         arrival time                         -10.061    <hidden>
+                         required time                         10.040    <hidden>
+                         arrival time                          -9.382    <hidden>
   -------------------------------------------------------------------
-                         slack                                 -0.146    <hidden>
+                         slack                                  0.658    <hidden>
 
-Slack (VIOLATED) :        -0.146ns  (required time - arrival time)
-  Source:                 u_fisika/tc_reg[23]/C
+Slack (MET) :             0.683ns  (required time - arrival time)
+  Source:                 u_fitur/m_reg[2]/C
                             (rising edge-triggered cell FDCE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            u_fisika/ttb_r_reg[3]/CE
+  Destination:            u_fitur/num_r_reg[39]/D
                             (rising edge-triggered cell FDCE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        10.019ns  (logic 5.442ns (54.319%)  route 4.577ns (45.681%))
-  Logic Levels:           23  (CARRY8=7 DSP_A_B_DATA=1 DSP_ALU=3 DSP_M_DATA=1 DSP_MULTIPLIER=1 DSP_OUTPUT=3 DSP_PREADD_DATA=1 LUT2=1 LUT4=3 LUT5=1 LUT6=1)
-  Clock Path Skew:        -0.012ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.030ns = ( 10.030 - 10.000 ) 
+  Data Path Delay:        9.313ns  (logic 5.944ns (63.825%)  route 3.369ns (36.175%))
+  Logic Levels:           21  (CARRY8=3 DSP_A_B_DATA=2 DSP_ALU=3 DSP_M_DATA=2 DSP_MULTIPLIER=2 DSP_OUTPUT=3 DSP_PREADD_DATA=2 LUT2=1 LUT3=2 LUT6=1)
+  Clock Path Skew:        -0.013ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.029ns = ( 10.029 - 10.000 ) 
     Source Clock Delay      (SCD):    0.042ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -501,97 +489,91 @@ Slack (VIOLATED) :        -0.146ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r  <hidden>
                                                       0.000     0.000 r  clk
-                         net (fo=29772, unset)        0.042     0.042    u_fisika/clk
-    SLICE_X51Y65         FDCE                                         r  u_fisika/tc_reg[23]/C
+                         net (fo=18517, unset)        0.042     0.042    u_fitur/clk
+    SLICE_X50Y101        FDCE                                         r  u_fitur/m_reg[2]/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X51Y65         FDCE (Prop_HFF_SLICEL_C_Q)
-                                                      0.113     0.155 r  u_fisika/tc_reg[23]/Q
-                         net (fo=13, routed)          0.796     0.951    u_fisika/tc[23]
-    SLICE_X40Y58         LUT2 (Prop_H6LUT_SLICEM_I1_O)
-                                                      0.060     1.011 r  u_fisika/seri6__3_i_11/O
-                         net (fo=1, routed)           0.021     1.032    u_fisika/seri6__3_i_11_n_0
-    SLICE_X40Y58         CARRY8 (Prop_CARRY8_SLICEM_S[7]_CO[7])
-                                                      0.175     1.207 r  u_fisika/seri6__3_i_2/CO[7]
-                         net (fo=1, routed)           0.030     1.237    u_fisika/seri6__3_i_2_n_0
-    SLICE_X40Y59         CARRY8 (Prop_CARRY8_SLICEM_CI_CO[7])
-                                                      0.065     1.302 r  u_fisika/seri6__3_i_1/CO[7]
-                         net (fo=1, routed)           0.030     1.332    u_fisika/seri6__3_i_1_n_0
-    SLICE_X40Y60         CARRY8 (Prop_CARRY8_SLICEM_CI_CO[7])
-                                                      0.065     1.397 r  u_fisika/seri6_i_2/CO[7]
-                         net (fo=1, routed)           0.030     1.427    u_fisika/seri6_i_2_n_0
-    SLICE_X40Y61         CARRY8 (Prop_CARRY8_SLICEM_CI_O[0])
-                                                      0.078     1.505 f  u_fisika/seri6_i_1/O[0]
-                         net (fo=70, routed)          0.525     2.030    u_fisika/seri6__2/B[16]
-    DSP48E2_X11Y18       DSP_A_B_DATA (Prop_DSP_A_B_DATA_DSP48E2_B[16]_B2_DATA[16])
-                                                      0.216     2.246 r  u_fisika/seri6__2/DSP_A_B_DATA_INST/B2_DATA[16]
-                         net (fo=1, routed)           0.000     2.246    u_fisika/seri6__2/DSP_A_B_DATA.B2_DATA<16>
-    DSP48E2_X11Y18       DSP_PREADD_DATA (Prop_DSP_PREADD_DATA_DSP48E2_B2_DATA[16]_B2B1[16])
-                                                      0.097     2.343 r  u_fisika/seri6__2/DSP_PREADD_DATA_INST/B2B1[16]
-                         net (fo=1, routed)           0.000     2.343    u_fisika/seri6__2/DSP_PREADD_DATA.B2B1<16>
-    DSP48E2_X11Y18       DSP_MULTIPLIER (Prop_DSP_MULTIPLIER_DSP48E2_B2B1[16]_U[43])
-                                                      0.773     3.116 f  u_fisika/seri6__2/DSP_MULTIPLIER_INST/U[43]
-                         net (fo=1, routed)           0.000     3.116    u_fisika/seri6__2/DSP_MULTIPLIER.U<43>
-    DSP48E2_X11Y18       DSP_M_DATA (Prop_DSP_M_DATA_DSP48E2_U[43]_U_DATA[43])
-                                                      0.067     3.183 r  u_fisika/seri6__2/DSP_M_DATA_INST/U_DATA[43]
-                         net (fo=1, routed)           0.000     3.183    u_fisika/seri6__2/DSP_M_DATA.U_DATA<43>
-    DSP48E2_X11Y18       DSP_ALU (Prop_DSP_ALU_DSP48E2_U_DATA[43]_ALU_OUT[47])
-                                                      0.727     3.910 f  u_fisika/seri6__2/DSP_ALU_INST/ALU_OUT[47]
-                         net (fo=1, routed)           0.000     3.910    u_fisika/seri6__2/DSP_ALU.ALU_OUT<47>
-    DSP48E2_X11Y18       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[47]_PCOUT[47])
-                                                      0.167     4.077 r  u_fisika/seri6__2/DSP_OUTPUT_INST/PCOUT[47]
-                         net (fo=1, routed)           0.014     4.091    u_fisika/seri6__3/PCIN[47]
-    DSP48E2_X11Y19       DSP_ALU (Prop_DSP_ALU_DSP48E2_PCIN[47]_ALU_OUT[47])
-                                                      0.739     4.830 f  u_fisika/seri6__3/DSP_ALU_INST/ALU_OUT[47]
-                         net (fo=1, routed)           0.000     4.830    u_fisika/seri6__3/DSP_ALU.ALU_OUT<47>
-    DSP48E2_X11Y19       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[47]_PCOUT[47])
-                                                      0.167     4.997 r  u_fisika/seri6__3/DSP_OUTPUT_INST/PCOUT[47]
-                         net (fo=1, routed)           0.038     5.035    u_fisika/seri6__4/PCIN[47]
-    DSP48E2_X11Y20       DSP_ALU (Prop_DSP_ALU_DSP48E2_PCIN[47]_ALU_OUT[18])
-                                                      0.739     5.774 f  u_fisika/seri6__4/DSP_ALU_INST/ALU_OUT[18]
-                         net (fo=1, routed)           0.000     5.774    u_fisika/seri6__4/DSP_ALU.ALU_OUT<18>
-    DSP48E2_X11Y20       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[18]_P[18])
-                                                      0.146     5.920 r  u_fisika/seri6__4/DSP_OUTPUT_INST/P[18]
-                         net (fo=4, routed)           0.624     6.544    u_fisika/seri6__4_n_87
-    SLICE_X40Y53         LUT4 (Prop_E5LUT_SLICEM_I2_O)
-                                                      0.157     6.701 r  u_fisika/ttb_ada_i_124/O
-                         net (fo=2, routed)           0.188     6.888    u_fisika/ttb_ada_i_124_n_0
-    SLICE_X40Y53         LUT5 (Prop_F6LUT_SLICEM_I4_O)
-                                                      0.080     6.968 r  u_fisika/ttb_ada_i_132/O
-                         net (fo=1, routed)           0.029     6.997    u_fisika/ttb_ada_i_132_n_0
-    SLICE_X40Y53         CARRY8 (Prop_CARRY8_SLICEM_S[5]_CO[7])
-                                                      0.238     7.235 r  u_fisika/ttb_ada_reg_i_60/CO[7]
-                         net (fo=1, routed)           0.030     7.265    u_fisika/ttb_ada_reg_i_60_n_0
-    SLICE_X40Y54         CARRY8 (Prop_CARRY8_SLICEM_CI_O[3])
-                                                      0.114     7.379 r  u_fisika/ttb_ada_reg_i_59/O[3]
-                         net (fo=2, routed)           0.471     7.850    u_fisika/ttb_ada_reg_i_59_n_12
-    SLICE_X39Y55         LUT4 (Prop_F6LUT_SLICEL_I2_O)
-                                                      0.081     7.931 r  u_fisika/ttb_ada_i_17/O
-                         net (fo=1, routed)           0.015     7.946    u_fisika/ttb_ada_i_17_n_0
-    SLICE_X39Y55         CARRY8 (Prop_CARRY8_SLICEL_S[5]_CO[7])
-                                                      0.240     8.186 r  u_fisika/ttb_ada_reg_i_4/CO[7]
-                         net (fo=2, routed)           0.672     8.858    u_fisika/seri5
-    SLICE_X51Y54         LUT6 (Prop_A6LUT_SLICEL_I3_O)
-                                                      0.058     8.916 r  u_fisika/ttb_ada_i_3/O
-                         net (fo=2, routed)           0.864     9.780    u_fisika/ttb_ada_i_3_n_0
-    SLICE_X53Y118        LUT4 (Prop_D6LUT_SLICEM_I2_O)
-                                                      0.080     9.860 r  u_fisika/ttb_ada_i_1/O
-                         net (fo=8, routed)           0.201    10.061    u_fisika/ttb_ada_i_1_n_0
-    SLICE_X53Y118        FDCE                                         r  u_fisika/ttb_r_reg[3]/CE
+    SLICE_X50Y101        FDCE (Prop_HFF_SLICEL_C_Q)
+                                                      0.113     0.155 r  u_fitur/m_reg[2]/Q
+                         net (fo=41, routed)          0.947     1.102    u_fitur/m[2]
+    SLICE_X46Y139        LUT6 (Prop_D6LUT_SLICEL_I1_O)
+                                                      0.185     1.287 f  u_fitur/num_r3_i_10/O
+                         net (fo=4, routed)           0.049     1.336    u_fitur/num_r3_i_10_n_0
+    SLICE_X46Y139        LUT3 (Prop_A6LUT_SLICEL_I1_O)
+                                                      0.082     1.418 f  u_fitur/num_r3_i_1/O
+                         net (fo=12, routed)          0.631     2.049    u_fitur/num_r3/B[11]
+    DSP48E2_X11Y58       DSP_A_B_DATA (Prop_DSP_A_B_DATA_DSP48E2_B[11]_B2_DATA[11])
+                                                      0.216     2.265 r  u_fitur/num_r3/DSP_A_B_DATA_INST/B2_DATA[11]
+                         net (fo=1, routed)           0.000     2.265    u_fitur/num_r3/DSP_A_B_DATA.B2_DATA<11>
+    DSP48E2_X11Y58       DSP_PREADD_DATA (Prop_DSP_PREADD_DATA_DSP48E2_B2_DATA[11]_B2B1[11])
+                                                      0.097     2.362 r  u_fitur/num_r3/DSP_PREADD_DATA_INST/B2B1[11]
+                         net (fo=1, routed)           0.000     2.362    u_fitur/num_r3/DSP_PREADD_DATA.B2B1<11>
+    DSP48E2_X11Y58       DSP_MULTIPLIER (Prop_DSP_MULTIPLIER_DSP48E2_B2B1[11]_U[19])
+                                                      0.773     3.135 f  u_fitur/num_r3/DSP_MULTIPLIER_INST/U[19]
+                         net (fo=1, routed)           0.000     3.135    u_fitur/num_r3/DSP_MULTIPLIER.U<19>
+    DSP48E2_X11Y58       DSP_M_DATA (Prop_DSP_M_DATA_DSP48E2_U[19]_U_DATA[19])
+                                                      0.067     3.202 r  u_fitur/num_r3/DSP_M_DATA_INST/U_DATA[19]
+                         net (fo=1, routed)           0.000     3.202    u_fitur/num_r3/DSP_M_DATA.U_DATA<19>
+    DSP48E2_X11Y58       DSP_ALU (Prop_DSP_ALU_DSP48E2_U_DATA[19]_ALU_OUT[19])
+                                                      0.727     3.929 r  u_fitur/num_r3/DSP_ALU_INST/ALU_OUT[19]
+                         net (fo=1, routed)           0.000     3.929    u_fitur/num_r3/DSP_ALU.ALU_OUT<19>
+    DSP48E2_X11Y58       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[19]_P[19])
+                                                      0.146     4.075 f  u_fitur/num_r3/DSP_OUTPUT_INST/P[19]
+                         net (fo=12, routed)          0.556     4.631    u_fitur/num_r1/A[22]
+    DSP48E2_X11Y53       DSP_A_B_DATA (Prop_DSP_A_B_DATA_DSP48E2_A[22]_A2_DATA[22])
+                                                      0.258     4.889 r  u_fitur/num_r1/DSP_A_B_DATA_INST/A2_DATA[22]
+                         net (fo=1, routed)           0.000     4.889    u_fitur/num_r1/DSP_A_B_DATA.A2_DATA<22>
+    DSP48E2_X11Y53       DSP_PREADD_DATA (Prop_DSP_PREADD_DATA_DSP48E2_A2_DATA[22]_A2A1[22])
+                                                      0.114     5.003 r  u_fitur/num_r1/DSP_PREADD_DATA_INST/A2A1[22]
+                         net (fo=1, routed)           0.000     5.003    u_fitur/num_r1/DSP_PREADD_DATA.A2A1<22>
+    DSP48E2_X11Y53       DSP_MULTIPLIER (Prop_DSP_MULTIPLIER_DSP48E2_A2A1[22]_U[41])
+                                                      0.700     5.703 f  u_fitur/num_r1/DSP_MULTIPLIER_INST/U[41]
+                         net (fo=1, routed)           0.000     5.703    u_fitur/num_r1/DSP_MULTIPLIER.U<41>
+    DSP48E2_X11Y53       DSP_M_DATA (Prop_DSP_M_DATA_DSP48E2_U[41]_U_DATA[41])
+                                                      0.067     5.770 r  u_fitur/num_r1/DSP_M_DATA_INST/U_DATA[41]
+                         net (fo=1, routed)           0.000     5.770    u_fitur/num_r1/DSP_M_DATA.U_DATA<41>
+    DSP48E2_X11Y53       DSP_ALU (Prop_DSP_ALU_DSP48E2_U_DATA[41]_ALU_OUT[47])
+                                                      0.727     6.497 f  u_fitur/num_r1/DSP_ALU_INST/ALU_OUT[47]
+                         net (fo=1, routed)           0.000     6.497    u_fitur/num_r1/DSP_ALU.ALU_OUT<47>
+    DSP48E2_X11Y53       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[47]_PCOUT[47])
+                                                      0.167     6.664 r  u_fitur/num_r1/DSP_OUTPUT_INST/PCOUT[47]
+                         net (fo=1, routed)           0.038     6.702    u_fitur/num_r1__0/PCIN[47]
+    DSP48E2_X11Y54       DSP_ALU (Prop_DSP_ALU_DSP48E2_PCIN[47]_ALU_OUT[2])
+                                                      0.739     7.441 f  u_fitur/num_r1__0/DSP_ALU_INST/ALU_OUT[2]
+                         net (fo=1, routed)           0.000     7.441    u_fitur/num_r1__0/DSP_ALU.ALU_OUT<2>
+    DSP48E2_X11Y54       DSP_OUTPUT (Prop_DSP_OUTPUT_DSP48E2_ALU_OUT[2]_P[2])
+                                                      0.146     7.587 r  u_fitur/num_r1__0/DSP_OUTPUT_INST/P[2]
+                         net (fo=1, routed)           0.685     8.272    u_fitur/num_r1__0_n_103
+    SLICE_X51Y135        LUT2 (Prop_D6LUT_SLICEL_I1_O)
+                                                      0.081     8.353 r  u_fitur/num_r[23]_i_7/O
+                         net (fo=1, routed)           0.013     8.366    u_fitur/num_r[23]_i_7_n_0
+    SLICE_X51Y135        CARRY8 (Prop_CARRY8_SLICEL_S[3]_CO[7])
+                                                      0.220     8.586 r  u_fitur/num_r_reg[23]_i_2/CO[7]
+                         net (fo=1, routed)           0.030     8.616    u_fitur/num_r_reg[23]_i_2_n_0
+    SLICE_X51Y136        CARRY8 (Prop_CARRY8_SLICEL_CI_CO[7])
+                                                      0.065     8.681 r  u_fitur/num_r_reg[31]_i_2/CO[7]
+                         net (fo=1, routed)           0.030     8.711    u_fitur/num_r_reg[31]_i_2_n_0
+    SLICE_X51Y137        CARRY8 (Prop_CARRY8_SLICEL_CI_O[7])
+                                                      0.171     8.882 r  u_fitur/num_r_reg[39]_i_2/O[7]
+                         net (fo=1, routed)           0.320     9.202    u_fitur/num_r0[39]
+    SLICE_X50Y139        LUT3 (Prop_H6LUT_SLICEL_I2_O)
+                                                      0.083     9.285 r  u_fitur/num_r[39]_i_1/O
+                         net (fo=1, routed)           0.070     9.355    u_fitur/num_r[39]_i_1_n_0
+    SLICE_X50Y139        FDCE                                         r  u_fitur/num_r_reg[39]/D
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r  <hidden>
                                                       0.000    10.000 r  clk
-                         net (fo=29772, unset)        0.030    10.030    u_fisika/clk
-    SLICE_X53Y118        FDCE                                         r  u_fisika/ttb_r_reg[3]/C
-                         clock pessimism              0.000    10.030    <hidden>
-                         clock uncertainty           -0.035     9.995    <hidden>
-    SLICE_X53Y118        FDCE (Setup_AFF_SLICEM_C_CE)
-                                                     -0.080     9.915    u_fisika/ttb_r_reg[3]
+                         net (fo=18517, unset)        0.029    10.029    u_fitur/clk
+    SLICE_X50Y139        FDCE                                         r  u_fitur/num_r_reg[39]/C
+                         clock pessimism              0.000    10.029    <hidden>
+                         clock uncertainty           -0.035     9.994    <hidden>
+    SLICE_X50Y139        FDCE (Setup_HFF_SLICEL_C_D)
+                                                      0.044    10.038    u_fitur/num_r_reg[39]
   -------------------------------------------------------------------
-                         required time                          9.915    <hidden>
-                         arrival time                         -10.061    <hidden>
+                         required time                         10.038    <hidden>
+                         arrival time                          -9.355    <hidden>
   -------------------------------------------------------------------
-                         slack                                 -0.146    <hidden>
+                         slack                                  0.683    <hidden>
 
 
 

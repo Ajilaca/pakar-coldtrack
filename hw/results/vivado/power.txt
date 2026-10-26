@@ -1,9 +1,9 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
 -------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2026.1 (lin64) Build 6511674 Tue Jun 16 11:01:26 MDT 2026
-| Date             : Sun Oct 25 21:21:20 2026
+| Date             : Mon Oct 26 10:04:49 2026
 | Host             : ajil-VivoBook-ASUSLaptop-TP470EZ-TP470EZ running 64-bit Ubuntu 24.04.4 LTS
-| Command          : report_power -file /home/ajil/FPGA/Projects/Coldtrack/pakar-coldtrack/hw/build/kv260_bd/daya.txt
+| Command          : report_power -file /home/ajil/FPGA/Projects/Coldtrack/pakar-coldtrack/hw/build/kv260_bd/power.txt
 | Design           : coldtrack_wrapper
 | Device           : xck26-sfvc784-2LV-c
 | Design State     : routed
@@ -30,14 +30,14 @@ Table of Contents
 ----------
 
 +--------------------------+--------------+
-| Total On-Chip Power (W)  | 2.884        |
+| Total On-Chip Power (W)  | 2.862        |
 | Design Power Budget (W)  | Unspecified* |
 | Power Budget Margin (W)  | NA           |
-| Dynamic (W)              | 2.561        |
+| Dynamic (W)              | 2.538        |
 | Device Static (W)        | 0.324        |
 | Effective TJA (C/W)      | 2.3          |
-| Max Ambient (C)          | 78.3         |
-| Junction Temperature (C) | 31.7         |
+| Max Ambient (C)          | 78.4         |
+| Junction Temperature (C) | 31.6         |
 | Confidence Level         | Medium       |
 | Setting File             | ---          |
 | Simulation Activity File | ---          |
@@ -52,24 +52,25 @@ Table of Contents
 +--------------------------+-----------+----------+-----------+-----------------+
 | On-Chip                  | Power (W) | Used     | Available | Utilization (%) |
 +--------------------------+-----------+----------+-----------+-----------------+
-| Clocks                   |     0.033 |        4 |       --- |             --- |
-| CLB Logic                |     0.038 |    53838 |       --- |             --- |
-|   LUT as Logic           |     0.026 |    15179 |    117120 |           12.96 |
-|   LUT as Distributed RAM |     0.008 |    12048 |     57600 |           20.92 |
-|   CARRY8                 |     0.002 |      502 |     14640 |            3.43 |
-|   Register               |     0.001 |    18862 |    234240 |            8.05 |
+| Clocks                   |     0.023 |        4 |       --- |             --- |
+| CLB Logic                |     0.030 |    36733 |       --- |             --- |
+|   LUT as Logic           |     0.026 |    12107 |    117120 |           10.34 |
+|   CARRY8                 |     0.002 |      481 |     14640 |            3.29 |
+|   Register               |     0.002 |    18682 |    234240 |            7.98 |
 |   LUT as Shift Register  |    <0.001 |       21 |     57600 |            0.04 |
+|   LUT as Distributed RAM |    <0.001 |      112 |     57600 |            0.19 |
 |   BUFG                   |    <0.001 |        2 |        32 |            6.25 |
-|   Others                 |     0.000 |       55 |       --- |             --- |
-|   F7/F8 Muxes            |     0.000 |     3557 |    117120 |            3.04 |
-| Signals                  |     0.053 |    40964 |       --- |             --- |
-| DSPs                     |     0.021 |       70 |      1248 |            5.61 |
+|   Others                 |     0.000 |       58 |       --- |             --- |
+|   F7/F8 Muxes            |     0.000 |     1802 |    117120 |            1.54 |
+| Signals                  |     0.035 |    29996 |       --- |             --- |
+| Block RAM                |     0.008 |       20 |       144 |           13.89 |
+| DSPs                     |     0.026 |       74 |      1248 |            5.93 |
 | I/O                      |    <0.001 |        3 |       189 |            1.59 |
 | PS8                      |     2.415 |        1 |       --- |             --- |
 | Static Power             |     0.324 |          |           |                 |
 |   PS Static              |     0.000 |          |           |                 |
 |   PL Static              |     0.324 |          |           |                 |
-| Total                    |     2.884 |          |           |                 |
+| Total                    |     2.862 |          |           |                 |
 +--------------------------+-----------+----------+-----------+-----------------+
 
 
@@ -79,9 +80,9 @@ Table of Contents
 +------------------+-------------+-----------+-------------+------------+-------------+-------------+------------+
 | Source           | Voltage (V) | Total (A) | Dynamic (A) | Static (A) | Powerup (A) | Budget (A)  | Margin (A) |
 +------------------+-------------+-----------+-------------+------------+-------------+-------------+------------+
-| Vccint           |       0.720 |     0.289 |       0.202 |      0.088 |       NA    | Unspecified | NA         |
+| Vccint           |       0.720 |     0.258 |       0.170 |      0.088 |       NA    | Unspecified | NA         |
 | Vccint_io        |       0.850 |     0.036 |       0.000 |      0.036 |       NA    | Unspecified | NA         |
-| Vccbram          |       0.850 |     0.001 |       0.000 |      0.001 |       NA    | Unspecified | NA         |
+| Vccbram          |       0.850 |     0.002 |       0.000 |      0.001 |       NA    | Unspecified | NA         |
 | Vccaux           |       1.800 |     0.075 |       0.000 |      0.075 |       NA    | Unspecified | NA         |
 | Vccaux_io        |       1.800 |     0.031 |       0.000 |      0.031 |       NA    | Unspecified | NA         |
 | Vcco33           |       3.300 |     0.007 |       0.000 |      0.007 |       NA    | Unspecified | NA         |
@@ -166,12 +167,12 @@ Table of Contents
 +-------------------+-----------+
 | Name              | Power (W) |
 +-------------------+-----------+
-| coldtrack_wrapper |     2.561 |
-|   coldtrack_i     |     2.560 |
+| coldtrack_wrapper |     2.538 |
+|   coldtrack_i     |     2.538 |
 |     axi_smc       |     0.003 |
 |       inst        |     0.003 |
-|     coldtrack     |     0.142 |
-|       inst        |     0.142 |
+|     coldtrack     |     0.120 |
+|       inst        |     0.120 |
 |     zynq_ps       |     2.415 |
 |       inst        |     2.415 |
 +-------------------+-----------+
