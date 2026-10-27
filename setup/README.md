@@ -162,6 +162,44 @@ sintesis lama (satu core per modul); di laptop 8 GB satu modul sudah lebih dari 
 - Opsi sintesis yang relevan di config: `SYNTH_STRATEGY` (AREA 0..3 atau DELAY 0..4), `SYNTH_HIERARCHY_MODE`
   (`flatten`, `deferred_flatten`, `keep`), `USE_SLANG` untuk parser SystemVerilog lain.
 
+### Risiko timing dan pilihan clock
+
+**Masalah:** `config.json` sekarang memakai `CLOCK_PERIOD` 20 ns (50 MHz). Angka itu titik mulai yang dipilih tanpa
+perhitungan, bukan hasil pengukuran, dan timing di SKY130 bisa gagal pada clock itu.
+
+- Semua angka timing di repo berasal dari **FPGA** (Vivado, 100 MHz lolos, WNS +1,430 ns). Angka itu tidak berlaku
+  untuk SKY130, yang gate-nya jauh lebih lambat daripada logika FPGA.
+- Jalur kritis yang sudah dikenal ada di `physics`: pencarian TTB dengan perkalian 82 bit. Di FPGA ia sempat gagal
+  tipis di 100 MHz (WNS -0,146 ns) sebelum diberi pipeline 3 tahap. Di ASIC perkalian itu menjadi rangkaian sel
+  standar yang besar. `features` juga punya pengali (kuadrat dan variansi).
+- Timing di SKY130 belum pernah diukur: sintesis di laptop 8 GB belum selesai, jadi belum ada laporan timing.
+
+**Latency tidak membatasi clock.** Chip mengerjakan satu sampel per menit, dan satu inferensi butuh 316.313 siklus
+(sebagian besar membaca flash). Clock rendah tetap jauh di bawah jeda 60 detik:
+
+| Clock | Satu inferensi | SCK SPI maks (clk/8) | SCK flash (clk/2) |
+|---|---|---|---|
+| 50 MHz | 6,3 ms | 6,25 MHz | 25 MHz |
+| 25 MHz | 12,7 ms | 3,1 MHz | 12,5 MHz |
+| 10 MHz | 31,6 ms | 1,25 MHz | 5 MHz |
+
+Kebutuhan data host sekitar 150 byte per menit, dan satu frame SPI 6 byte pada SCK 1,25 MHz hanya sekitar 40 us,
+jadi batas SPI pada clock rendah tetap longgar. Flash sekelas W25Q aman di 5 sampai 12,5 MHz (cek datasheet flash
+yang dipakai).
+
+**Rekomendasi:** run pertama pada 10 sampai 25 MHz (`CLOCK_PERIOD` 40 sampai 100 ns), lalu kecilkan periode di
+run berikutnya bila margin timing besar. Ini cara standar, bukan menghindari masalah: kegagalan timing di run
+pertama paling mudah ditangani dengan melonggarkan clock, sedangkan clock tinggi baru dikejar setelah laporan
+STA ada.
+
+**Kalau timing tetap gagal setelah clock diturunkan**, urutan penanganannya:
+1. Baca jalur kritis di laporan STA run itu untuk tahu modul penyebabnya (hampir pasti `physics` atau `features`).
+2. Longgarkan lagi periode, atau coba `SYNTH_STRATEGY` DELAY (0 sampai 4).
+3. Tambahkan pipeline pada jalur itu, atau serialkan pengali lebar (1 sampai 2 pengali dipakai bergantian);
+   latency longgar, tapi RTL berubah sehingga tes cocotb harus diulang penuh.
+
+`config.json` **belum diubah**: masih 20 ns. Turunkan sebelum run pertama.
+
 ### Urutan flow LibreLane (umum, sesuai dokumentasi)
 
 Sintesis (Yosys) → floorplan → placement → CTS → routing → signoff (DRC, LVS, STA). Tiap langkah punya subfolder di
