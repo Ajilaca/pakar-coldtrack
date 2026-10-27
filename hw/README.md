@@ -11,7 +11,7 @@ disintesis Vivado maupun Yosys.
 | `tb/` | Testbench cocotb (`test_*.py`), dijalankan lewat pytest |
 | `golden/` | Model acuan Python bilangan bulat; RTL harus sama bit per bit dengan model ini |
 | `scripts/` | Ekspor model XGBoost beku ke berkas memori; vektor uji hasil edge untuk backend; inventaris memori per mode (`asic_mem.py`) |
-| `driver/` | Driver ARM: `chip.py` (`ChipAxi` lewat `/dev/mem`, belum diuji di board; `ChipGolden` identik bit per bit dengan RTL) dan `edge_driver.py` (sampel ke chip, kirim bacaan + hasil tersegel lewat MQTT) |
+| `driver/` | Driver: `chip.py` (`ChipAxi` lewat `/dev/mem` untuk KV260, `ChipSpi` lewat `spidev` untuk chip ASIC, keduanya belum diuji di perangkat; `ChipGolden` identik bit per bit dengan RTL) dan `edge_driver.py` (sampel ke chip, kirim bacaan + hasil tersegel lewat MQTT) |
 | `model/` | Hasil ekspor: `nodes.mem`, `trees.mem`, `base.mem` per model, plus `flash.bin` dan `flash.sha256` untuk mode flash |
 | `bd/` | Pembungkus Verilog AXI4-Lite (`coldtrack_axil.v`) untuk block design Vivado + pin alarm PMOD |
 | `synth/` | Skrip Yosys (perkiraan) dan Vivado (implementasi out-of-context, block design KV260, laporan) |
@@ -53,6 +53,8 @@ desimal membuat kelipatan 0,1 C data latih eksak, karena ambang pohon XGBoost se
 | M9 | `sha256_stream` | 25 pesan (0 sampai 2.000 byte, termasuk semua batas padding) identik `hashlib` |
 | M9 | `model_flash` (mode flash) | 20 jendela val identik golden; byte image dibalik, model lain, dan header buruk ditolak |
 | M9 | `coldtrack_top` mode flash | 150 menit dua trip identik golden; satu menit dengan image dirusak: diagnosis dibuang, fisika, rantai, dan HMAC tetap identik |
+| M10 | `coldtrack_spi` (top ASIC: SPI + flash) | uji M9 diulang lewat SPI pada SCK = clk/8 (batas terburuk): 150 menit identik; frame yang terputus diabaikan |
+| M10 | Sapuan SPI (`tb/test_spi_sweep.py`) | 13 kecepatan x 4 offset fase, 8 ronde baca-tulis tiap konfigurasi: nol kesalahan sampai clk/3, gagal semua di clk/2,5 dan clk/2 (`results/spi_sweep.json`) |
 
 Catatan dari verifikasi: aturan "pintu terbuka, sisa waktu terburuk <= 30 menit" (alasan 4) di `engine.py`
 tidak pernah bisa menentukan status. Saat pintu terbuka kabin = max(ts10, suhu luar) >= suhu luar dan
@@ -85,6 +87,28 @@ coldtrack_top (MODEL_FLASH = 1)
   digital (kunci publik di chip), yang belum dibuat.
 - **Flash:** bit QE harus diset saat flash diprogram. `qspi_io_o`/`qspi_io_oe`/`qspi_io_i` disambungkan ke
   penyangga tiga keadaan di pad.
+
+### Antarmuka SPI (top ASIC `coldtrack_spi`)
+
+Di ASIC tidak ada ARM di die yang sama, jadi AXI4-Lite (sekitar 108 sinyal) tidak bisa ditarik keluar sebagai pin.
+`coldtrack_spi` menaruh `spi_axil_bridge` di depan `coldtrack_top`. Register map tetap sama, dan mikrokontroler
+mengaksesnya lewat 4 pin SPI. Total pin chip: clk, rst_n, SPI 4, QSPI 6, alarm 3.
+
+| Frame (SPI mode 0, MSB dulu, satu per CS rendah) | MOSI | MISO |
+|---|---|---|
+| Tulis, 6 byte | `{1, 000, alamat[11:0]}` + data 32 bit | diabaikan |
+| Baca, 7 byte | `{0, 000, alamat[11:0]}` + 1 byte dummy + 4 byte bebas | data 32 bit di 4 byte terakhir |
+
+- SCK, CS, dan MOSI dicuplik clk chip lewat sinkroniser 2 FF, jadi **SCK paling cepat clk/8** (12,5 MHz pada
+  100 MHz, 6,25 MHz pada 50 MHz). Data ColdTrack sekitar 150 byte per menit, jadi batas ini tidak terasa.
+- Sapuan simulasi (`tb/test_spi_sweep.py`, termasuk rasio pecahan dan 4 offset fase) bebas kesalahan sampai
+  clk/3 dan gagal mulai clk/2,5: MISO berganti 2 sampai 3 clk setelah tepi naik SCK, jadi satu periode SCK harus
+  lebih dari sekitar 3 clk. Simulasi tidak memodelkan delay pad, jalur PCB, jitter, dan metastabilitas, jadi
+  batas resmi tetap clk/8 (cadangan sekitar 2,7x). Batas silikon diukur ulang di chip.
+- Frame yang terputus (CS naik sebelum bit terakhir) diabaikan. Byte dummy memberi waktu chip membaca register
+  sebelum bit data pertama dikirim.
+- Encoder frame: `golden/spi_frame.py`. Driver: `ChipSpi` di `driver/chip.py`, atau `edge_driver.py --chip spi`.
+- Kunci HMAC ikut dikirim lewat SPI saat boot, karena PDK open source tidak punya OTP/eFuse.
 
 Inventaris memori (`python -m hw.scripts.asic_mem`, Yosys `memory -nomap`, tanpa sintesis penuh):
 

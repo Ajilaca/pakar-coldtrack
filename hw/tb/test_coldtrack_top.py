@@ -1,9 +1,10 @@
 """coldtrack_top lewat AXI4-Lite, seperti driver ARM KV260: setiap menit hasil fisika, diagnosis, rantai segel,
 dan HMAC paket hasil harus identik dengan model golden (fisika, pohon, segel, regmap).
 
-Dijalankan dua kali: mode BRAM (coldtrack_top) dan mode flash (tb/coldtrack_top_flash_tb.sv, CT_FLASH=1). Di mode
-flash satu menit dijalankan dengan satu byte image dirusak: diagnosis harus dibuang (diag_valid 0, model tidak
-sah tercatat), sedangkan fisika, rantai segel, dan HMAC tetap identik.
+Dijalankan tiga kali: mode BRAM (coldtrack_top), mode flash (tb/coldtrack_top_flash_tb.sv, CT_FLASH=1), dan top
+ASIC lewat SPI (tb/coldtrack_spi_tb.sv, CT_SPI=1, SCK = clk/8, batas terburuk). Di mode flash satu menit dijalankan
+dengan satu byte image dirusak: diagnosis harus dibuang (diag_valid 0, model tidak sah tercatat), sedangkan fisika,
+rantai segel, dan HMAC tetap identik. Lewat SPI juga dicek bahwa frame yang terputus (CS naik di tengah) diabaikan.
 """
 
 import os
@@ -23,9 +24,12 @@ from hw.golden import physics as fx
 from hw.golden import trees as ph
 from hw.golden import regmap as rm
 from hw.golden import seal as sg
+from hw.golden import spi_frame as sf
 
 B9 = "b9_xgb_chip_v5_context_synthetic_duty"
-FLASH = os.environ.get("CT_FLASH") == "1"
+SPI = os.environ.get("CT_SPI") == "1"
+FLASH = SPI or os.environ.get("CT_FLASH") == "1"
+SETENGAH_SPI_NS = 40                 # SCK 12,5 MHz = clk 100 MHz / 8
 MENIT = int(os.environ.get("MENIT_TOP_FLASH" if FLASH else "MENIT_TOP", "75" if FLASH else "140"))
 MENIT_RUSAK = 65                     # mode flash, trip A0 (diagnosis normalnya sah): image dirusak hanya menit ini
 KUNCI = bytes(range(0x40, 0x60))
@@ -80,6 +84,40 @@ class Axil:
         raise AssertionError(f"baca {addr:#x} tidak dijawab")
 
 
+class Spi:
+    """Master SPI mode 0 dengan frame hw/golden/spi_frame.py; antarmuka sama dengan Axil."""
+
+    def __init__(self, dut):
+        self.d = dut
+
+    async def frame(self, mosi, potong_bit=None):
+        d, t = self.d, SETENGAH_SPI_NS
+        d.spi_cs_n.value = 0
+        await Timer(t, unit="ns")
+        miso, n = 0, 0
+        for byte in mosi:
+            for i in range(7, -1, -1):
+                if n == potong_bit:
+                    break
+                d.spi_mosi.value = (byte >> i) & 1
+                await Timer(t, unit="ns")
+                miso = miso << 1 | int(d.spi_miso.value)        # dicuplik tepat sebelum tepi naik
+                d.spi_sck.value = 1
+                await Timer(t, unit="ns")
+                d.spi_sck.value = 0
+                n += 1
+        await Timer(t, unit="ns")
+        d.spi_cs_n.value = 1
+        await Timer(2 * t, unit="ns")
+        return miso.to_bytes(len(mosi), "big")
+
+    async def tulis(self, addr, data):
+        await self.frame(sf.frame_tulis(addr, data))
+
+    async def baca(self, addr):
+        return sf.data_baca(await self.frame(sf.frame_baca(addr)))
+
+
 def s(v, bits):
     return v - (1 << bits) if v >> (bits - 1) else v
 
@@ -102,14 +140,24 @@ def trip(mode_pilih):
 @cocotb.test()
 async def ujung_ke_ujung(dut):
     cocotb.start_soon(Clock(dut.clk, 10, unit="ns").start())
-    for sig in ("rst_n", "s_axil_awvalid", "s_axil_wvalid", "s_axil_bready", "s_axil_arvalid", "s_axil_rready",
-                "s_axil_awaddr", "s_axil_wdata", "s_axil_wstrb", "s_axil_araddr") + (("tulis",) if FLASH else ()):
+    sinyal = ("rst_n", "spi_sck", "spi_mosi") if SPI else (
+        "rst_n", "s_axil_awvalid", "s_axil_wvalid", "s_axil_bready", "s_axil_arvalid", "s_axil_rready",
+        "s_axil_awaddr", "s_axil_wdata", "s_axil_wstrb", "s_axil_araddr")
+    for sig in sinyal + (("tulis",) if FLASH else ()):
         getattr(dut, sig).value = 0
+    if SPI:
+        dut.spi_cs_n.value = 1
     await ClockCycles(dut.clk, 3)
     dut.rst_n.value = 1
     await FallingEdge(dut.clk)
-    bus = Axil(dut)
+    bus = Spi(dut) if SPI else Axil(dut)
     assert await bus.baca(rm.ID) == 0x43540001
+    if SPI:
+        # frame tulis CTRL.sampel_go terputus 1 bit sebelum selesai: harus diabaikan, chip tetap diam
+        await bus.frame(sf.frame_tulis(rm.CTRL, rm.C_SAMPEL), potong_bit=47)
+        await Timer(1, unit="us")
+        assert (await bus.baca(rm.STATUS)) & 3 == 0, "frame terputus tidak boleh menjalankan perintah"
+        assert await bus.baca(rm.ID) == 0x43540001
     assert bool((await bus.baca(rm.STATUS)) >> 8 & 1) == FLASH, "bit mode flash"
 
     for i in range(8):
@@ -235,6 +283,23 @@ def test_coldtrack_top():
                                "model_flash.sv", "coldtrack_top.sv"], "test_coldtrack_top",
              parameters={"BERKAS_SIMPUL": f'"{folder / "nodes.mem"}"', "BERKAS_POHON": f'"{folder / "trees.mem"}"',
                          "BERKAS_BASE": f'"{folder / "base.mem"}"'})
+
+
+def test_coldtrack_spi():
+    from runner import jalankan
+
+    from hw.golden import flash_image as fi
+
+    folder = HW / "model" / "xgb_v5_context_duty"
+    img = fi.image(folder)
+    berkas = HW / "build" / "flash" / f"{folder.name}.hex"
+    fi.tulis_hex(img, berkas)
+    jalankan("coldtrack_spi_tb", ["sha256_core.sv", "seal.sv", "physics.sv", "floor_div.sv", "features.sv",
+                                  "tree_engine.sv", "sha256_stream.sv", "qspi_reader.sv", "tree_stream.sv",
+                                  "model_flash.sv", "coldtrack_top.sv", "spi_axil_bridge.sv", "coldtrack_spi.sv",
+                                  "tb/spi_flash_model.sv", "tb/coldtrack_spi_tb.sv"], "test_coldtrack_top",
+             parameters={"BERKAS_A": f'"{berkas}"', "HASH_MODEL": f"256'h{fi.sha256(img)}"},
+             extra_env={"CT_SPI": "1"})
 
 
 def test_coldtrack_top_flash():

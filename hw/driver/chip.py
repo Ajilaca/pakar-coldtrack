@@ -1,8 +1,10 @@
 """Antarmuka chip ColdTrack untuk driver ARM: satu sampel per menit masuk, hasil + segel keluar.
 
-Dua implementasi dengan antarmuka sama (`mulai_trip`, `proses`):
+Tiga implementasi dengan antarmuka sama (`mulai_trip`, `proses`):
   ChipAxi     KV260 sungguhan: register AXI4-Lite coldtrack_axil di 0xA000_0000 lewat /dev/mem (butuh root).
               Urutan akses sama dengan hw/tb/test_coldtrack_top.py. Belum diuji di board.
+  ChipSpi     Chip ASIC (hw/rtl/coldtrack_spi.sv) lewat SPI dari Linux (`spidev`), register map sama.
+              Belum ada chipnya; frame diuji di testbench cocotb.
   ChipGolden  Model golden Python (hw/golden/) yang identik bit per bit dengan RTL di testbench cocotb;
               dipakai untuk demo tanpa board.
 
@@ -21,6 +23,7 @@ import numpy as np
 from hw.golden import physics as fx
 from hw.golden import regmap as rm
 from hw.golden import seal as sg
+from hw.golden import spi_frame as sf
 from hw.golden import trees as ph
 
 NOL = bytes(32)
@@ -99,21 +102,20 @@ class ChipGolden:
         return HasilMenit(rek, self.h, paket, sg.mac(self.kunci, self.h, paket), skor, o["status"], diag_valid, kelas)
 
 
-class ChipAxi:
-    """Register coldtrack_axil lewat /dev/mem. Model sudah tertanam di bitstream (nodes/trees/base.mem)."""
+class _ChipRegister:
+    """Urutan akses register per trip dan per menit; subkelas menyediakan tulis/baca."""
 
-    def __init__(self, basis: int = BASIS_AXI, batas_tunggu_s: float = 0.5):
-        self.fd = os.open("/dev/mem", os.O_RDWR | os.O_SYNC)
-        self.mm = mmap.mmap(self.fd, 0x1000, mmap.MAP_SHARED, mmap.PROT_READ | mmap.PROT_WRITE, offset=basis)
-        self.batas = batas_tunggu_s
-        if self.baca(rm.ID) != 0x43540001:
-            raise RuntimeError(f"ID chip salah: {self.baca(rm.ID):#x} (bitstream ColdTrack belum dimuat?)")
+    batas = 0.5
 
     def tulis(self, alamat: int, nilai: int) -> None:
-        self.mm[alamat:alamat + 4] = struct.pack("<I", nilai & 0xFFFFFFFF)
+        raise NotImplementedError
 
     def baca(self, alamat: int) -> int:
-        return struct.unpack("<I", self.mm[alamat:alamat + 4])[0]
+        raise NotImplementedError
+
+    def _cek_id(self, saran: str) -> None:
+        if (i := self.baca(rm.ID)) != 0x43540001:
+            raise RuntimeError(f"ID chip salah: {i:#x} ({saran})")
 
     def _tunggu(self, bit: int) -> None:
         akhir = time.monotonic() + self.batas
@@ -162,3 +164,40 @@ class ChipAxi:
         self._tunggu(4)
         return HasilMenit(rekaman(s), self._kata(rm.R_RANTAI), paket, self._kata(rm.R_MAC), skor, fis["status"],
                           diag_valid, kelas)
+
+
+class ChipAxi(_ChipRegister):
+    """Register coldtrack_axil lewat /dev/mem. Model sudah tertanam di bitstream (nodes/trees/base.mem)."""
+
+    def __init__(self, basis: int = BASIS_AXI, batas_tunggu_s: float = 0.5):
+        self.fd = os.open("/dev/mem", os.O_RDWR | os.O_SYNC)
+        self.mm = mmap.mmap(self.fd, 0x1000, mmap.MAP_SHARED, mmap.PROT_READ | mmap.PROT_WRITE, offset=basis)
+        self.batas = batas_tunggu_s
+        self._cek_id("bitstream ColdTrack belum dimuat?")
+
+    def tulis(self, alamat: int, nilai: int) -> None:
+        self.mm[alamat:alamat + 4] = struct.pack("<I", nilai & 0xFFFFFFFF)
+
+    def baca(self, alamat: int) -> int:
+        return struct.unpack("<I", self.mm[alamat:alamat + 4])[0]
+
+
+class ChipSpi(_ChipRegister):
+    """Chip ASIC lewat /dev/spidevB.C (paket `spidev`). SCK paling cepat clk chip / 8; model ada di flash QSPI chip,
+    diagnosis hanya sah bila hash image cocok (STATUS bit 7)."""
+
+    def __init__(self, bus: int = 0, cs: int = 0, hz: int = 4_000_000, batas_tunggu_s: float = 0.5):
+        import spidev
+
+        self.spi = spidev.SpiDev()
+        self.spi.open(bus, cs)
+        self.spi.mode = 0
+        self.spi.max_speed_hz = hz
+        self.batas = batas_tunggu_s
+        self._cek_id("kabel SPI, clock chip, atau SCK terlalu cepat?")
+
+    def tulis(self, alamat: int, nilai: int) -> None:
+        self.spi.xfer2(list(sf.frame_tulis(alamat, nilai)))
+
+    def baca(self, alamat: int) -> int:
+        return sf.data_baca(bytes(self.spi.xfer2(list(sf.frame_baca(alamat)))))

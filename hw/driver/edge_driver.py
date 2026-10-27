@@ -25,7 +25,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "backend"))
 
-from hw.driver.chip import ChipAxi, ChipGolden, Sampel
+from hw.driver.chip import ChipAxi, ChipGolden, ChipSpi, Sampel
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
 logger = logging.getLogger("coldtrack.edge_driver")
@@ -72,7 +72,7 @@ def main() -> None:
 
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--truck", required=True, help="nomor polisi truk seed, mis. 'B 3036 WN'")
-    ap.add_argument("--chip", choices=["golden", "axi"], default="golden")
+    ap.add_argument("--chip", choices=["golden", "axi", "spi"], default="golden")
     ap.add_argument("--kunci", default=os.environ.get("EDGE_KEY", ""), help="kunci HMAC perangkat, 64 hex")
     a = ap.parse_args()
     kunci = bytes.fromhex(a.kunci)
@@ -81,7 +81,7 @@ def main() -> None:
 
     trip, device, g, q = trip_truk(a.truck)
     prod = cargo_params(trip["cargo_profile"], trip["mass_kg"])
-    chip = ChipGolden(MODEL) if a.chip == "golden" else ChipAxi()
+    chip = {"golden": lambda: ChipGolden(MODEL), "axi": ChipAxi, "spi": ChipSpi}[a.chip]()
     key = truck_key(a.truck)
     cl = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id=f"edge-{key}")
     cl.username_pw_set(os.environ.get("MQTT_USER", "simulator"), os.environ.get("MQTT_PASSWORD", ""))
