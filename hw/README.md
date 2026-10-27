@@ -10,9 +10,9 @@ disintesis Vivado maupun Yosys.
 | `rtl/` | Modul sintesis |
 | `tb/` | Testbench cocotb (`test_*.py`), dijalankan lewat pytest |
 | `golden/` | Model acuan Python bilangan bulat; RTL harus sama bit per bit dengan model ini |
-| `scripts/` | Ekspor model XGBoost beku ke berkas memori; vektor uji hasil edge untuk backend |
+| `scripts/` | Ekspor model XGBoost beku ke berkas memori; vektor uji hasil edge untuk backend; inventaris memori per mode (`asic_mem.py`) |
 | `driver/` | Driver ARM: `chip.py` (`ChipAxi` lewat `/dev/mem`, belum diuji di board; `ChipGolden` identik bit per bit dengan RTL) dan `edge_driver.py` (sampel ke chip, kirim bacaan + hasil tersegel lewat MQTT) |
-| `model/` | Hasil ekspor: `nodes.mem`, `trees.mem`, `base.mem` per model |
+| `model/` | Hasil ekspor: `nodes.mem`, `trees.mem`, `base.mem` per model, plus `flash.bin` dan `flash.sha256` untuk mode flash |
 | `bd/` | Pembungkus Verilog AXI4-Lite (`coldtrack_axil.v`) untuk block design Vivado + pin alarm PMOD |
 | `synth/` | Skrip Yosys (perkiraan) dan Vivado (implementasi out-of-context, block design KV260, laporan) |
 | `docs/` | Gambar arsitektur (`rtl_architecture.png`) dan block design Vivado (`vivado_block_design.png`/`.svg`) |
@@ -50,11 +50,55 @@ desimal membuat kelipatan 0,1 C data latih eksak, karena ambang pohon XGBoost se
 | M6 | `coldtrack_top` (AXI4-Lite) | 709 menit dua trip penuh: fisika, rantai, 296 diagnosis, 26 HMAC identik golden |
 | M7 | Sintesis Yosys KV260 | perkiraan resource, lihat tabel di bawah |
 | M8 | Vivado KV260 (block design, place-and-route) | lolos 100 MHz, WNS +1,351 ns, WHS +0,011 ns; bitstream + `.xsa` dibuat. Belum diuji di board |
+| M9 | `sha256_stream` | 25 pesan (0 sampai 2.000 byte, termasuk semua batas padding) identik `hashlib` |
+| M9 | `model_flash` (mode flash) | 20 jendela val identik golden; byte image dibalik, model lain, dan header buruk ditolak |
+| M9 | `coldtrack_top` mode flash | 150 menit dua trip identik golden; satu menit dengan image dirusak: diagnosis dibuang, fisika, rantai, dan HMAC tetap identik |
 
 Catatan dari verifikasi: aturan "pintu terbuka, sisa waktu terburuk <= 30 menit" (alasan 4) di `engine.py`
 tidak pernah bisa menentukan status. Saat pintu terbuka kabin = max(ts10, suhu luar) >= suhu luar dan
 (x - t_hi)/(x - Tc) naik terhadap x, sehingga TTB biasa selalu <= TTB kasus terburuk dan aturan TTB lebih
 dulu memicu dengan status yang sama atau lebih tinggi. RTL tetap memuat aturan itu agar setara backend.
+
+## Mode flash untuk ASIC
+
+Di ASIC tidak ada BRAM, dan tabel simpul pohon (8.704 x 72 bit = 76,5 KiB) adalah bagian terbesar chip. Karena
+isinya konstanta, `MODEL_FLASH = 1` memindahkannya ke flash QSPI eksternal. Bawaannya tetap `MODEL_FLASH = 0`
+(BRAM), jadi build KV260 dan semua angka Vivado di bawah tidak berubah.
+
+```
+coldtrack_top (MODEL_FLASH = 1)
+  model_flash   start -> qspi_reader baca image dari alamat 0 (perintah 0x6B, 6 pin)
+                  tiap byte -> sha256_stream (hash seluruh image)
+                            -> rakit rekaman 9 byte -> tree_stream (evaluasi pohon dari aliran)
+                  hash == HASH_MODEL, dicek dua kali sebagai pola 8 bit -> pola_sah 0xA5
+  model tidak sah -> diag_valid 0, kelas dan skor dibuang, STATUS.bit7 0, R_MODEL menghitung kegagalan;
+                     status fisika, TTB, alarm, dan segel tetap jalan
+```
+
+- **Image flash** (`golden/flash_image.py`): header, base score, lalu per pohon satu rekaman kepala dan
+  simpulnya. Format simpul sama dengan `nodes.mem`. Syarat aliran (simpul satu pohon berurutan, anak selalu
+  sesudah induk) dicek saat ekspor. Model sekarang: 78.714 byte (#8) dan 80.172 byte (#7).
+- **Waktu:** satu inferensi membaca seluruh image, 316.313 siklus (3,2 ms pada 100 MHz dengan SCK 50 MHz).
+  Waktunya tetap, tidak bergantung pada kedalaman pohon. Jeda antar sampel 60 detik.
+- **HASH_MODEL** ditanam saat sintesis dari `model/<nama>/flash.sha256`. Ganti model berarti ganti hash, jadi
+  untuk prototipe model ikut terkunci di chip. Agar model bisa diperbarui di lapangan dibutuhkan tanda tangan
+  digital (kunci publik di chip), yang belum dibuat.
+- **Flash:** bit QE harus diset saat flash diprogram. `qspi_io_o`/`qspi_io_oe`/`qspi_io_i` disambungkan ke
+  penyangga tiga keadaan di pad.
+
+Inventaris memori (`python -m hw.scripts.asic_mem`, Yosys `memory -nomap`, tanpa sintesis penuh):
+
+| Memori | Mode BRAM | Mode flash |
+|---|---|---|
+| `mem_simpul` 8.704 x 72 | 76,5 KiB | dihapus |
+| `mem_pohon` 420 x 19 + `mem_base` 8 x 32 | 1,0 KiB | dihapus |
+| Ring buffer `features` 256 x 111 | 3,5 KiB | 3,5 KiB |
+| Tabel fitur 82 x 48 | 0,5 KiB | 0,5 KiB |
+| **RAM tulis** | **81,5 KiB** | **3,9 KiB** |
+| ROM konstanta (tabel K SHA-256, konstanta fisika) | 0,3 KiB | 0,5 KiB |
+
+Mode flash memakai inti SHA-256 kedua untuk hash image, jadi tabel K ada dua. Inti ini bisa dibagi dengan
+`seal` bila luas logika perlu dihemat. Luas ASIC sebenarnya baru diketahui setelah sintesis dengan PDK.
 
 ## Vivado KV260 (post-route, model #8)
 

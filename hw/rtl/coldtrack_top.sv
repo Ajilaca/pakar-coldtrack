@@ -2,10 +2,16 @@
 // Peta register (alamat byte, data 32 bit) di hw/golden/regmap.py; urutan per menit:
 //   host tulis S_* lalu CTRL.sampel_go -> segel rekaman, fisika, fitur paralel -> tree_engine (bila siap)
 //   -> STATUS.hasil_valid. CTRL.mac_go -> HMAC atas {rantai, paket hasil} -> STATUS.mac_valid.
+// MODEL_FLASH = 0: bobot pohon di BRAM (tree_engine.sv, dimuat dari berkas .mem atau host; build KV260).
+// MODEL_FLASH = 1: bobot di flash QSPI eksternal (model_flash.sv, untuk ASIC); diagnosis hanya sah bila SHA-256
+//                  image == HASH_MODEL. Pin qspi_* hanya dipakai di mode ini.
 module coldtrack_top #(
-    parameter        BERKAS_SIMPUL = "",
-    parameter        BERKAS_POHON  = "",
-    parameter        BERKAS_BASE   = ""
+    parameter               BERKAS_SIMPUL = "",
+    parameter               BERKAS_POHON  = "",
+    parameter               BERKAS_BASE   = "",
+    parameter bit           MODEL_FLASH   = 1'b0,
+    parameter logic [255:0] HASH_MODEL    = '0,
+    parameter int           SETENGAH_SCK  = 1
 ) (
     input  logic        clk,
     input  logic        rst_n,
@@ -32,7 +38,13 @@ module coldtrack_top #(
     // alarm sopir (LED / buzzer)
     output logic        alarm_waspada,
     output logic        alarm_kritis,
-    output logic        alarm_sensor
+    output logic        alarm_sensor,
+    // flash QSPI bobot pohon (MODEL_FLASH = 1)
+    output logic        qspi_sck,
+    output logic        qspi_cs_n,
+    output logic [3:0]  qspi_io_o,
+    output logic [3:0]  qspi_io_oe,
+    input  logic [3:0]  qspi_io_i
 );
     localparam logic [31:0] ID = 32'h43540001;      // "CT" v1
 
@@ -79,6 +91,7 @@ module coldtrack_top #(
     logic         tr_start, tr_done;
     logic [7*32-1:0] tr_skor;
     logic [2:0]   tr_kelas;
+    logic [7:0]   tr_pola;                       // 8'hA5 = model sah
 
     assign rekaman = {s_seq, s_ts, s_temp, s_rh, s_amb, s_solar, s_speed, 4'd0, s_flags, s_duty, s_harsh, s_batt};
 
@@ -108,14 +121,38 @@ module coldtrack_top #(
         .fitur_we(ft_we), .fitur_addr(ft_addr), .fitur_data(ft_data)
     );
 
-    tree_engine #(.N_FITUR(82), .BERKAS_SIMPUL(BERKAS_SIMPUL), .BERKAS_POHON(BERKAS_POHON), .BERKAS_BASE(BERKAS_BASE)) u_tree (
-        .clk(clk), .rst_n(rst_n),
-        .fitur_we(ft_we), .fitur_addr(ft_addr), .fitur_data(ft_data),
-        .simpul_we(c_simpul_we), .simpul_addr(m_simpul_addr), .simpul_data(m_simpul_data),
-        .pohon_we(c_pohon_we), .pohon_addr(m_pohon_addr), .pohon_data(m_pohon_data),
-        .base_we(c_base_we), .base_addr(m_base_addr), .base_data(m_base_data),
-        .start(tr_start), .busy(tr_busy), .done(tr_done), .skor(tr_skor), .kelas(tr_kelas)
-    );
+    generate
+        if (MODEL_FLASH) begin : g_flash
+            model_flash #(.N_FITUR(82), .HASH_MODEL(HASH_MODEL), .SETENGAH(SETENGAH_SCK)) u_tree (
+                .clk(clk), .rst_n(rst_n),
+                .fitur_we(ft_we), .fitur_addr(ft_addr), .fitur_data(ft_data),
+                .start(tr_start), .busy(tr_busy), .done(tr_done), .pola_sah(tr_pola), .skor(tr_skor), .kelas(tr_kelas),
+                .qspi_sck(qspi_sck), .qspi_cs_n(qspi_cs_n), .qspi_io_o(qspi_io_o), .qspi_io_oe(qspi_io_oe),
+                .qspi_io_i(qspi_io_i)
+            );
+            /* verilator lint_off UNUSEDSIGNAL */
+            wire _muat_host = ^{c_simpul_we, m_simpul_addr, m_simpul_data, c_pohon_we, m_pohon_addr, m_pohon_data,
+                                c_base_we, m_base_addr, m_base_data};
+            /* verilator lint_on UNUSEDSIGNAL */
+        end else begin : g_bram
+            tree_engine #(.N_FITUR(82), .BERKAS_SIMPUL(BERKAS_SIMPUL), .BERKAS_POHON(BERKAS_POHON), .BERKAS_BASE(BERKAS_BASE)) u_tree (
+                .clk(clk), .rst_n(rst_n),
+                .fitur_we(ft_we), .fitur_addr(ft_addr), .fitur_data(ft_data),
+                .simpul_we(c_simpul_we), .simpul_addr(m_simpul_addr), .simpul_data(m_simpul_data),
+                .pohon_we(c_pohon_we), .pohon_addr(m_pohon_addr), .pohon_data(m_pohon_data),
+                .base_we(c_base_we), .base_addr(m_base_addr), .base_data(m_base_data),
+                .start(tr_start), .busy(tr_busy), .done(tr_done), .skor(tr_skor), .kelas(tr_kelas)
+            );
+            assign tr_pola    = 8'hA5;
+            assign qspi_sck   = 1'b0;
+            assign qspi_cs_n  = 1'b1;
+            assign qspi_io_o  = 4'h0;
+            assign qspi_io_oe = 4'h0;
+            /* verilator lint_off UNUSEDSIGNAL */
+            wire _qspi = ^qspi_io_i;
+            /* verilator lint_on UNUSEDSIGNAL */
+        end
+    endgenerate
 
     // ---------------- sequencer per menit ----------------
     logic busy, tunggu_segel, tunggu_fisika, tunggu_fitur, tunggu_tree, mode_mac, jalan;
@@ -128,6 +165,9 @@ module coldtrack_top #(
     logic [15:0] r_menit;
     logic [7*32-1:0] r_skor;
     logic [31:0] r_seq;
+    logic [7:0]  r_model;                         // pola sah inferensi terakhir
+    logic [15:0] n_model_gagal;
+    wire         model_sah = (tr_pola == 8'hA5);
 
     assign busy = tunggu_segel | tunggu_fisika | tunggu_fitur | tunggu_tree | sg_busy;
 
@@ -145,6 +185,7 @@ module coldtrack_top #(
             sg_segel_start <= 1'b0; sg_mac_start <= 1'b0; tr_start <= 1'b0;
             r_status <= '0; r_sensor <= '0; r_alasan <= '0; r_kelas <= '0; r_ttb_valid <= 1'b0; r_seri <= 1'b0;
             r_ttb <= '0; r_tc <= '0; r_ts10 <= '0; r_menit <= '0; r_skor <= '0; r_seq <= '0;
+            r_model <= '0; n_model_gagal <= '0;
         end else begin
             sg_segel_start <= 1'b0;
             sg_mac_start   <= 1'b0;
@@ -187,11 +228,13 @@ module coldtrack_top #(
                     tunggu_tree <= 1'b1;
                 end
             end
-            if (tr_done) begin
+            if (tr_done) begin                     // model tidak sah -> diagnosis dibuang, status fisika tetap
                 tunggu_tree <= 1'b0;
-                r_kelas     <= tr_kelas;
-                r_skor      <= tr_skor;
-                diag_valid  <= ft_lengkap;
+                r_kelas     <= model_sah ? tr_kelas : 3'd0;
+                r_skor      <= model_sah ? tr_skor : '0;
+                diag_valid  <= ft_lengkap && model_sah;
+                r_model     <= tr_pola;
+                if (!model_sah && n_model_gagal != 16'hFFFF) n_model_gagal <= n_model_gagal + 16'd1;
             end
             // semua blok selesai -> hasil menit ini sah
             if (jalan && !(tunggu_segel | tunggu_fisika | tunggu_fitur | tunggu_tree)) begin
@@ -279,7 +322,8 @@ module coldtrack_top #(
                 s_axil_rvalid  <= 1'b1;
                 case (s_axil_araddr)
                     12'h000: s_axil_rdata <= ID;
-                    12'h008: s_axil_rdata <= {25'd0, diag_valid, ft_lengkap, ft_siap, sg_terkunci, mac_valid, hasil_valid, busy};
+                    12'h008: s_axil_rdata <= {23'd0, MODEL_FLASH, r_model == 8'hA5, diag_valid, ft_lengkap, ft_siap,
+                                              sg_terkunci, mac_valid, hasil_valid, busy};
                     12'h080: s_axil_rdata <= {15'd0, r_seri, 2'b0, r_ttb, b_fisika};
                     12'h084: s_axil_rdata <= r_tc[31:0];
                     12'h088: s_axil_rdata <= {{24{r_tc[39]}}, r_tc[39:32]};
@@ -287,6 +331,7 @@ module coldtrack_top #(
                     12'h090: s_axil_rdata <= {16'd0, r_menit};
                     12'h094: s_axil_rdata <= r_ts10[31:0];
                     12'h098: s_axil_rdata <= {{24{r_ts10[39]}}, r_ts10[39:32]};
+                    12'h09C: s_axil_rdata <= {n_model_gagal, 8'd0, r_model};
                     default: begin
                         s_axil_rdata <= 32'hDEAD_BEEF;
                         if (s_axil_araddr >= 12'h0A0 && s_axil_araddr <= 12'h0B8)

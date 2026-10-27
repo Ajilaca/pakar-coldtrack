@@ -8,6 +8,7 @@ Ambang sudah dikonversi ke domain bilangan bulat fitur oleh hw/golden/trees.py. 
   trees.mem   satu pohon per baris: [18:16] kelas | [15:0] alamat akar
   base.mem    base_score per kelas, s32 Q8.16
   meta.json   jumlah simpul/pohon/kelas/fitur dan lebar
+  flash.bin   image flash QSPI untuk mode flash (hw/golden/flash_image.py), flash.sha256 = HASH_MODEL
 
   python -m hw.scripts.export_trees
 """
@@ -19,6 +20,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
+from hw.golden import flash_image
 from hw.golden import trees as ph
 
 FW, AW, SW = 48, 16, 32
@@ -56,6 +58,7 @@ def ekspor(nama, folder, duty):
             "fitur": len(ph.jenis_fitur(duty)), "lebar_fitur": FW, "lebar_alamat": AW, "lebar_skor": SW,
             "frak_daun": ph.FRAK_DAUN}
     (out / "meta.json").write_text(json.dumps(meta, indent=2) + "\n")
+    flash_image.ekspor(out)
     print(nama, meta)
 
 

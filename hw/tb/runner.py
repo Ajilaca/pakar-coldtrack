@@ -12,7 +12,8 @@ RTL = HW / "rtl"
 OSS = Path(os.environ.get("OSS_CAD_SUITE", Path.home() / "FPGA" / "tools" / "oss-cad-suite"))
 
 
-def jalankan(toplevel, sources, test_module, parameters=None, sim=None, waves=False):
+def jalankan(toplevel, sources, test_module, parameters=None, sim=None, waves=False, extra_env=None):
+    """sources: nama berkas di rtl/, atau path relatif hw/ untuk berkas testbench (mis. "tb/x.sv")."""
     from cocotb_tools.runner import get_runner
 
     sim = sim or os.environ.get("SIM", "verilator")
@@ -21,8 +22,8 @@ def jalankan(toplevel, sources, test_module, parameters=None, sim=None, waves=Fa
     build = HW / "build" / f"{toplevel}_{sim}"
     args = ["-Wno-fatal", "--timing"] if sim == "verilator" else []
     runner = get_runner(sim)
-    runner.build(sources=[RTL / s for s in sources], hdl_toplevel=toplevel, build_dir=build,
+    runner.build(sources=[HW / s if "/" in s else RTL / s for s in sources], hdl_toplevel=toplevel, build_dir=build,
                  parameters=parameters or {}, build_args=args, timescale=("1ns", "1ps"),
                  waves=waves, always=True)
     runner.test(hdl_toplevel=toplevel, test_module=test_module, build_dir=build,
-                test_dir=Path(__file__).resolve().parent, waves=waves)
+                test_dir=Path(__file__).resolve().parent, waves=waves, extra_env=extra_env or {})

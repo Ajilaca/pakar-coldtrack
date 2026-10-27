@@ -1,5 +1,9 @@
 """coldtrack_top lewat AXI4-Lite, seperti driver ARM KV260: setiap menit hasil fisika, diagnosis, rantai segel,
 dan HMAC paket hasil harus identik dengan model golden (fisika, pohon, segel, regmap).
+
+Dijalankan dua kali: mode BRAM (coldtrack_top) dan mode flash (tb/coldtrack_top_flash_tb.sv, CT_FLASH=1). Di mode
+flash satu menit dijalankan dengan satu byte image dirusak: diagnosis harus dibuang (diag_valid 0, model tidak
+sah tercatat), sedangkan fisika, rantai segel, dan HMAC tetap identik.
 """
 
 import os
@@ -9,7 +13,7 @@ from pathlib import Path
 import cocotb
 import pandas as pd
 from cocotb.clock import Clock
-from cocotb.triggers import ClockCycles, FallingEdge, RisingEdge
+from cocotb.triggers import ClockCycles, FallingEdge, RisingEdge, Timer
 
 HW = Path(__file__).resolve().parent.parent
 ROOT = HW.parent
@@ -21,7 +25,9 @@ from hw.golden import regmap as rm
 from hw.golden import seal as sg
 
 B9 = "b9_xgb_chip_v5_context_synthetic_duty"
-MENIT = int(os.environ.get("MENIT_TOP", "140"))
+FLASH = os.environ.get("CT_FLASH") == "1"
+MENIT = int(os.environ.get("MENIT_TOP_FLASH" if FLASH else "MENIT_TOP", "75" if FLASH else "140"))
+MENIT_RUSAK = 65                     # mode flash, trip A0 (diagnosis normalnya sah): image dirusak hanya menit ini
 KUNCI = bytes(range(0x40, 0x60))
 
 
@@ -97,13 +103,14 @@ def trip(mode_pilih):
 async def ujung_ke_ujung(dut):
     cocotb.start_soon(Clock(dut.clk, 10, unit="ns").start())
     for sig in ("rst_n", "s_axil_awvalid", "s_axil_wvalid", "s_axil_bready", "s_axil_arvalid", "s_axil_rready",
-                "s_axil_awaddr", "s_axil_wdata", "s_axil_wstrb", "s_axil_araddr"):
+                "s_axil_awaddr", "s_axil_wdata", "s_axil_wstrb", "s_axil_araddr") + (("tulis",) if FLASH else ()):
         getattr(dut, sig).value = 0
     await ClockCycles(dut.clk, 3)
     dut.rst_n.value = 1
     await FallingEdge(dut.clk)
     bus = Axil(dut)
     assert await bus.baca(rm.ID) == 0x43540001
+    assert bool((await bus.baca(rm.STATUS)) >> 8 & 1) == FLASH, "bit mode flash"
 
     for i in range(8):
         await bus.tulis(rm.KUNCI + 4 * i, int.from_bytes(KUNCI[4 * i:4 * i + 4], "big"))
@@ -112,6 +119,7 @@ async def ujung_ke_ujung(dut):
     assert (await bus.baca(rm.STATUS)) & 8, "kunci harus terkunci"
 
     model = ph.muat_model(ROOT / f"bench/results/local-cpu/B10/{B9}.json", True)
+    n_rusak = 0
     for md in ("A1", "A0"):
         tid, g, q, prod = trip(md)
         cfg = fx.konfigurasi(prod["t_lo"], prod["t_hi"], prod["t_set"], prod["c"], prod["mass_kg"])
@@ -134,13 +142,20 @@ async def ujung_ke_ujung(dut):
                      "flags": rm.flags(q["door"][t], q["reefer"][t], q["duty"][t] > 0, ok)}
             for k, v in nilai.items():
                 await bus.tulis(rm.SAMPEL[k], int(v))
+            rusak = FLASH and md == "A0" and t == MENIT_RUSAK
+            if rusak:
+                await rusak_flash(dut, True)
             await bus.tulis(rm.CTRL, rm.C_SAMPEL)
             for _ in range(10000):
                 st = await bus.baca(rm.STATUS)
                 if st & 2:
                     break
+                if FLASH:
+                    await Timer(5, unit="us")          # satu inferensi flash ~316 ribu siklus
             else:
                 raise AssertionError(f"menit {t}: hasil_valid tidak muncul")
+            if rusak:
+                await rusak_flash(dut, False)
 
             # golden
             o = gf.langkah(temp if ok else -32768, int(q["amb"][t]), bool(q["door"][t]), int(q["speed"][t]) >= 100)
@@ -164,18 +179,24 @@ async def ujung_ke_ujung(dut):
             diag = await bus.baca(rm.R_DIAG)
             lengkap = bool(st & 32)
             kelas, skor = 0, 0
-            if t >= 59:
+            if rusak:
+                model_reg = await bus.baca(rm.R_MODEL)
+                assert diag == 0 and not st & 64 and not st & 128, f"menit {t}: diagnosis model rusak harus dibuang"
+                assert model_reg & 0xFF != 0xA5 and model_reg >> 16 == 1, f"menit {t}: R_MODEL {model_reg:#x}"
+                n_rusak += 1
+            elif t >= 59:
                 if lengkap:
                     f = ph.fitur_bulat(q, t, True)
                     skor_g = ph.skor_bulat(model, f)
                     kelas = ph.kelas_bulat(model, f)
                     skor_rtl = [s(await bus.baca(rm.R_SKOR + 4 * k), 32) for k in range(7)]
                     assert skor_rtl == skor_g and diag == (8 | kelas), f"menit {t}: diagnosis beda"
+                    assert st & 128, f"menit {t}: model harus sah"
                     skor = skor_g[kelas]
                     n_diag += 1
             else:
                 assert diag == 0
-            if (t >= 59 and lengkap or t < 59) and t % 15 == 14:
+            if (t >= 59 and lengkap or t < 59) and t % 15 == 14 and not rusak:
                 await bus.tulis(rm.CTRL, rm.C_MAC)
                 while not (await bus.baca(rm.STATUS)) & 4:
                     pass
@@ -185,6 +206,24 @@ async def ujung_ke_ujung(dut):
                 assert sg.verifikasi(KUNCI, rekaman, rantai, paket, mac)
                 n_mac += 1
         dut._log.info(f"trip {tid} ({md}): {min(MENIT, len(g))} menit identik; {n_diag} diagnosis, {n_mac} HMAC dicek")
+    assert n_rusak == (1 if FLASH else 0)
+    if FLASH:
+        assert not dut.perintah_salah.value
+        dut._log.info("menit dengan image rusak: diagnosis dibuang, fisika dan segel tetap identik")
+
+
+async def rusak_flash(dut, rusak):
+    """Balik satu bit di tengah image flash (atau kembalikan)."""
+    from hw.golden import flash_image as fi
+
+    img = fi.image(HW / "model" / "xgb_v5_context_duty")
+    a = len(img) // 2
+    await FallingEdge(dut.clk)              # pemanggil baru lewat tepi naik (handshake AXI)
+    dut.tulis.value = 1
+    dut.tulis_addr.value = a
+    dut.tulis_data.value = img[a] ^ (1 if rusak else 0)
+    await FallingEdge(dut.clk)
+    dut.tulis.value = 0
 
 
 def test_coldtrack_top():
@@ -192,6 +231,24 @@ def test_coldtrack_top():
 
     folder = HW / "model" / "xgb_v5_context_duty"
     jalankan("coldtrack_top", ["sha256_core.sv", "seal.sv", "physics.sv", "floor_div.sv", "features.sv",
-                               "tree_engine.sv", "coldtrack_top.sv"], "test_coldtrack_top",
+                               "tree_engine.sv", "sha256_stream.sv", "qspi_reader.sv", "tree_stream.sv",
+                               "model_flash.sv", "coldtrack_top.sv"], "test_coldtrack_top",
              parameters={"BERKAS_SIMPUL": f'"{folder / "nodes.mem"}"', "BERKAS_POHON": f'"{folder / "trees.mem"}"',
                          "BERKAS_BASE": f'"{folder / "base.mem"}"'})
+
+
+def test_coldtrack_top_flash():
+    from runner import jalankan
+
+    from hw.golden import flash_image as fi
+
+    folder = HW / "model" / "xgb_v5_context_duty"
+    img = fi.image(folder)
+    berkas = HW / "build" / "flash" / f"{folder.name}.hex"
+    fi.tulis_hex(img, berkas)
+    jalankan("coldtrack_top_flash_tb", ["sha256_core.sv", "seal.sv", "physics.sv", "floor_div.sv", "features.sv",
+                                        "tree_engine.sv", "sha256_stream.sv", "qspi_reader.sv", "tree_stream.sv",
+                                        "model_flash.sv", "coldtrack_top.sv", "tb/spi_flash_model.sv",
+                                        "tb/coldtrack_top_flash_tb.sv"], "test_coldtrack_top",
+             parameters={"BERKAS_A": f'"{berkas}"', "HASH_MODEL": f"256'h{fi.sha256(img)}"},
+             extra_env={"CT_FLASH": "1"})

@@ -7,7 +7,7 @@ ID = 0x000              # RO 0x43540001
 CTRL = 0x004            # WO pulsa: bit0 trip_reset, bit1 sampel_go, bit2 mac_go, bit3 kunci_kunci, bit4 kunci_tulis,
                         #           bit5 simpul_we, bit6 pohon_we, bit7 base_we
 STATUS = 0x008          # RO: bit0 busy, bit1 hasil_valid, bit2 mac_valid, bit3 kunci_terkunci, bit4 siap, bit5 lengkap,
-                        #     bit6 diag_valid
+                        #     bit6 diag_valid, bit7 model_sah (inferensi terakhir), bit8 mode flash (MODEL_FLASH)
 CFG = {"t_lo": 0x010, "t_hi": 0x014, "t_set": 0x018, "batas_waspada": 0x01C,
        "k_lo": 0x020, "k_hi": 0x024, "ek_lo": 0x028, "ek_hi": 0x02C}
 SAMPEL = {"seq": 0x040, "ts": 0x044, "temp": 0x048, "rh": 0x04C, "amb": 0x050, "solar": 0x054, "speed": 0x058,
@@ -17,6 +17,7 @@ R_TC_LO, R_TC_HI = 0x084, 0x088
 R_DIAG = 0x08C          # [2:0] kelas [3] diag_valid
 R_MENIT = 0x090
 R_TS10_LO, R_TS10_HI = 0x094, 0x098
+R_MODEL = 0x09C         # [7:0] pola sah inferensi terakhir (0xA5 = sah) [31:16] jumlah inferensi model tidak sah
 R_SKOR = 0x0A0          # 7 kata, kelas k di R_SKOR + 4k
 R_RANTAI = 0x0C0        # 8 kata, kata 0 = bit 255..224
 R_MAC = 0x0E0

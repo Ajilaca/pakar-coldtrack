@@ -83,7 +83,14 @@ module coldtrack_axil #(
         .s_axil_rready (s_axi_rready),
         .alarm_waspada (alarm_waspada),
         .alarm_kritis  (alarm_kritis),
-        .alarm_sensor  (alarm_sensor)
+        .alarm_sensor  (alarm_sensor),
+        /* verilator lint_off PINCONNECTEMPTY */
+        .qspi_sck      (),                 // mode BRAM (MODEL_FLASH = 0): pin flash tidak dipakai
+        .qspi_cs_n     (),
+        .qspi_io_o     (),
+        .qspi_io_oe    (),
+        /* verilator lint_on PINCONNECTEMPTY */
+        .qspi_io_i     (4'b0000)
     );
 
     // AxPROT tidak dipakai (semua akses diperlakukan sama)
