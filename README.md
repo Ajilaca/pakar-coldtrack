@@ -109,6 +109,7 @@ bench/      Percobaan latih ulang dan benchmark antar-device (hasil di bench/res
 eval/       Evaluasi sistem sebagaimana di-deploy
 data/       Data olahan hasil simulator dan dataset Berkeley
 docker/     Konfigurasi Mosquitto
+setup/      Setup layout ASIC di Windows (WSL2, Docker, LibreLane)
 docs/       Arsitektur, kontrak API dan perangkat, kartu model, tata kelola AI
 ```
 

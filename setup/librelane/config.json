@@ -1,0 +1,25 @@
+{
+  "DESIGN_NAME": "coldtrack_spi",
+  "VERILOG_FILES": [
+    "dir::../../hw/rtl/sha256_core.sv",
+    "dir::../../hw/rtl/seal.sv",
+    "dir::../../hw/rtl/physics.sv",
+    "dir::../../hw/rtl/floor_div.sv",
+    "dir::../../hw/rtl/features.sv",
+    "dir::../../hw/rtl/tree_engine.sv",
+    "dir::../../hw/rtl/sha256_stream.sv",
+    "dir::../../hw/rtl/qspi_reader.sv",
+    "dir::../../hw/rtl/tree_stream.sv",
+    "dir::../../hw/rtl/model_flash.sv",
+    "dir::../../hw/rtl/coldtrack_top.sv",
+    "dir::../../hw/rtl/spi_axil_bridge.sv",
+    "dir::../../hw/rtl/coldtrack_spi.sv"
+  ],
+  "CLOCK_PORT": "clk",
+  "CLOCK_PERIOD": 20,
+  "SYNTH_PARAMETERS": [
+    "MODEL_FLASH=1",
+    "HASH_MODEL=256'h22c411dea9c3c64a56a8c02825a0203bbdf6e0cfc13804db999f53bfbfe3b4c0"
+  ],
+  "FP_CORE_UTIL": 40
+}

@@ -1,0 +1,6 @@
+# Salin ke %UserProfile%\.wslconfig, lalu jalankan `wsl --shutdown` agar berlaku.
+# Untuk laptop 16 GB (ASUS ROG Strix G16): 12 GB untuk WSL, sisanya untuk Windows dan Docker Desktop.
+# Laptop 32 GB: naikkan memory ke 24GB.
+[wsl2]
+memory=12GB
+swap=8GB
