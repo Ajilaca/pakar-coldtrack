@@ -1,0 +1,162 @@
+{
+  "DESIGN_NAME": "coldtrack_asic",
+  "VERILOG_FILES": [
+    "dir::../../../rtl/sha256_core.sv",
+    "dir::../../../rtl/seal.sv",
+    "dir::../../../rtl/floor_div.sv",
+    "dir::../../../rtl/tree_engine.sv",
+    "dir::../../../rtl/sha256_stream.sv",
+    "dir::../../../rtl/qspi_reader.sv",
+    "dir::../../../rtl/tree_stream.sv",
+    "dir::../rtl/model_flash.sv",
+    "dir::../../../rtl/coldtrack_top.sv",
+    "dir::../../../rtl/spi_axil_bridge.sv",
+    "dir::../../../rtl/coldtrack_spi.sv",
+    "dir::../rtl/serial_mul.sv",
+    "dir::../rtl/physics.sv",
+    "dir::../rtl/ring_sram.sv",
+    "dir::../rtl/features.sv",
+    "dir::../rtl/rst_sync.sv",
+    "dir::../rtl/coldtrack_asic.sv"
+  ],
+  "CLOCK_PORT": "clk",
+  "CLOCK_PERIOD": 100,
+  "MACROS": {
+    "RAM256": {
+      "gds": [
+        "dir::../ram256/gds/RAM256.gds"
+      ],
+      "lef": [
+        "dir::../ram256/lef/RAM256.lef"
+      ],
+      "nl": [
+        "dir::../ram256/nl/RAM256.nl.v"
+      ],
+      "pnl": [
+        "dir::../ram256/pnl/RAM256.pnl.v"
+      ],
+      "spice": [
+        "dir::../ram256/spice/RAM256.spice"
+      ],
+      "spef": {
+        "nom_*": [
+          "dir::../ram256/spef/nom/RAM256.nom.spef"
+        ],
+        "min_*": [
+          "dir::../ram256/spef/min/RAM256.min.spef"
+        ],
+        "max_*": [
+          "dir::../ram256/spef/max/RAM256.max.spef"
+        ]
+      },
+      "lib": {
+        "nom_tt_025C_1v80": [
+          "dir::../ram256/lib/nom_tt_025C_1v80/RAM256__nom_tt_025C_1v80.lib"
+        ],
+        "nom_ss_100C_1v60": [
+          "dir::../ram256/lib/nom_ss_100C_1v60/RAM256__nom_ss_100C_1v60.lib"
+        ],
+        "nom_ff_n40C_1v95": [
+          "dir::../ram256/lib/nom_ff_n40C_1v95/RAM256__nom_ff_n40C_1v95.lib"
+        ],
+        "min_tt_025C_1v80": [
+          "dir::../ram256/lib/min_tt_025C_1v80/RAM256__min_tt_025C_1v80.lib"
+        ],
+        "min_ss_100C_1v60": [
+          "dir::../ram256/lib/min_ss_100C_1v60/RAM256__min_ss_100C_1v60.lib"
+        ],
+        "min_ff_n40C_1v95": [
+          "dir::../ram256/lib/min_ff_n40C_1v95/RAM256__min_ff_n40C_1v95.lib"
+        ],
+        "max_tt_025C_1v80": [
+          "dir::../ram256/lib/max_tt_025C_1v80/RAM256__max_tt_025C_1v80.lib"
+        ],
+        "max_ss_100C_1v60": [
+          "dir::../ram256/lib/max_ss_100C_1v60/RAM256__max_ss_100C_1v60.lib"
+        ],
+        "max_ff_n40C_1v95": [
+          "dir::../ram256/lib/max_ff_n40C_1v95/RAM256__max_ff_n40C_1v95.lib"
+        ]
+      },
+      "instances": {
+        "u_chip.u_ct.u_fitur.u_ring.u_ram0": {
+          "location": [
+            40,
+            80
+          ],
+          "orientation": "N"
+        },
+        "u_chip.u_ct.u_fitur.u_ring.u_ram1": {
+          "location": [
+            1350,
+            80
+          ],
+          "orientation": "FN"
+        },
+        "u_chip.u_ct.u_fitur.u_ring.u_ram2": {
+          "location": [
+            40,
+            1586
+          ],
+          "orientation": "FS"
+        },
+        "u_chip.u_ct.u_fitur.u_ring.u_ram3": {
+          "location": [
+            1350,
+            1586
+          ],
+          "orientation": "S"
+        }
+      }
+    }
+  },
+  "PDN_MACRO_CONNECTIONS": [
+    "u_chip.u_ct.u_fitur.u_ring.u_ram.* VPWR VGND VPWR VGND"
+  ],
+  "FP_SIZING": "absolute",
+  "IO_PIN_ORDER_CFG": "dir::pin_order.cfg",
+  "DIE_AREA": [
+    0,
+    0,
+    2200,
+    2200
+  ],
+  "FP_MACRO_HORIZONTAL_HALO": 45,
+  "FP_MACRO_VERTICAL_HALO": 40,
+  "PL_TARGET_DENSITY_PCT": 62,
+  "PL_RESIZER_HOLD_SLACK_MARGIN": 0.01,
+  "GRT_RESIZER_HOLD_SLACK_MARGIN": 0.0,
+  "GRT_RESIZER_HOLD_MAX_BUFFER_PCT": 5,
+  "RUN_POST_GRT_RESIZER_TIMING": false,
+  "GRT_ALLOW_CONGESTION": true,
+  "PRIMARY_GDSII_STREAMOUT_TOOL": "klayout",
+  "SYNTH_CLK_DRIVING_CELL": "sky130_fd_sc_hd__clkbuf_16/X",
+  "CTS_SINK_CLUSTERING_SIZE": 10,
+  "CTS_CLK_MAX_WIRE_LENGTH": 600,
+  "CTS_CLK_BUFFERS": [
+    "sky130_fd_sc_hd__clkbuf_16",
+    "sky130_fd_sc_hd__clkbuf_8",
+    "sky130_fd_sc_hd__clkbuf_4",
+    "sky130_fd_sc_hd__clkbuf_2"
+  ],
+  "DESIGN_REPAIR_MAX_SLEW_PCT": 40,
+  "DESIGN_REPAIR_MAX_CAP_PCT": 40,
+  "DESIGN_REPAIR_MAX_WIRE_LENGTH": 600,
+  "RUN_POST_GRT_DESIGN_REPAIR": false,
+  "GRT_DESIGN_REPAIR_MAX_SLEW_PCT": 30,
+  "GRT_DESIGN_REPAIR_MAX_CAP_PCT": 40,
+  "GRT_DESIGN_REPAIR_MAX_WIRE_LENGTH": 400,
+  "DRT_ANTENNA_REPAIR_ITERS": 6,
+  "EXTRA_EXCLUDED_CELLS": [
+    "sky130_fd_sc_hd__clkdlybuf4s*",
+    "sky130_fd_sc_hd__dlygate4sd1_1",
+    "sky130_fd_sc_hd__dlygate4sd2_1",
+    "sky130_fd_sc_hd__dlymetal6s*",
+    "sky130_fd_sc_hd__buf_1",
+    "sky130_fd_sc_hd__clkbuf_1"
+  ],
+  "STA_MACRO_PRIORITIZE_NL": true,
+  "LINTER_INCLUDE_PDK_MODELS": true,
+  "PNR_SDC_FILE": "dir::pnr.sdc",
+  "SIGNOFF_SDC_FILE": "dir::signoff.sdc"
+}

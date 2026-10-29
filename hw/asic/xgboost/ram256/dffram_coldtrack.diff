@@ -1,0 +1,97 @@
+diff --git a/dffram.py b/dffram.py
+index a21763c..9eee7c5 100755
+--- a/dffram.py
++++ b/dffram.py
+@@ -168,7 +168,7 @@ def main(
+             "SYNTH_ELABORATE_ONLY": True,
+             "SYNTH_ELABORATE_FLATTEN": True,
+             "SYNTH_PARAMETERS": [f"WSIZE={logical_width}", f"USE_LATCH={int(latch)}"],
+-            "GRT_REPAIR_ANTENNAS": False,
++            "GRT_REPAIR_ANTENNAS": True,
+             "MINIMUM_HEIGHT": min_height,
+             "VERTICAL_HALO": vertical_halo,
+             "HORIZONTAL_HALO": horizontal_halo,
+diff --git a/models/ram/model.v b/models/ram/model.v
+index b33d03f..d7eeb23 100644
+--- a/models/ram/model.v
++++ b/models/ram/model.v
+@@ -392,20 +392,41 @@ module RAM256 #(parameter   USE_LATCH=1,
+ );
+ 
+     wire [1:0]             SEL0;
++
++    // ColdTrack: buffer every input pin next to the pin (short pin net -> low pin cap, fewer antenna issues)
++    wire                     CLK_buf;
++    wire [WSIZE-1:0]         WE0_buf;
++    wire                     EN0_buf;
++    wire [7:0]               A0_buf;
++    wire [(WSIZE*8-1):0]     Di0_buf;
++
++`ifndef NO_DIODES
++    (* keep = "true" *)
++    DIODE    DIODE_DI [WSIZE*8-1:0]  (.DIODE(Di0));
++    (* keep = "true" *)
++    DIODE    DIODE_CLK            (.DIODE(CLK));
++    (* keep = "true" *)
++    DIODE    DIODE_A0 [7:0]       (.DIODE(A0));
++`endif
++    CLKBUF_4   DIBUF[(WSIZE*8-1):0]  (.X(Di0_buf), .A(Di0));
++    CLKBUF_4   CLKBUF                (.X(CLK_buf), .A(CLK));
++    CLKBUF_2   WEBUF[WSIZE-1:0]      (.X(WE0_buf), .A(WE0));
++    CLKBUF_2   EN0BUF                (.X(EN0_buf), .A(EN0));
++    CLKBUF_4   A0BUF[7:0]            (.X(A0_buf),  .A(A0));
+     wire [(WSIZE*8-1):0]    Do0_pre[1:0]; 
+ 
+     // 1x2 DEC
+-    DEC1x2 DEC0 (.EN(EN0), .A(A0[7]), .SEL(SEL0));
++    DEC1x2 DEC0 (.EN(EN0_buf), .A(A0_buf[7]), .SEL(SEL0));
+ 
+     generate
+         genvar i;
+         for (i=0; i< 2; i=i+1) begin : BANK128
+-            RAM128 #(.USE_LATCH(USE_LATCH), .WSIZE(WSIZE)) RAM128 (.CLK(CLK), .EN0(SEL0[i]), .WE0(WE0), .Di0(Di0), .Do0(Do0_pre[i]), .A0(A0[6:0]) );        
++            RAM128 #(.USE_LATCH(USE_LATCH), .WSIZE(WSIZE)) RAM128 (.CLK(CLK_buf), .EN0(SEL0[i]), .WE0(WE0_buf), .Di0(Di0_buf), .Do0(Do0_pre[i]), .A0(A0_buf[6:0]) );        
+         end
+      endgenerate
+ 
+     // Output MUX    
+-    MUX2x1 #(.WIDTH(WSIZE*8)) Do0MUX ( .A0(Do0_pre[0]), .A1(Do0_pre[1]), .S(A0[7]), .X(Do0) );
++    MUX2x1_X4 #(.WIDTH(WSIZE*8)) Do0MUX ( .A0(Do0_pre[0]), .A1(Do0_pre[1]), .S(A0_buf[7]), .X(Do0) );
+ 
+ endmodule
+ 
+diff --git a/platforms/sky130A/sky130_fd_sc_hd/block_definitions.v b/platforms/sky130A/sky130_fd_sc_hd/block_definitions.v
+index 5994f5a..6c2e22c 100644
+--- a/platforms/sky130A/sky130_fd_sc_hd/block_definitions.v
++++ b/platforms/sky130A/sky130_fd_sc_hd/block_definitions.v
+@@ -132,6 +132,30 @@ module MUX2x1 #(parameter   WIDTH=32)
+     endgenerate
+ endmodule
+ 
++// ColdTrack: strong output mux for the top-level Do bus (long internal route to the pins)
++module MUX2x1_X4 #(parameter   WIDTH=32)
++(
++    input   wire [WIDTH-1:0]    A0, A1,
++    input   wire                S,
++    output  wire [WIDTH-1:0]    X
++);
++    localparam SIZE = WIDTH/8;
++    wire [SIZE-1:0] SEL;
++    sky130_fd_sc_hd__clkbuf_2 SEL0BUF[SIZE-1:0] (.X(SEL), .A(S));
++    generate
++        genvar i;
++        for(i=0; i<SIZE; i=i+1) begin : M
++`ifndef NO_DIODES
++            (* keep = "true" *)
++            sky130_fd_sc_hd__diode_2 DIODE_A0MUX [(i+1)*8-1:i*8] (.DIODE(A0[(i+1)*8-1:i*8]));   
++            (* keep = "true" *)
++            sky130_fd_sc_hd__diode_2 DIODE_A1MUX [(i+1)*8-1:i*8] (.DIODE(A1[(i+1)*8-1:i*8])); 
++`endif
++            sky130_fd_sc_hd__mux2_4 MUX[7:0] (.A0(A0[(i+1)*8-1:i*8]), .A1(A1[(i+1)*8-1:i*8]), .S(SEL[i]), .X(X[(i+1)*8-1:i*8]) );
++        end
++    endgenerate
++endmodule
++
+ module OUTREG #(parameter WIDTH=32)
+ (
+     input   wire                CLK,        // FO: 8
