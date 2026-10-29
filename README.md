@@ -103,13 +103,12 @@ di workflow `Fleet CI` ([.github/workflows/fleet.yml](.github/workflows/fleet.ym
 ```
 backend/    FastAPI, worker ingest MQTT dan inferensi, TimescaleDB (migrations/), tests/
 frontend/   Dasbor Next.js 14
-hw/         RTL chip edge KV260, testbench cocotb, skrip Vivado, driver ARM
+hw/         RTL chip edge KV260, versi ASIC SKY130 (hw/asic), testbench cocotb, skrip Vivado, driver ARM
 ml/         Simulator, notebook, pelatihan GRU dan XGBoost, ekspor ONNX
 bench/      Percobaan latih ulang dan benchmark antar-device (hasil di bench/results/)
 eval/       Evaluasi sistem sebagaimana di-deploy
 data/       Data olahan hasil simulator dan dataset Berkeley
 docker/     Konfigurasi Mosquitto
-setup/      Setup layout ASIC di Windows (WSL2, Docker, LibreLane)
 docs/       Arsitektur, kontrak API dan perangkat, kartu model, tata kelola AI
 ```
 

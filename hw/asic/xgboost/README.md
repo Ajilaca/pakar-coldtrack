@@ -128,7 +128,7 @@ serial perlu lebih banyak siklus. Default di `hw/tb` tidak berubah.
 ## Layout
 
 ```bash
-# dari root repo, setelah setup/wsl/02_librelane.sh
+# dari root repo; butuh Docker dan LibreLane 3.0.17 di .venv (pip install librelane==3.0.17)
 hw/asic/xgboost/layout/run_layout.sh                      # alur lengkap RTL -> GDS
 hw/asic/xgboost/layout/run_layout.sh --to Yosys.Synthesis # sintesis saja
 ```

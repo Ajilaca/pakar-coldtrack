@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Layout coldtrack_asic (RTL -> GDS) dengan LibreLane mode dockerized, PDK sky130A, sky130_fd_sc_hd, dan 4 makro SRAM
 # sky130_sram_1kbyte_1rw1r_32x256_8 untuk ring buffer. Hasil di hw/asic/xgboost/layout/runs/RUN_<waktu>/final/.
-# Jalankan dari root repo setelah setup/wsl/02_librelane.sh. Argumen tambahan diteruskan ke LibreLane
+# Jalankan dari root repo; butuh Docker dan LibreLane 3.0.17 di .venv (pip install librelane==3.0.17). Argumen tambahan diteruskan ke LibreLane
 # (mis. --to Yosys.Synthesis untuk sintesis saja, atau --last-run --from <langkah> untuk melanjutkan).
 #
 # Kunci HMAC model (KUNCI_MODEL, lihat hw/asic/xgboost/rtl/model_flash.sv) dibaca dari $CT_KUNCI_MODEL, bawaan
