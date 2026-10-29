@@ -19,6 +19,7 @@ sys.path.insert(0, str(ROOT / "backend"))
 from hw.golden import physics as fx
 
 PER_MODE = int(os.environ.get("TRIP_PER_MODE", "2"))
+BATAS_DONE = int(os.environ.get("BATAS_DONE_FISIKA", "200"))   # versi ASIC (pengali serial) butuh lebih lama
 
 
 def data_uji():
@@ -78,7 +79,7 @@ async def trip_dan_skenario(dut):
             dut.sampel.value = 1
             await FallingEdge(dut.clk)
             dut.sampel.value = 0
-            for _ in range(200):
+            for _ in range(BATAS_DONE):
                 if dut.done.value:
                     break
                 await FallingEdge(dut.clk)

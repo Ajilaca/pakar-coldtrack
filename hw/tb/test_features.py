@@ -19,6 +19,7 @@ from hw.golden import trees as ph
 
 FW = 48
 MENIT = int(os.environ.get("MENIT_FITUR", "300"))
+BATAS_DONE = int(os.environ.get("BATAS_DONE_FITUR", "5000"))   # versi ASIC (kuadrat serial) butuh lebih lama
 MODE = ["A0", "A1", "A6", "A8", "A2", "A7"]
 
 
@@ -75,7 +76,7 @@ async def trip_val(dut):
             await FallingEdge(dut.clk)
             dut.sampel.value = 0
             f = {}
-            for _ in range(5000):
+            for _ in range(BATAS_DONE):
                 if dut.fitur_we.value:
                     f[int(dut.fitur_addr.value)] = s(dut.fitur_data.value, FW)
                 if dut.done.value:
