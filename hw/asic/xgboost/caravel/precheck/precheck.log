@@ -1,0 +1,50 @@
+2026-10-31 05:40:17 [INFO] Extracting compressed files in: /home/tsabita/FPGA/caravel/caravel_user_project
+2026-10-31 05:40:19 [INFO] make uncompress produced 2 gds/*.gds file(s): coldtrack_asic.gds, user_project_wrapper.gds (make exit 0)
+2026-10-31 05:40:19 [INFO] Project type: digital
+2026-10-31 05:40:19 [INFO] GDS hash (user_project_wrapper): 040c20a0d2d0858f10ad7340b539766935e864af
+2026-10-31 05:40:20 [INFO] Tools: KLayout v0.29.12 | Magic v8.3.471
+2026-10-31 05:40:20 [INFO] PDK: SKY130A unknown
+2026-10-31 05:40:20 [INFO] Running 13 checks: [topcell_check, gpio_defines, xor, klayout_feol, klayout_beol, klayout_offgrid, klayout_met_min_ca_density, klayout_pin_label_purposes_overlapping_drawing, klayout_zeroarea, spike_check, illegal_cellname_check, lvs, oeb]
+2026-10-31 05:40:21 [INFO] Single top cell 'user_project_wrapper' found
+2026-10-31 05:40:21 [INFO] GPIO defines: parsing verilog/rtl/user_defines.v
+2026-10-31 05:40:21 [INFO] GPIO defines report: /home/tsabita/FPGA/caravel/caravel_user_project/precheck_results/31_OCT_2026___05_40_17/outputs/reports/gpio_defines.report
+2026-10-31 05:42:01 [INFO] Total XOR differences: 0
+2026-10-31 05:42:01 [INFO] Running: klayout -b -r /usr/local/lib/python3.9/site-packages/cf_precheck/drc_scripts/sky130A_mr.drc -rd input=/home/tsabita/FPGA/caravel/caravel_user_project/gds/user_project_wrapper.gds -rd topcell=user_project_wrapper -rd report=/home/tsabita/FPGA/caravel/caravel_user_project/precheck_results/31_OCT_2026___05_40_17/outputs/reports/klayout_feol_check.xml -rd thr=32 -rd feol=true
+2026-10-31 05:46:56 [INFO] No DRC violations found
+2026-10-31 05:46:56 [INFO] Running: klayout -b -r /usr/local/lib/python3.9/site-packages/cf_precheck/drc_scripts/sky130A_mr.drc -rd input=/home/tsabita/FPGA/caravel/caravel_user_project/gds/user_project_wrapper.gds -rd topcell=user_project_wrapper -rd report=/home/tsabita/FPGA/caravel/caravel_user_project/precheck_results/31_OCT_2026___05_40_17/outputs/reports/klayout_beol_check.xml -rd thr=32 -rd beol=true
+2026-10-31 06:02:24 [INFO] No DRC violations found
+2026-10-31 06:02:24 [INFO] Running: klayout -b -r /usr/local/lib/python3.9/site-packages/cf_precheck/drc_scripts/sky130A_mr.drc -rd input=/home/tsabita/FPGA/caravel/caravel_user_project/gds/user_project_wrapper.gds -rd topcell=user_project_wrapper -rd report=/home/tsabita/FPGA/caravel/caravel_user_project/precheck_results/31_OCT_2026___05_40_17/outputs/reports/klayout_offgrid_check.xml -rd thr=32 -rd offgrid=true
+2026-10-31 06:05:33 [INFO] No DRC violations found
+2026-10-31 06:05:33 [INFO] Running: klayout -b -r /usr/local/lib/python3.9/site-packages/cf_precheck/drc_scripts/met_min_ca_density.lydrc -rd input=/home/tsabita/FPGA/caravel/caravel_user_project/gds/user_project_wrapper.gds -rd topcell=user_project_wrapper -rd report=/home/tsabita/FPGA/caravel/caravel_user_project/precheck_results/31_OCT_2026___05_40_17/outputs/reports/klayout_met_min_ca_density_check.xml -rd thr=32
+2026-10-31 06:06:58 [INFO] No DRC violations found
+2026-10-31 06:06:58 [INFO] Running: klayout -b -r /usr/local/lib/python3.9/site-packages/cf_precheck/drc_scripts/pin_label_purposes_overlapping_drawing.rb.drc -rd input=/home/tsabita/FPGA/caravel/caravel_user_project/gds/user_project_wrapper.gds -rd topcell=user_project_wrapper -rd report=/home/tsabita/FPGA/caravel/caravel_user_project/precheck_results/31_OCT_2026___05_40_17/outputs/reports/klayout_pin_label_purposes_overlapping_drawing_check.xml -rd thr=32 -rd top_cell_name=user_project_wrapper
+2026-10-31 06:07:45 [INFO] No DRC violations found
+2026-10-31 06:07:45 [INFO] Running: klayout -b -r /usr/local/lib/python3.9/site-packages/cf_precheck/drc_scripts/zeroarea.rb.drc -rd input=/home/tsabita/FPGA/caravel/caravel_user_project/gds/user_project_wrapper.gds -rd topcell=user_project_wrapper -rd report=/home/tsabita/FPGA/caravel/caravel_user_project/precheck_results/31_OCT_2026___05_40_17/outputs/reports/klayout_zeroarea_check.xml -rd thr=32 -rd cleaned_output=/home/tsabita/FPGA/caravel/caravel_user_project/precheck_results/31_OCT_2026___05_40_17/outputs/user_project_wrapper_no_zero_areas.gds
+2026-10-31 06:07:51 [INFO] No DRC violations found
+2026-10-31 06:07:51 [INFO] Running: bash /usr/local/lib/python3.9/site-packages/cf_precheck/drc_scripts/gdsArea0 -V -m /home/tsabita/FPGA/caravel/caravel_user_project/precheck_results/31_OCT_2026___05_40_17/outputs/reports/spike_check.xml /home/tsabita/FPGA/caravel/caravel_user_project/gds/user_project_wrapper.gds
+2026-10-31 06:08:07 [INFO] No spikes found
+2026-10-31 06:08:11 [INFO] Loading LVS environment from /home/tsabita/FPGA/caravel/caravel_user_project/lvs/user_project_wrapper/lvs_config.json
+2026-10-31 06:08:11 [INFO] EXTRACT_FLATGLOB: 
+2026-10-31 06:08:11 [INFO] EXTRACT_ABSTRACT: *__fill_* *__fakediode_* *__tapvpwrvgnd_*
+2026-10-31 06:08:11 [INFO] EXTRACT_CREATE_SUBCUT: 
+2026-10-31 06:08:11 [INFO] LVS_FLATTEN: 
+2026-10-31 06:08:11 [INFO] LVS_NOFLATTEN: 
+2026-10-31 06:08:11 [INFO] LVS_IGNORE: 
+2026-10-31 06:08:11 [INFO] LVS_SPICE_FILES: /home/tsabita/FPGA/caravel/pdks/sky130A/libs.ref/sky130_fd_sc_hd/spice/sky130_ef_sc_hd__decap*.spice /home/tsabita/FPGA/caravel/pdks/sky130A/libs.ref/sky130_fd_sc_hd/spice/sky130_fd_sc_hd.spice
+2026-10-31 06:08:11 [INFO] LVS_VERILOG_FILES: /home/tsabita/FPGA/caravel/caravel_user_project/verilog/gl/RAM256.v /home/tsabita/FPGA/caravel/caravel_user_project/verilog/gl/coldtrack_asic.v /home/tsabita/FPGA/caravel/caravel_user_project/verilog/gl/user_project_wrapper.v
+2026-10-31 06:08:11 [INFO] LAYOUT_FILE: /home/tsabita/FPGA/caravel/caravel_user_project/gds/user_project_wrapper.gds
+2026-10-31 06:08:11 [INFO] Running: run_be_checks --nooeb
+2026-10-31 06:08:11 [INFO] LVS output directory: /home/tsabita/FPGA/caravel/caravel_user_project/precheck_results/31_OCT_2026___05_40_17
+2026-10-31 06:37:24 [INFO] Loading LVS environment from /home/tsabita/FPGA/caravel/caravel_user_project/lvs/user_project_wrapper/lvs_config.json
+2026-10-31 06:37:24 [INFO] EXTRACT_FLATGLOB: 
+2026-10-31 06:37:24 [INFO] EXTRACT_ABSTRACT: *__fill_* *__fakediode_* *__tapvpwrvgnd_*
+2026-10-31 06:37:24 [INFO] EXTRACT_CREATE_SUBCUT: 
+2026-10-31 06:37:24 [INFO] LVS_FLATTEN: 
+2026-10-31 06:37:24 [INFO] LVS_NOFLATTEN: 
+2026-10-31 06:37:24 [INFO] LVS_IGNORE: 
+2026-10-31 06:37:24 [INFO] LVS_SPICE_FILES: /home/tsabita/FPGA/caravel/pdks/sky130A/libs.ref/sky130_fd_sc_hd/spice/sky130_ef_sc_hd__decap*.spice /home/tsabita/FPGA/caravel/pdks/sky130A/libs.ref/sky130_fd_sc_hd/spice/sky130_fd_sc_hd.spice
+2026-10-31 06:37:24 [INFO] LVS_VERILOG_FILES: /home/tsabita/FPGA/caravel/caravel_user_project/verilog/gl/RAM256.v /home/tsabita/FPGA/caravel/caravel_user_project/verilog/gl/coldtrack_asic.v /home/tsabita/FPGA/caravel/caravel_user_project/verilog/gl/user_project_wrapper.v
+2026-10-31 06:37:24 [INFO] LAYOUT_FILE: /home/tsabita/FPGA/caravel/caravel_user_project/gds/user_project_wrapper.gds
+2026-10-31 06:37:24 [INFO] Running: run_oeb_check --noextract
+2026-10-31 06:37:24 [INFO] OEB output directory: /home/tsabita/FPGA/caravel/caravel_user_project/precheck_results/31_OCT_2026___05_40_17
+2026-10-31 06:37:43 [WARNING] ERC check failed (stat=4), see /home/tsabita/FPGA/caravel/caravel_user_project/precheck_results/31_OCT_2026___05_40_17/logs/OEB_check.log

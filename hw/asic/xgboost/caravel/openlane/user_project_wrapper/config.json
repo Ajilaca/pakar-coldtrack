@@ -1,0 +1,110 @@
+{
+    "//": "Design files",
+    "VERILOG_FILES": [
+        "dir::../../verilog/rtl/defines.v",
+        "dir::../../verilog/rtl/user_project_wrapper.v"
+    ],
+    "PNR_SDC_FILE": "dir::signoff.sdc",
+
+    "//": "Wrapper = makro coldtrack_asic + glue (inverter io_oeb/reset, tie cell, buffer clock/kabel panjang). Baris sel standar hanya di pita bawah (y < 46,6), kanal kiri (x < 65, jalur clock/reset dari wb_clk_i/wb_rst_i di kiri bawah), kanal kanan (x > 2860, jalur repeater user_irq ke kanan bawah dan pin io 0..14) dan pita atas (y > 3440, dekat pin IO); tanpa ini fill/tap memenuhi seluruh 2,9 x 3,5 mm (1,4 juta sel) dan Magic kehabisan memori",
+    "FP_OBSTRUCTIONS": [[65, 46.6, 2860, 3440]],
+    "//": "CTS tidak mengenali pin clk makro sebagai sink (CTS-0082), jadi clock dibuffer lewat rantai clkbuf di RTL (g_clkbuf, dont-touch); RepairDesignPostGRT gagal RSZ-0074 di wrapper ini",
+    "RUN_CTS": false,
+    "RSZ_DONT_TOUCH_RX": "g_clkbuf",
+    "LINTER_INCLUDE_PDK_MODELS": true,
+    "RUN_IRDROP_REPORT": false,
+    "ERROR_ON_SYNTH_CHECKS": false,
+    "RUN_POST_CTS_RESIZER_TIMING": false,
+    "RUN_POST_GRT_DESIGN_REPAIR": false,
+    "DESIGN_REPAIR_MAX_WIRE_LENGTH": 400,
+    "PL_TARGET_DENSITY_PCT": 30,
+    "FP_MACRO_HORIZONTAL_HALO": 10,
+    "FP_MACRO_VERTICAL_HALO": 10,
+    "RUN_ANTENNA_REPAIR": true,
+    "DRT_ANTENNA_REPAIR_ITERS": 6,
+    "PRIMARY_GDSII_STREAMOUT_TOOL": "klayout",
+
+    "//": "Macros configurations",
+    "MACROS": {
+        "coldtrack_asic": {
+            "gds": ["dir::../../gds/coldtrack_asic.gds"],
+            "lef": ["dir::../../lef/coldtrack_asic.lef"],
+            "vh": ["dir::../../verilog/rtl/coldtrack_asic.vh"],
+            "pnl": ["dir::../../verilog/gl/coldtrack_asic.v"],
+            "spice": ["dir::../../spi/lvs/coldtrack_asic.spice"],
+            "spef": {
+                "min_*": ["dir::../../spef/multicorner/coldtrack_asic.min.spef"],
+                "nom_*": ["dir::../../spef/multicorner/coldtrack_asic.nom.spef"],
+                "max_*": ["dir::../../spef/multicorner/coldtrack_asic.max.spef"]
+            },
+            "lib": {
+                "nom_tt_025C_1v80": ["dir::../../lib/multicorner/coldtrack_asic__nom_tt_025C_1v80.lib"],
+                "nom_ss_100C_1v60": ["dir::../../lib/multicorner/coldtrack_asic__nom_ss_100C_1v60.lib"],
+                "nom_ff_n40C_1v95": ["dir::../../lib/multicorner/coldtrack_asic__nom_ff_n40C_1v95.lib"],
+                "min_tt_025C_1v80": ["dir::../../lib/multicorner/coldtrack_asic__min_tt_025C_1v80.lib"],
+                "min_ss_100C_1v60": ["dir::../../lib/multicorner/coldtrack_asic__min_ss_100C_1v60.lib"],
+                "min_ff_n40C_1v95": ["dir::../../lib/multicorner/coldtrack_asic__min_ff_n40C_1v95.lib"],
+                "max_tt_025C_1v80": ["dir::../../lib/multicorner/coldtrack_asic__max_tt_025C_1v80.lib"],
+                "max_ss_100C_1v60": ["dir::../../lib/multicorner/coldtrack_asic__max_ss_100C_1v60.lib"],
+                "max_ff_n40C_1v95": ["dir::../../lib/multicorner/coldtrack_asic__max_ff_n40C_1v95.lib"]
+            },
+            "instances": {
+                "u_ct": {
+                    "location": [360.18, 1098.88],
+                    "orientation": "N"
+                }
+            }
+        }
+    },
+    "PDN_MACRO_CONNECTIONS": ["u_ct vccd1 vssd1 VPWR VGND"],
+
+    "//": "PDN: strap wrapper berimpit dengan grid makro (met4 lebar 1,6 jarak 1,7 pitch 153,6; met5 lebar 1,6 jarak 1,7 pitch 153,18), karena makro memakai met4+met5 (PDN_MULTILAYER) dan OBS met5 mengisi celah antar-strap; offset = jarak pojok core (5,52; 10,88) ke TENGAH strap, supaya strap jatuh tepat di VPWR makro x = 360,18 + 21,04 dan y = 1098,88 + 26,73 (lebar 1,6). Strap hanya vccd1/vssd1 (pdn_ct.tcl)",
+    "PDN_CFG": "dir::pdn_ct.tcl",
+    "PDN_VOFFSET": 69.3,
+    "PDN_HOFFSET": 43.27,
+    "PDN_VWIDTH": 1.6,
+    "PDN_HWIDTH": 1.6,
+    "PDN_VSPACING": 1.7,
+    "PDN_HSPACING": 1.7,
+    "PDN_VPITCH": 153.6,
+    "PDN_HPITCH": 153.18,
+    "ERROR_ON_PDN_VIOLATIONS": false,
+
+    "//": "Magic variables",
+    "MAGIC_DRC_USE_GDS": true,
+
+    "MAX_TRANSITION_CONSTRAINT": 1.5,
+
+    "//": "Fixed configurations for caravel. You should NOT edit this section",
+    "DESIGN_NAME": "user_project_wrapper",
+    "FP_SIZING": "absolute",
+    "DIE_AREA": [0, 0, 2920, 3520],
+    "FP_DEF_TEMPLATE": "dir::fixed_dont_change/user_project_wrapper.def",
+    "VDD_NETS": [
+        "vccd1",
+        "vccd2",
+        "vdda1",
+        "vdda2"
+    ],
+    "GND_NETS": [
+        "vssd1",
+        "vssd2",
+        "vssa1",
+        "vssa2"
+    ],
+    "FP_PDN_CORE_RING": true,
+    "FP_PDN_CORE_RING_VWIDTH": 3.1,
+    "FP_PDN_CORE_RING_HWIDTH": 3.1,
+    "FP_PDN_CORE_RING_VOFFSET": 12.45,
+    "FP_PDN_CORE_RING_HOFFSET": 12.45,
+    "FP_PDN_CORE_RING_VSPACING": 1.7,
+    "FP_PDN_CORE_RING_HSPACING": 1.7,
+    "CLOCK_PORT": "wb_clk_i",
+    "SIGNOFF_SDC_FILE": "dir::signoff.sdc",
+    "MAGIC_DEF_LABELS": false,
+    "CLOCK_PERIOD": 100,
+    "MAGIC_ZEROIZE_ORIGIN": false,
+    "meta": {
+        "version": 2
+    }
+}
