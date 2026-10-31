@@ -17,7 +17,8 @@ dan antarmuka modul yang sama, sehingga pemilihan versi cukup lewat daftar berka
 | `golden/flash_tag.py` | Pembuat kunci model dan image flash bertag |
 | `sim/sky130_sram_1kbyte_1rw1r_32x256_8.v` | Model simulasi makro yang bersih (tanpa `$display`/delay), pin sama dengan model PDK |
 | `tb/` | Tes cocotb versi ASIC (memakai modul tes dan golden dari `hw/tb`) |
-| `layout/` | Config dan skrip LibreLane |
+| `layout/` | Config, SDC, dan skrip LibreLane; `layout/eco/` berisi skrip ECO (lihat Layout) |
+| `metrics.csv` | Metrik signoff layout final |
 
 ## Perubahan dari versi FPGA
 
@@ -30,19 +31,27 @@ dan antarmuka modul yang sama, sehingga pemilihan versi cukup lewat daftar berka
 
   Dibanding SRAM OpenRAM yang dipakai sebelumnya, DFFRAM punya liberty di semua corner (OpenRAM hanya TT),
   tidak ada aturan DRC khusus makro (Magic DRC SRAM melaporkan 11,3 juta error bitcell), dan pin masukannya
-  tidak dibatasi slew 0,04 ns. Gantinya lebih luas: 809,6 × 533,1 µm per makro (SRAM 479,8 × 397,5 µm).
+  tidak dibatasi slew 0,04 ns. Gantinya lebih luas: 809,6 × 533,12 µm per makro (SRAM 479,8 × 397,5 µm).
 
-  **Asal-usul makro `ram256/`.** DFFRAM commit `ba5268492ab1e6135329d571cf9724766233a230`
-  (10 Nov 2025), LibreLane 2.4.2, PDK sky130A `8afc8346`, ditambah patch ColdTrack `ram256/dffram_coldtrack.diff`:
+  **Asal-usul makro `ram256/` (versi v6).** DFFRAM commit `ba5268492ab1e6135329d571cf9724766233a230`
+  (10 Nov 2025), di-harden dengan LibreLane 3.0.17 (image `ghcr.io/librelane/librelane:3.0.17`), PDK sky130A
+  `8afc8346`, ditambah patch ColdTrack `ram256/dffram_coldtrack.diff`:
 
-  - Mux keluaran `Do` tingkat atas memakai `mux2_4` (MUX2x1_X4): slew pin `Do` turun dari 1,79 ns (`Do0[17]`) menjadi
-    < 0,75 ns di STA makro.
-  - Semua pin masukan di-buffer dekat pin (DIBUF/A0BUF/WEBUF/EN0BUF/CLKBUF, ditambah dioda di DI/A0/CLK): kapasitansi
-    pin `A0[7]` turun dari 0,332 menjadi 0,031 pF, dan semua pin masukan < 0,2 pF.
-  - `GRT_REPAIR_ANTENNAS=True` (tidak berefek pada flow DFFRAM 2.4.2).
+  - Mux keluaran `Do` tingkat atas memakai `mux2_4` (MUX2x1_X4): slew pin `Do` turun dari 1,79 ns (`Do0[17]`)
+    menjadi < 0,75 ns di STA makro.
+  - Langkah baru `DFFRAM.PinBufPlace` (`scripts/odbpy/pinbuf.py`) setelah penempatan pin, diikuti
+    `OpenROAD.DetailedPlacement`. PlaceRAM menaruh sel tambahan berderet di pojok makro, jadi langkah ini
+    memindahkan buffer pin masukan (DIBUF/A0BUF/WEBUF/EN0BUF/CLKBUF beserta diodanya) dan mux keluaran `Do0MUX`
+    (beserta dioda di masukannya) ke baris terdekat dari pinnya. Kapasitansi pin yang terlihat dari top-level:
+    `Di` maksimal 0,019 pF (sebelumnya sampai 0,18 pF), `Do` maksimal 0,0011 pF.
+  - Antena: `OpenROAD.RepairAntennas` setelah GRT (`GRT_REPAIR_ANTENNAS=True`), `DRT_ANTENNA_REPAIR_ITERS=5`,
+    `OpenROAD.CheckAntennas` setelah DRT, dan `OpenROAD.FillInsertion` dipindah ke setelah DRT supaya dioda dan
+    jumper punya tempat. Pelanggaran antena di dalam makro 0 (versi asli 32 net).
 
-  Hasilnya: ukuran tetap 809,6 × 533,12 µm; DRC, LVS, dan XOR bersih; antena pasca-routing 16 net internal (versi
-  asli 32). Ringkasan metrik harden ada di `ram256/metrics.json`.
+  Hasil harden: ukuran 809,6 × 533,12 µm, 72.537 sel, DRC Magic 0, LVS 0, XOR 0, antena 0. Pin LEF sama dengan
+  versi sebelumnya, jadi makro bisa ditukar tanpa mengubah top-level. Ringkasan metrik harden ada di
+  `ram256/metrics.json`. Angka timing di sana memakai constraint bawaan DFFRAM; timing makro di dalam chip
+  dianalisis ulang di STA top-level (clock 100 ns).
 
   View besar (`gds`, `spef`, `spice`, `nl`, `pnl`, ±155 MB) tidak disimpan di git. Unduh dari aset GitHub Release
   layout ASIC lalu ekstrak ke `ram256/`, atau bangun ulang. Yang ada di git: `lef`, `lib`, `metrics.json`,
@@ -51,9 +60,9 @@ dan antarmuka modul yang sama, sehingga pemilihan versi cukup lewat daftar berka
   Membangun ulang makro:
 
   ```bash
-  # di clone DFFRAM (commit di atas) setelah git apply dffram_coldtrack.diff; DFFRAM butuh LibreLane 2.x
+  # di clone DFFRAM (commit di atas) setelah git apply dffram_coldtrack.diff
   docker run --rm -u $(id -u):$(id -g) -e HOME=/tmp -v $PWD:/dffram -v <pdk sky130 8afc8346>:/pdk:ro -w /dffram \
-    ghcr.io/librelane/librelane:2.4.2 python3 dffram.py -p sky130A -s sky130_fd_sc_hd -b ram \
+    ghcr.io/librelane/librelane:3.0.17 python3 dffram.py -p sky130A -s sky130_fd_sc_hd -b ram \
     --manual-pdk --pdk-root /pdk 256x32
   # salin products/RAM256/{gds,lef,lib,nl,pnl,spice,spef} ke hw/asic/xgboost/ram256/
   ```
@@ -85,18 +94,26 @@ dan antarmuka modul yang sama, sehingga pemilihan versi cukup lewat daftar berka
 
   ```bash
   .venv/bin/python -m hw.golden.flash_image                                   # nodes/trees/base.mem -> image
-  .venv/bin/python -m hw.asic.xgboost.golden.flash_tag hw/model/<folder>              # -> hw/asic/xgboost/build/flash/<folder>.bin
+  .venv/bin/python -m hw.asic.xgboost.golden.flash_tag hw/model/<folder>      # -> hw/asic/xgboost/build/flash/<folder>.bin
   # tulis .bin itu ke flash QSPI mulai alamat 0
   ```
 
   Batas hardware tetap berlaku: 82 fitur, 7 kelas, maksimal 1.024 pohon dan 16.384 simpul.
 
-  **Kunci.** Kunci dibuat sekali (`python -m hw.asic.xgboost.golden.flash_tag --buat-kunci`) dan disimpan di luar repo,
-  di `~/.coldtrack/kunci_model.hex` (bisa diganti lewat env `CT_KUNCI_MODEL`). Kunci tidak bisa diubah setelah
-  chip dibuat. Jika hilang, model baru tidak bisa diterbitkan lagi. Jika bocor, siapa pun bisa menerbitkan
-  model, jadi cadangkan dan rahasiakan. Kunci ikut tertanam di netlist dan GDS (konstanta logika), jadi
-  keamanannya bergantung pada GDS yang tidak dipublikasikan. Untuk shuttle yang mewajibkan GDS terbuka, perlu
-  skema tanda tangan berbasis kunci publik.
+  **Kunci.** Kunci dibuat dengan `python -m hw.asic.xgboost.golden.flash_tag --buat-kunci` dan dibaca dari
+  `~/.coldtrack/kunci_model.hex` (bisa diganti lewat env `CT_KUNCI_MODEL`). Kunci ikut tertanam di netlist dan
+  GDS sebagai konstanta logika, jadi siapa pun yang memegang GDS atau netlist bisa membacanya.
+
+  > **Kunci layout ini adalah kunci lomba yang dibuka (open source).** Layout di folder ini dibuat untuk lomba
+  > dan verifikasi, bukan untuk tapeout sungguhan. Kunci yang tertanam di layout final sengaja dipublikasikan
+  > bersama GDS, netlist, dan berkas layout lain, sehingga juri dan siapa pun bisa memeriksa tag model dan
+  > mengulang verifikasinya. Akibatnya chip dari layout ini tidak memberi perlindungan model: siapa pun bisa
+  > menerbitkan model bertag yang diterima.
+  >
+  > **Untuk tapeout sungguhan:** buat kunci rahasia baru (`--buat-kunci`), lalu ulangi sintesis dan layout
+  > penuh beserta ECO-nya (kunci mengubah logika, jadi netlist, routing, dan timing ikut berubah), dan jangan
+  > publikasikan GDS, netlist, DEF, maupun SPEF hasilnya. Jangan memakai kunci lomba ini untuk perangkat lain,
+  > termasuk board FPGA.
 
 Hasil keluarannya **bit-exact** dengan golden dan RTL FPGA.
 
@@ -117,7 +134,7 @@ Lima tes:
 | `test_coldtrack_top_flash_asic` | `coldtrack_top` lewat AXI dengan flash QSPI bertag |
 | `test_coldtrack_asic` | top layout lewat SPI, termasuk `rst_sync` |
 
-Tes memakai kunci uji yang tetap (`bytes(range(0xA0, 0xC0))`), bukan kunci produksi.
+Tes memakai kunci uji yang tetap (`bytes(range(0xA0, 0xC0))`), bukan kunci layout.
 
 Verilator mengisi register tanpa reset dengan nilai acak (`--x-initial unique`, `+verilator+rand+reset+2`),
 jadi logika yang diam-diam bergantung pada nilai awal nol akan gagal.
@@ -133,27 +150,153 @@ hw/asic/xgboost/layout/run_layout.sh                      # alur lengkap RTL -> 
 hw/asic/xgboost/layout/run_layout.sh --to Yosys.Synthesis # sintesis saja
 ```
 
-`run_layout.sh` membaca kunci model dari `~/.coldtrack/kunci_model.hex` dan berhenti bila berkas itu tidak ada.
-Kunci tidak ditulis ke `config.json`; skrip membuat config sementara `.config_kunci.json` yang dihapus setelah
-run. Folder `runs/` tetap memuat kunci (netlist, GDS, `resolved.json`) dan diabaikan git.
+`run_layout.sh` membaca kunci dari `~/.coldtrack/kunci_model.hex` dan berhenti bila berkas itu tidak ada. Kunci
+tidak ditulis ke `config.json`; skrip membuat config sementara `.config_kunci.json` yang dihapus setelah run.
+Folder `runs/` memuat kunci (netlist, GDS, `resolved.json`) dan diabaikan git. Hasil ditulis ke
+`hw/asic/xgboost/layout/runs/<tag>/final/`.
 
-Hasil ditulis ke `hw/asic/xgboost/layout/runs/RUN_<waktu>/final/`. Isi `layout/config.json`:
+### Parameter
 
-- **Clock** 10 MHz (`CLOCK_PERIOD` 100 ns).
-- **Die** 2000 × 2000 µm. Versi tanpa SRAM memakai 2631 × 2642 µm.
-- **Penempatan makro**: 4 makro (masing-masing 479,78 × 397,5 µm) membentuk blok 2×2 di tengah die.
-  Pin port 0 ada di sisi bawah/kiri makro, pin port 1 di sisi atas/kanan, jadi di antara kedua baris
-  disisakan celah untuk routing.
-- **Power makro**: pin `vccd1`/`vssd1` disambungkan ke `VPWR`/`VGND` lewat `PDN_MACRO_CONNECTIONS`.
-- **Hold**: margin perbaikan hold diturunkan dari 0,1 ns ke 0,01 ns. Clock uncertainty 0,25 ns di
-  `base.sdc` tetap berlaku. Pada versi tanpa SRAM, margin 0,1 ns menambah ±44 ribu buffer tanpa
-  memperbaiki pelanggaran yang nyata.
-- **Batasan**: liberty makro hanya tersedia untuk corner TT (1,8 V, 25 °C). Corner lain memakai liberty TT
-  untuk makro, jadi analisis timing di sekitar SRAM pada corner ss/ff hanya perkiraan.
+| Kelompok | Nilai |
+|---|---|
+| Alat | LibreLane 3.0.17 (Docker), OpenROAD 2026-02-17, PDK sky130A `8afc8346`, sel `sky130_fd_sc_hd` |
+| Clock | `clk`, 10 MHz (`CLOCK_PERIOD` 100 ns) |
+| Die / core | 2200 × 2200 µm (4,84 mm²) / 4,76 mm², 800 baris `unithd` |
+| Makro | 4 × `RAM256` 809,6 × 533,12 µm di pojok die: `u_ram0` (40, 80) N, `u_ram1` (1350, 80) FN, `u_ram2` (40, 1586) FS, `u_ram3` (1350, 1586) S |
+| Halo makro | horizontal 45 µm, vertikal 40 µm |
+| Power makro | `PDN_MACRO_CONNECTIONS` ke `VPWR`/`VGND` |
+| Penempatan | `PL_TARGET_DENSITY_PCT` 62 |
+| SDC | `pnr.sdc` (fanout maksimal 9, satu di bawah batas signoff, karena dioda dari DRT dihitung sebagai beban) dan `signoff.sdc` (fanout 10); slew maksimal 0,75 ns; clock uncertainty 0,25 ns; transisi clock 0,15 ns; derate ±5 % |
+| CTS | `clkbuf_16/8/4/2`, cluster 10 sink, kabel clock maksimal 600 µm |
+| Perbaikan desain | sebelum GRT: slew 40 %, cap 40 %, kabel maksimal 600 µm; `RUN_POST_GRT_DESIGN_REPAIR` dan `RUN_POST_GRT_RESIZER_TIMING` dimatikan, diganti ECO (di bawah) |
+| Hold | margin resizer PL 0,01 ns, GRT 0 ns, buffer hold maksimal 5 % |
+| Antena | jumper di tahap GRT (`RUN_ANTENNA_REPAIR=true`, `GRT_ANTENNA_REPAIR_JUMPER_ONLY=true`), sisanya dioda oleh DRT (`DRT_ANTENNA_REPAIR_ITERS` 6, margin rasio 10 %) |
+| STA | 9 corner (ff/tt/ss × RC min/nom/max), `STA_MACRO_PRIORITIZE_NL` |
+| GDS | KLayout |
 
-### Luas hasil sintesis Yosys (sky130_fd_sc_hd, TT)
+### Alur dan ECO
 
-| | Sel standar | Flip-flop | Makro |
+Layout final (tag `RUN_AK`) didapat dari alur LibreLane penuh lalu beberapa putaran ECO dengan skrip di
+`layout/eco/`:
+
+| Skrip | Fungsi |
+|---|---|
+| `eco_all.tcl` | ECO OpenROAD (env): repeater di tengah net panjang, penyeimbangan dioda, pemecahan net, buffer di belakang driver lemah, sel hold; `POST_ROUTE=1` untuk layout yang sudah di-route |
+| `ecolist.py` | Menyusun daftar ECO dari pelanggar slew/fanout STA pasca-route |
+| `diodenets.py` | Jumlah dioda dan beban per net (pelanggar fanout berasal dari dioda antena) |
+| `holdall.tcl` | Disisipkan ke STA (`-c STA_EXTRA_CORNER_TCL_FILE=...`): semua endpoint hold dengan slack < 0,05 ns di corner ff ditulis ke `runs/_hold/` (laporan bawaan hanya 2.000 jalur) |
+
+Urutannya:
+
+1. **Alur penuh** RTL → GDS dengan `run_layout.sh`.
+2. **ECO sebelum GRT** pada ODB hasil penempatan dan CTS: buffer di belakang driver lemah (driver ukuran 1–2,
+   dlygate, `clkbuf_2` dengan kabel panjang), repeater di tengah net panjang, pemecahan net dengan beban banyak,
+   dan sel hold untuk jalur makro `Do` → flop. Dioda antena tidak dihapus (menghapusnya membuat
+   `repair_antennas` crash). Driver tidak diperbesar, karena itu mempercepat jalur dan bisa merusak hold.
+3. **Routing ulang dari GRT** dengan jumper antena di tahap GRT: net antena setelah GRT turun dari 927 ke 101,
+   dan dioda dari DRT turun dari 1.655 ke 654. Dioda dihitung STA sebagai beban, jadi inilah sumber utama
+   pelanggaran fanout.
+4. **ECO inkremental setelah DRT** (2 putaran). Sel lama dikunci (`FIRM`), sel baru ditaruh di slot kosong, dan
+   kabel hanya dihapus pada net yang diubah. GRT lalu hanya me-route net tersebut (sekitar 10–66 mm, beberapa
+   detik), dan DRT mempertahankan routing net lain (DRT ±7 menit, bukan ±30 menit). Hasilnya bisa diprediksi:
+   ECO yang diikuti routing ulang penuh terbukti tidak konvergen, karena routing ulang menggeser ribuan net lain.
+   Run ini dimulai dari ODB hasil ECO dengan
+   `--with-initial-state <state> --from OpenROAD.GlobalRouting --to OpenROAD.STAPostPNR -c RUN_ANTENNA_REPAIR=false`
+   (jumper GRT tidak dipakai lagi, karena net lama sudah di-route dan net baru pendek).
+   - Putaran 1: 870 `dlygate4sd1_1` untuk endpoint hold < 0,022 ns, 51 buffer slew, 18 repeater, 1 net dipecah.
+   - Putaran 2: dioda di 8 repeater diseimbangkan antara net masukan dan keluaran, 7 buffer slew, 13 sel hold.
+5. **Signoff** dilanjutkan dari state STA (`--from OpenROAD.IRDropReport`).
+
+Margin hold dibatasi +0,022 ns. Menaikkan targetnya butuh ribuan sel tunda di area rantai flop yang sudah
+padat: 7.170 sel untuk +0,05 ns membuat GRT overflow 2.529, dan 3.287 sel untuk +0,03 ns sudah overflow.
+Slack hold di STA sudah termasuk clock uncertainty 0,25 ns dan derate 5 %.
+
+### Hasil signoff (`RUN_AK`)
+
+| Pemeriksaan | Hasil |
+|---|---|
+| DRC Magic / KLayout / routing | 0 / 0 / 0 |
+| LVS (error, device, net, pin, property) | 0 |
+| XOR Magic vs KLayout | 0 |
+| Antena (net / pin) | 0 / 0 |
+| Illegal overlap, pin terputus, pelanggaran power grid | 0 |
+| Setup WNS (ss / tt / ff) | +36,13 / +42,77 / +45,38 ns |
+| Hold WNS (ff / tt / ss) | +0,022 / +0,188 / +0,650 ns |
+| Slew, cap, fanout top-level (9 corner) | 0 |
+| IR drop terburuk | 0,11 mV (VPWR 0,106 mV, VGND 0,111 mV) |
+| Daya (nom tt) | 28,8 mW (internal 18,6, switching 10,2, bocor 0,0045) |
+
+Metrik `design__max_slew/cap/fanout_violation__count` di `metrics.json` LibreLane tidak nol (misalnya slew 34.060
+di nom tt), tetapi semuanya berasal dari bagian dalam makro DFFRAM: bus bit dibaca lewat buffer tri-state dari
+banyak word, sehingga transisinya lambat. Makro sudah dikarakterisasi lengkap, dan timing yang melewatinya
+terpenuhi di STA top-level. Daftar lengkap ada di `metrics.csv`.
+
+### Luas
+
+| | Nilai |
+|---|---|
+| Sel standar | 1,561 mm² (utilisasi 51,4 %), 165.585 sel logika |
+| Makro | 4 × 0,4316 mm² = 1,726 mm² |
+| Flip-flop | 17.795 |
+| Buffer perbaikan timing / hold | 22.834 / 640 dari resizer, ditambah sel ECO |
+| Dioda antena | 1.862 sel |
+| Total sel (termasuk filler 302.384 dan tap 36.851) | 467.973 |
+| Panjang kabel / via | 5,64 m / 980.471 |
+
+Versi FPGA apa adanya (`hw/rtl`) menghasilkan sekitar 2,75 mm² sel standar dengan ±46.000 flip-flop setelah
+sintesis.
+
+## Gate-level simulation (netlist final `RUN_AK`)
+
+```bash
+cd hw/asic/xgboost/tb
+../../../../.venv/bin/python -m pytest -q -s test_gls.py -k fungsional              # Verilator, tanpa delay
+GLS_CORNER=max_ss_100C_1v60 ../../../../.venv/bin/python -m pytest -q -s test_gls.py -k sdf   # Icarus + SDF
+```
+
+`test_gls.py` memakai netlist `layout/runs/RUN_AK/final/nl` dengan model Verilog sel sky130 dari PDK. Image flash
+ditandai dengan kunci layout (`~/.coldtrack/kunci_model.hex`), karena kunci sudah tertanam di gerbang.
+`coldtrack_asic_tb.sv` memilih DUT netlist lewat `` `define GLS `` dan anotasi SDF lewat `` `define GLS_SDF ``.
+
+| Tes | DUT dan simulator | Skenario | Hasil |
 |---|---|---|---|
-| Versi FPGA apa adanya (`hw/rtl`) | ±2,75 mm² | ±46.000 | — |
-| Versi ASIC (`hw/asic`) | 0,93 mm² | ±17.200 | 4 × 0,19 mm² SRAM |
+| `test_gls_fungsional` | netlist tanpa sel fisik + RAM256 perilaku, Verilator 5.053, tanpa delay | sama dengan `test_coldtrack_asic` (SPI): 2 trip × 75 menit, 15 diagnosis, 8 HMAC, image flash rusak ditolak | lulus, bit-exact dengan golden (43 menit) |
+| `test_gls_sdf`, nom_tt | netlist + netlist gerbang RAM256, Icarus 14 + SDF pasca-layout, clock 100 ns, SCK = clk/8 | `sdf_singkat`: ID, frame terputus diabaikan, kunci sesi, 3 menit fisika + rantai segel + HMAC | lulus (2 jam 20 menit) |
+| `test_gls_sdf`, max_ss | idem | idem | lulus (1 jam 58 menit) |
+| `test_gls_sdf`, min_ff | idem | idem | lulus (1 jam 48 menit) |
+
+Hal yang perlu diketahui tentang GLS dengan SDF:
+
+- SDF final dibuat STA dengan netlist gerbang makro (`STA_MACRO_PRIORITIZE_NL`), jadi berisi delay sel dan kabel di
+  dalam RAM256. Karena itu GLS SDF memakai netlist gerbang RAM256 (`ram256/nl`), bukan model perilaku.
+- Parser SDF Icarus tidak mengenali titik ber-escape di path hierarki (`u_chip\.u_ct...`) dan crash pada
+  INTERCONNECT. Nama escaped di netlist dan SDF diganti secara konsisten (`.` → `__`, `[`/`]` → `_`).
+- Icarus mencari tiap nama instance secara linear di scope top (±230 ribu instance), jadi 555 ribu entri
+  INTERCONNECT butuh lebih dari 1 jam anotasi per corner. Delay kabel dilipat ke IOPATH sel penggeraknya (delay
+  terpanjang di net itu). Delay kabel kecil dibanding delay sel (tt: median 0,001 ns, p99 0,029 ns, maks 0,326 ns;
+  delay sel median 0,279 ns). `GLS_SDF_INTERCONNECT=1` mempertahankan INTERCONNECT asli.
+- Icarus tidak menjalankan TIMINGCHECK SDF (setup/hold). Pemeriksaan itu tetap dari STA signoff. GLS SDF memeriksa
+  bahwa logika berjalan benar dengan delay nyata (glitch, latch dan clock gating di DFFRAM, reset asinkron).
+- Sel fisik (decap, fill, tap) dibuang sebelum kompilasi. Dioda antena dibuang di GLS fungsional, tetapi
+  dipertahankan di GLS SDF karena SDF menganotasi kabel ke pin dioda.
+
+Dua "floating net" di `metrics.json` (`timing__drv__floating__nets`) berasal dari langkah `repair_design` di awal
+alur. Pada ODB final, `report_floating_nets` kosong, dan tidak ada net tanpa driver maupun multi-driver.
+
+## Integrasi Caravel (ChipFoundry chipIgnite)
+
+Makro `coldtrack_asic` ditempatkan di `user_project_wrapper` Caravel (sky130A, Caravel Lite `CC2509`) dengan
+templat ChipFoundry `caravel_user_project`. Sumber kecilnya disalin ke `caravel/`: konfigurasi dan skrip harden,
+RTL wrapper, `user_defines.v`, konfigurasi LVS, metrik signoff, dan log precheck. Proyek lengkap beserta view besar
+(GDS 166 MB, SPEF, netlist) ada di luar repo, di `~/FPGA/caravel/caravel_user_project`. Rinciannya di
+`caravel/README.md`.
+
+| | |
+|---|---|
+| Clock / reset | `wb_clk_i` (10 MHz) / `wb_rst_i`, lewat rantai 6 `clkbuf_8` di RTL (pin clk makro tidak dikenali CTS) |
+| Pin | 13 `mprj_io` (13–25): SPI slave, flash QSPI, 3 alarm; alarm juga ke `user_irq[2:0]` |
+| Penempatan makro | (360,18; 1098,88) N di area 2920 × 3520 µm |
+| PDN | strap vccd1/vssd1 berimpit dengan grid daya makro (met4 + met5), celah di ujung pin makro ditutup `pdn_bridge.tcl` |
+| Baris sel standar | dibatasi ke pita/kanal tepi (`FP_OBSTRUCTIONS`), 185 ribu sel fill (bukan 1,4 juta) |
+| Signoff wrapper (run 4 dari 5) | DRC 0, LVS lulus, XOR 0, antena 0, slew/cap/fanout 0, setup +50,2 ns, hold +4,86 ns |
+| Precheck | CF Precheck v1.3.7: 13/13 lulus, termasuk LVS penuh (wrapper + makro + RAM256) |
