@@ -158,5 +158,7 @@
   "STA_MACRO_PRIORITIZE_NL": true,
   "LINTER_INCLUDE_PDK_MODELS": true,
   "PNR_SDC_FILE": "dir::pnr.sdc",
-  "SIGNOFF_SDC_FILE": "dir::signoff.sdc"
+  "SIGNOFF_SDC_FILE": "dir::signoff.sdc",
+  "RUN_ANTENNA_REPAIR": true,
+  "GRT_ANTENNA_REPAIR_JUMPER_ONLY": true
 }

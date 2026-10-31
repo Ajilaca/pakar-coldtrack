@@ -1,16 +1,57 @@
 diff --git a/dffram.py b/dffram.py
-index a21763c..9eee7c5 100755
+index a21763c..fb14826 100755
 --- a/dffram.py
 +++ b/dffram.py
-@@ -168,7 +168,7 @@ def main(
+@@ -168,7 +168,8 @@ def main(
              "SYNTH_ELABORATE_ONLY": True,
              "SYNTH_ELABORATE_FLATTEN": True,
              "SYNTH_PARAMETERS": [f"WSIZE={logical_width}", f"USE_LATCH={int(latch)}"],
 -            "GRT_REPAIR_ANTENNAS": False,
 +            "GRT_REPAIR_ANTENNAS": True,
++            "DRT_ANTENNA_REPAIR_ITERS": 5,
              "MINIMUM_HEIGHT": min_height,
              "VERTICAL_HALO": vertical_halo,
              "HORIZONTAL_HALO": horizontal_halo,
+diff --git a/librelane_plugin_dffram/flows.py b/librelane_plugin_dffram/flows.py
+index 6ae9a6b..933d959 100644
+--- a/librelane_plugin_dffram/flows.py
++++ b/librelane_plugin_dffram/flows.py
+@@ -20,11 +20,16 @@ class DFFRAMFlow(SequentialFlow):
+         DFFRAM.PlaceRAM,
+         OpenROAD.IOPlacement,
+         Odb.CustomIOPlacement,
++        DFFRAM.PinBufPlace,
++        OpenROAD.DetailedPlacement,
+         OpenROAD.GeneratePDN,
+         OpenROAD.STAMidPNR,
+         OpenROAD.GlobalRouting,
++        OpenROAD.RepairAntennas,
+         OpenROAD.STAMidPNR,
+         OpenROAD.DetailedRouting,
++        OpenROAD.CheckAntennas,
++        OpenROAD.FillInsertion,
+         Checker.TrDRC,
+         Odb.ReportDisconnectedPins,
+         Checker.DisconnectedPins,
+diff --git a/librelane_plugin_dffram/steps.py b/librelane_plugin_dffram/steps.py
+index 9eebb34..dba985d 100644
+--- a/librelane_plugin_dffram/steps.py
++++ b/librelane_plugin_dffram/steps.py
+@@ -143,3 +143,14 @@ class Floorplan(OpenROAD.Floorplan):
+         )
+         env["FP_SIZING"] = "absolute"
+         return super().run(state_in, env=env, **kwargs)
++
++
++@Step.factory.register()
++class PinBufPlace(OdbpyStep):
++    """ColdTrack: buffer dan dioda pin masukan dipindah ke dekat pinnya (lihat scripts/odbpy/pinbuf.py)."""
++
++    id = "DFFRAM.PinBufPlace"
++    name = "Pin Buffer Placement"
++
++    def get_script_path(self):
++        return str(__file_dir__ / "scripts" / "odbpy" / "pinbuf.py")
 diff --git a/models/ram/model.v b/models/ram/model.v
 index b33d03f..d7eeb23 100644
 --- a/models/ram/model.v
@@ -95,3 +136,105 @@ index 5994f5a..6c2e22c 100644
  module OUTREG #(parameter WIDTH=32)
  (
      input   wire                CLK,        // FO: 8
+diff --git a/librelane_plugin_dffram/scripts/odbpy/pinbuf.py b/librelane_plugin_dffram/scripts/odbpy/pinbuf.py
+new file mode 100755
+index 0000000..ab89203
+--- /dev/null
++++ b/librelane_plugin_dffram/scripts/odbpy/pinbuf.py
+@@ -0,0 +1,96 @@
++# ColdTrack: pindahkan buffer dan dioda pin masukan RAM (DIBUF/DIODE_DI, dst.) ke baris terdekat dari pinnya.
++# PlaceRAM menaruh sel-sel tambahan ini berderet di pojok makro, sehingga kabel internal pin Di0[k] bisa
++# ratusan um (kapasitansi pin dilihat dari top-level sampai 0,18 pF). Dijalankan setelah IO placement;
++# legalisasi oleh OpenROAD.DetailedPlacement sesudahnya. Sel tap dikunci agar aturan jarak tap tetap terpenuhi.
++import click
++from reader import click_odb
++
++
++@click.command()
++@click_odb
++def main(reader):
++    block = reader.block
++    rows = sorted(block.getRows(), key=lambda r: r.getOrigin()[1])
++    site_w = rows[0].getSite().getWidth()
++    ymin = rows[0].getOrigin()[1]
++    ymax = rows[-1].getOrigin()[1]
++
++    def row_near(y):
++        return min(rows, key=lambda r: abs(r.getOrigin()[1] - y))
++
++    fixed = 0
++    for inst in block.getInsts():
++        m = inst.getMaster().getName()
++        if "tapvpwrvgnd" in m or inst.getName().startswith("tap_"):
++            inst.setPlacementStatus("FIRM")
++            fixed += 1
++
++    moved = 0
++    for bt in block.getBTerms():
++        if bt.getIoType() != "INPUT" or bt.getSigType() in ("POWER", "GROUND"):
++            continue
++        net = bt.getNet()
++        if net is None:
++            continue
++        ok, px, py = bt.getFirstPinLocation()
++        if not ok:
++            continue
++        cells = [it.getInst() for it in net.getITerms() if it.isInputSignal()]
++        # hanya net pin yang langsung masuk ke buffer pin (bukan ke logika dalam RAM)
++        cells = [c for c in cells if c.getName().split(".")[0].split("\\[")[0].split("[")[0]
++                 in ("DIBUF", "DIODE_DI", "A0BUF", "DIODE_A0", "WEBUF", "EN0BUF", "CLKBUF", "DIODE_CLK")]
++        if not cells:
++            continue
++        cells.sort(key=lambda c: 0 if "BUF" in c.getName() else 1)
++        y = min(max(py, ymin), ymax)
++        row = row_near(y)
++        x = px
++        for c in cells:
++            w = c.getMaster().getWidth()
++            cx = (x - w // 2) // site_w * site_w
++            c.setOrient(row.getOrient())
++            c.setLocation(cx, row.getOrigin()[1])
++            c.setPlacementStatus("PLACED")
++            x += w + site_w
++            moved += 1
++    # pin keluaran: mux keluaran Do0MUX (dan dioda di masukannya) dipindah ke dekat pin Do0[k].
++    # PlaceRAM menaruh mux ini berderet di pojok kiri, sehingga kabel ke pin bisa ratusan um.
++    moved_out = 0
++    for bt in block.getBTerms():
++        if bt.getIoType() != "OUTPUT":
++            continue
++        net = bt.getNet()
++        if net is None:
++            continue
++        ok, px, py = bt.getFirstPinLocation()
++        if not ok:
++            continue
++        drv = [it for it in net.getITerms() if it.isOutputSignal()]
++        if len(drv) != 1:
++            continue
++        mux = drv[0].getInst()
++        if not mux.getName().startswith("Do0MUX") or "mux2" not in mux.getMaster().getName():
++            continue
++        cells = [mux]
++        for it in mux.getITerms():
++            if it.isInputSignal() and it.getNet() is not None:
++                for t in it.getNet().getITerms():
++                    c = t.getInst()
++                    if c.getName().startswith("Do0MUX") and "diode" in c.getMaster().getName() and c not in cells:
++                        cells.append(c)
++        y = min(max(py, ymin), ymax)
++        row = row_near(y)
++        x = px
++        for c in cells:
++            w = c.getMaster().getWidth()
++            cx = (x - w // 2) // site_w * site_w
++            c.setOrient(row.getOrient())
++            c.setLocation(cx, row.getOrigin()[1])
++            c.setPlacementStatus("PLACED")
++            x += w + site_w
++            moved_out += 1
++    print(f"pinbuf: {moved} sel masukan dan {moved_out} sel keluaran dipindah ke dekat pin, {fixed} tap dikunci")
++
++
++if __name__ == "__main__":
++    main()
