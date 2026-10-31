@@ -1,5 +1,7 @@
 // Testbench top layout ASIC coldtrack_asic (sinkroniser reset + SPI + flash QSPI) dengan model flash,
 // untuk hw/tb/test_coldtrack_top.py (CT_SPI=1). Sama dengan hw/tb/coldtrack_spi_tb.sv, DUT-nya coldtrack_asic.
+// Dengan `define GLS, DUT-nya netlist final (tanpa parameter; kunci sudah tertanam di gerbang), lihat test_gls.py;
+// `define GLS_SDF "<berkas.sdf>" menambahkan anotasi delay pasca-layout.
 module coldtrack_asic_tb #(
     parameter               BERKAS_A   = "",
     parameter logic [255:0] HASH_MODEL = '0           // kunci HMAC model (nama sama dengan tb FPGA)
@@ -25,12 +27,19 @@ module coldtrack_asic_tb #(
     logic [31:0] jumlah_byte;
     /* verilator lint_on UNUSEDSIGNAL */
 
+`ifdef GLS
+    coldtrack_asic u_dut (
+`else
     coldtrack_asic #(.KUNCI_MODEL(HASH_MODEL)) u_dut (
+`endif
         .clk(clk), .rst_n(rst_n),
         .spi_sck(spi_sck), .spi_cs_n(spi_cs_n), .spi_mosi(spi_mosi), .spi_miso(spi_miso), .spi_miso_oe(spi_miso_oe),
         .qspi_sck(sck), .qspi_cs_n(cs_n), .qspi_io_o(io_o), .qspi_io_oe(io_oe), .qspi_io_i(io_flash),
         .alarm_waspada(alarm_waspada), .alarm_kritis(alarm_kritis), .alarm_sensor(alarm_sensor)
     );
+`ifdef GLS_SDF
+    initial $sdf_annotate(`GLS_SDF, u_dut);
+`endif
 
     spi_flash_model #(.BERKAS_A(BERKAS_A)) u_flash (
         .clk(clk), .sck(sck), .cs_n(cs_n), .io_dut(io_o), .oe_dut(io_oe), .io_flash(io_flash),
