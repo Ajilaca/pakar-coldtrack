@@ -20,7 +20,9 @@ Struktur tiap folder:
 └── laporan.pdf laporan layout
 ```
 
-Saat ini `caravel/` baru ada di `xgboost/`.
+Saat ini `layout/` dan `caravel/` baru ada di `xgboost/`. Mesin GRU belum di-layout karena keterbatasan waktu:
+waktu lomba habis untuk menutup timing dan signoff chip XGBoost, lalu integrasi Caravel. RTL GRU sudah
+terverifikasi bit-exact terhadap golden, jadi layout-nya bisa menyusul dengan alur yang sama.
 
 ## Perintah
 
