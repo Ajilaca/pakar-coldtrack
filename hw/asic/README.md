@@ -1,25 +1,26 @@
-# hw/asic — versi ASIC ColdTrack (SKY130)
+# hw/asic: versi ASIC ColdTrack (SKY130)
 
-RTL FPGA di `hw/rtl` **tidak diubah**. Folder ini hanya berisi bagian khusus ASIC, dipisah per mesin AI:
+Folder ini berisi bagian khusus ASIC, dipisah per mesin AI. RTL FPGA di `hw/rtl` tidak diubah.
 
 | Folder | Isi | Status |
 |---|---|---|
-| [`xgboost/`](xgboost/README.md) | Chip ColdTrack: fisika + fitur + XGBoost (model di flash, tag HMAC). RTL pengganti khusus ASIC, makro DFFRAM, tes cocotb, config dan skrip LibreLane | Layout lengkap sampai signoff (RUN_A sampai RUN_U) |
-| [`GRU/`](GRU/README.md) | Mesin GRU forecast + diagnosis, bobot dibaca dari flash. RTL, golden bit-exact, image model, tes cocotb | RTL terverifikasi, belum di-layout |
+| [`xgboost/`](xgboost/README.md) | Chip ColdTrack: fisika, fitur, dan XGBoost (model di flash, tag HMAC). RTL pengganti khusus ASIC, makro DFFRAM, tes cocotb, config dan skrip LibreLane, wrapper Caravel | Layout final RUN_AK lolos signoff, GLS lulus, wrapper Caravel lolos precheck ChipFoundry |
+| [`GRU/`](GRU/README.md) | Mesin GRU untuk forecast dan diagnosis, bobot dibaca dari flash. RTL, golden bit-exact, image model, tes cocotb | RTL terverifikasi, belum di-layout |
 
-Setiap folder punya struktur yang sama:
+Struktur tiap folder:
 
 ```
 <mesin>/
 ├── rtl/        modul khusus ASIC (top layout dan pembungkus, mis. xgboost/rtl/coldtrack_asic.sv)
 ├── golden/     model golden / pembuat image flash
-├── tb/         tes cocotb (Verilator)
+├── tb/         tes cocotb (Verilator; GLS dengan SDF memakai Icarus)
 ├── layout/     config dan skrip LibreLane, hasil di layout/runs/ (tidak masuk git)
-├── metrics.csv ringkasan metrik layout run final 
+├── caravel/    wrapper Caravel (user_project_wrapper), skrip harden, log precheck
+├── metrics.csv ringkasan metrik layout run final
 └── laporan.pdf laporan layout
 ```
 
-`wrapper/` untuk pembungkus Caravel (`user_project_wrapper`) ditambahkan di tiap folder saat integrasi Caravel.
+Saat ini `caravel/` baru ada di `xgboost/`.
 
 ## Perintah
 
@@ -31,4 +32,4 @@ cd hw/asic/xgboost/tb && ../../../../.venv/bin/python -m pytest -q # tes ASIC XG
 .venv/bin/python -m hw.asic.xgboost.golden.flash_tag --buat-kunci # kunci model (sekali, rahasia)
 ```
 
-Folder `xgboost/layout/runs/`, `xgboost/build/`, dan config sementara berisi kunci model HMAC; jangan dibagikan.
+Folder `xgboost/layout/runs/`, `xgboost/build/`, dan config sementara berisi kunci model HMAC, jadi jangan dibagikan.
