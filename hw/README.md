@@ -1,9 +1,9 @@
 # ColdTrack RTL
 
-Chip ColdTrack untuk truk: segel data sensor (rantai SHA-256 + HMAC), mesin fisika (status
-AMAN/WASPADA/KRITIS + TTB), dan diagnosis tree ensemble (XGBoost 420 pohon), di belakang slave AXI4-Lite
-untuk ARM pada AMD Kria KV260. RTL ditulis dalam subset SystemVerilog tanpa primitive vendor, jadi bisa
-disintesis Vivado maupun Yosys.
+RTL chip ColdTrack untuk truk, diakses ARM pada AMD Kria KV260 lewat slave AXI4-Lite. Chip ini menyegel data
+sensor dengan rantai SHA-256 dan HMAC, menghitung status AMAN/WASPADA/KRITIS dan TTB dengan mesin fisika, dan
+mendiagnosis penyebab dengan XGBoost 420 pohon. RTL ditulis dalam subset SystemVerilog tanpa primitive vendor,
+sehingga bisa disintesis dengan Vivado maupun Yosys.
 
 | Folder | Isi |
 |---|---|
@@ -11,11 +11,12 @@ disintesis Vivado maupun Yosys.
 | `tb/` | Testbench cocotb (`test_*.py`), dijalankan lewat pytest |
 | `golden/` | Model acuan Python bilangan bulat; RTL harus sama bit per bit dengan model ini |
 | `scripts/` | Ekspor model XGBoost beku ke berkas memori; vektor uji hasil edge untuk backend; inventaris memori per mode (`asic_mem.py`) |
-| `driver/` | Driver: `chip.py` (`ChipAxi` lewat `/dev/mem` untuk KV260, `ChipSpi` lewat `spidev` untuk chip ASIC, keduanya belum diuji di perangkat; `ChipGolden` identik bit per bit dengan RTL) dan `edge_driver.py` (sampel ke chip, kirim bacaan + hasil tersegel lewat MQTT) |
+| `driver/` | `chip.py` (`ChipAxi` lewat `/dev/mem` untuk KV260 dan `ChipSpi` lewat `spidev` untuk chip ASIC, keduanya belum diuji di perangkat; `ChipGolden` identik bit per bit dengan RTL) dan `edge_driver.py` (kirim sampel ke chip, lalu kirim bacaan dan hasil tersegel lewat MQTT) |
+| `asic/` | Versi ASIC SKY130: RTL pengganti, layout LibreLane, wrapper Caravel ([`asic/README.md`](asic/README.md)) |
 | `model/` | Hasil ekspor: `nodes.mem`, `trees.mem`, `base.mem` per model, plus `flash.bin` dan `flash.sha256` untuk mode flash |
 | `bd/` | Pembungkus Verilog AXI4-Lite (`coldtrack_axil.v`) untuk block design Vivado + pin alarm PMOD |
 | `synth/` | Skrip Yosys (perkiraan) dan Vivado (implementasi out-of-context, block design KV260, laporan) |
-| `docs/` | Gambar arsitektur (`rtl_architecture.png`) dan block design Vivado (`vivado_block_design.png`/`.svg`) |
+| `docs/` | Gambar arsitektur KV260 (`rtl_architecture.png`), arsitektur mode flash dan top ASIC (`flash_architecture.png`), dan block design Vivado (`vivado_block_design.png`/`.svg`) |
 | `results/` | Laporan paritas golden vs float (JSON) dan laporan Vivado (`results/vivado/`) |
 
 ## Arsitektur
@@ -56,16 +57,18 @@ desimal membuat kelipatan 0,1 C data latih eksak, karena ambang pohon XGBoost se
 | M10 | `coldtrack_spi` (top ASIC: SPI + flash) | uji M9 diulang lewat SPI pada SCK = clk/8 (batas terburuk): 150 menit identik; frame yang terputus diabaikan |
 | M10 | Sapuan SPI (`tb/test_spi_sweep.py`) | 13 kecepatan x 4 offset fase, 8 ronde baca-tulis tiap konfigurasi: nol kesalahan sampai clk/3, gagal semua di clk/2,5 dan clk/2 (`results/spi_sweep.json`) |
 
-Catatan dari verifikasi: aturan "pintu terbuka, sisa waktu terburuk <= 30 menit" (alasan 4) di `engine.py`
-tidak pernah bisa menentukan status. Saat pintu terbuka kabin = max(ts10, suhu luar) >= suhu luar dan
-(x - t_hi)/(x - Tc) naik terhadap x, sehingga TTB biasa selalu <= TTB kasus terburuk dan aturan TTB lebih
-dulu memicu dengan status yang sama atau lebih tinggi. RTL tetap memuat aturan itu agar setara backend.
+Verifikasi menemukan bahwa aturan "pintu terbuka, sisa waktu terburuk <= 30 menit" (alasan 4) di `engine.py`
+tidak pernah menentukan status. Saat pintu terbuka, kabin = max(ts10, suhu luar) >= suhu luar dan
+(x - t_hi)/(x - Tc) naik terhadap x. Akibatnya TTB biasa selalu <= TTB kasus terburuk, dan aturan TTB lebih dulu
+memicu dengan status yang sama atau lebih tinggi. RTL tetap memuat aturan itu agar setara dengan backend.
 
 ## Mode flash untuk ASIC
 
 Di ASIC tidak ada BRAM, dan tabel simpul pohon (8.704 x 72 bit = 76,5 KiB) adalah bagian terbesar chip. Karena
 isinya konstanta, `MODEL_FLASH = 1` memindahkannya ke flash QSPI eksternal. Bawaannya tetap `MODEL_FLASH = 0`
 (BRAM), jadi build KV260 dan semua angka Vivado di bawah tidak berubah.
+
+![Mode flash dan top ASIC coldtrack_spi](docs/flash_architecture.png)
 
 ```
 coldtrack_top (MODEL_FLASH = 1)
@@ -77,16 +80,16 @@ coldtrack_top (MODEL_FLASH = 1)
                      status fisika, TTB, alarm, dan segel tetap jalan
 ```
 
-- **Image flash** (`golden/flash_image.py`): header, base score, lalu per pohon satu rekaman kepala dan
+- Image flash (`golden/flash_image.py`) berisi header dan base score, lalu per pohon satu rekaman kepala diikuti
   simpulnya. Format simpul sama dengan `nodes.mem`. Syarat aliran (simpul satu pohon berurutan, anak selalu
   sesudah induk) dicek saat ekspor. Model sekarang: 78.714 byte (#8) dan 80.172 byte (#7).
-- **Waktu:** satu inferensi membaca seluruh image, 316.313 siklus (3,2 ms pada 100 MHz dengan SCK 50 MHz).
-  Waktunya tetap, tidak bergantung pada kedalaman pohon. Jeda antar sampel 60 detik.
-- **HASH_MODEL** ditanam saat sintesis dari `model/<nama>/flash.sha256`. Ganti model berarti ganti hash, jadi
-  untuk prototipe model ikut terkunci di chip. Agar model bisa diperbarui di lapangan dibutuhkan tanda tangan
-  digital (kunci publik di chip), yang belum dibuat.
-- **Flash:** bit QE harus diset saat flash diprogram. `qspi_io_o`/`qspi_io_oe`/`qspi_io_i` disambungkan ke
-  penyangga tiga keadaan di pad.
+- Satu inferensi membaca seluruh image dalam 316.313 siklus (3,2 ms pada 100 MHz dengan SCK 50 MHz). Waktunya
+  tetap berapa pun kedalaman pohonnya, dan jeda antar sampel 60 detik.
+- `HASH_MODEL` ditanam saat sintesis dari `model/<nama>/flash.sha256`. Ganti model berarti ganti hash, jadi di
+  RTL ini model ikut terkunci di chip. Versi ASIC (`hw/asic/xgboost`) menggantinya dengan tag HMAC, sehingga
+  model baru yang ditandai kunci yang benar bisa dipasang tanpa chip baru.
+- Bit QE flash harus diset saat flash diprogram. `qspi_io_o`/`qspi_io_oe`/`qspi_io_i` disambungkan ke penyangga
+  tiga keadaan di pad.
 
 ### Antarmuka SPI (top ASIC `coldtrack_spi`)
 
@@ -99,8 +102,8 @@ mengaksesnya lewat 4 pin SPI. Total pin chip: clk, rst_n, SPI 4, QSPI 6, alarm 3
 | Tulis, 6 byte | `{1, 000, alamat[11:0]}` + data 32 bit | diabaikan |
 | Baca, 7 byte | `{0, 000, alamat[11:0]}` + 1 byte dummy + 4 byte bebas | data 32 bit di 4 byte terakhir |
 
-- SCK, CS, dan MOSI dicuplik clk chip lewat sinkroniser 2 FF, jadi **SCK paling cepat clk/8** (12,5 MHz pada
-  100 MHz, 6,25 MHz pada 50 MHz). Data ColdTrack sekitar 150 byte per menit, jadi batas ini tidak terasa.
+- SCK, CS, dan MOSI dicuplik clk chip lewat sinkroniser 2 FF, jadi SCK paling cepat clk/8 (12,5 MHz pada
+  100 MHz, 6,25 MHz pada 50 MHz). Data ColdTrack hanya sekitar 150 byte per menit, jauh di bawah batas ini.
 - Sapuan simulasi (`tb/test_spi_sweep.py`, termasuk rasio pecahan dan 4 offset fase) bebas kesalahan sampai
   clk/3 dan gagal mulai clk/2,5: MISO berganti 2 sampai 3 clk setelah tepi naik SCK, jadi satu periode SCK harus
   lebih dari sekitar 3 clk. Simulasi tidak memodelkan delay pad, jalur PCB, jitter, dan metastabilitas, jadi
@@ -122,7 +125,7 @@ Inventaris memori (`python -m hw.scripts.asic_mem`, Yosys `memory -nomap`, tanpa
 | ROM konstanta (tabel K SHA-256, konstanta fisika) | 0,3 KiB | 0,5 KiB |
 
 Mode flash memakai inti SHA-256 kedua untuk hash image, jadi tabel K ada dua. Inti ini bisa dibagi dengan
-`seal` bila luas logika perlu dihemat. Luas ASIC sebenarnya baru diketahui setelah sintesis dengan PDK.
+`seal` bila luas logika perlu dihemat. Luas hasil layout SKY130 ada di `hw/asic/xgboost/README.md`.
 
 ## Vivado KV260 (post-route, model #8)
 
@@ -139,10 +142,10 @@ UG1089 sebelum dipakai).
 | BRAM36 | 20 | 13,9 % |
 | DSP | 74 | 5,9 % |
 
-Tabel simpul `tree_engine` (8.704 x 72) memakai 18 BRAM dan ring buffer `features` (256 x 111) 2 BRAM.
-Sebelumnya keduanya jatuh ke LUTRAM (27.248 LUT, 12.069 sebagai memori) karena register baca BRAM diserap
-primitif lain: `simpul_q` menjadi register alamat LUTRAM `fitur`, `rd_q` menjadi register masukan DSP. Kini
-ada satu register tambahan di depan keduanya dan `rd_q` diberi `keep`.
+Tabel simpul `tree_engine` (8.704 x 72) memakai 18 BRAM dan ring buffer `features` (256 x 111) 2 BRAM. Agar
+Vivado memetakannya ke BRAM, ada satu register tambahan di depan keduanya dan `rd_q` diberi `keep`. Tanpa itu,
+register baca BRAM diserap primitif lain (`simpul_q` menjadi register alamat LUTRAM `fitur`, `rd_q` menjadi
+register masukan DSP), dan kedua memori jatuh ke LUTRAM: 27.248 LUT, 12.069 di antaranya sebagai memori.
 
 Timing `coldtrack_top` out-of-context per frekuensi (`synth/kv260_vivado.tcl`, laporan di
 `results/vivado/sweep/`). Daya adalah logika PL saja; daya total block design (termasuk PS) 2,86 W.
@@ -154,9 +157,10 @@ Timing `coldtrack_top` out-of-context per frekuensi (`synth/kv260_vivado.tcl`, l
 | 50 MHz | +9,12 ns | 0,348 W / 0,059 W |
 | 100 MHz | +0,637 ns (block design +1,351 ns) | 0,407 W / 0,118 W |
 
-Sebelum perbaikan, 100 MHz gagal tipis (WNS -0,146 ns) di pencarian TTB `physics` (selisih -> perkalian 82 bit
--> bandingkan, 23 level). Perkalian TTB dan aturan pintu kini melewati 3 register pipeline, jumlah `features`
-dihitung satu siklus sebelum digeser, dan `flat` diregister sebelum aturan sensor.
+Jalur terpanjang di 100 MHz adalah pencarian TTB `physics` (selisih, perkalian 82 bit, lalu pembandingan;
+23 level logika). Tanpa pipeline, jalur ini gagal tipis dengan WNS -0,146 ns. Karena itu perkalian TTB dan aturan
+pintu melewati 3 register pipeline, jumlah `features` dihitung satu siklus sebelum digeser, dan `flat`
+diregister sebelum aturan sensor.
 
 ## Resource KV260 (Yosys `synth_xilinx -family xcup`, model #8, sebelum pipeline)
 

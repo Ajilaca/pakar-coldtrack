@@ -19,7 +19,7 @@ pengganti sama dengan versi FPGA, jadi versi yang dipakai cukup dipilih lewat da
 | `tb/` | Tes cocotb versi ASIC (memakai modul tes dan golden dari `hw/tb`) dan GLS netlist final |
 | `layout/` | Config, SDC, dan skrip LibreLane; `layout/eco/` berisi skrip ECO (bagian Layout) |
 | `caravel/` | Wrapper Caravel: config dan skrip harden, RTL wrapper, metrik signoff, log precheck |
-| `gambar/` | Gambar penempatan sel `RUN_AK` dan layout wrapper WR4 (sama dengan Gambar 1 dan 3 di laporan) |
+| `figures/` | `fig1_placement_run_ak.png` (penempatan sel `RUN_AK`) dan `fig3_wrapper_wr4.png` (layout wrapper WR4), sama dengan Gambar 1 dan 3 di laporan |
 | `metrics.csv` | Metrik signoff layout final, GLS, dan Caravel |
 | `laporan.pdf` | Laporan proses layout |
 

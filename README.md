@@ -1,8 +1,9 @@
 # ColdTrack AI
 
 Sistem peringatan dini kegagalan rantai dingin untuk armada truk berpendingin. Chip FPGA di truk (AMD Kria KV260)
-menghitung status dan diagnosis sekali per menit, lalu backend di cloud memverifikasi hasilnya, menambahkan
-forecast suhu, dan menampilkannya di dasbor.
+menghitung status dan diagnosis sekali per menit. Backend di cloud lalu memverifikasi hasilnya, menambahkan
+forecast suhu, dan menampilkannya di dasbor. Mesin diagnosis yang sama juga sudah di-layout sebagai chip ASIC
+SKY130.
 
 Untuk setiap truk, dasbor menampilkan status (AMAN, WASPADA, atau KRITIS), Time-to-Breach (sisa menit sampai muatan
 melewati batas suhu), diagnosis penyebab, tindakan yang disarankan, insiden beserta audit trail, dan estimasi
@@ -19,13 +20,15 @@ sensor truk ─► KV260: segel SHA-256 + HMAC · mesin fisika · XGBoost 420 po
           backend: verifikasi segel ─► forecast GRU ─► database ─► dasbor
 ```
 
-- **Di truk:** chip menghitung status, TTB, dan diagnosis, lalu menyegel tiap rekaman dengan rantai hash dan
-  HMAC. Alarm sopir keluar langsung ke pin, jadi tetap menyala saat sinyal hilang. RTL dan hasil Vivado ada di
-  [hw/](hw/README.md).
-- **Di cloud:** backend memeriksa segel, memakai hasil chip tanpa menghitung ulang, dan menjalankan GRU hanya
-  untuk forecast suhu +15/+30/+60 menit. Truk tanpa chip dihitung penuh di cloud dengan komponen yang sama.
-- **Pembagian keputusan:** status dan TTB selalu datang dari mesin fisika. Model memberi forecast dan diagnosis
-  penyebab. Masalah sensor hanya dari aturan sensor.
+Di truk, chip menghitung status, TTB, dan diagnosis, lalu menyegel tiap rekaman dengan rantai hash dan HMAC. Alarm
+sopir keluar langsung ke pin, jadi tetap menyala saat sinyal hilang. RTL dan hasil Vivado ada di
+[hw/](hw/README.md).
+
+Di cloud, backend memeriksa segel dan memakai hasil chip apa adanya. GRU hanya dijalankan untuk forecast suhu
++15/+30/+60 menit. Truk tanpa chip dihitung penuh di cloud dengan komponen yang sama.
+
+Status dan TTB selalu berasal dari mesin fisika. Model memberi forecast dan diagnosis penyebab, sedangkan masalah
+sensor hanya ditentukan aturan sensor.
 
 Penjelasan lengkap: [docs/architecture.md](docs/architecture.md).
 
@@ -72,19 +75,37 @@ jadi di sana hanya halaman Simulasi yang berfungsi. Panduan demo: [docs/demo.md]
 
 ## Model
 
-- **Diagnosis dan forecast:** GRU v5 (3 lapis, hidden 128, dengan 6 fitur konteks trip) dalam ONNX. Keluarannya
-  7 kelas mode kegagalan dan forecast suhu t+15, t+30, dan t+60 menit.
-- **Status dan TTB:** mesin fisika, dengan XGBoost sebagai pembanding informasi untuk TTB.
-- **Di chip:** XGBoost 420 pohon untuk diagnosis dengan 82 fitur bilangan bulat.
-- **Hasil test:** Macro F1 0,820 dan PR-AUC 0,855 dengan label v5, yang memperlakukan pintu terbuka dan kejut
-  ambien sebagai kejadian sementara. Dengan label lama hasilnya 0,756 dan 0,812 (model v3: 0,668 dan 0,786).
-- **Keterbatasan:** semua data sintetis dari simulator fisika, tanpa logger truk sungguhan. Pengujian gangguan
-  menunjukkan beberapa kelas (reefer mati, pintu terbuka, prapendinginan buruk) dikenali dari satu sinyal yang
-  terlalu bersih di simulator, jadi dua di antaranya sekarang diputuskan aturan. Kelas `degradasi_bertahap` masih
-  lemah.
+| | |
+|---|---|
+| Diagnosis dan forecast | GRU v5 (3 lapis, hidden 128, dengan 6 fitur konteks trip) dalam ONNX; keluarannya 7 kelas mode kegagalan dan forecast suhu t+15, t+30, dan t+60 menit |
+| Status dan TTB | mesin fisika, dengan XGBoost sebagai pembanding informasi untuk TTB |
+| Di chip | XGBoost 420 pohon untuk diagnosis dengan 82 fitur bilangan bulat |
+| Hasil test | Macro F1 0,820 dan PR-AUC 0,855 dengan label v5, yang memperlakukan pintu terbuka dan kejut ambien sebagai kejadian sementara; dengan label lama 0,756 dan 0,812 (model v3: 0,668 dan 0,786) |
+
+Semua data berasal dari simulator fisika, belum dari logger truk sungguhan. Pengujian gangguan menunjukkan beberapa
+kelas (reefer mati, pintu terbuka, prapendinginan buruk) dikenali dari satu sinyal yang terlalu bersih di
+simulator, jadi dua di antaranya sekarang diputuskan aturan. Kelas `degradasi_bertahap` masih lemah.
 
 Angka, perbandingan versi, dan hasil pengujian gangguan ada di [docs/model_card.md](docs/model_card.md). Asal
 data dan rumus fisikanya di [docs/train_ai.md](docs/train_ai.md).
+
+## Chip ASIC (SKY130)
+
+Mesin fisika, fitur, dan XGBoost juga dibuat sebagai chip ASIC di proses SkyWater SKY130 dengan LibreLane. Chip
+berukuran 2,2 × 2,2 mm, berjalan pada 10 MHz, dan dihubungkan ke mikrokontroler lewat SPI. Model XGBoost dibaca
+dari flash QSPI dan diverifikasi dengan tag HMAC, jadi model bisa diganti tanpa membuat chip baru.
+
+| Pemeriksaan | Hasil |
+|---|---|
+| Signoff layout (DRC, LVS, XOR, antena) | 0 pelanggaran |
+| Timing | setup dan hold terpenuhi di 9 corner |
+| Gate-level simulation | lulus tanpa delay (bit-exact dengan golden) dan dengan SDF di corner tt, ss, ff |
+| Wrapper Caravel untuk ChipFoundry chipIgnite | signoff bersih, precheck 13/13 lulus |
+
+Berkas tapeout (GDS, LEF, netlist, SPEF) dan laporan layout ada di GitHub Release
+[`asic-v1.0`](https://github.com/Ajilaca/pakar-coldtrack/releases/tag/asic-v1.0). Kunci HMAC yang tertanam di
+layout ini adalah kunci lomba yang dipublikasikan, sehingga tapeout sungguhan memerlukan kunci baru dan layout
+ulang. Mesin GRU belum di-layout karena keterbatasan waktu. Rinciannya di [hw/asic/](hw/asic/README.md).
 
 ## Pengujian
 
@@ -122,3 +143,4 @@ Setiap folder punya `README.md` sendiri.
 - [Tata kelola AI](docs/ai_governance.md)
 - [Kontrak API](docs/api_contract.md), [kontrak perangkat](docs/device_contract.md), dan [asumsi armada](docs/fleet_assumptions.md)
 - [Menjalankan demo](docs/demo.md)
+- [Versi ASIC SKY130](hw/asic/README.md) dan [laporan layout](hw/asic/xgboost/laporan.pdf)
