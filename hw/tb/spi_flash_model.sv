@@ -30,6 +30,11 @@ module spi_flash_model #(
     logic [31:0] naik;            // tepi naik SCK sejak CS turun
     logic [31:0] sr;
     logic        salah;
+    // flash menyala dalam keadaan diam; tanpa ini naik bisa acak bila cs_n sudah 1 sejak awal (tidak ada tepi naik)
+    initial begin
+        naik  = '0;
+        salah = 1'b0;
+    end
 
     always @(posedge sck or posedge cs_n) begin
         if (cs_n) begin

@@ -1,0 +1,83 @@
+kategori,metrik,nilai,satuan,target,status,kunci_librelane
+desain,run,RUN_AK,,,,
+desain,pdk,sky130A sky130_fd_sc_hd,,,,
+desain,alat,LibreLane 3.0.17 / OpenROAD 2026-02-17,,,,
+desain,clock,100,ns,,,CLOCK_PERIOD
+desain,die,2200 x 2200,um,,,design__die__bbox
+desain,luas_die,4.840,mm2,,,design__die__area
+desain,luas_core,4.763,mm2,,,design__core__area
+desain,makro,4 x RAM256 (DFFRAM v6),,,,design__instance__count__macros
+luas,sel_standar,1.561,mm2,,,design__instance__area__stdcell
+luas,makro,1.726,mm2,,,design__instance__area__macros
+luas,utilisasi_sel_standar,51.4,%,,,design__instance__utilization__stdcell
+luas,utilisasi_total,69.0,%,,,design__instance__utilization
+sel,total,467973,,,,design__instance__count
+sel,logika_tanpa_filler_tap,165585,,,,design__instance__count__stdcell
+sel,flip_flop,17795,,,,design__instance__count__class:sequential_cell
+sel,buffer_perbaikan_timing,22834,,,,design__instance__count__class:timing_repair_buffer
+sel,buffer_hold_resizer,640,,,,design__instance__count__hold_buffer
+sel,dioda_antena,1862,,,,design__instance__count__class:antenna_cell
+sel,filler,302384,,,,design__instance__count__class:fill_cell
+sel,tap,36851,,,,design__instance__count__class:tap_cell
+routing,panjang_kabel,5.645,m,,,route__wirelength
+routing,via,980471,,,,route__vias
+routing,net,125789,,,,route__net
+signoff,drc_magic,0,,0,lolos,magic__drc_error__count
+signoff,drc_klayout,0,,0,lolos,klayout__drc_error__count
+signoff,drc_routing,0,,0,lolos,route__drc_errors
+signoff,lvs_error,0,,0,lolos,design__lvs_error__count
+signoff,lvs_unmatched_device_net_pin,0,,0,lolos,design__lvs_unmatched_*
+signoff,xor,0,,0,lolos,design__xor_difference__count
+signoff,antena_net,0,,0,lolos,antenna__violating__nets
+signoff,antena_pin,0,,0,lolos,antenna__violating__pins
+signoff,illegal_overlap,0,,0,lolos,magic__illegal_overlap__count
+signoff,pin_terputus,0,,0,lolos,design__disconnected_pin__count
+signoff,pelanggaran_power_grid,0,,0,lolos,design__power_grid_violation__count
+timing,setup_ws_max_ss_100C_1v60,36.128,ns,>=0,lolos,timing__setup__ws__corner:max_ss_100C_1v60
+timing,setup_ws_nom_tt_025C_1v80,42.765,ns,>=0,lolos,timing__setup__ws__corner:nom_tt_025C_1v80
+timing,setup_ws_min_ff_n40C_1v95,45.384,ns,>=0,lolos,timing__setup__ws__corner:min_ff_n40C_1v95
+timing,hold_ws_min_ff_n40C_1v95,0.0220,ns,>=0,lolos,timing__hold__ws__corner:min_ff_n40C_1v95
+timing,hold_ws_nom_ff_n40C_1v95,0.0225,ns,>=0,lolos,
+timing,hold_ws_max_ff_n40C_1v95,0.0221,ns,>=0,lolos,
+timing,hold_ws_nom_tt_025C_1v80,0.188,ns,>=0,lolos,timing__hold__ws__corner:nom_tt_025C_1v80
+timing,hold_ws_max_ss_100C_1v60,0.650,ns,>=0,lolos,timing__hold__ws__corner:max_ss_100C_1v60
+timing,setup_tns,0,ns,0,lolos,timing__setup__tns
+timing,hold_tns,0,ns,0,lolos,timing__hold__tns
+timing,clock_uncertainty_sudah_termasuk,0.25,ns,,,CLOCK_UNCERTAINTY_CONSTRAINT
+timing,derate_sudah_termasuk,5,%,,,TIME_DERATING_CONSTRAINT
+drv_top_level,slew_9_corner,0,,0,lolos,checks.rpt tanpa u_ram*
+drv_top_level,cap_9_corner,0,,0,lolos,checks.rpt tanpa u_ram*
+drv_top_level,fanout_lebih_dari_10,0,,0,lolos,checks.rpt tanpa u_ram*
+drv_dalam_makro,slew_max_ss_100C_1v60,49260,,,bawaan arsitektur DFFRAM,design__max_slew_violation__count__corner:max_ss_100C_1v60
+drv_dalam_makro,slew_nom_tt_025C_1v80,34060,,,bawaan arsitektur DFFRAM,design__max_slew_violation__count__corner:nom_tt_025C_1v80
+drv_dalam_makro,cap_max_ss_100C_1v60,23004,,,bawaan arsitektur DFFRAM,design__max_cap_violation__count__corner:max_ss_100C_1v60
+drv_dalam_makro,cap_nom_tt_025C_1v80,148,,,bawaan arsitektur DFFRAM,design__max_cap_violation__count__corner:nom_tt_025C_1v80
+drv_dalam_makro,fanout,900,,,bawaan arsitektur DFFRAM,design__max_fanout_violation__count
+daya,total_nom_tt,28.79,mW,,,power__total
+daya,internal,18.58,mW,,,power__internal__total
+daya,switching,10.21,mW,,,power__switching__total
+daya,bocor,0.0045,mW,,,power__leakage__total
+daya,ir_drop_terburuk,0.111,mV,<18 (1% VDD),lolos,design_powergrid__drop__worst
+daya,ir_drop_vpwr,0.106,mV,,,design_powergrid__drop__worst__net:VPWR
+daya,ir_drop_vgnd,0.111,mV,,,design_powergrid__drop__worst__net:VGND
+makro,ukuran_ram256,809.6 x 533.12,um,,,ram256/metrics.json
+makro,drc_magic_ram256,0,,0,lolos,ram256/metrics.json
+makro,lvs_ram256,0,,0,lolos,ram256/metrics.json
+makro,xor_ram256,0,,0,lolos,ram256/metrics.json
+makro,antena_ram256,0,,0,lolos,ram256/metrics.json
+makro,cap_pin_di_maks,0.019,pF,,,STA top-level
+makro,cap_pin_do_maks,0.0011,pF,,,STA top-level
+verifikasi,gls_fungsional,lolos,,lolos,lolos,tb/test_gls.py::test_gls_fungsional (Verilator; 2 trip x 75 menit; 15 diagnosis; 8 HMAC)
+verifikasi,gls_sdf_nom_tt,lolos,,lolos,lolos,tb/test_gls.py::test_gls_sdf (Icarus + SDF; clock 100 ns; 3 menit)
+verifikasi,gls_sdf_max_ss,lolos,,lolos,lolos,tb/test_gls.py::test_gls_sdf GLS_CORNER=max_ss_100C_1v60
+verifikasi,gls_sdf_min_ff,lolos,,lolos,lolos,tb/test_gls.py::test_gls_sdf GLS_CORNER=min_ff_n40C_1v95
+verifikasi,net_tanpa_driver_odb_final,0,,0,lolos,report_floating_nets (ODB final)
+caravel,shuttle,ChipFoundry chipIgnite (Caravel Lite CC2509),,,,caravel/README.md
+caravel,run_wrapper,WR4 (4 dari 5),,,,caravel/openlane/user_project_wrapper/harden.sh
+caravel,drc_magic_klayout_route_wrapper,0 / 0 / 0,,0,lolos,magic__drc_error__count / klayout__drc_error__count / route__drc_errors
+caravel,lvs_wrapper,0,,0,lolos,design__lvs_error__count
+caravel,xor_antena_wrapper,0 / 0,,0,lolos,design__xor_difference__count / antenna__violating__nets
+caravel,slew_cap_fanout_wrapper,0 / 0 / 0,,0,lolos,design__max_slew/cap/fanout_violation__count (9 corner)
+caravel,setup_ws_wrapper,50.23,ns,>= 0,lolos,timing__setup__ws
+caravel,hold_ws_wrapper,4.86,ns,>= 0,lolos,timing__hold__ws
+caravel,precheck_chipfoundry,13/13,,13/13,lolos,CF Precheck v1.3.7 (caravel/precheck/precheck.log)

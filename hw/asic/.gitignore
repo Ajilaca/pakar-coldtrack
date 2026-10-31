@@ -1,0 +1,13 @@
+# hasil layout dan config sementara memuat kunci model (run_layout.sh)
+xgboost/layout/runs/
+xgboost/layout/.config_kunci.json
+xgboost/layout/*.log
+# image flash bertag (python -m hw.asic.xgboost.golden.flash_tag)
+xgboost/build/
+# view makro besar (±155 MB) tidak masuk git; diunggah sebagai aset GitHub Release bersama GDS final.
+# Yang tetap di git: lef, lib, metrics.json, dffram_coldtrack.diff
+xgboost/ram256/gds/
+xgboost/ram256/spef/
+xgboost/ram256/spice/
+xgboost/ram256/nl/
+xgboost/ram256/pnl/

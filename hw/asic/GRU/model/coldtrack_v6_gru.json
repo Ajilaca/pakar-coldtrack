@@ -1,0 +1,25 @@
+{
+ "sumber": "coldtrack_gru_v6_cand.onnx",
+ "sha256_onnx": "772ad2d258795904e64e3904ec24d3239e56c663e5bca68b012b16f8c659e410",
+ "sha256_image": "7245653cc8bed8c577df6219e5d8c11292779d0c5d42f41450271c17a8721410",
+ "byte": 264357,
+ "L": 3,
+ "H": 128,
+ "NI": 12,
+ "NC": 6,
+ "T": 60,
+ "NO": 11,
+ "byte_per_langkah": 261888,
+ "forecast_mul": [
+  0.22513660788536072,
+  0.30242639780044556,
+  0.4176531434059143
+ ],
+ "forecast_add": [
+  0.0,
+  0.0,
+  0.0
+ ],
+ "forecast_residual": true,
+ "keluaran": "0..2 forecast t15/t30/t60: C = v/1024*mul + add + temp_c terakhir; 3..9 logit kelas; 10 ttb mentah (menit = exp(v/1024) - 1)"
+}

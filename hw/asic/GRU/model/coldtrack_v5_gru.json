@@ -1,0 +1,16 @@
+{
+ "sumber": "coldtrack_v5.onnx",
+ "sha256_onnx": "ae90d94be348273aee5baf61795066e4f3cc21aa5867460474e8542b7db7e051",
+ "sha256_image": "eda4352bbcee95b5cd6e45354f68d735ef7bc5649bf133bb5fa006dd3480f5fd",
+ "byte": 264357,
+ "L": 3,
+ "H": 128,
+ "NI": 12,
+ "NC": 6,
+ "T": 60,
+ "NO": 11,
+ "byte_per_langkah": 261888,
+ "forecast_mul": 10.170904159545898,
+ "forecast_add": -1.210589051246643,
+ "keluaran": "0..2 forecast t15/t30/t60 ternormalisasi (C = v/1024*mul + add), 3..9 logit kelas, 10 ttb mentah"
+}
