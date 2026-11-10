@@ -12,4 +12,6 @@ iter_*_Congested*.txt
 *.bit
 *.xsa
 .pytest_cache/
+driver/log/
+kv260/paket/
 nlviewcommon.logfile
