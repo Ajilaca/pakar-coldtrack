@@ -1,0 +1,27 @@
+/dts-v1/;
+/plugin/;
+
+/*
+ * Overlay PL untuk coldtrack (belum diuji di board). Hanya memuat bitstream dan menyalakan clock fabric 100 MHz
+ * (pl0_ref, id 71) serta melepas reset PL (id 116). Chip diakses lewat /dev/mem di 0xA000_0000 (hw/driver/chip.py,
+ * ChipAxi), jadi tidak ada node IP. Kalau overlay ini ditolak, buat pl.dtsi dari coldtrack_kv260.xsa dengan
+ * device-tree-xlnx (xsct, dt_overlay true) dan ganti berkas ini.
+ */
+&fpga_full {
+	firmware-name = "coldtrack.bit.bin";
+	resets = <&zynqmp_reset 116>;
+};
+
+&amba {
+	#address-cells = <2>;
+	#size-cells = <2>;
+
+	clocking0: clocking0 {
+		#clock-cells = <0>;
+		assigned-clock-rates = <100000000>;
+		assigned-clocks = <&zynqmp_clk 71>;
+		clock-output-names = "fabric_clk";
+		clocks = <&zynqmp_clk 71>;
+		compatible = "xlnx,fclk";
+	};
+};
